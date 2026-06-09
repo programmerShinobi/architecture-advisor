@@ -40,14 +40,13 @@ Small changes (typos, translations) follow a light path. Larger changes need dis
 Commits use a typed, scoped format:
 
 ```
-[type](scope): short imperative summary [TICKET-ID]
+[type](scope): short imperative summary
 ```
 
 - **type** — one of the tags in the table below.
 - **scope** — the area touched (optional but encouraged), e.g. `docs`, `readme`, `charter`,
   `spec`, `prototype`, `config`, `api`, `db`, `auth`, `service`, `security`, `ci`.
 - **summary** — concise, in the imperative mood ("add", not "added").
-- **[TICKET-ID]** — optional issue/ticket reference (e.g. `[#42]`); omit when there is none.
 
 | Type | When to use |
 |------|-------------|
