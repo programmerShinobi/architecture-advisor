@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Architecture Advisor — UI Prototype</title>
+<meta name="description" content="Interactive UI prototype for Architecture Advisor: a transparent, quality-attribute-driven architecture decision-support tool." />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<style>
+/* ============================================================
+   Design tokens — dark by default (matches the mockup),
+   light overrides under html.light. This reconstructs the
+   token contract the prototype was authored against.
+   ============================================================ */
+:root{
+  --color-background-primary:#1f2226;
+  --color-background-secondary:#282c31;
+  --color-background-tertiary:#343a41;
+  --color-text-primary:#ECEDEE;
+  --color-text-secondary:#AEB4BC;
+  --color-text-tertiary:#7E858E;
+  --color-text-info:#6AA6FF;
+  --color-text-success:#35C28D;
+  --color-text-warning:#E0A93B;
+  --color-text-danger:#EC6A60;
+  --color-background-info:rgba(106,166,255,0.13);
+  --color-background-success:rgba(53,194,141,0.13);
+  --color-background-warning:rgba(224,169,59,0.13);
+  --color-background-danger:rgba(236,106,96,0.13);
+  --color-border-secondary:rgba(255,255,255,0.15);
+  --color-border-tertiary:rgba(255,255,255,0.08);
+  --color-border-info:rgba(106,166,255,0.45);
+  --color-border-warning:rgba(224,169,59,0.45);
+  --color-border-danger:rgba(236,106,96,0.45);
+  --border-radius-md:8px;
+  --border-radius-lg:12px;
+  --border-radius-xl:16px;
+  --font-sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+html.light{
+  --color-background-primary:#ffffff;
+  --color-background-secondary:#f4f5f7;
+  --color-background-tertiary:#e7e9ec;
+  --color-text-primary:#1b1d1f;
+  --color-text-secondary:#4a4f57;
+  --color-text-tertiary:#80868f;
+  --color-text-info:#2563EB;
+  --color-text-success:#0F8A5F;
+  --color-text-warning:#B5790E;
+  --color-text-danger:#C4392E;
+  --color-background-info:rgba(37,99,235,0.08);
+  --color-background-success:rgba(15,138,95,0.10);
+  --color-background-warning:rgba(181,121,14,0.10);
+  --color-background-danger:rgba(196,57,46,0.08);
+  --color-border-secondary:rgba(0,0,0,0.16);
+  --color-border-tertiary:rgba(0,0,0,0.09);
+  --color-border-info:rgba(37,99,235,0.45);
+  --color-border-warning:rgba(181,121,14,0.45);
+  --color-border-danger:rgba(196,57,46,0.45);
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:24px;background:var(--color-background-secondary);color:var(--color-text-primary);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
+.page{max-width:1180px;margin:0 auto;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+
+.f-seg span{flex:1;text-align:center;font-size:11px;padding:7px 0;color:var(--color-text-secondary);cursor:pointer;transition:background .15s,color .15s;}
+.f-seg span.on{background:var(--color-background-info);color:var(--color-text-info);font-weight:500;}
+.f-chip{font-size:12px;color:var(--color-text-secondary);border:0.5px solid var(--color-border-secondary);border-radius:99px;padding:6px 13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;}
+.f-chip.on{color:var(--color-text-info);background:var(--color-background-info);border-color:var(--color-border-info);}
+.f-chip:hover{border-color:var(--color-border-info);}
+.f-step{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-text-tertiary);}
+.f-step .n{width:22px;height:22px;border-radius:50%;border:0.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;}
+.f-step.act{color:var(--color-text-info);}
+.f-step.act .n{background:var(--color-text-info);color:var(--color-background-primary);border-color:var(--color-text-info);}
+.f-div{height:0.5px;background:var(--color-border-tertiary);margin:20px 0;}
+.f-gloss{font-size:11px;color:var(--color-text-tertiary);line-height:1.45;}
+.f-num{width:22px;height:22px;border-radius:50%;background:var(--color-text-info);color:var(--color-background-primary);display:flex;align-items:center;justify-content:center;font-size:11px;flex:none;}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+.f-dim{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 12px;cursor:pointer;transition:border-color .15s,transform .15s;}
+.f-dim:hover{border-color:var(--color-border-info);transform:translateY(-1px);}
+.f-dim.on{border:1.5px solid var(--color-border-info);background:var(--color-background-info);}
+.f-mode{font-size:11px;padding:5px 12px;border-radius:99px;cursor:pointer;transition:all .15s;color:var(--color-text-secondary);}
+.f-mode.on{background:var(--color-text-info);color:var(--color-background-primary);font-weight:500;}
+.f-mig{font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:99px;padding:5px 11px;cursor:pointer;color:var(--color-text-secondary);transition:all .15s;}
+.f-mig.on{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info);}
+.f-act{transition:opacity .15s;}
+.f-act.busy{opacity:.55;pointer-events:none;}
+.f-btn{font-size:12px;border-radius:var(--border-radius-md);padding:5px 12px;cursor:pointer;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.f-btn:hover{border-color:var(--color-border-info);}
+.kbd{font-family:var(--font-mono);font-size:10px;border:0.5px solid var(--color-border-secondary);border-bottom-width:1.5px;border-radius:4px;padding:1px 5px;color:var(--color-text-tertiary);background:var(--color-background-secondary);}
+.spin{display:inline-block;width:12px;height:12px;border:1.5px solid var(--color-border-secondary);border-top-color:var(--color-text-info);border-radius:50%;animation:fspin .6s linear infinite;vertical-align:-1px;}
+@keyframes fspin{to{transform:rotate(360deg);}}
+.sk{background:linear-gradient(90deg,var(--color-background-secondary) 25%,var(--color-background-tertiary) 37%,var(--color-background-secondary) 63%);background-size:400% 100%;animation:shimmer 1.2s ease-in-out infinite;border-radius:var(--border-radius-md);}
+@keyframes shimmer{0%{background-position:100% 0;}100%{background-position:0 0;}}
+.r-chip{font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:99px;padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s;color:var(--color-text-secondary);}
+.r-chip:hover{border-color:var(--color-border-info);}
+.r-chip.off{opacity:.45;}
+.r-dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+.f-row{transition:transform .15s;}
+.f-row:hover{transform:translateX(2px);}
+#f-app.expert .guided-only{display:none!important;}
+#f-app.guided .expert-only{display:none!important;}
+#f-app.expert .f-gloss{display:none!important;}
+#f-app details{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);}
+#f-app summary{list-style:none;cursor:pointer;padding:11px 14px;font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px;}
+#f-app summary::-webkit-details-marker{display:none;}
+#f-grid table{width:100%;border-collapse:collapse;font-size:12px;}
+#f-grid th{position:sticky;top:0;background:var(--color-background-primary);text-align:right;padding:7px 10px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;border-bottom:0.5px solid var(--color-border-tertiary);}
+#f-grid th:first-child,#f-grid td:first-child{text-align:left;}
+#f-grid td{padding:7px 10px;text-align:right;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);}
+.f-ov{position:fixed;inset:0;background:rgba(0,0,0,.32);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:60px 16px;}
+.f-ov.open{display:flex;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h2 class="sr-only">Architecture Advisor tuned for technical users: command palette (Cmd/Ctrl+K), keyboard shortcuts, a persistent save-state indicator, skeleton loading, monospace tabular numbers with a sortable comparison data grid, three-layer error messages with request ID and retry, CSV/JSON export, and a guiding empty state with sample data.</h2>
+
+<div style="background:var(--color-background-secondary); border-radius:var(--border-radius-xl); padding:16px;">
+<div id="f-app" class="guided" style="position:relative; background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden;">
+
+<div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:0.5px solid var(--color-border-tertiary); flex-wrap:wrap; gap:10px;">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <div style="width:36px; height:36px; border-radius:var(--border-radius-md); background:var(--color-background-info); display:flex; align-items:center; justify-content:center;"><i class="ti ti-sitemap" style="font-size:21px; color:var(--color-text-info);" aria-hidden="true"></i></div>
+    <div><div style="font-size:16px; font-weight:500; color:var(--color-text-primary); line-height:1.25;">Architecture Advisor</div><div style="font-size:12px; color:var(--color-text-tertiary);">Answer a few questions — get a clear, explained plan</div></div>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <span id="f-savestate" style="display:flex; align-items:center; gap:5px; font-size:11px; color:var(--color-text-tertiary);"><i class="ti ti-circle-check" style="font-size:13px; color:var(--color-text-success);" aria-hidden="true"></i>All changes saved</span>
+    <span id="f-cmdk" class="f-btn"><i class="ti ti-command" style="font-size:13px;" aria-hidden="true"></i><span class="kbd">⌘K</span></span>
+    <span id="f-help" class="f-btn" title="Keyboard shortcuts">?</span>
+    <div style="display:flex; align-items:center; gap:2px; background:var(--color-background-secondary); border-radius:99px; padding:2px;"><span class="f-mode on" id="m-guided">Guided</span><span class="f-mode" id="m-expert">Expert</span></div>
+    <div style="display:flex; align-items:center; gap:7px;"><span class="f-chip on" style="padding:4px 11px;">EN</span><span class="f-chip" style="padding:4px 11px;">ID</span><span id="f-dark" style="width:28px; height:28px; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); display:flex; align-items:center; justify-content:center; cursor:pointer;"><i class="ti ti-moon" style="font-size:16px; color:var(--color-text-secondary);" aria-hidden="true"></i></span></div>
+  </div>
+</div>
+
+<div class="guided-only" style="display:flex; gap:12px; align-items:flex-start; padding:13px 20px; background:var(--color-background-info); border-bottom:0.5px solid var(--color-border-tertiary);">
+  <i class="ti ti-info-circle" style="font-size:19px; color:var(--color-text-info); margin-top:1px;" aria-hidden="true"></i>
+  <div style="font-size:12px; color:var(--color-text-info); line-height:1.6;"><span style="font-weight:500;">New here?</span> Tell the tool about your project. It works out what matters, suggests how to build, and shows <span style="font-weight:500;">why</span>. Power user? Press <span class="kbd">⌘K</span> for the command palette, or switch to <span style="font-weight:500;">Expert mode</span>.</div>
+</div>
+
+<div style="display:flex; align-items:center; gap:12px; padding:12px 20px; border-bottom:0.5px solid var(--color-border-tertiary); flex-wrap:wrap;">
+  <div class="f-step act"><span class="n">1</span> <span class="guided-only">Tell us about your project</span><span class="expert-only">Project factors</span></div>
+  <i class="ti ti-chevron-right" style="font-size:13px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+  <div class="f-step act"><span class="n">2</span> <span class="guided-only">See what matters most</span><span class="expert-only">Quality priorities</span></div>
+  <i class="ti ti-chevron-right" style="font-size:13px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+  <div class="f-step act"><span class="n">3</span> <span class="guided-only">Get your plan</span><span class="expert-only">Recommendation</span></div>
+  <i class="ti ti-chevron-right" style="font-size:13px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+  <div class="f-step act"><span class="n">4</span> <span class="guided-only">Save &amp; share</span><span class="expert-only">Export</span></div>
+</div>
+
+<div style="padding:18px 20px;">
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; gap:10px; flex-wrap:wrap;">
+    <span style="font-size:13px; color:var(--color-text-primary); font-weight:500;">Start from a scenario close to your project:</span>
+    <span id="m-reset" class="f-btn"><i class="ti ti-rotate" style="font-size:13px;" aria-hidden="true"></i>Reset answers</span>
+  </div>
+  <div class="f-gloss" style="margin-bottom:11px;">These fill in the answers for you — change anything afterward.</div>
+  <div style="display:flex; flex-wrap:wrap; gap:8px;">
+    <span class="f-chip on f-preset"><i class="ti ti-rocket" style="font-size:14px;" aria-hidden="true"></i>New idea / small startup</span>
+    <span class="f-chip f-preset"><i class="ti ti-building-bank" style="font-size:14px;" aria-hidden="true"></i>Bank or healthcare</span>
+    <span class="f-chip f-preset"><i class="ti ti-shopping-cart" style="font-size:14px;" aria-hidden="true"></i>Busy online shop</span>
+    <span class="f-chip f-preset"><i class="ti ti-cpu" style="font-size:14px;" aria-hidden="true"></i>Sensors / live data</span>
+  </div>
+  <div id="f-resetstatus" style="margin-top:10px;"></div>
+
+  <div class="f-div"></div>
+
+  <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;"><span class="f-num">1</span><span style="font-size:15px; font-weight:500; color:var(--color-text-primary);"><span class="guided-only">Tell us about your project</span><span class="expert-only">Project factors</span></span></div>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px;">
+    <div>
+      <div style="margin-bottom:15px;">
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:3px;"><span style="color:var(--color-text-primary);"><span class="guided-only">How big is your team?</span><span class="expert-only">Team size</span></span><i class="ti ti-help-circle" style="font-size:14px; color:var(--color-text-info); cursor:pointer;" aria-hidden="true"></i></div>
+        <div class="f-gloss" style="margin-bottom:7px;">More people means you'll want pieces that can be worked on separately.</div>
+        <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Small</span><span class="on">Medium</span><span>Large</span></div>
+      </div>
+      <div style="margin-bottom:15px;">
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:3px;"><span style="color:var(--color-text-primary);"><span class="guided-only">How many people will use it?</span><span class="expert-only">Scale &amp; traffic</span></span><i class="ti ti-help-circle" style="font-size:14px; color:var(--color-text-info); cursor:pointer;" aria-hidden="true"></i></div>
+        <div class="f-gloss" style="margin-bottom:7px;">An office tool is "low". A nationwide app during a sale is "high".</div>
+        <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Low</span><span>Steady</span><span class="on">High</span></div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:3px;"><span style="color:var(--color-text-primary);"><span class="guided-only">Must the data always be exact?</span><span class="expert-only">Data consistency</span></span><i class="ti ti-help-circle" style="font-size:14px; color:var(--color-text-info); cursor:pointer;" aria-hidden="true"></i></div>
+        <div class="f-gloss" style="margin-bottom:7px;">Money must be exact instantly. A "likes" count can lag a second — fine.</div>
+        <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span class="on">Eventual OK</span><span>Mixed</span><span>Strong</span></div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:12px; color:var(--color-text-info); margin-top:16px; cursor:pointer;"><i class="ti ti-chevron-down" style="font-size:14px;" aria-hidden="true"></i> Show the other 11 factors</div>
+    </div>
+
+    <div style="border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:15px 16px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
+        <div style="display:flex; align-items:center; gap:8px;"><span class="f-num">2</span><span style="font-size:14px; font-weight:500; color:var(--color-text-primary);"><span class="guided-only">What matters most</span><span class="expert-only">Quality priorities</span></span></div>
+        <span id="f-updating" style="display:none; align-items:center; gap:5px; font-size:11px; color:var(--color-text-info);"><span class="spin"></span>Updating…</span>
+        <span class="expert-only" style="font-size:11px; color:var(--color-text-info); border:0.5px solid var(--color-border-info); border-radius:99px; padding:3px 10px; cursor:pointer;"><i class="ti ti-pencil" style="font-size:12px; vertical-align:-1px;" aria-hidden="true"></i> Adjust weights</span>
+      </div>
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:14px;"><span class="guided-only">Worked out from your answers:</span><span class="expert-only">Derived from factors · normalized to 100%</span></div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div><div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:2px;"><span class="qa-lbl" data-tech="Scalability" style="color:var(--color-text-primary); font-weight:500;">Handling lots of users</span><span class="num" style="color:var(--color-text-secondary);">28%</span></div><div class="f-gloss" style="margin-bottom:5px;">Stays fast when crowds show up</div><div style="height:8px; background:var(--color-background-tertiary); border-radius:99px;"><div style="height:100%; width:28%; background:#1D9E75; border-radius:99px;"></div></div></div>
+        <div><div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:2px;"><span class="qa-lbl" data-tech="Deployability" style="color:var(--color-text-primary); font-weight:500;">Easy, frequent updates</span><span class="num" style="color:var(--color-text-secondary);">22%</span></div><div class="f-gloss" style="margin-bottom:5px;">Teams ship changes without waiting on each other</div><div style="height:8px; background:var(--color-background-tertiary); border-radius:99px;"><div style="height:100%; width:22%; background:#1D9E75; border-radius:99px;"></div></div></div>
+        <div><div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:2px;"><span class="qa-lbl" data-tech="Performance" style="color:var(--color-text-primary); font-weight:500;">Speed &amp; quick response</span><span class="num" style="color:var(--color-text-secondary);">17%</span></div><div class="f-gloss" style="margin-bottom:5px;">Pages and actions feel snappy</div><div style="height:8px; background:var(--color-background-tertiary); border-radius:99px;"><div style="height:100%; width:17%; background:#7F77DD; border-radius:99px;"></div></div></div>
+        <div><div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:2px;"><span class="qa-lbl" data-tech="Availability" style="color:var(--color-text-primary); font-weight:500;">Always staying online</span><span class="num" style="color:var(--color-text-secondary);">14%</span></div><div class="f-gloss" style="margin-bottom:5px;">Keeps working even if one part fails</div><div style="height:8px; background:var(--color-background-tertiary); border-radius:99px;"><div style="height:100%; width:14%; background:#7F77DD; border-radius:99px;"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="f-div"></div>
+
+  <div style="display:flex; align-items:center; gap:8px; margin-bottom:13px;"><span class="f-num">3</span><span style="font-size:15px; font-weight:500; color:var(--color-text-primary);"><span class="guided-only">Your recommended plan</span><span class="expert-only">Recommendation across 5 dimensions</span></span></div>
+
+  <div id="f-empty" style="display:none; text-align:center; border:1px dashed var(--color-border-secondary); border-radius:var(--border-radius-lg); padding:30px 20px;">
+    <i class="ti ti-clipboard-list" style="font-size:30px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+    <div style="font-size:14px; font-weight:500; color:var(--color-text-primary); margin-top:10px;">No plan yet</div>
+    <div style="font-size:12px; color:var(--color-text-secondary); margin-top:4px; margin-bottom:14px;">Pick a scenario above, set the sliders, or load sample data to explore.</div>
+    <span id="f-sample" class="f-btn" style="border-color:var(--color-border-info); color:var(--color-text-info);"><i class="ti ti-flask" style="font-size:14px;" aria-hidden="true"></i>Load sample data</span>
+  </div>
+
+  <div id="f-skeleton" style="display:none;">
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:16px;"><div class="sk" style="height:74px;"></div><div class="sk" style="height:74px;"></div><div class="sk" style="height:74px;"></div><div class="sk" style="height:74px;"></div><div class="sk" style="height:74px;"></div></div>
+    <div class="sk" style="height:120px; margin-bottom:10px;"></div>
+    <div class="sk" style="height:44px; margin-bottom:8px;"></div><div class="sk" style="height:44px;"></div>
+  </div>
+
+  <div id="f-results">
+  <div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:10px;">Tap any layer to see its options and reasoning:</div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:16px;">
+    <div class="f-dim on" data-dim="deployment"><i class="ti ti-affiliate" style="font-size:18px;" aria-hidden="true"></i><div style="font-size:11px; margin-top:7px;"><span class="guided-only">How it's split</span><span class="expert-only">Deployment</span></div><div style="font-size:13px; font-weight:500; line-height:1.3;"><span class="guided-only">Small apps</span><span class="expert-only">Microservices</span></div></div>
+    <div class="f-dim" data-dim="comm"><i class="ti ti-arrows-shuffle" style="font-size:18px; color:var(--color-text-secondary);" aria-hidden="true"></i><div style="font-size:11px; color:var(--color-text-tertiary); margin-top:7px;"><span class="guided-only">How they talk</span><span class="expert-only">Communication</span></div><div style="font-size:13px; font-weight:500; color:var(--color-text-primary); line-height:1.3;">Event-driven</div></div>
+    <div class="f-dim" data-dim="data"><i class="ti ti-database-cog" style="font-size:18px; color:var(--color-text-secondary);" aria-hidden="true"></i><div style="font-size:11px; color:var(--color-text-tertiary); margin-top:7px;"><span class="guided-only">Where data lives</span><span class="expert-only">Data</span></div><div style="font-size:13px; font-weight:500; color:var(--color-text-primary); line-height:1.3;"><span class="guided-only">Own database</span><span class="expert-only">DB per service</span></div></div>
+    <div class="f-dim" data-dim="structure"><i class="ti ti-stack-2" style="font-size:18px; color:var(--color-text-secondary);" aria-hidden="true"></i><div style="font-size:11px; color:var(--color-text-tertiary); margin-top:7px;"><span class="guided-only">Inside each app</span><span class="expert-only">Code structure</span></div><div style="font-size:13px; font-weight:500; color:var(--color-text-primary); line-height:1.3;">Hexagonal</div></div>
+    <div class="f-dim" data-dim="frontend"><i class="ti ti-layout-grid" style="font-size:18px; color:var(--color-text-secondary);" aria-hidden="true"></i><div style="font-size:11px; color:var(--color-text-tertiary); margin-top:7px;"><span class="guided-only">The screens</span><span class="expert-only">Frontend</span></div><div style="font-size:13px; font-weight:500; color:var(--color-text-primary); line-height:1.3;">Micro-frontends</div></div>
+  </div>
+
+  <div id="f-dimdetail"></div>
+
+  <div style="border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:16px; margin-top:16px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; flex-wrap:wrap; gap:6px;">
+      <span style="font-size:14px; font-weight:500; color:var(--color-text-primary);"><i class="ti ti-radar-2" style="font-size:17px; vertical-align:-3px; margin-right:7px; color:var(--color-text-info);" aria-hidden="true"></i><span class="guided-only">See exactly why — compare the build styles</span><span class="expert-only">Trade-off radar — build styles × 12 quality attributes</span></span>
+      <span id="f-gridtoggle" class="f-btn expert-only"><i class="ti ti-table" style="font-size:13px;" aria-hidden="true"></i>Data grid</span>
+    </div>
+    <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:14px;">Tap a name to show or hide it. Further out = stronger. The ranking scores each against your priorities.</div>
+    <div id="r-chips" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;"></div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:18px; align-items:start;">
+      <div style="min-height:340px; display:flex; align-items:center; justify-content:center;"><svg id="r-svg" viewBox="0 0 380 360" width="100%" style="max-width:380px;" role="img" aria-label="Radar chart of architectures across twelve quality attributes"></svg></div>
+      <div>
+        <div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:13px;">Best fit for <span style="color:var(--color-text-primary); font-weight:500;">your</span> priorities</div>
+        <div id="r-rank" style="display:flex; flex-direction:column; gap:9px;"></div>
+        <div id="r-verdict" style="display:flex; gap:9px; align-items:flex-start; background:var(--color-background-info); border-radius:var(--border-radius-md); padding:11px 13px; margin-top:13px;"><i class="ti ti-bulb" style="font-size:17px; color:var(--color-text-info); margin-top:1px;" aria-hidden="true"></i><div id="r-verdict-text" style="font-size:12px; color:var(--color-text-info); line-height:1.6;"></div></div>
+      </div>
+    </div>
+    <div id="f-grid" style="display:none; margin-top:16px; max-height:230px; overflow:auto; border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-md);"></div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:16px;">
+    <div style="border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px 15px;">
+      <div style="font-size:13px; font-weight:500; color:var(--color-text-primary); margin-bottom:4px;"><i class="ti ti-arrows-exchange" style="font-size:16px; vertical-align:-3px; margin-right:6px; color:var(--color-text-info);" aria-hidden="true"></i>What would change this?</div>
+      <div style="font-size:11px; color:var(--color-text-tertiary); margin-bottom:12px;">How sensitive your top pick is to each answer</div>
+      <div style="display:flex; gap:9px; margin-bottom:10px; align-items:flex-start;"><i class="ti ti-arrow-down-right" style="font-size:15px; color:var(--color-text-warning); margin-top:1px;" aria-hidden="true"></i><span style="font-size:12px; color:var(--color-text-secondary); line-height:1.5;">If your team were <span style="color:var(--color-text-primary); font-weight:500;">Small</span> + DevOps low → <span style="color:var(--color-text-primary); font-weight:500;">Modular monolith</span> would win.</span></div>
+      <div style="display:flex; gap:9px; margin-bottom:10px; align-items:flex-start;"><i class="ti ti-arrow-up-right" style="font-size:15px; color:var(--color-text-warning); margin-top:1px;" aria-hidden="true"></i><span style="font-size:12px; color:var(--color-text-secondary); line-height:1.5;">If data had to be <span style="color:var(--color-text-primary); font-weight:500;">always exact</span> → strongly-consistent core first.</span></div>
+      <div style="display:flex; gap:9px; align-items:flex-start;"><i class="ti ti-shield-check" style="font-size:15px; color:var(--color-text-success); margin-top:1px;" aria-hidden="true"></i><span style="font-size:12px; color:var(--color-text-secondary); line-height:1.5;">Otherwise the pick is <span style="color:var(--color-text-primary); font-weight:500;">robust</span>.</span></div>
+    </div>
+
+    <div style="border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:14px 15px;">
+      <div style="font-size:13px; font-weight:500; color:var(--color-text-primary); margin-bottom:4px;"><i class="ti ti-git-branch" style="font-size:16px; vertical-align:-3px; margin-right:6px; color:var(--color-text-info);" aria-hidden="true"></i>Already have a system?</div>
+      <div style="font-size:11px; color:var(--color-text-tertiary); margin-bottom:11px;">Get a safe, step-by-step path — not a risky rewrite</div>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;">
+        <span class="f-mig" data-mig="fresh">Starting fresh</span>
+        <span class="f-mig on" data-mig="big">One big app today</span>
+        <span class="f-mig" data-mig="mix">Mix of old systems</span>
+      </div>
+      <div id="f-migpath" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:11px; align-items:flex-start; border:0.5px solid var(--color-border-warning); background:var(--color-background-warning); border-radius:var(--border-radius-md); padding:12px 15px; margin-top:14px;">
+    <i class="ti ti-alert-triangle" style="font-size:19px; color:var(--color-text-warning); margin-top:1px;" aria-hidden="true"></i>
+    <div><div style="font-size:13px; font-weight:500; color:var(--color-text-warning); margin-bottom:3px;"><span class="guided-only">A common mistake to avoid</span><span class="expert-only">Anti-pattern: distributed monolith</span></div><div style="font-size:12px; color:var(--color-text-warning); line-height:1.55;"><span class="guided-only">If you split into small apps but share one single database, you get the worst of both. Give each its own data store — your plan already does.</span><span class="expert-only">Independent services sharing one database can't deploy or scale separately. Your blueprint uses database-per-service — keep it.</span></div></div>
+  </div>
+
+  <details style="margin-top:14px;">
+    <summary><i class="ti ti-math-function" style="font-size:16px; color:var(--color-text-info);" aria-hidden="true"></i><span class="guided-only">How does it decide? (nothing is hidden)</span><span class="expert-only">How is this scored? — open the model</span><i class="ti ti-chevron-down" style="font-size:14px; color:var(--color-text-tertiary); margin-left:auto;" aria-hidden="true"></i></summary>
+    <div style="padding:0 14px 14px; font-size:12px; color:var(--color-text-secondary); line-height:1.65;">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; color:var(--color-text-primary); font-weight:500; font-size:12px;">
+        <span style="background:var(--color-background-secondary); border-radius:99px; padding:4px 10px;">Your answers</span><i class="ti ti-arrow-right" style="font-size:13px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+        <span style="background:var(--color-background-secondary); border-radius:99px; padding:4px 10px;">Priorities</span><i class="ti ti-arrow-right" style="font-size:13px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+        <span style="background:var(--color-background-secondary); border-radius:99px; padding:4px 10px;">Fit 1–5</span><i class="ti ti-arrow-right" style="font-size:13px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+        <span style="background:var(--color-background-info); color:var(--color-text-info); border-radius:99px; padding:4px 10px;">Score = Σ weight × fit</span>
+      </div>
+      Each architecture is rated 1–5 on 12 quality attributes (based on the <span style="color:var(--color-text-primary); font-weight:500;">ISO/IEC 25010</span> model). Your answers set how much each quality matters; the score is each rating times its weight, added up. <span class="expert-only">Fit ratings and the factor–weight mapping live in editable config. Mirrors an ATAM-style utility-tree analysis.</span><span class="guided-only">Adjust the weights yourself in Expert mode and the recommendation updates instantly.</span>
+    </div>
+  </details>
+  </div>
+
+  <div class="f-div"></div>
+
+  <div style="display:flex; align-items:center; gap:8px; margin-bottom:11px;"><span class="f-num">4</span><span style="font-size:15px; font-weight:500; color:var(--color-text-primary);"><span class="guided-only">Save it or share it</span><span class="expert-only">Export</span></span></div>
+  <div style="display:flex; flex-wrap:wrap; gap:9px;">
+    <span class="f-act" data-act="save" data-label="Document saved · ready to download" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-background-primary); background:var(--color-text-info); border-radius:var(--border-radius-md); padding:10px 16px; cursor:pointer; font-weight:500;"><i class="ti ti-file-text" style="font-size:16px;" aria-hidden="true"></i><span class="guided-only">Save as a document</span><span class="expert-only">Export ADR</span> <span class="kbd" style="margin-left:2px;">⌘S</span></span>
+    <span class="f-act" data-act="report" data-label="Report generated" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-report-analytics" style="font-size:16px;" aria-hidden="true"></i>Full report</span>
+    <span class="f-act expert-only" data-act="csv" data-label="scores.csv downloaded" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-file-spreadsheet" style="font-size:16px;" aria-hidden="true"></i>CSV</span>
+    <span class="f-act expert-only" data-act="json" data-label="assessment.json downloaded" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-code" style="font-size:16px;" aria-hidden="true"></i>JSON</span>
+    <span class="f-act" data-act="share" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-share-2" style="font-size:16px;" aria-hidden="true"></i><span class="guided-only">Share a link</span><span class="expert-only">Share</span></span>
+  </div>
+  <div id="f-exportstatus" style="margin-top:11px;"></div>
+  <div style="display:flex; align-items:center; gap:7px; margin-top:12px; font-size:11px; color:var(--color-text-tertiary); flex-wrap:wrap;">
+    <i class="ti ti-history" style="font-size:13px;" aria-hidden="true"></i>
+    <span class="guided-only">Saved automatically · view preferences remembered</span><span class="expert-only">Audit: last edited by you · just now · v3 · preferences persisted</span>
+    <span style="width:1px; height:11px; background:var(--color-border-secondary);"></span>
+    <i class="ti ti-link" style="font-size:13px;" aria-hidden="true"></i><span>Traced to requirement: handle peak-season traffic</span>
+  </div>
+
+</div>
+
+<div class="f-ov" id="f-palette">
+  <div style="width:100%; max-width:440px; background:var(--color-background-primary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-lg); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.2);">
+    <div style="display:flex; align-items:center; gap:9px; padding:12px 14px; border-bottom:0.5px solid var(--color-border-tertiary);">
+      <i class="ti ti-search" style="font-size:16px; color:var(--color-text-tertiary);" aria-hidden="true"></i>
+      <input id="f-palinput" placeholder="Type a command or search…" style="flex:1; border:none; outline:none; background:transparent; font-size:14px; color:var(--color-text-primary);" />
+      <span class="kbd">Esc</span>
+    </div>
+    <div id="f-pallist" style="max-height:280px; overflow:auto; padding:6px;"></div>
+  </div>
+</div>
+
+<div class="f-ov" id="f-shortcuts">
+  <div style="width:100%; max-width:360px; background:var(--color-background-primary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-lg); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.2);">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:0.5px solid var(--color-border-tertiary);"><span style="font-size:14px; font-weight:500; color:var(--color-text-primary);">Keyboard shortcuts</span><span class="kbd">Esc</span></div>
+    <div style="padding:12px 16px; display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--color-text-secondary);"><span>Command palette</span><span class="kbd">⌘K</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--color-text-secondary);"><span>Save as document</span><span class="kbd">⌘S</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--color-text-secondary);"><span>Undo last action</span><span class="kbd">⌘Z</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--color-text-secondary);"><span>Close / cancel</span><span class="kbd">Esc</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--color-text-secondary);"><span>Confirm</span><span class="kbd">Enter</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+</div><!-- /.page -->
+
+<script>
+(function(){
+  var app=document.getElementById("f-app");
+  function save(){ var s=document.getElementById("f-savestate"); s.innerHTML='<span class="spin"></span>Saving…'; clearTimeout(s._t); s._t=setTimeout(function(){ s.innerHTML='<i class="ti ti-circle-check" style="font-size:13px; color:var(--color-text-success);"></i>All changes saved'; },700); }
+  function pulse(){ var u=document.getElementById("f-updating"); u.style.display="inline-flex"; clearTimeout(u._t); u._t=setTimeout(function(){u.style.display="none";},650); save(); }
+
+  function setMode(mode){
+    app.className=mode;
+    document.getElementById("m-guided").classList.toggle("on",mode==="guided");
+    document.getElementById("m-expert").classList.toggle("on",mode==="expert");
+    document.querySelectorAll(".qa-lbl").forEach(function(s){ if(mode==="expert"){ if(!s.dataset.plain) s.dataset.plain=s.textContent; s.textContent=s.dataset.tech; } else if(s.dataset.plain){ s.textContent=s.dataset.plain; } });
+    renderDim(currentDim);
+  }
+  document.getElementById("m-guided").addEventListener("click",function(){setMode("guided");});
+  document.getElementById("m-expert").addEventListener("click",function(){setMode("expert");});
+  document.getElementById("f-dark").addEventListener("click",function(){ var light=document.documentElement.classList.toggle("light"); var ic=this.querySelector("i"); if(ic) ic.className=light?"ti ti-sun":"ti ti-moon"; });
+
+  document.querySelectorAll('.f-seg').forEach(function(seg){ seg.querySelectorAll('span').forEach(function(s){ s.addEventListener('click',function(){ seg.querySelectorAll('span').forEach(function(x){x.classList.remove('on');}); s.classList.add('on'); recompute(); }); }); });
+  document.querySelectorAll('.f-chip').forEach(function(c){ c.addEventListener('click',function(){ var t=c.textContent.trim(); if(t==='EN'||t==='ID'){ document.querySelectorAll('.f-chip').forEach(function(x){var xt=x.textContent.trim(); if(xt==='EN'||xt==='ID')x.classList.remove('on');}); c.classList.add('on'); return; } if(c.classList.contains('f-preset')){ document.querySelectorAll('.f-preset').forEach(function(x){x.classList.remove('on');}); c.classList.add('on'); recompute(); } }); });
+
+  // perceived performance: skeleton on recompute (Task 1)
+  function recompute(){ var sk=document.getElementById("f-skeleton"), rs=document.getElementById("f-results"); document.getElementById("f-empty").style.display="none"; rs.style.display="none"; sk.style.display="block"; pulse(); setTimeout(function(){ sk.style.display="none"; rs.style.display="block"; },520); }
+  function showResults(){ document.getElementById("f-results").style.display="block"; document.getElementById("f-empty").style.display="none"; document.getElementById("f-skeleton").style.display="none"; }
+  function showEmpty(){ document.getElementById("f-results").style.display="none"; document.getElementById("f-skeleton").style.display="none"; document.getElementById("f-empty").style.display="block"; }
+  document.getElementById("f-sample").addEventListener("click",function(){ document.querySelector('.f-preset').classList.add('on'); recompute(); });
+
+  // Reset with confirm + undo (Task 4)
+  var reset=document.getElementById("m-reset"), rstatus=document.getElementById("f-resetstatus");
+  reset.addEventListener("click",function(){
+    rstatus.innerHTML='<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--color-background-warning); border-radius:var(--border-radius-md); padding:9px 12px;"><span style="font-size:12px; color:var(--color-text-warning);">Reset all your answers?</span><span id="r-yes" style="font-size:11px; font-weight:500; background:var(--color-text-warning); color:var(--color-background-primary); border-radius:99px; padding:4px 12px; cursor:pointer;">Yes, reset</span><span id="r-no" style="font-size:11px; color:var(--color-text-secondary); cursor:pointer;">Cancel</span></div>';
+    document.getElementById("r-no").addEventListener("click",function(){ rstatus.innerHTML=""; });
+    document.getElementById("r-yes").addEventListener("click",function(){ document.querySelectorAll('.f-preset').forEach(function(x){x.classList.remove('on');}); showEmpty(); save();
+      rstatus.innerHTML='<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 12px;"><i class="ti ti-circle-check" style="font-size:15px; color:var(--color-text-success);"></i><span style="font-size:12px; color:var(--color-text-secondary);">Answers reset.</span><span id="r-undo" style="font-size:11px; font-weight:500; color:var(--color-text-info); cursor:pointer;">Undo</span></div>';
+      document.getElementById("r-undo").addEventListener("click",function(){ document.querySelector('.f-preset').classList.add('on'); showResults(); rstatus.innerHTML=''; }); });
+  });
+
+  // Export with states + 3-layer error + request id (Task 1, 5)
+  var estatus=document.getElementById("f-exportstatus"), shareFailed=false, reqId="req_"+Math.random().toString(36).slice(2,8);
+  function ok(msg){ estatus.innerHTML='<div style="display:flex; align-items:center; gap:8px; background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 12px;"><i class="ti ti-circle-check" style="font-size:15px; color:var(--color-text-success);"></i><span style="font-size:12px; color:var(--color-text-secondary);">'+msg+'</span></div>'; }
+  function load(msg){ estatus.innerHTML='<div style="display:flex; align-items:center; gap:8px; padding:9px 12px;"><span class="spin"></span><span style="font-size:12px; color:var(--color-text-secondary);">'+msg+'</span></div>'; }
+  function errShare(retryFn){ estatus.innerHTML='<div style="background:var(--color-background-danger); border-radius:var(--border-radius-md); padding:10px 13px;"><div style="display:flex; align-items:center; gap:7px; margin-bottom:5px;"><i class="ti ti-alert-circle" style="font-size:15px; color:var(--color-text-danger);"></i><span style="font-size:12px; font-weight:500; color:var(--color-text-danger);">Couldn\'t create the share link</span></div><div style="font-size:11px; color:var(--color-text-danger); line-height:1.55; margin-bottom:7px;">The network timed out — this is on our side, not your input. Your work is saved. Try again, or check the docs.</div><div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;"><span id="e-retry" style="font-size:11px; font-weight:500; color:var(--color-text-danger); cursor:pointer; text-decoration:underline;">Retry</span><span style="font-size:11px; color:var(--color-text-danger);">docs →</span><span class="num" style="font-size:10px; color:var(--color-text-danger); opacity:.8;">NET_TIMEOUT · '+reqId+'</span><span id="e-copy" style="font-size:10px; color:var(--color-text-danger); cursor:pointer; text-decoration:underline;">copy ID</span></div></div>'; document.getElementById("e-retry").addEventListener("click",retryFn); document.getElementById("e-copy").addEventListener("click",function(){ this.textContent="copied ✓"; }); }
+  function doExport(act, btn){
+    if(btn){ if(btn.classList.contains('busy'))return; btn.classList.add('busy'); }
+    if(act==='share'){ load('Creating share link…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); if(!shareFailed){ shareFailed=true; errShare(function(){ doExport('share'); }); } else { ok('Link copied to clipboard.'); } },820); }
+    else { var labels={save:'Building your document…',report:'Generating report…',csv:'Exporting CSV…',json:'Exporting JSON…'}; var done={save:'Document saved · ready to download',report:'Report generated',csv:'scores.csv downloaded',json:'assessment.json downloaded'}; load(labels[act]||'Working…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); ok(done[act]||'Done'); },820); }
+  }
+  document.querySelectorAll('.f-act').forEach(function(b){ b.addEventListener('click',function(){ doExport(b.dataset.act,b); }); });
+
+  // flash helper (small inline note near export)
+  function flash(msg){ ok(msg); }
+
+  // Command palette (Task 2) + shortcuts
+  var palette=document.getElementById("f-palette"), palinput=document.getElementById("f-palinput"), pallist=document.getElementById("f-pallist"), shortcuts=document.getElementById("f-shortcuts");
+  var ACTIONS=[
+    {l:"Save as document",h:"⌘S",fn:function(){doExport('save');}},
+    {l:"Export full report",fn:function(){doExport('report');}},
+    {l:"Export as CSV",fn:function(){setMode('expert');doExport('csv');}},
+    {l:"Export as JSON",fn:function(){setMode('expert');doExport('json');}},
+    {l:"Share link",fn:function(){doExport('share');}},
+    {l:"Reset answers",fn:function(){document.getElementById('m-reset').click();}},
+    {l:"Switch to Expert mode",fn:function(){setMode('expert');}},
+    {l:"Switch to Guided mode",fn:function(){setMode('guided');}},
+    {l:"Toggle data grid comparison",fn:function(){setMode('expert');toggleGrid(true);}},
+    {l:"Load sample data",fn:function(){document.getElementById('f-sample').click();}},
+    {l:"Keyboard shortcuts",fn:function(){openOv(shortcuts);}}
+  ];
+  function renderPal(q){ pallist.innerHTML=""; var ql=(q||"").toLowerCase(); ACTIONS.filter(function(a){return a.l.toLowerCase().indexOf(ql)>=0;}).forEach(function(a,i){ var row=document.createElement("div"); row.className="f-palrow"; row.style.cssText="display:flex; align-items:center; justify-content:space-between; padding:9px 11px; border-radius:var(--border-radius-md); cursor:pointer; font-size:13px; color:var(--color-text-primary);"+(i===0?"background:var(--color-background-info);":""); row.innerHTML='<span>'+a.l+'</span>'+(a.h?'<span class="kbd">'+a.h+'</span>':''); row.addEventListener("mouseenter",function(){ pallist.querySelectorAll('.f-palrow').forEach(function(x){x.style.background="";}); row.style.background="var(--color-background-info)"; }); row.addEventListener("click",function(){ closeOv(); a.fn(); }); pallist.appendChild(row); }); }
+  function openOv(ov){ ov.classList.add("open"); if(ov===palette){ palinput.value=""; renderPal(""); setTimeout(function(){palinput.focus();},30); } }
+  function closeOv(){ palette.classList.remove("open"); shortcuts.classList.remove("open"); }
+  document.getElementById("f-cmdk").addEventListener("click",function(){openOv(palette);});
+  document.getElementById("f-help").addEventListener("click",function(){openOv(shortcuts);});
+  palette.addEventListener("click",function(e){ if(e.target===palette) closeOv(); });
+  shortcuts.addEventListener("click",function(e){ if(e.target===shortcuts) closeOv(); });
+  palinput.addEventListener("input",function(){ renderPal(palinput.value); });
+  palinput.addEventListener("keydown",function(e){ if(e.key==="Enter"){ var first=pallist.querySelector('.f-palrow'); if(first) first.click(); } });
+  document.addEventListener("keydown",function(e){
+    if((e.metaKey||e.ctrlKey)&&(e.key==="k"||e.key==="K")){ e.preventDefault(); openOv(palette); }
+    else if((e.metaKey||e.ctrlKey)&&(e.key==="s"||e.key==="S")){ e.preventDefault(); doExport('save'); }
+    else if(e.key==="Escape"){ closeOv(); }
+  });
+
+  // Sortable data grid (Task 3)
+  var grid=document.getElementById("f-grid"), gridOpen=false, sortKey="score", sortDir=-1;
+  function toggleGrid(force){ gridOpen=(force!==undefined)?force:!gridOpen; grid.style.display=gridOpen?"block":"none"; if(gridOpen) renderGrid(); }
+  document.getElementById("f-gridtoggle").addEventListener("click",function(){toggleGrid();});
+  var GCOLS=[{k:"name",t:"Architecture"},{k:"score",t:"Score%"},{k:"scal",t:"Scal"},{k:"deploy",t:"Deploy"},{k:"perf",t:"Perf"},{k:"avail",t:"Avail"},{k:"cost",t:"Cost"}];
+  function gridRows(){ return ARCHS.map(function(a){ return {name:a.name,score:sc(a),scal:a.fit[1],deploy:a.fit[5],perf:a.fit[0],avail:a.fit[2],cost:a.fit[10]}; }); }
+  function renderGrid(){ var rows=gridRows().sort(function(x,y){ var v=x[sortKey]>y[sortKey]?1:(x[sortKey]<y[sortKey]?-1:0); return v*sortDir; });
+    var h='<table><thead><tr>'; GCOLS.forEach(function(c){ var arrow=sortKey===c.k?(sortDir<0?' ↓':' ↑'):''; h+='<th data-k="'+c.k+'">'+c.t+arrow+'</th>'; }); h+='</tr></thead><tbody>';
+    rows.forEach(function(r){ h+='<tr><td>'+r.name+'</td><td class="num" style="font-weight:500;">'+r.score+'</td><td class="num">'+r.scal+'</td><td class="num">'+r.deploy+'</td><td class="num">'+r.perf+'</td><td class="num">'+r.avail+'</td><td class="num">'+r.cost+'</td></tr>'; }); h+='</tbody></table>';
+    grid.innerHTML=h; grid.querySelectorAll('th').forEach(function(th){ th.addEventListener("click",function(){ var k=th.dataset.k; if(sortKey===k) sortDir*=-1; else { sortKey=k; sortDir=(k==="name")?1:-1; } renderGrid(); }); });
+  }
+
+  var DIMS={
+    deployment:{icon:"ti-affiliate",opts:[{n:"Microservices",s:84,r:{g:"Several small apps — best for crowds and independent teams",e:"Independent services; strongest on scalability & deployability"}},{n:"Serverless",s:79},{n:"Modular monolith",s:67},{n:"Layered (N-tier)",s:61},{n:"Monolith",s:56}],good:"handles big crowds well, and teams update their own part without stepping on each other",cost:"more moving parts to manage, and keeping data in sync is harder — which you said is OK",know:"needs a capable team and good automation; if that's not ready, the runner-up is gentler",contrib:[["Scalability","+1.4"],["Deployability","+1.1"],["Availability","+0.7"],["Consistency","-0.4"]]},
+    comm:{icon:"ti-arrows-shuffle",opts:[{n:"Event-driven",s:82,r:{g:"Parts react to events — very scalable and resilient",e:"Pub/sub; high decoupling, eventual consistency"}},{n:"Async messaging",s:74,r:{g:"Parts leave messages for each other — resilient",e:"Queues/brokers; decoupled, buffered load"}},{n:"Streaming",s:70,r:{g:"Continuous flow of live data — great for sensors",e:"Event streams; high throughput, real-time"}},{n:"Synchronous",s:58,r:{g:"Parts ask and wait — simplest but tighter coupling",e:"Request/response; simple, tighter coupling"}}]},
+    data:{icon:"ti-database-cog",opts:[{n:"Database per service",s:85,r:{g:"Each app keeps its own data — stays independent",e:"Per-service stores; enables independent deploy/scale"}},{n:"CQRS",s:72,r:{g:"Separate paths for reading and writing — fast reads",e:"Split read/write models; scales divergent loads"}},{n:"Polyglot persistence",s:68,r:{g:"Right database for each job",e:"Fit-for-purpose stores; higher ops overhead"}},{n:"Event sourcing",s:60,r:{g:"Stores every change as history — full audit trail",e:"Append-only log; audit + replay, complex"}},{n:"Single shared database",s:52,r:{g:"One database for everything — simple but limiting",e:"Shared store; simple, blocks independent scaling"}}]},
+    structure:{icon:"ti-stack-2",opts:[{n:"Hexagonal",s:80,r:{g:"Business logic kept separate from technical details",e:"Ports & adapters; isolates core from IO/frameworks"}},{n:"Clean Architecture",s:78,r:{g:"Strict layers around the core rules",e:"Dependency rule inward; testable core"}},{n:"Vertical slice",s:70,r:{g:"Organized by feature, not by layer",e:"Feature-sliced; low coupling between features"}},{n:"Layered",s:62,r:{g:"Simple top-to-bottom layers",e:"Classic layering; quick but can tangle over time"}}]},
+    frontend:{icon:"ti-layout-grid",opts:[{n:"Micro-frontends",s:76,r:{g:"Teams own their own screens independently",e:"Independently deployable UI; suits large teams"}},{n:"Single-page app",s:72,r:{g:"One smooth app in the browser",e:"SPA; rich interactivity, one deployable"}},{n:"Server-rendered",s:68,r:{g:"Pages built on the server — fast first load, good SEO",e:"SSR/SSG; strong first paint & SEO"}}]}
+  };
+  var currentDim="deployment";
+  function renderDim(id){ currentDim=id; var g=app.className==="guided"; var d=DIMS[id], opts=d.opts.slice().sort(function(a,b){return b.s-a.s;}); var top=opts[0], gap=top.s-opts[1].s, robust=gap>=8;
+    var h='<div style="border:2px solid var(--color-border-info); background:var(--color-background-info); border-radius:var(--border-radius-md); padding:15px 16px;">';
+    h+='<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; flex-wrap:wrap; gap:7px;"><span style="display:flex; align-items:center; gap:9px;"><i class="ti '+d.icon+'" style="font-size:20px; color:var(--color-text-info);"></i><span style="font-size:16px; font-weight:500; color:var(--color-text-info);">'+top.n+'</span></span>';
+    h+='<span style="display:flex; align-items:center; gap:7px;"><span style="font-size:11px; background:var(--color-text-info); color:var(--color-background-primary); padding:2px 9px; border-radius:99px;">Best fit</span><span style="font-size:11px; color:var(--color-text-info); border:0.5px solid var(--color-border-info); padding:2px 9px; border-radius:99px;"><i class="ti '+(robust?"ti-shield-check":"ti-scale")+'" style="font-size:12px; vertical-align:-1px;"></i> '+(robust?"Robust pick":"Close call")+'</span><span class="num" style="font-size:16px; font-weight:500; color:var(--color-text-info);">'+top.s+'%</span></span></div>';
+    if(top.r) h+='<div style="font-size:13px; color:var(--color-text-info); line-height:1.55;">'+(g?top.r.g:top.r.e)+'.</div>';
+    if(id==="deployment"){
+      h+='<div class="guided-only" style="background:var(--color-background-primary); border-radius:var(--border-radius-md); padding:12px 14px; margin-top:12px;"><div style="font-size:12px; font-weight:500; color:var(--color-text-primary); margin-bottom:9px;"><i class="ti ti-message-circle" style="font-size:15px; vertical-align:-2px; margin-right:5px; color:var(--color-text-info);"></i>What this means for you</div>';
+      h+='<div style="display:flex; gap:9px; margin-bottom:9px;"><i class="ti ti-thumb-up" style="font-size:16px; color:var(--color-text-success); margin-top:1px;"></i><span style="font-size:12px; color:var(--color-text-secondary); line-height:1.55;"><span style="color:var(--color-text-primary); font-weight:500;">The good:</span> '+d.good+'.</span></div>';
+      h+='<div style="display:flex; gap:9px; margin-bottom:9px;"><i class="ti ti-thumb-down" style="font-size:16px; color:var(--color-text-warning); margin-top:1px;"></i><span style="font-size:12px; color:var(--color-text-secondary); line-height:1.55;"><span style="color:var(--color-text-primary); font-weight:500;">The cost:</span> '+d.cost+'.</span></div>';
+      h+='<div style="display:flex; gap:9px;"><i class="ti ti-bulb" style="font-size:16px; color:var(--color-text-info); margin-top:1px;"></i><span style="font-size:12px; color:var(--color-text-secondary); line-height:1.55;"><span style="color:var(--color-text-primary); font-weight:500;">Good to know:</span> '+d.know+'.</span></div></div>';
+      h+='<div class="expert-only" style="background:var(--color-background-primary); border-radius:var(--border-radius-md); padding:12px 14px; margin-top:12px;"><div style="font-size:11px; color:var(--color-text-tertiary); margin-bottom:9px;">Top contributing attributes (weight × fit)</div>';
+      d.contrib.forEach(function(c){ var neg=parseFloat(c[1])<0; var w=Math.min(100,Math.abs(parseFloat(c[1]))/1.4*100); h+='<div style="display:grid; grid-template-columns:100px 1fr 38px; align-items:center; gap:9px; margin-bottom:7px;"><span style="font-size:12px; color:var(--color-text-'+(neg?"secondary":"primary")+');">'+c[0]+'</span><div style="height:6px; background:var(--color-background-tertiary); border-radius:99px;'+(neg?"direction:rtl;":"")+'"><div style="height:100%; width:'+w+'%; background:'+(neg?"var(--color-text-warning)":"#1D9E75")+'; border-radius:99px;"></div></div><span class="num" style="font-size:11px; color:var(--color-text-'+(neg?"warning":"secondary")+'); text-align:right;">'+c[1]+'</span></div>'; });
+      h+='</div><div style="font-size:11px; color:var(--color-text-info); margin-top:11px; display:flex; align-items:center; gap:5px;"><i class="ti ti-arrow-down" style="font-size:13px;"></i> All five build styles are compared in the radar below.</div>';
+    }
+    h+='</div>';
+    if(id!=="deployment"){ h+='<div style="margin-top:9px; display:flex; flex-direction:column; gap:8px;">'; opts.slice(1).forEach(function(o){ h+='<div class="f-row" style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:11px 14px;"><div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:'+(g?"3px":"6px")+';"><span style="font-size:13px; color:var(--color-text-primary);">'+o.n+'</span><span class="num" style="font-size:12px; color:var(--color-text-secondary);">'+o.s+'%</span></div>'; if(g&&o.r) h+='<div class="f-gloss" style="margin-bottom:6px;">'+o.r.g+'</div>'; h+='<div style="height:6px; background:var(--color-background-tertiary); border-radius:99px;"><div style="height:100%; width:'+o.s+'%; background:var(--color-border-secondary); border-radius:99px;"></div></div></div>'; }); h+='</div>'; }
+    document.getElementById("f-dimdetail").innerHTML=h;
+  }
+  var dimCards=document.querySelectorAll('.f-dim');
+  dimCards.forEach(function(card){ card.addEventListener('click',function(){ dimCards.forEach(function(x){ x.classList.remove('on'); x.querySelectorAll('div').forEach(function(t,i){t.style.color=i===0?'var(--color-text-tertiary)':'var(--color-text-primary)';}); var ic=x.querySelector('i'); if(ic) ic.style.color='var(--color-text-secondary)'; }); card.classList.add('on'); card.querySelectorAll('div').forEach(function(t){t.style.color='var(--color-text-info)';}); var ic=card.querySelector('i'); if(ic) ic.style.color='var(--color-text-info)'; renderDim(card.dataset.dim); }); });
+
+  var MIG={ fresh:["Start with a Modular monolith — fast and simple","Keep clear module boundaries from day one","Extract a module into its own service only when it proves a bottleneck","Grow into microservices where the benefit is real"], big:["Add clear module boundaries inside the current app","Wrap the seams with tests and CI","Carve out the busiest area as the first service (Strangler Fig)","Repeat for the next bottleneck, retiring old code as you go"], mix:["Put an API gateway / anti-corruption layer in front","Route new features to new services","Strangle legacy piece by piece behind the gateway","Retire old systems as traffic shifts over"] };
+  function renderMig(key){ var steps=MIG[key], box=document.getElementById("f-migpath"); box.innerHTML=""; steps.forEach(function(s,i){ var row=document.createElement("div"); row.style.cssText="display:flex; gap:9px; align-items:flex-start;"; row.innerHTML='<span class="num" style="width:18px; height:18px; border-radius:50%; background:var(--color-background-info); color:var(--color-text-info); font-size:10px; display:flex; align-items:center; justify-content:center; flex:none; margin-top:1px;">'+(i+1)+'</span><span style="font-size:12px; color:var(--color-text-secondary); line-height:1.5;">'+s+'</span>'; box.appendChild(row); }); }
+  document.querySelectorAll('.f-mig').forEach(function(m){ m.addEventListener('click',function(){ document.querySelectorAll('.f-mig').forEach(function(x){x.classList.remove('on');}); m.classList.add('on'); renderMig(m.dataset.mig); }); });
+
+  var ATTRS=["Performance","Scalability","Availability","Security","Maintainable","Deploy ease","Testability","Monitoring","Consistency","Integration","Low cost","Speed to ship"];
+  var WEIGHTS=[0.17,0.28,0.14,0.03,0.05,0.22,0.02,0.02,0.02,0.02,0.02,0.01];
+  var ARCHS=[{name:"Microservices",color:"#1D9E75",fit:[3,5,4,4,4,5,3,3,2,4,2,2],on:true},{name:"Serverless",color:"#D85A30",fit:[3,5,4,3,3,4,3,3,3,3,4,4],on:true},{name:"Modular monolith",color:"#7F77DD",fit:[4,3,3,4,4,3,4,4,5,3,4,4],on:true},{name:"Monolith",color:"#378ADD",fit:[4,2,3,4,3,2,4,4,5,3,4,5],on:false},{name:"Layered (N-tier)",color:"#BA7517",fit:[4,3,3,4,3,2,3,3,5,3,4,4],on:false}];
+  var NS="http://www.w3.org/2000/svg", svg=document.getElementById("r-svg"); var cx=190, cy=178, R=118, N=12;
+  function ang(i){ return (-90+i*(360/N))*Math.PI/180; }
+  function pt(i,v){ var r=(v/5)*R; return [cx+r*Math.cos(ang(i)), cy+r*Math.sin(ang(i))]; }
+  function el(t,a){ var e=document.createElementNS(NS,t); for(var k in a) e.setAttribute(k,a[k]); return e; }
+  function gridR(){ for(var ring=1;ring<=5;ring++){ var p=""; for(var i=0;i<N;i++){ var q=pt(i,ring); p+=q[0].toFixed(1)+","+q[1].toFixed(1)+" "; } svg.appendChild(el("polygon",{points:p.trim(),fill:"none",stroke:"var(--color-border-tertiary)","stroke-width":ring===5?"1":"0.5"})); }
+    for(var i=0;i<N;i++){ var pe=pt(i,5); svg.appendChild(el("line",{x1:cx,y1:cy,x2:pe[0].toFixed(1),y2:pe[1].toFixed(1),stroke:"var(--color-border-tertiary)","stroke-width":"0.5"})); var lp=[cx+(R+15)*Math.cos(ang(i)), cy+(R+15)*Math.sin(ang(i))]; var c=Math.cos(ang(i)), an=c>0.25?"start":(c<-0.25?"end":"middle"); var tx=el("text",{x:lp[0].toFixed(1),y:(lp[1]+3).toFixed(1),"text-anchor":an,"font-size":"11","font-family":"var(--font-sans)",fill:"var(--color-text-secondary)"}); tx.textContent=ATTRS[i]; svg.appendChild(tx); } }
+  var pl=el("g",{}); svg.appendChild(pl);
+  function polys(){ while(pl.firstChild) pl.removeChild(pl.firstChild); ARCHS.forEach(function(a){ if(!a.on)return; var p=""; for(var i=0;i<N;i++){ var q=pt(i,a.fit[i]); p+=q[0].toFixed(1)+","+q[1].toFixed(1)+" "; } pl.appendChild(el("polygon",{points:p.trim(),fill:a.color,"fill-opacity":"0.12",stroke:a.color,"stroke-width":"1.75","stroke-linejoin":"round"})); for(var j=0;j<N;j++){ var d=pt(j,a.fit[j]); pl.appendChild(el("circle",{cx:d[0].toFixed(1),cy:d[1].toFixed(1),r:"2.4",fill:a.color})); } }); }
+  function sc(a){ var s=0; for(var i=0;i<N;i++) s+=WEIGHTS[i]*a.fit[i]; return Math.round(s*20); }
+  function chips(){ var b=document.getElementById("r-chips"); b.innerHTML=""; ARCHS.forEach(function(a){ var c=document.createElement("span"); c.className="r-chip"+(a.on?"":" off"); c.innerHTML='<span class="r-dot" style="background:'+a.color+'"></span>'+a.name; c.addEventListener("click",function(){ a.on=!a.on; c.className="r-chip"+(a.on?"":" off"); polys(); rank(); verdict(); if(gridOpen)renderGrid(); pulse(); }); b.appendChild(c); }); }
+  function rank(){ var b=document.getElementById("r-rank"); b.innerHTML=""; var s=ARCHS.map(function(a){return{a:a,s:sc(a)};}).sort(function(x,y){return y.s-x.s;}); s.forEach(function(o,idx){ var best=idx===0; var row=document.createElement("div"); row.className="f-row"; row.style.cssText="background:"+(best?"var(--color-background-info)":"var(--color-background-secondary)")+";border-radius:var(--border-radius-md);padding:10px 12px;"+(best?"border:1.5px solid var(--color-border-info);":"")+(o.a.on?"":"opacity:.5;"); var badge=best?'<span style="font-size:10px;background:var(--color-text-info);color:var(--color-background-primary);padding:1px 8px;border-radius:99px;margin-left:7px;">Best to build</span>':''; row.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:'+(best?"var(--color-text-info)":"var(--color-text-primary)")+';display:flex;align-items:center;gap:7px;"><span class="r-dot" style="background:'+o.a.color+'"></span>'+o.a.name+badge+'</span><span class="num" style="font-size:13px;font-weight:500;color:'+(best?"var(--color-text-info)":"var(--color-text-secondary)")+';">'+o.s+'%</span></div><div style="height:6px;background:var(--color-background-tertiary);border-radius:99px;"><div style="height:100%;width:'+o.s+'%;background:'+(best?"var(--color-text-info)":o.a.color)+';border-radius:99px;"></div></div>'; b.appendChild(row); }); }
+  function verdict(){ var s=ARCHS.map(function(a){return{a:a,s:sc(a)};}).sort(function(x,y){return y.s-x.s;}); var top=s[0],sec=s[1],gap=top.s-sec.s; var t; if(gap<8){ t='<span style="font-weight:500;">Close call:</span> '+top.a.name+' ('+top.s+'%) and '+sec.a.name+' ('+sec.s+'%) are within '+gap+' points. Both reasonable — let team experience decide.'; } else { t='<span style="font-weight:500;">'+top.a.name+'</span> leads at '+top.s+'%, ahead of '+sec.a.name+' ('+sec.s+'%). Strongest where you cared most; the dip on Consistency is the trade-off.'; } document.getElementById("r-verdict-text").innerHTML=t; }
+  gridR(); polys(); chips(); rank(); verdict(); renderDim("deployment"); renderMig("big");
+})();
+</script>
+</body>
+</html>

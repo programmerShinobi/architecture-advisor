@@ -1,0 +1,43 @@
+# Documentation Map
+
+This directory documents Architecture Advisor across the **software development lifecycle
+(SDLC)**, so the flow of work is explicit and traceable from idea to maintenance. All
+documentation is written in English; the product itself targets both Indonesian and English.
+
+## Development lifecycle
+
+```mermaid
+flowchart LR
+    P1["1 · Discovery<br/>& Planning"] --> P2["2 · Requirement<br/>Analysis"] --> P3["3 · Blueprint<br/>(Design)"] --> P4["4 · Development"] --> P5["5 · Testing<br/>/ QA"] --> P6["6 · Deployment<br/>/ Release"] --> P7["7 · Maintenance<br/>& Iteration"]
+    P7 -. feedback .-> P2
+```
+
+Each phase lives in its own numbered folder, and each produces a concrete deliverable:
+
+| # | Phase | Folder | Key output | Status |
+|---|-------|--------|-----------|--------|
+| 1 | Discovery & Planning | [`01-discovery-and-planning/`](01-discovery-and-planning/discovery-and-planning.md) | Project charter / product vision | ✅ Complete |
+| 2 | Requirement Analysis | [`02-requirement-analysis/`](02-requirement-analysis/) | SRS / PRD (functional + non-functional) | 🚧 Planned |
+| 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | Architecture, ERD, API design, UI mockup/prototype | 🔬 In progress — [UI prototype](03-blueprint/prototype/index.html) |
+| 4 | Development | [`04-development/`](04-development/) | Source code (standards, Git, code review) | 🚧 Not started |
+| 5 | Testing / QA | [`05-testing-qa/`](05-testing-qa/) | Unit / integration / system / UAT + security & perf | 🚧 Not started |
+| 6 | Deployment / Release | [`06-deployment/`](06-deployment/) | CI/CD pipeline → staging → live URL | 🚧 Not started ([guide ready](guides/deployment-github-pages.md)) |
+| 7 | Maintenance & Iteration | [`07-maintenance/`](07-maintenance/) | Monitoring, fixes, updates, changelog | 🚧 Ongoing (post-launch) |
+
+## Cross-cutting references
+
+These documents support multiple phases and are not tied to a single one:
+
+| Folder | Document | Summary |
+|--------|----------|---------|
+| [`specs/`](specs/) | [Build Spec v3](specs/build-spec-v3.md) | The complete technical specification the app is built from (feeds phases 2–5) |
+| [`guides/`](guides/) | [Deployment — GitHub Pages](guides/deployment-github-pages.md) | Free hosting + CI/CD on GitHub Pages (phase 6) |
+| [`guides/`](guides/) | [UI/UX Execution Playbook](guides/uiux-execution-playbook.md) | 9 usability factors for technical users as executable tasks (phases 3–4) |
+| [`guides/`](guides/) | [Feature-Maturity Playbook](guides/feature-maturity-playbook.md) | UX/technical/analyst factors as concrete, verifiable tasks (phases 4–7) |
+
+## Reading paths
+
+- **Quick overview** → [Discovery charter](01-discovery-and-planning/discovery-and-planning.md), Preface + §1, §3.
+- **Build the app** → [Build Spec v3](specs/build-spec-v3.md), then the [deployment guide](guides/deployment-github-pages.md).
+- **Polish the UX** → the two playbooks in [`guides/`](guides/).
+- **Contribute** → [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and §14 of the discovery charter.
