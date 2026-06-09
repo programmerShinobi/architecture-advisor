@@ -35,6 +35,58 @@ By participating, you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 Small changes (typos, translations) follow a light path. Larger changes need discussion first.
 
+## Commit message convention
+
+Commits use a typed, scoped format:
+
+```
+[type](scope): short imperative summary [TICKET-ID]
+```
+
+- **type** — one of the tags in the table below.
+- **scope** — the area touched (optional but encouraged), e.g. `docs`, `readme`, `charter`,
+  `spec`, `prototype`, `config`, `api`, `db`, `auth`, `service`, `security`, `ci`.
+- **summary** — concise, in the imperative mood ("add", not "added").
+- **[TICKET-ID]** — optional issue/ticket reference (e.g. `[#42]`); omit when there is none.
+
+| Type | When to use |
+|------|-------------|
+| `[add]` | Add new files, assets, configs, classes, or dependencies |
+| `[update]` | Update or improve existing functionality, logic, or content |
+| `[delete]` | Remove code, files, or unused dependencies |
+| `[feat]` | Introduce a new feature visible to the end user |
+| `[fix]` | Fix a bug or incorrect behavior |
+| `[hotfix]` | Urgent critical fix applied directly to production |
+| `[refactor]` | Restructure code without changing external behavior |
+| `[style]` | Code formatting, whitespace, or naming changes only |
+| `[perf]` | Performance improvements |
+| `[test]` | Add or update test cases |
+| `[docs]` | Documentation changes only |
+| `[chore]` | Build tooling, CI/CD pipeline, or dependency maintenance |
+| `[revert]` | Revert a previous commit |
+
+**Examples**
+
+```
+[docs](charter): translate discovery charter to English
+[add](prototype): add interactive UI prototype and preview screenshot
+[docs](contributing): add commit message convention
+[chore](ci): add lint, test, and build workflow
+[feat](scoring): add weighted composite score engine
+[fix](url-state): sanitize state parsed from the URL hash
+```
+
+**Key distinctions**
+
+| Type | Distinction |
+|------|-------------|
+| `[feat]` | A brand-new capability exposed to the end user |
+| `[add]` | A supplementary addition (file, class, config) that supports a feature or fix |
+| `[update]` | Modifies *existing* behavior, content, or logic |
+| `[delete]` | Intentional removal of code, files, or dependencies |
+| `[fix]` | Something was broken — now it is not |
+| `[hotfix]` | Same intent as `[fix]`, but bypasses normal branching and goes directly to production |
+
 ## Changes to the decision model
 
 Because this is a tool *about* documenting architecture decisions, it documents its own. Any
