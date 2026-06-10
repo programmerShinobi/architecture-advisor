@@ -6,7 +6,7 @@
 |---|---|
 | **Document type** | Project Charter / Product Vision |
 | **Version** | 1.2 |
-| **Date** | 10 June 2026 |
+| **Date** | 2026-06-10 |
 | **Status** | Approved — execution baseline |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Academic/IEEE & industry |
@@ -159,20 +159,22 @@ of contributors**.
 
 ## 5. Scope
 
-**In the MVP (Minimum Viable Product, v1.0):** the 4-step flow (factors → priorities → recommendation → export), Guided &
-Expert modes; ≥12 factors; 12 quality attributes (ISO/IEC 25010:2023 [1]); recommendations across
-5 dimensions with weighted composite scores; an interactive trade-off radar + ranking;
-*close-call* detection; sensitivity analysis; a risk register; fitness functions; anti-pattern
-detection; a migration path (brownfield); presets; a glossary; a "How scoring works" panel; ADR
-(MADR — Markdown ADR — format) & reports; share-via-URL; ID/EN i18n; dark mode; WCAG (Web Content Accessibility Guidelines) AA [11]; mature UI states
-(skeleton, 3-layer error + retry, undo, save-state, empty state).
+**In the MVP (Minimum Viable Product, v1.0):** the 4-step flow (factors → priorities →
+recommendation → export), Guided & Expert modes; ≥12 factors; 12 quality attributes
+(ISO/IEC 25010:2023 [1]); recommendations across five dimensions with weighted composite scores;
+an interactive trade-off radar + ranking; *close-call* detection; sensitivity analysis; a risk
+register; fitness functions; anti-pattern detection; a migration path (brownfield); presets; a
+glossary; a "How scoring works" panel; ADR export (MADR — Markdown ADR — format) & reports;
+share-via-URL; ID/EN internationalization (i18n); dark mode; WCAG (Web Content Accessibility
+Guidelines) AA [11]; mature UI states (skeleton, 3-layer error + retry, undo, save-state, empty
+state).
 
 **Deferred (see the evolution roadmap, §15):** multi-stakeholder collaboration; saved
 multi-project comparison; custom configuration import/export; generated C4 diagrams; an empirical
 validation study.
 
-**Non-goals:** a replacement for human judgment / full ATAM; a code/IaC generator; storage of
-sensitive data.
+**Non-goals:** a replacement for human judgment / full ATAM; a code / Infrastructure-as-Code
+(IaC) generator; storage of sensitive data.
 
 ---
 
@@ -180,13 +182,13 @@ sensitive data.
 
 | Party | Role | Interest | Influence |
 |---|---|---|---|
-| Product owner | Sponsor & decision-maker | Vision, priorities, feasibility | High |
-| Maintainer/engineer | Builder & maintainer | Technical feasibility, maintainability | High |
+| Product Owner | Sponsor & decision-maker | Vision, priorities, feasibility | High |
+| Maintainer/Engineer | Builder & maintainer | Technical feasibility, maintainability | High |
 | Architects/analysts (core) | Primary users | Accuracy, transparency, credibility | High |
 | Newcomers/students | Secondary users | Ease of use, education | Medium |
-| **Community contributors** | Volunteer developers | Extensibility, recognition, clear process | Medium–High |
-| **Translators (i18n)** | Language contributors | Accurate localization | Medium |
-| **Domain advisors** | Model validators | Correctness of fit/weight values | Medium–High |
+| **Community Contributors** | Volunteer developers | Extensibility, recognition, clear process | Medium–High |
+| **Translators** | Language contributors (i18n) | Accurate localization | Medium |
+| **Domain Advisors** | Model validators | Correctness of fit/weight values | Medium–High |
 | Academics/reviewers *(ASSUMPTION)* | Methodology validators | Scientific grounding | Medium |
 
 **Distrust triggers (design guardrails):** scores without explanation; claims without references;
@@ -286,7 +288,7 @@ study comparing the tool's recommendations against expert/ATAM judgment + an SUS
 
 | Phase | Milestone | Estimate |
 |---|---|---|
-| M0 | Discovery & charter approved | Now |
+| M0 | Discovery & charter approved | Complete |
 | M1 | Spec freeze + design tokens + data sheet (matrix & ID/EN copy) | Weeks 1–2 |
 | M2 | Core implementation | Weeks 3–5 |
 | M3 | Multi-dimensional + analysis | Weeks 6–8 |
@@ -387,7 +389,7 @@ ISO revision) and the validation study's findings; update *fit*/weight values vi
 | Version | Focus | Example improvements |
 |---|---|---|
 | **v1.0** | MVP (scope of §5) | 4-step flow, 5 dimensions, radar, ADR export, Guided/Expert, ID/EN |
-| **v1.x** | Refinement | More factors & "learn more" content, stricter a11y, new translations, UX fixes |
+| **v1.x** | Refinement | More factors & "learn more" content, stricter accessibility (a11y), new translations, UX fixes |
 | **v2.0** | Collaboration | Multi-stakeholder weighting, save & compare assessments, organization config import/export |
 | **v2.x** | Integration | Generated C4 diagrams, export to ADR tools/repos, industry templates |
 | **v3.0** | Evidence-based | Recalibrating *fit* values from empirical validation results; community-contributed architecture packs |
@@ -423,13 +425,14 @@ availability.
 
 ## 17. Privacy & Data Handling
 
-- The application is **client-side**: no server stores user data; **no Personally Identifiable Information (PII) is collected**.
+- The application is **client-side**: no server stores user data; **no Personally Identifiable
+  Information (PII) is collected**.
 - Answer data is stored in the **user's browser** (localStorage) and, when sharing, **inside the
   URL** that the user shares themselves.
 - The inputs are **non-sensitive** (generic project factors). Even so, note to users not to put
   confidential information in free-text/project-name fields if such a feature exists.
 - **Analytics:** none by default; if added later, it must be privacy-respecting, openly declared,
-  and disable-able *(decision: **ASSUMPTION**)*.
+  and able to be disabled *(decision: **ASSUMPTION**)*.
 
 ---
 
@@ -522,7 +525,7 @@ This is a single-signatory approval. At present all roles are held by one person
 
 | Role | Name | Date |
 |---|---|---|
-| Product Owner / Sponsor (also Maintainer & user representative) | **Faqih Pratama Muhti** | 9 Jun 2026 |
+| Product Owner / Sponsor (also Maintainer & user representative) | **Faqih Pratama Muhti** | 2026-06-09 |
 
 *Other roles (additional Maintainers, an independent user representative, a Domain Advisor) will*
 *be filled as contributors join, and recorded as a document version update.*
