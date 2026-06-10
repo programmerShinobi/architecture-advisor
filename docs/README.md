@@ -17,7 +17,7 @@ Each phase lives in its own numbered folder, and each produces a concrete delive
 | # | Phase | Folder | Key output | Status |
 |---|-------|--------|-----------|--------|
 | 1 | Discovery & Planning | [`01-discovery-and-planning/`](01-discovery-and-planning/discovery-and-planning.md) | Project charter / product vision | ✅ Complete |
-| 2 | Requirement Analysis | [`02-requirement-analysis/`](02-requirement-analysis/) | SRS / PRD (functional + non-functional) | 🚧 Planned |
+| 2 | Requirement Analysis | [`02-requirement-analysis/`](02-requirement-analysis/) | [SRS](02-requirement-analysis/software-requirements-specification.md) (functional + non-functional) | 🔬 In progress — draft |
 | 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | Architecture, ERD, API design, UI mockup/prototype | 🔬 In progress — [UI prototype](03-blueprint/prototype/index.html) |
 | 4 | Development | [`04-development/`](04-development/) | Source code (standards, Git, code review) | 🚧 Not started |
 | 5 | Testing / QA | [`05-testing-qa/`](05-testing-qa/) | Unit / integration / system / UAT + security & perf | 🚧 Not started |
