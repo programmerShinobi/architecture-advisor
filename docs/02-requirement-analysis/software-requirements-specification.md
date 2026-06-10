@@ -244,7 +244,51 @@ free static hosting/CI are available. Full list: charter
 
 The decision model is data, not code, and **shall** live in configuration so it is auditable and
 extensible (NFR-MAINT-1). The authoritative definitions are in [Build Spec v3](../specs/build-spec-v3.md);
-this section states the required datasets and their integrity rules.
+this section states the scoring pipeline, the required datasets, and their integrity rules.
+
+### 5.1 Scoring pipeline — one input, five coordinated decisions
+
+A single set of factor answers drives **all five dimensions at once**, through a shared
+quality-attribute priority layer (the "utility tree"). The dimensions are **orthogonal** — chosen
+together, not one instead of another — and the resulting combination is then checked for
+anti-patterns.
+
+```mermaid
+flowchart TB
+    F["Project factors<br/>≥12 × 3 levels"] --> W["Quality-attribute priorities<br/>utility tree · normalized to 100%"]
+    W --> D1["D1 · Deployment Granularity"]
+    W --> D2["D2 · Communication Style"]
+    W --> D3["D3 · Data Management"]
+    W --> D4["D4 · Code Structure"]
+    W --> D5["D5 · Frontend Architecture"]
+    D1 --> X["Combination analysis<br/>anti-patterns · sensitivity · risks · migration"]
+    D2 --> X
+    D3 --> X
+    D4 --> X
+    D5 --> X
+    X --> O["Coordinated recommendation<br/>+ ADR / report / share link"]
+```
+
+> **In plain language:** you answer the questions once; the tool decides five things about your
+> app together — how it's split, how the parts talk, where data lives, how each part is organized
+> inside, and how the screens are built — and warns you if the combined choices clash.
+
+**Worked example — one change ripples across all five dimensions.** Raising *scale*, *async
+workload*, *team size*, and *DevOps maturity* (the high-traffic e-commerce preset) lifts the
+**scalability**, **availability**, and **deployability** weights, shifting every dimension at once:
+
+| Dimension | Top recommendation | Why |
+|---|---|---|
+| D1 · Deployment Granularity | Microservices / Serverless | highest deployability & scalability |
+| D2 · Communication Style | Event-driven / Async | absorbs load & traffic spikes |
+| D3 · Data Management | Database-per-service / CQRS | independent read/write scaling |
+| D4 · Code Structure | Hexagonal / Clean | maintainability for a large team |
+| D5 · Frontend Architecture | Micro-frontends | independent UI deployment |
+| ⚠ Combination | Microservices + single shared DB → *distributed monolith* | flagged by FR-REC-9 |
+
+### 5.2 Required datasets
+
+These datasets **shall** be held in configuration:
 
 | ID | The system shall maintain… | Trace |
 |---|---|---|
@@ -260,6 +304,25 @@ this section states the required datasets and their integrity rules.
 
 **Integrity rules:** unlisted `qaFit` entries default to a neutral 3; normalized QA weights always
 sum to 100; a contribution breakdown always reconciles to the composite score (FR-REC-4).
+
+### 5.3 Preset calibration (targets)
+
+Each scenario preset **shall** set factor levels that produce the expected top recommendation
+below. These outcome targets make the model **verifiable** — a preset that no longer yields its
+expected result is a regression. The exact factor levels live in configuration ([BS §12](../specs/build-spec-v3.md))
+and are confirmed with a Domain Advisor and recorded as an ADR ([Charter §14.4](../01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution)).
+
+| Preset | D1 Deployment | D2 Communication | D3 Data | D4 Code | D5 Frontend | Primary driver |
+|---|---|---|---|---|---|---|
+| Startup MVP | Monolith | Synchronous | Single shared DB | Layered | SPA | time-to-market, low cost |
+| Bank / healthcare (regulated) | Modular Monolith | Synchronous | Single shared DB | Hexagonal / Clean | SPA / SSR | security, strong consistency |
+| High-traffic e-commerce | Microservices | Event-driven | Database-per-service | Hexagonal | Micro-frontends | scalability, availability |
+| Sensors / live data (IoT) | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal | SPA | performance, data volume |
+| Internal tool | Modular Monolith | Synchronous | Single shared DB | Layered | SPA | maintainability, simplicity |
+
+> Anti-pattern guardrails apply per preset — e.g. choosing CQRS/Event Sourcing for a short-lived
+> Startup MVP triggers the over-engineering warning, and Microservices + a single shared DB
+> triggers the distributed-monolith danger (FR-REC-9).
 
 ---
 
@@ -333,7 +396,7 @@ all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.
 | # | Open issue | Owner | Notes |
 |---|---|---|---|
 | OI-1 | Final factor count (≥12 vs the 14 in BS §4) and grouping | Owner | Confirm at spec freeze (M1) |
-| OI-2 | Exact preset factor values for the 5 scenarios | Owner + Domain Advisor | Calibrate against expected D1 outcomes |
+| OI-2 | Preset factor-level values (config) that hit the §5.3 outcome targets | Owner + Domain Advisor | Outcome targets defined in [§5.3](#5-data--decision-model-requirements); exact levels to be calibrated & ADR-logged |
 | OI-3 | Whether the C4 Mermaid stub (FR-OUT-5) is in v1.0 or deferred | Owner | Currently **Could**-priority |
 | OI-4 | D4/D5 `qaFit` values (documented as defensible defaults) | Domain Advisor | Recorded as an ADR per Charter §14.4 |
 | OI-5 | Quantitative performance budgets (bundle size, p95 interaction) | Engineer | Set during Phase 3 design |
