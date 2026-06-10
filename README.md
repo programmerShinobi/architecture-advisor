@@ -65,7 +65,7 @@ traceable:
 |---|-------|--------|--------|
 | 1 | [Discovery & Planning](docs/01-discovery-and-planning/discovery-and-planning.md) | Project charter / product vision | ✅ Complete |
 | 2 | [Requirement Analysis](docs/02-requirement-analysis/) | [SRS](docs/02-requirement-analysis/software-requirements-specification.md) | 🔬 In progress |
-| 3 | [Blueprint (Design)](docs/03-blueprint/) | Architecture, ERD, API, [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
+| 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | [Development](docs/04-development/) | Source code (standards, Git, review) | 🚧 Not started |
 | 5 | [Testing / QA](docs/05-testing-qa/) | Unit/integration/system/UAT + security & perf | 🚧 Not started |
 | 6 | [Deployment / Release](docs/06-deployment/) | CI/CD → staging → live ([guide ready](docs/guides/deployment-github-pages.md)) | 🚧 Not started |
