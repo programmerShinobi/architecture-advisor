@@ -169,6 +169,22 @@ share-via-URL; ID/EN internationalization (i18n); dark mode; WCAG (Web Content A
 Guidelines) AA [11]; mature UI states (skeleton, 3-layer error + retry, undo, save-state, empty
 state).
 
+**The five architecture dimensions.** A recommendation is not a single label; it spans five
+**orthogonal** dimensions, chosen *together* rather than one instead of another:
+
+1. **Deployment Granularity** — how the system is split into deployable units (e.g. monolith, modular monolith, microservices, serverless).
+2. **Communication Style** — how the parts talk (e.g. synchronous, async messaging, event-driven, streaming).
+3. **Data Management** — where and how data lives (e.g. shared database, database-per-service, CQRS, event sourcing).
+4. **Code Structure** — how each unit is organized inside (e.g. layered, hexagonal, clean architecture, vertical slice).
+5. **Frontend Architecture** — how the UI is built (e.g. single-page app, server-side rendering, micro-frontends).
+
+All five are derived from the same factor answers through the shared quality-attribute priority
+layer, and the chosen combination is then checked for anti-patterns.
+
+> **In plain language:** the tool does not just say "use microservices". It answers five questions
+> about your app at once — how to split it, how the parts talk, where data lives, how each part is
+> organized inside, and how the screens are built — and warns you when the combined choices clash.
+
 **Deferred (see the evolution roadmap, §15):** multi-stakeholder collaboration; saved
 multi-project comparison; custom configuration import/export; generated C4 diagrams; an empirical
 validation study.
