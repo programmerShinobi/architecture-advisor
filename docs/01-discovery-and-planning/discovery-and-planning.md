@@ -2,14 +2,23 @@
 
 **Discovery & Planning Phase · Product Vision Document**
 
-| | |
+| Field | Detail |
 |---|---|
 | **Document type** | Project Charter / Product Vision |
 | **Version** | 1.2 |
 | **Date** | 10 June 2026 |
-| **Author** | Faqih Pratama Muhti, B.Sc. Computer Science |
+| **Status** | Approved — execution baseline |
+| **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Academic/IEEE & industry |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
+
+**Document history**
+
+| Version | Date | Summary |
+|---|---|---|
+| 1.0 | — | Initial Discovery & Planning draft |
+| 1.1 | — | Charter baseline established |
+| 1.2 | 2026-06-10 | Closing package added; approved as the execution baseline |
 
 ---
 
@@ -71,8 +80,9 @@ by trend rather than by an explicit quality-attribute trade-off analysis. **Arch
 Advisor** is a client-side web application that structures that decision as a transparent
 pipeline: project factors → quality-attribute priorities (grounded in ISO/IEC 25010:2023 [1]) →
 architecture fit across five dimensions → analysis of trade-offs, sensitivity, risk, and
-decision documentation (ADR). The approach adapts established architecture-evaluation methods —
-ATAM [2] and Attribute-Driven Design [3] — into an interactive tool for engineers, architects,
+decision documentation (Architecture Decision Records, ADRs). The approach adapts established
+architecture-evaluation methods — ATAM (Architecture Tradeoff Analysis Method) [2] and
+Attribute-Driven Design [3] — into an interactive tool for engineers, architects,
 analysts, and newcomers alike. Being client-side, it can be hosted for free with no data risk,
 offers two modes (Guided/Expert), and is designed as an open project that evolves across many
 versions.
@@ -133,7 +143,7 @@ become a credible and widely used architecture decision tool; (2) reduce time an
 quality of early decisions; (3) serve as an educational resource; (4) **grow a healthy community
 of contributors**.
 
-**Measurable KPIs** *(numbers are **ASSUMPTIONS** — the first validation point)*
+**Measurable KPIs (Key Performance Indicators)** *(numbers are **ASSUMPTIONS** — the first validation point)*
 
 | # | KPI | Target | Deadline |
 |---|---|---|---|
@@ -141,7 +151,7 @@ of contributors**.
 | K2 | Full-assessment completion | ≥ 60% | continuous |
 | K3 | Median time to recommendation | ≤ 5 minutes | from MVP |
 | K4 | Export usage (ADR/report/CSV-JSON) | ≥ 30% of sessions | continuous |
-| K5 | Usability (System Usability Scale) | ≥ 75 | beta test |
+| K5 | Usability (System Usability Scale, SUS) | ≥ 75 | beta test |
 | K6 | Technical-user satisfaction | ≥ 70% | quarterly survey |
 | K7 | **Community health** (active contributors/quarter) | ≥ 5 *(ASSUMPTION)* | first year |
 
@@ -149,12 +159,12 @@ of contributors**.
 
 ## 5. Scope
 
-**In the MVP (v1.0):** the 4-step flow (factors → priorities → recommendation → export), Guided &
+**In the MVP (Minimum Viable Product, v1.0):** the 4-step flow (factors → priorities → recommendation → export), Guided &
 Expert modes; ≥12 factors; 12 quality attributes (ISO/IEC 25010:2023 [1]); recommendations across
 5 dimensions with weighted composite scores; an interactive trade-off radar + ranking;
 *close-call* detection; sensitivity analysis; a risk register; fitness functions; anti-pattern
 detection; a migration path (brownfield); presets; a glossary; a "How scoring works" panel; ADR
-(MADR) & report export; share-via-URL; ID/EN i18n; dark mode; WCAG AA [11]; mature UI states
+(MADR — Markdown ADR — format) & reports; share-via-URL; ID/EN i18n; dark mode; WCAG (Web Content Accessibility Guidelines) AA [11]; mature UI states
 (skeleton, 3-layer error + retry, undo, save-state, empty state).
 
 **Deferred (see the evolution roadmap, §15):** multi-stakeholder collaboration; saved
@@ -170,7 +180,7 @@ sensitive data.
 
 | Party | Role | Interest | Influence |
 |---|---|---|---|
-| Product owner (you) | Sponsor & decision-maker | Vision, priorities, feasibility | High |
+| Product owner | Sponsor & decision-maker | Vision, priorities, feasibility | High |
 | Maintainer/engineer | Builder & maintainer | Technical feasibility, maintainability | High |
 | Architects/analysts (core) | Primary users | Accuracy, transparency, credibility | High |
 | Newcomers/students | Secondary users | Ease of use, education | Medium |
@@ -413,7 +423,7 @@ availability.
 
 ## 17. Privacy & Data Handling
 
-- The application is **client-side**: no server stores user data; **no PII is collected**.
+- The application is **client-side**: no server stores user data; **no Personally Identifiable Information (PII) is collected**.
 - Answer data is stored in the **user's browser** (localStorage) and, when sharing, **inside the
   URL** that the user shares themselves.
 - The inputs are **non-sensitive** (generic project factors). Even so, note to users not to put
@@ -479,9 +489,9 @@ without consideration. This principle is embedded in the product (a permanent di
 | D3 | KPI baseline | **Zero** (new product); measured from the v1.0 release | — |
 | D4 | Code license | **MIT** | Permissive → maximizes adoption & contribution. *Not legal advice — confirm if there are commercial/organizational interests.* |
 | D5 | Document/content license | **CC BY 4.0** | — |
-| D6 | Budget & resources | **Monetary cost ≈ 0**; 1 person (you) + AI-agent assistance | Free hosting/CI on GitHub |
+| D6 | Budget & resources | **Monetary cost ≈ 0**; 1 person (the author) + AI-agent assistance | Free hosting/CI on GitHub |
 | D7 | Schedule/deadline | **Flexible, no hard deadline**; indicative target ±10–12 weeks part-time | Reasonable for solo |
-| D8 | Maintenance owner | **You (solo)** for now → shifting to a community model as contributors join | Bus factor mitigated via §14 |
+| D8 | Maintenance owner | **The author (solo)** for now → shifting to a community model as contributors join | Bus factor mitigated via §14 |
 | D9 | Analytics | **None** by default (privacy-friendly) | Can be added later if privacy-respecting & open |
 | D10 | Evolution roadmap (§15.6) | **Adopted as indicative direction** (not a promise) | — |
 | D11 | Reference formality level | **Mixed** (industry + standards) for now | Add peer-reviewed literature if entering the academic track |
@@ -499,7 +509,7 @@ without consideration. This principle is embedded in the product (a permanent di
 | K6 | Technical-user satisfaction | ≥ 60% |
 | K7 | **Active contributors** (first year) | **≥ 3** |
 
-> Contributor-growth strategy (per your direction): a free public release on GitHub →
+> Contributor-growth strategy (per the owner's direction): a free public release on GitHub →
 > provide onboarding & `good first issue`s (§14.5) → bilingual release notes →
 > invite open contribution → formal recruitment follows once traction forms.
 
