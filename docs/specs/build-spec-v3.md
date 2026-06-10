@@ -160,7 +160,7 @@ A recommendation spans 5 orthogonal dimensions. Each dimension has options; each
 Composite score of an option = `Σ_QA ( normalizedWeight[QA]/100 * qaFit[option][QA] )`.
 Within each dimension, rank options by composite score. Round all displayed numbers.
 
-**Dimension D1 — Deployment granularity.** Provide full qaFit vectors (order:
+**Dimension D1 — Deployment Granularity** *(Guided label: "How it's split into apps")*. Provide full qaFit vectors (order:
 perf, scal, avail, sec, maint, deploy, test, obs, dataCons, interop, cost, ttm):
 
 ```
@@ -171,7 +171,7 @@ Microservices         : 3,5,4,4,4,5,3,3,2,4,2,2
 Serverless (FaaS)     : 3,5,4,3,3,4,3,3,3,3,4,4
 ```
 
-**Dimension D2 — Communication style.** Provide qaFit for the differentiating QAs; default any
+**Dimension D2 — Communication Style** *(Guided label: "How the parts talk")*. Provide qaFit for the differentiating QAs; default any
 unlisted QA to 3.
 
 ```
@@ -181,7 +181,7 @@ Event-driven (pub/sub): perf 3, scal 5, avail 5, dataCons 2, maint 3, obs 2, ttm
 Streaming             : perf 5, scal 5, avail 4, dataCons 2, maint 2, obs 2, ttm 2
 ```
 
-**Dimension D3 — Data management.** qaFit for differentiating QAs; default unlisted = 3.
+**Dimension D3 — Data Management** *(Guided label: "Where data lives")*. qaFit for differentiating QAs; default unlisted = 3.
 
 ```
 Single shared DB      : dataCons 5, scal 2, maint 3, perf 4, cost 4, ttm 5, deploy 2
@@ -191,13 +191,13 @@ Event Sourcing        : dataCons 4, scal 4, maint 2, obs 5, ttm 2, cost 2
 Polyglot persistence  : perf 4, scal 4, maint 3, cost 2, ttm 3, interop 4
 ```
 
-**Dimension D4 — Internal code structure.** Options: Layered, Hexagonal (Ports & Adapters),
+**Dimension D4 — Code Structure** *(Guided label: "How each app is organized inside")*. Options: Layered, Hexagonal (Ports & Adapters),
 Clean Architecture, Vertical Slice. These differ mainly on maintainability/testability/ttm.
 Assign defensible qaFit vectors following this principle: simpler structures favor `ttm`;
 Hexagonal/Clean favor `maintainability`/`testability` at some `ttm` cost; reflect that
 `domain` complexity is what makes the extra structure pay off. Document your chosen values.
 
-**Dimension D5 — Frontend architecture (optional, show only if relevant).** Options:
+**Dimension D5 — Frontend Architecture** *(Guided label: "How the screens are built"; optional, show only if relevant)*. Options:
 Monolithic SPA, Server-side rendering (SSR/SSG), Micro-frontends. Assign defensible qaFit;
 micro-frontends favor `deployability`/`scalability` for large/distributed teams at a
 `maintainability`/`ttm` cost. Document values.
