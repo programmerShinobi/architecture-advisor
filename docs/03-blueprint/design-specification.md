@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Design Specification / Software Design Document (SDD) |
-| **Version** | 0.1 |
-| **Date** | 2026-06-11 |
+| **Version** | 0.3 |
+| **Date** | 2026-06-12 |
 | **Status** | Draft |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, designers |
-| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.1 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.2 · [UI prototype](prototype/index.html) |
+| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.2 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.4 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -18,6 +18,8 @@
 | Version | Date | Summary |
 |---|---|---|
 | 0.1 | 2026-06-11 | Initial blueprint: architecture, module/data schema, design system, UX patterns, ADRs |
+| 0.2 | 2026-06-12 | Realigned to SRS v0.2 / Charter v1.4: added a resilience & edge-case design (Section 5.1) covering FR-EDGE-*, browser-baseline and performance-budget coverage, corrected the design-token source reference, and extended traceability |
+| 0.3 | 2026-06-12 | Build-readiness: linked the new [Model Data Sheet](model-data-sheet.md) (frozen numeric model values), added a Definition-of-Ready gate (Section 11), and updated DI-1 to the recorded baseline |
 
 ---
 
@@ -33,6 +35,7 @@
 - [8. Key Design Decisions (ADRs)](#8-key-design-decisions-adrs)
 - [9. Traceability](#9-traceability)
 - [10. Open Issues & To Be Determined](#10-open-issues--to-be-determined)
+- [11. Definition of Ready for Development](#11-definition-of-ready-for-development)
 
 ---
 
@@ -122,7 +125,10 @@ for the codebase: a build-time check **should** forbid `lib/` from importing Rea
 ## 4. Decision-Model Data Schema
 
 The `config/` datasets required by [SRS Section 5.2](../02-requirement-analysis/software-requirements-specification.md#5-data--decision-model-requirements)
-are typed as follows (sketch; authoritative values in [Build Spec v3 Sections 3–11](../specs/build-spec-v3.md)).
+are typed as follows (sketch). **Every concrete value the engine needs is frozen in the
+[Model Data Sheet](model-data-sheet.md)** — the 12-QA index, the 14 factors + defaults, the
+factor→QA matrix, all D1–D5 `qaFit` vectors, the anti-pattern rules, and the preset levels — so the
+`config/` files have a single, unambiguous source to mirror.
 
 ```ts
 type Bilingual = { en: string; id: string };
@@ -135,7 +141,7 @@ interface QualityAttribute {            // 12 of these — Build Spec Section 3
   isoMapping: string; economicFlag: boolean;        // true = outside ISO product model
 }
 
-interface Factor {                       // ≥12 — Build Spec Section 4
+interface Factor {                       // 14 — Build Spec Section 4 / Model Data Sheet Section 2
   id: string; label: Bilingual; group: string;
   levels: [Bilingual, Bilingual, Bilingual];        // index 0..2
   help: Bilingual;
@@ -196,11 +202,28 @@ interface AppState {
   change the app offers "recompute with the latest model" (FR-STATE-3, Charter Section 15.2 / R8).
 - **Backward compatibility:** the URL decoder tolerates older payloads (NFR-REL-2).
 
+### 5.1 Resilience & edge-case handling
+
+How the design satisfies the SRS edge-case requirements (FR-EDGE-\*), so failure modes are built
+in rather than discovered later:
+
+| SRS requirement | Design response |
+|---|---|
+| FR-EDGE-1 — bad shared URL | `useUrlSyncedState` decode is **total**: a parse/schema/checksum failure returns a typed `Err`, the app falls back to the `localStorage` state (or defaults), and a non-blocking toast is shown. Decode never throws to the render tree. |
+| FR-EDGE-2 — `localStorage` unavailable | `usePersistedState` probes storage once; on failure it switches to an in-memory store for the session and surfaces a persistent "changes won't be saved" notice — the app stays fully usable. |
+| FR-EDGE-3 — invalid config import | `lib/customConfig.ts` validates an imported JSON against the schema (Section 4); on any failure it returns a typed error naming the offending field and leaves the active config untouched. |
+| FR-EDGE-4 — unsupported browser | A small bootstrap feature-detects ES2020 + `localStorage`; if absent it renders a static, readable plain-HTML message instead of mounting the SPA. |
+| FR-EDGE-5 — older model version | The decoded payload's `modelVersion` is compared to the current one; on mismatch the result renders as-is and a "recompute with the current model" action is offered (never a silent rescore). |
+| FR-EDGE-6 — total scoring | `lib/scoring.ts` clamps factor levels to 0–2, defaults unlisted `qaFit` to 3, and when all normalized weights resolve to 0 falls back to equal weights — so a composite score is defined for every input. |
+| FR-EDGE-7 — deterministic outputs | `lib/adr.ts` / `report.ts` take an explicit clock and locale; timestamps are emitted in UTC ISO-8601 so identical state yields byte-identical exports. |
+
+These behaviors are unit-tested in `lib/` (pure) and at the hook boundary, satisfying NFR-MAINT-2.
+
 ---
 
 ## 6. Design System & Tokens
 
-Formalized from the [UI prototype](prototype/index.html) and UI/UX Playbook task `F0-01`.
+Formalized from the [UI prototype](prototype/index.html) and [UI/UX Playbook](../guides/uiux-execution-playbook.md) Task 0.2 (Design System / Design Tokens).
 Implemented as **CSS custom properties** themed by a class on `<html>` (Tailwind in `class` dark
 mode); the prototype's `:root` / `html.light` blocks are the source of truth.
 
@@ -261,10 +284,11 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 
 | Design section | Satisfies (SRS) |
 |---|---|
-| Section 2 Architecture overview | NFR-MAINT-1, NFR-PRIV-1, NFR-COMPAT-2 |
+| Section 2 Architecture overview | NFR-MAINT-1, NFR-PRIV-1, NFR-COMPAT-1/2, NFR-PERF-3 |
 | Section 3 Module & code structure | NFR-MAINT-1/2; FR-DATA-* |
 | Section 4 Data schema | FR-DATA-1…9 |
 | Section 5 State & persistence | FR-STATE-1…4; NFR-REL-2, NFR-SEC-1 |
+| Section 5.1 Resilience & edge cases | FR-EDGE-1…7 |
 | Section 6 Design system | NFR-A11Y-1; FR-SHELL-3 |
 | Section 7 UX patterns | FR-SHELL-*, FR-UI-*, FR-REC-13; NFR-PERF-1, NFR-A11Y-2 |
 | Section 8 ADRs | NFR-MAINT-1/3; FR-STATE-3 |
@@ -275,11 +299,31 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 
 | # | Open issue | Notes |
 |---|---|---|
-| DI-1 | Final D4/D5 `qaFit` values | Inherits SRS OI-4; record as an ADR once set |
+| DI-1 | Ratify D4/D5 `qaFit` values | Baseline now recorded in the [Model Data Sheet](model-data-sheet.md) Section 4; Domain Advisor ratifies & ADR-logs (SRS OI-4) |
 | DI-2 | Whether URL-hash state needs a compression library | Decide against a size budget (DI-4) |
 | DI-3 | Final design-token values vs the prototype | Promote the prototype `:root` blocks to the token source of truth |
-| DI-4 | Performance budgets (bundle size, p95 interaction) | Inherits SRS OI-5 |
+| DI-4 | Ratify the performance budgets against the real bundle | Interim targets already set in SRS NFR-PERF-3 (≤ 300 KB gzip, FCP ≤ 2 s, p95 ≤ 100 ms); inherits SRS OI-5 |
 | DI-5 | C4 Mermaid stub (FR-OUT-5) — in v1.0 or deferred | Inherits SRS OI-3 (Could-priority) |
+
+---
+
+## 11. Definition of Ready for Development
+
+Phase 4 (development) may begin once every item below holds. This is the gate that keeps the build
+free of guesswork — each line is either fixed or has a usable baseline.
+
+- [x] All **numeric model values frozen** in the [Model Data Sheet](model-data-sheet.md) — QAs, 14 factors + defaults, factor→QA matrix, D1–D5 `qaFit`, anti-pattern rules, preset levels.
+- [x] **Architecture, module boundaries, data schema, and state model** fixed (Sections 2–5, incl. the resilience design 5.1).
+- [x] **Design tokens** fixed against the prototype (Section 6).
+- [x] **Acceptance criteria** enumerated and ready to wire as tests (SRS Section 7, AC-1…12).
+- [ ] **D4/D5 `qaFit` ratified** by a Domain Advisor (SRS OI-4) — *baseline usable now*.
+- [ ] **Preset levels pass the calibration test** against SRS 5.3 (SRS OI-2) — *baseline usable now*.
+- [ ] **Bilingual content authored**: factor help; option pros/cons/whenToUse/learnMore; fitness & anti-pattern messages (EN/ID) (Build Spec Section 7, Section 11).
+- [ ] **C4 stub** scoped in or out of v1.0 (SRS OI-3).
+- [ ] **Performance budgets ratified** against the real bundle (SRS OI-5 / DI-4).
+
+Checked items are done. The unchecked items all have **baseline values recorded in the Model Data
+Sheet**, so development is unblocked today — closing them refines numbers, never the structure.
 
 ---
 
