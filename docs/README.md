@@ -18,7 +18,7 @@ Each phase lives in its own numbered folder, and each produces a concrete delive
 |---|-------|--------|-----------|--------|
 | 1 | Discovery & Planning | [`01-discovery-and-planning/`](01-discovery-and-planning/discovery-and-planning.md) | Project charter / product vision | ✅ Complete |
 | 2 | Requirement Analysis | [`02-requirement-analysis/`](02-requirement-analysis/) | [SRS](02-requirement-analysis/software-requirements-specification.md) (functional + non-functional) | 🔬 In progress — draft |
-| 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | [Design spec](03-blueprint/design-specification.md) + [UI prototype](03-blueprint/prototype/index.html) | 🔬 In progress |
+| 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | [Design spec](03-blueprint/design-specification.md) + [Model Data Sheet](03-blueprint/model-data-sheet.md) + [UI prototype](03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | Development | [`04-development/`](04-development/) | Source code (standards, Git, code review) | 🚧 Not started |
 | 5 | Testing / QA | [`05-testing-qa/`](05-testing-qa/) | Unit / integration / system / UAT + security & perf | 🚧 Not started |
 | 6 | Deployment / Release | [`06-deployment/`](06-deployment/) | CI/CD pipeline → staging → live URL | 🚧 Not started ([guide ready](guides/deployment-github-pages.md)) |
