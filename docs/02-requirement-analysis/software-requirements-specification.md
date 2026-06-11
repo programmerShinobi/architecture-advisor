@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 0.1 |
-| **Date** | 2026-06-10 |
-| **Status** | Draft |
+| **Version** | 0.3 |
+| **Date** | 2026-06-12 |
+| **Status** | Draft — review-ready |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, analysts, reviewers |
-| **Derived from** | [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) v1.2 · [Build Spec v3](../specs/build-spec-v3.md) |
+| **Derived from** | [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) v1.4 · [Build Spec v3](../specs/build-spec-v3.md) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -18,6 +18,8 @@
 | Version | Date | Summary |
 |---|---|---|
 | 0.1 | 2026-06-10 | Initial SRS draft derived from the charter and Build Spec v3 |
+| 0.2 | 2026-06-11 | Maturity pass: a verification method on every functional requirement; completed definitions; explicit non-goals (Section 2.6); edge-case, resilience & input-validation requirements (Section 3.8); quantified performance budgets and a browser-support baseline; open issues given target milestones |
+| 0.3 | 2026-06-12 | Build-readiness: pinned the factor count at 14 (closes OI-1); linked the new [Model Data Sheet](../03-blueprint/model-data-sheet.md) that freezes all numeric model values; OI-2/OI-4 now reference recorded baselines |
 
 ---
 
@@ -72,15 +74,27 @@ decision records. The authoritative scope (in/deferred/non-goals) is the charter
 | MoSCoW | Prioritization: Must / Should / Could / Won't (this release) |
 | SUS | System Usability Scale |
 | i18n / a11y | Internationalization / accessibility |
+| MVP | Minimum Viable Product (the v1.0 scope) |
+| MADR | Markdown Architecture Decision Record (the ADR export format) |
+| SPA / SSR | Single-page application / server-side rendering (D5 options) |
+| CQRS | Command Query Responsibility Segregation (a D3 option) |
+| C4 | A model for visualizing software architecture (Context/Container/Component/Code) |
+| SPA shell / static site | A single HTML/JS/CSS bundle served from static hosting, no backend |
+| CSP | Content Security Policy (an HTTP response header that restricts content sources) |
+| SemVer | Semantic Versioning (`MAJOR.MINOR.PATCH`) |
+| PII | Personally Identifiable Information |
+| p95 / p99 | The 95th / 99th-percentile value of a measured distribution (e.g. interaction latency) |
+| Verification method | How a requirement is checked: **T** test, **D** demonstration, **I** inspection, **A** analysis |
 
 ### 1.4 References
 
-1. [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) (v1.2) — problem, scope, KPIs, risks, governance.
+1. [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) (v1.4) — problem, scope, KPIs, risks, governance.
 2. [Build Spec v3](../specs/build-spec-v3.md) — technical specification and model definitions.
 3. [UI/UX Execution Playbook](../guides/uiux-execution-playbook.md) — usability requirements for technical users.
 4. ISO/IEC/IEEE 29148:2018 — Requirements engineering.
 5. ISO/IEC 25010:2023 — Product quality model.
 6. W3C WCAG 2.2 — Web Content Accessibility Guidelines.
+7. [Model Data Sheet](../03-blueprint/model-data-sheet.md) — the frozen numeric model values (QAs, factors, matrix, D1–D5 `qaFit`, anti-patterns, presets).
 
 ### 1.5 Requirement Conventions
 
@@ -90,6 +104,24 @@ decision records. The authoritative scope (in/deferred/non-goals) is the charter
   a section of Build Spec v3; **UI/UX Playbook Task n** = a task in the UI/UX Execution Playbook.
 - Priority for v1.0: **Must** unless stated. **Could** items may slip without affecting the MVP.
 - Verification methods (Phase 5): **T** test, **D** demonstration, **I** inspection, **A** analysis.
+- Every requirement carries an explicit **Verify** column so nothing ships unverifiable.
+
+### 1.6 Requirement Quality & Change Control
+
+To keep this specification dependable as the project evolves:
+
+- **Atomic & verifiable.** Each requirement states a single, testable behavior. Where a
+  requirement names several coordinated steps (e.g. derive → clamp → normalize), they are one
+  indivisible behavior verified together, not separate requirements.
+- **Conflict resolution.** If two requirements appear to conflict, the **charter** wins over this
+  SRS, and this SRS wins over the Build Spec; the conflict is then logged in Section 9 and
+  resolved by the Owner. The Build Spec remains authoritative only for *model internals* (factor
+  values, fit vectors, rule conditions).
+- **Change control.** Adding, removing, or changing the intent of a requirement bumps this
+  document's version and adds a Document History row. Changes that alter the decision model
+  additionally require a Domain-Advisor review and an ADR (Charter Section 14.4).
+- **Stable identifiers.** Requirement IDs are permanent. A retired requirement keeps its ID and is
+  marked withdrawn rather than reused, so traceability never breaks.
 
 ---
 
@@ -114,6 +146,11 @@ non-technical decision-maker (summaries/reports); **P5** contributor (onboarding
 Modern evergreen desktop and mobile browsers; responsive down to a 360 px viewport; functions
 fully offline after first load; WCAG 2.2 AA in both light and dark themes.
 
+**Supported-browser baseline** (the verification target for "evergreen"): the latest two stable
+versions of Chrome, Edge, Firefox, and Safari (desktop and mobile), covering ES2020 and
+`localStorage`. Internet Explorer is **not supported**. Older or non-conforming browsers receive a
+plain, readable degraded experience rather than a blank page (see FR-EDGE-4).
+
 ### 2.4 Constraints
 
 Client-side only; bilingual ID/EN; all model values held in configuration (not hard-coded);
@@ -126,90 +163,117 @@ The `fit`/weight values are tunable expert heuristics (not validated facts); npm
 free static hosting/CI are available. Full list: charter
 [Section 9](../01-discovery-and-planning/discovery-and-planning.md#9-assumptions-constraints--dependencies).
 
+### 2.6 Out of Scope / Non-Goals
+
+Stated explicitly so these never re-enter as implicit requirements. The system **shall not**, in
+v1.0:
+
+- **Replace human judgment** or perform a full ATAM workshop — it is decision *support* only (Charter Section 21).
+- **Generate application code or Infrastructure-as-Code** — the C4 Mermaid stub (FR-OUT-5) is a diagram, not runnable artifacts (Charter Section 5).
+- **Store sensitive data, accounts, or any server-side state** — there is no backend, database, or login (Charter Section 17).
+- **Make network or AI calls** to score, recommend, or explain — all computation is local arithmetic (Build Spec Section 2).
+- **Claim empirical validity** for its heuristics — the validation study is deferred (Charter Section 11; OI-6).
+- **Implement deferred features**: multi-stakeholder collaboration, saved multi-project comparison, **organization-level** config import/export, and generated production diagrams remain post-MVP (Charter Section 15.6). The **basic** per-user config JSON import/export (FR-OUT-6) *is* in the MVP.
+
 ---
 
 ## 3. Functional Requirements
 
 ### 3.1 Application Shell, Modes & Global UX
 
-| ID | The system shall… | Priority | Trace |
-|---|---|---|---|
-| FR-SHELL-1 | Provide two modes — **Guided** (plain language) and **Expert** (technical terms, editable weights) — switchable at runtime, with the choice persisted. | Must | Charter Section 7; Build Spec Section 12 |
-| FR-SHELL-2 | Provide an **ID/EN language toggle** that localizes every visible string at runtime (default ID). | Must | Charter Section 5; Build Spec Section 2 |
-| FR-SHELL-3 | Provide a **dark/light theme toggle**, both meeting WCAG AA contrast. | Must | Charter Section 5, Section 11 |
-| FR-SHELL-4 | Display a **permanent, visible disclaimer** that scores are tunable heuristics, not facts. | Must | Charter Section 21 (R2) |
-| FR-SHELL-5 | Offer **scenario presets** (startup MVP, regulated/enterprise, high-traffic e-commerce, IoT/streaming, internal tool) that populate all factors. | Must | Build Spec Section 12; Charter Section 5 |
-| FR-SHELL-6 | Provide **reset** of all answers, guarded by confirmation and reversible via undo. | Must | UI/UX Playbook Task 4 |
-| FR-SHELL-7 | Provide a **glossary** of terms and contextual help/tooltips. | Must | Charter Section 5; UI/UX Playbook Task 9 |
-| FR-SHELL-8 | Provide a **command palette and keyboard shortcuts** covering all core actions. | Should | UI/UX Playbook Task 2 |
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-SHELL-1 | Provide two modes — **Guided** (plain language) and **Expert** (technical terms, editable weights) — switchable at runtime, with the choice persisted. | Must | Charter Section 7; Build Spec Section 12 | T |
+| FR-SHELL-2 | Provide an **ID/EN language toggle** that localizes every visible string at runtime (default ID). | Must | Charter Section 5; Build Spec Section 2 | T |
+| FR-SHELL-3 | Provide a **dark/light theme toggle**, both meeting WCAG AA contrast. | Must | Charter Section 5, Section 11 | T |
+| FR-SHELL-4 | Display a **permanent, visible disclaimer** that scores are tunable heuristics, not facts. | Must | Charter Section 21 (R2) | I |
+| FR-SHELL-5 | Offer **scenario presets** (startup MVP, regulated/enterprise, high-traffic e-commerce, IoT/streaming, internal tool) that populate all factors. | Must | Build Spec Section 12; Charter Section 5 | T |
+| FR-SHELL-6 | Provide **reset** of all answers, guarded by confirmation and reversible via undo. | Must | UI/UX Playbook Task 4 | T |
+| FR-SHELL-7 | Provide a **glossary** of terms and contextual help/tooltips. | Must | Charter Section 5; UI/UX Playbook Task 9 | D |
+| FR-SHELL-8 | Provide a **command palette and keyboard shortcuts** covering all core actions. | Should | UI/UX Playbook Task 2 | T |
 
 ### 3.2 Step 1 — Project Factors
 
-| ID | The system shall… | Priority | Trace |
-|---|---|---|---|
-| FR-FACT-1 | Present **≥12 project factors** (target 14), grouped, each with three ordinal levels (0–2). | Must | Charter Section 5; Build Spec Section 4 |
-| FR-FACT-2 | Show localized **help text** per factor (what it means + why it shifts QA priorities). | Must | Build Spec Section 4 |
-| FR-FACT-3 | On any factor change, **instantly update** QA priorities, all dimension rankings, charts, and analyses. | Must | Build Spec Section 14.2 |
-| FR-FACT-4 | Support **collapsible groups** and progressive disclosure of advanced factors. | Should | UI/UX Playbook Task 3, T9 |
-| FR-FACT-5 | Apply documented **default factor levels** (all level 0 except time-to-market = 1). | Must | Build Spec Section 12 |
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-FACT-1 | Present the **14 project factors**, grouped, each with three ordinal levels (0–2). | Must | Charter Section 5; Build Spec Section 4; Model Data Sheet Section 2 | I |
+| FR-FACT-2 | Show localized **help text** per factor (what it means + why it shifts QA priorities). | Must | Build Spec Section 4 | D |
+| FR-FACT-3 | On any factor change, **instantly update** QA priorities, all dimension rankings, charts, and analyses. | Must | Build Spec Section 14.2 | T |
+| FR-FACT-4 | Support **collapsible groups** and progressive disclosure of advanced factors. | Should | UI/UX Playbook Task 3, Task 9 | D |
+| FR-FACT-5 | Apply documented **default factor levels** (all level 0 except time-to-market = 1). | Must | Build Spec Section 12 | T |
 
 ### 3.3 Step 2 — Quality-Attribute Priorities
 
-| ID | The system shall… | Priority | Trace |
-|---|---|---|---|
-| FR-QA-1 | Derive QA weights from factors via the **factor→QA influence matrix** (contribution = influence × level; budget inverted), clamp negatives to 0, and **normalize to sum 100 %**. | Must | Build Spec Section 5 |
-| FR-QA-2 | Display the 12 QA weights as a ranked bar chart (the **utility tree**). | Must | Build Spec Section 8 |
-| FR-QA-3 | In Expert mode, allow **direct override** of any QA weight and **lock** it so factor changes do not overwrite it. | Should | Build Spec Section 5 |
-| FR-QA-4 | Visibly mark **economic QAs** (cost efficiency, time-to-market) as outside the ISO product-quality model. | Must | Build Spec Section 3 |
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-QA-1 | Derive QA weights from factors via the **factor→QA influence matrix** (contribution = influence × level; budget inverted), clamp negatives to 0, and **normalize to sum 100 %**. | Must | Build Spec Section 5 | T |
+| FR-QA-2 | Display the 12 QA weights as a ranked bar chart (the **utility tree**). | Must | Build Spec Section 8 | D |
+| FR-QA-3 | In Expert mode, allow **direct override** of any QA weight and **lock** it so factor changes do not overwrite it. | Should | Build Spec Section 5 | T |
+| FR-QA-4 | Visibly mark **economic QAs** (cost efficiency, time-to-market) as outside the ISO product-quality model. | Must | Build Spec Section 3 | I |
 
 ### 3.4 Step 3 — Recommendation & Analysis
 
-| ID | The system shall… | Priority | Trace |
-|---|---|---|---|
-| FR-REC-1 | Recommend across **five orthogonal dimensions** (deployment, communication, data, code structure, frontend). | Must | Build Spec Section 6 |
-| FR-REC-2 | Compute each option's **composite score** and rank options within each dimension, displaying scores normalized to 0–100. | Must | Build Spec Section 6, Section 8 |
-| FR-REC-3 | Render a **radar chart** overlaying the top options across all 12 QAs. | Must | Build Spec Section 8 |
-| FR-REC-4 | Show a per-option **QA contribution breakdown** that reconciles exactly to the composite score. | Must | Build Spec Section 8, Section 14.10 |
-| FR-REC-5 | Provide a **comparison mode** for 2–3 options side-by-side. | Should | Build Spec Section 8 |
-| FR-REC-6 | Flag a **close call** when the top two options in a dimension are within 10 %. | Must | Build Spec Section 8 |
-| FR-REC-7 | Perform **sensitivity analysis**: name the single factor change (±1 level) that flips the D1 winner, or label the result **robust**. | Must | Build Spec Section 8 |
-| FR-REC-8 | Present a **risk register** for the chosen options (likelihood, impact, mitigation). | Must | Build Spec Section 8, Section 9 |
-| FR-REC-9 | Detect **anti-patterns** on the chosen combination via rules with severity (info/warning/danger). | Must | Build Spec Section 10 |
-| FR-REC-10 | Generate suggested, measurable **fitness functions** from the top-weighted QAs. | Should | Build Spec Section 11 |
-| FR-REC-11 | Show qualitative **cost & operational-complexity indicators** (Low/Med/High) per D1 option. | Should | Build Spec Section 8 |
-| FR-REC-12 | Given an optional **current architecture**, suggest an incremental **migration path** (Strangler Fig where legacy is heavy). | Should | Build Spec Section 8 |
-| FR-REC-13 | Provide a **"How scoring works" / methodology panel** citing ISO/IEC 25010:2023, ATAM, ADD, and fitness functions. | Must | Build Spec Section 8; Charter Section 1 |
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-REC-1 | Recommend across **five orthogonal dimensions** (deployment, communication, data, code structure, frontend). | Must | Build Spec Section 6 | D |
+| FR-REC-2 | Compute each option's **composite score** and rank options within each dimension, displaying scores normalized to 0–100. | Must | Build Spec Section 6, Section 8 | T |
+| FR-REC-3 | Render a **radar chart** overlaying the top options across all 12 QAs. | Must | Build Spec Section 8 | D |
+| FR-REC-4 | Show a per-option **QA contribution breakdown** that reconciles exactly to the composite score. | Must | Build Spec Section 8, Section 14.10 | T |
+| FR-REC-5 | Provide a **comparison mode** for 2–3 options side-by-side. | Should | Build Spec Section 8 | D |
+| FR-REC-6 | Flag a **close call** when the top two options in a dimension are within 10 %. | Must | Build Spec Section 8 | T |
+| FR-REC-7 | Perform **sensitivity analysis**: name the single factor change (±1 level) that flips the D1 winner, or label the result **robust**. | Must | Build Spec Section 8 | T |
+| FR-REC-8 | Present a **risk register** for the chosen options (likelihood, impact, mitigation). | Must | Build Spec Section 8, Section 9 | D |
+| FR-REC-9 | Detect **anti-patterns** on the chosen combination via rules with severity (info/warning/danger). | Must | Build Spec Section 10 | T |
+| FR-REC-10 | Generate suggested, measurable **fitness functions** from the top-weighted QAs. | Should | Build Spec Section 11 | T |
+| FR-REC-11 | Show qualitative **cost & operational-complexity indicators** (Low/Med/High) per D1 option. | Should | Build Spec Section 8 | D |
+| FR-REC-12 | Given an optional **current architecture**, suggest an incremental **migration path** (Strangler Fig where legacy is heavy). | Should | Build Spec Section 8 | T |
+| FR-REC-13 | Provide a **"How scoring works" / methodology panel** citing ISO/IEC 25010:2023, ATAM, ADD, and fitness functions. | Must | Build Spec Section 8; Charter Section 1 | I |
 
 ### 3.5 Step 4 — Outputs & Sharing
 
-| ID | The system shall… | Priority | Trace |
-|---|---|---|---|
-| FR-OUT-1 | Export an **ADR in MADR format**. | Must | Build Spec Section 12 |
-| FR-OUT-2 | Export a **full report** (Markdown + print stylesheet). | Must | Build Spec Section 12 |
-| FR-OUT-3 | Export **scores as CSV** and the **assessment as JSON**. | Should | Build Spec Section 12 |
-| FR-OUT-4 | Provide a **share-via-URL** link that round-trips to identical state. | Must | Build Spec Section 14.14 |
-| FR-OUT-5 | Render a **C4-style Mermaid diagram stub** reflecting the chosen D1 style. | Could | Build Spec Section 12 |
-| FR-OUT-6 | Support **import/export of a custom configuration JSON** for extensibility. | Should | Build Spec Section 12 |
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-OUT-1 | Export an **ADR in MADR format**. | Must | Build Spec Section 12 | T |
+| FR-OUT-2 | Export a **full report** (Markdown + print stylesheet). | Must | Build Spec Section 12 | T |
+| FR-OUT-3 | Export **scores as CSV** and the **assessment as JSON**. | Should | Build Spec Section 12 | T |
+| FR-OUT-4 | Provide a **share-via-URL** link that round-trips to identical state. | Must | Build Spec Section 14.14 | T |
+| FR-OUT-5 | Render a **C4-style Mermaid diagram stub** reflecting the chosen D1 style. | Could | Build Spec Section 12 | D |
+| FR-OUT-6 | Support **import/export of a basic custom-configuration JSON** for extensibility (per-user; organization-level config is deferred to v2.0). | Should | Build Spec Section 12; Charter Section 5 | T |
 
 ### 3.6 State, Persistence & Reproducibility
 
-| ID | The system shall… | Priority | Trace |
-|---|---|---|---|
-| FR-STATE-1 | Persist the full assessment state to **`localStorage`**. | Must | Build Spec Section 2 |
-| FR-STATE-2 | Encode the full state in the **URL hash** for shareable links. | Must | Build Spec Section 2 |
-| FR-STATE-3 | Record the **model version** in every result, export, and shared URL. | Must | Charter Section 15 (R8) |
-| FR-STATE-4 | **Validate and sanitize** any state parsed from the URL before use. | Must | Charter Section 18 |
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-STATE-1 | Persist the full assessment state to **`localStorage`**. | Must | Build Spec Section 2 | T |
+| FR-STATE-2 | Encode the full state in the **URL hash** for shareable links. | Must | Build Spec Section 2 | T |
+| FR-STATE-3 | Record the **model version** in every result, export, and shared URL. | Must | Charter Section 15 (R8) | I |
+| FR-STATE-4 | **Validate and sanitize** any state parsed from the URL before use. | Must | Charter Section 18 | T |
 
 ### 3.7 UI States & Feedback
 
-| ID | The system shall… | Priority | Trace |
-|---|---|---|---|
-| FR-UI-1 | Show an always-visible **save-state indicator** (Saving / All changes saved). | Must | UI/UX Playbook Task 4 |
-| FR-UI-2 | Use **skeleton loading** (not a full-screen spinner) while recomputing. | Must | UI/UX Playbook Task 1 |
-| FR-UI-3 | Present **three-layer errors** (what / why / how to fix) with a retry and a copyable request ID for recoverable failures. | Must | UI/UX Playbook Task 5 |
-| FR-UI-4 | Provide **undo** for destructive actions. | Must | UI/UX Playbook Task 4 |
-| FR-UI-5 | Provide a **guiding empty state** with a "load sample data" action. | Must | UI/UX Playbook Task 9 |
-| FR-UI-6 | Avoid layout shift and keep transitions within 150–250 ms. | Should | UI/UX Playbook Task 1 |
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-UI-1 | Show an always-visible **save-state indicator** (Saving / All changes saved). | Must | UI/UX Playbook Task 4 | D |
+| FR-UI-2 | Use **skeleton loading** (not a full-screen spinner) while recomputing. | Must | UI/UX Playbook Task 1 | D |
+| FR-UI-3 | Present **three-layer errors** (what / why / how to fix) with a retry and a copyable request ID for recoverable failures. | Must | UI/UX Playbook Task 5 | T |
+| FR-UI-4 | Provide **undo** for destructive actions. | Must | UI/UX Playbook Task 4 | T |
+| FR-UI-5 | Provide a **guiding empty state** with a "load sample data" action. | Must | UI/UX Playbook Task 9 | D |
+| FR-UI-6 | Avoid layout shift and keep transitions within 150–250 ms. | Should | UI/UX Playbook Task 1 | T |
+
+### 3.8 Edge Cases, Resilience & Input Validation
+
+These requirements make failure modes explicit so they are handled by design, not discovered in
+production. They are the most common source of "we never specified that" defects.
+
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-EDGE-1 | On a **malformed, truncated, or tampered shared URL**, ignore the bad state, fall back to the last `localStorage` state (or defaults), and show a non-blocking notice — never crash or render a blank page. | Must | Charter Section 18; FR-STATE-4 | T |
+| FR-EDGE-2 | When **`localStorage` is unavailable, full, or denied** (private mode, quota, disabled), continue to function in memory for the session and inform the user that progress will not be saved. | Must | Charter Section 11, Section 17 | T |
+| FR-EDGE-3 | On **import of an invalid custom-configuration JSON** (schema mismatch, out-of-range fit values, missing keys), reject it with a precise, localized error naming the offending field, and leave the current config unchanged. | Must | Build Spec Section 12; FR-DATA-9 | T |
+| FR-EDGE-4 | On an **unsupported or non-conforming browser**, present a readable plain-HTML message rather than a broken UI. | Should | Charter Section 9 | D |
+| FR-EDGE-5 | When a **shared URL or export carries an older model version**, detect the mismatch, render the result as-is for readability, and offer to **recompute with the current model** — never silently rescore. | Must | Charter Section 15.2 (R8); FR-STATE-3 | T |
+| FR-EDGE-6 | Guarantee scoring is **defined for every input combination**: clamp factor levels to 0–2, default unlisted `qaFit` to 3, and never divide by zero when all QA weights resolve to 0 (fall back to equal weights). | Must | Build Spec Section 5, Section 6 | T |
+| FR-EDGE-7 | Keep **export and share actions deterministic**: identical state always yields byte-identical ADR/report/CSV/JSON output, independent of locale or time zone (timestamps explicitly UTC). | Should | Build Spec Section 12; FR-OUT-* | T |
 
 ---
 
@@ -218,8 +282,9 @@ free static hosting/CI are available. Full list: charter
 | ID | The system shall… | Priority | Trace | Verify |
 |---|---|---|---|---|
 | NFR-PERF-1 | Reflect any factor change in priorities, charts, and rankings within **~100 ms perceived** latency on a mid-range device. | Must | UI/UX Playbook Task 1 | T |
-| NFR-PERF-2 | Enable a **median time-to-first-recommendation ≤ 5 minutes** (KPI K3). | Must | Charter Section 4 (K3) | T |
-| NFR-USE-1 | Achieve a **System Usability Scale ≥ 75** at beta (KPI K5). | Should | Charter Section 4 (K5) | T |
+| NFR-PERF-2 | Enable a **median time-to-first-recommendation ≤ 5 minutes** (KPI K3). | Must | Charter Section 22 (K3) | T |
+| NFR-PERF-3 | Meet **interim performance budgets** on a mid-range device: initial JS bundle **≤ 300 KB gzipped**, First Contentful Paint **≤ 2 s** on a fast-3G profile, and a re-score interaction p95 **≤ 100 ms**. (Interim targets; confirmed at Phase 3 design — OI-5.) | Should | UI/UX Playbook Task 1 | T |
+| NFR-USE-1 | Achieve a **System Usability Scale ≥ 70** at beta (operative solo-stage KPI K5; aspirational target 75). | Should | Charter Section 22 (K5) | T |
 | NFR-USE-2 | Be usable **without mandatory setup** (presets and sample data available immediately). | Must | UI/UX Playbook Task 9 | D |
 | NFR-USE-3 | Be **consistent and predictable**: honor standard shortcuts; one term per concept; consistent color meaning. | Must | UI/UX Playbook Task 6 | I |
 | NFR-A11Y-1 | Meet **WCAG 2.2 AA** contrast in both themes. | Must | Charter Section 5 | T |
@@ -255,7 +320,7 @@ anti-patterns.
 
 ```mermaid
 flowchart TB
-    F["Project factors<br/>≥12 × 3 levels"] --> W["Quality-attribute priorities<br/>utility tree · normalized to 100%"]
+    F["Project factors<br/>14 × 3 levels"] --> W["Quality-attribute priorities<br/>utility tree · normalized to 100%"]
     W --> D1["D1 · Deployment Granularity"]
     W --> D2["D2 · Communication Style"]
     W --> D3["D3 · Data Management"]
@@ -290,17 +355,17 @@ workload*, *team size*, and *DevOps maturity* (the high-traffic e-commerce prese
 
 These datasets **shall** be held in configuration:
 
-| ID | The system shall maintain… | Trace |
-|---|---|---|
-| FR-DATA-1 | **12 quality attributes**, each with id, EN/ID name & definition, ISO 25010 mapping, and an economic flag. | Build Spec Section 3 |
-| FR-DATA-2 | **≥12 (target 14) factors**, each with id, EN/ID label, three EN/ID level labels, EN/ID help, and a group. | Build Spec Section 4 |
-| FR-DATA-3 | A **factor→QA influence matrix** of non-zero influences (budget inverted). | Build Spec Section 5 |
-| FR-DATA-4 | **Five dimensions** with options, each option carrying a 12-value `qaFit` vector (1–5), educational metadata (EN/ID), and risks. | Build Spec Section 6, Section 7, Section 9 |
-| FR-DATA-5 | **Anti-pattern rules** (condition + severity + EN/ID message). | Build Spec Section 10 |
-| FR-DATA-6 | **Fitness-function templates** keyed to QAs (EN/ID). | Build Spec Section 11 |
-| FR-DATA-7 | **Scenario presets** and **migration paths**. | Build Spec Section 12 |
-| FR-DATA-8 | A defined **persisted-state schema** and a stable **URL-encoding** of it, both versioned by model version. | Build Spec Section 2; FR-STATE-3 |
-| FR-DATA-9 | A documented **custom-configuration JSON** schema for import/export. | Build Spec Section 12 |
+| ID | The system shall maintain… | Trace | Verify |
+|---|---|---|---|
+| FR-DATA-1 | **12 quality attributes**, each with id, EN/ID name & definition, ISO 25010 mapping, and an economic flag. | Build Spec Section 3 | I |
+| FR-DATA-2 | The **14 factors**, each with id, EN/ID label, three EN/ID level labels, EN/ID help, and a group. | Build Spec Section 4; Model Data Sheet Section 2 | I |
+| FR-DATA-3 | A **factor→QA influence matrix** of non-zero influences (budget inverted). | Build Spec Section 5 | I |
+| FR-DATA-4 | **Five dimensions** with options, each option carrying a 12-value `qaFit` vector (1–5), educational metadata (EN/ID), and risks. | Build Spec Section 6, Section 7, Section 9 | I |
+| FR-DATA-5 | **Anti-pattern rules** (condition + severity + EN/ID message). | Build Spec Section 10 | I |
+| FR-DATA-6 | **Fitness-function templates** keyed to QAs (EN/ID). | Build Spec Section 11 | I |
+| FR-DATA-7 | **Scenario presets** and **migration paths**. | Build Spec Section 12 | I |
+| FR-DATA-8 | A defined **persisted-state schema** and a stable **URL-encoding** of it, both versioned by model version. | Build Spec Section 2; FR-STATE-3 | T |
+| FR-DATA-9 | A documented **custom-configuration JSON** schema for import/export. | Build Spec Section 12 | I |
 
 **Integrity rules:** unlisted `qaFit` entries default to a neutral 3; normalized QA weights always
 sum to 100; a contribution breakdown always reconciles to the composite score (FR-REC-4).
@@ -366,6 +431,9 @@ Key gates:
 - **AC-7.** Language toggle updates **all** strings; dark mode fully styled. *(NFR-I18N-1, FR-SHELL-3)*
 - **AC-8.** Share link round-trips to identical state; ADR/report exports are valid; config import/export round-trips. *(FR-OUT-\*, FR-STATE-2)*
 - **AC-9.** Fully keyboard-operable; AA contrast in both themes. *(NFR-A11Y-1/2)*
+- **AC-10.** A tampered/truncated share URL falls back to saved or default state with a notice (no crash, no blank page); with `localStorage` disabled, the app still runs and warns that progress will not be saved. *(FR-EDGE-1/2)*
+- **AC-11.** An older-model-version share link or export renders as-is and offers "recompute with the current model"; importing an invalid config JSON is rejected with a field-level error and leaves the current config intact. *(FR-EDGE-3/5)*
+- **AC-12.** The production build meets the interim performance budgets (bundle ≤ 300 KB gzipped; re-score p95 ≤ 100 ms). *(NFR-PERF-3)*
 
 **Release gate (Charter [Section 11](../01-discovery-and-planning/discovery-and-planning.md#11-success-criteria--project-level-definition-of-done)):**
 all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.
@@ -382,10 +450,11 @@ all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.
 | FR-REC (5 dimensions + analysis) | Section 1, Section 5 | Sections 6–11 | K2, K6 |
 | FR-OUT (ADR, report, CSV/JSON, share, config) | Section 5 | Section 12 | K4 |
 | FR-STATE (persistence, reproducibility) | Section 15, Section 18 | Section 2 | — |
+| FR-EDGE (edge cases, resilience, validation) | Section 9, Section 11, Section 15, Section 17, Section 18 | Section 2, Section 5, Section 12 | — |
 | FR-UI (mature states) | Section 11 | Section 12 | K2, K5 |
 | FR-DATA (decision model) | Section 14.7 | Sections 3–12 | — |
-| NFR-PERF | Section 4 | Section 1 | K3 |
-| NFR-USE / A11Y / I18N | Section 5, Section 11 | Section 14 | K5, K6 |
+| NFR-PERF | Section 22 | Section 1 | K3 |
+| NFR-USE / A11Y / I18N | Section 5, Section 11, Section 22 | Section 14 | K5, K6 |
 | NFR-SEC / PRIV | Section 17, Section 18 | Section 2 | — |
 | NFR-MAINT | Section 14.7, Section 15 | Section 13, Section 14 | K7 |
 
@@ -393,14 +462,14 @@ all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.
 
 ## 9. Open Issues & To Be Determined
 
-| # | Open issue | Owner | Notes |
-|---|---|---|---|
-| OI-1 | Final factor count (≥12 vs the 14 in Build Spec Section 4) and grouping | Owner | Confirm at spec freeze (M1) |
-| OI-2 | Preset factor-level values (config) that hit the Section 5.3 outcome targets | Owner + Domain Advisor | Outcome targets defined in [Section 5.3](#5-data--decision-model-requirements); exact levels to be calibrated & ADR-logged |
-| OI-3 | Whether the C4 Mermaid stub (FR-OUT-5) is in v1.0 or deferred | Owner | Currently **Could**-priority |
-| OI-4 | D4/D5 `qaFit` values (documented as defensible defaults) | Domain Advisor | Recorded as an ADR per Charter Section 14.4 |
-| OI-5 | Quantitative performance budgets (bundle size, p95 interaction) | Engineer | Set during Phase 3 design |
-| OI-6 | Empirical-validation study design (deferred per Charter Section 5) | Owner | Out of MVP scope; tracked for v3.0 |
+| # | Open issue | Owner | Target | Notes |
+|---|---|---|---|---|
+| OI-1 | ~~Final factor count~~ — **Resolved: fixed at 14** (Build Spec Section 4 / [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 2) | Owner | Closed (2026-06-12) | Grouping also fixed in the Model Data Sheet |
+| OI-2 | Preset factor-level values that hit the Section 5.3 outcome targets | Owner + Domain Advisor | M1–M2 | **Baseline levels now recorded** in [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 6; calibrate against [Section 5.3](#5-data--decision-model-requirements) & ADR-log |
+| OI-3 | Whether the C4 Mermaid stub (FR-OUT-5) is in v1.0 or deferred | Owner | M1 | Currently **Could**-priority |
+| OI-4 | D4/D5 `qaFit` values (documented as defensible defaults) | Domain Advisor | M1–M3 | **Baseline values now recorded** in [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 4; ratify & ADR-log per Charter Section 14.4 |
+| OI-5 | Confirm/ratify the quantitative performance budgets in NFR-PERF-3 (bundle size, FCP, p95 interaction) | Engineer | M2 (Phase 3 design) | Interim targets already set in NFR-PERF-3; ratify against the real bundle |
+| OI-6 | Empirical-validation study design (deferred per Charter Section 5) | Owner | v3.0 | Out of MVP scope; tracked for v3.0 |
 
 ---
 
