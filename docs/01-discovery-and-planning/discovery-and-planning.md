@@ -64,11 +64,11 @@ and will keep improving collaboratively year over year.
 
 ### How to read this document (by who you are)
 
-- **General reader / want a quick picture:** read the **Preface** above, then §1 and §3.
-- **Product owner / manager:** §3–§6, §10, §12, §15.
-- **Engineer / architect / analyst:** §5, §8, §11, §13.
-- **Prospective contributor:** §14 (Governance & Contribution) and §15 (Versioning & Evolution).
-- **Academics / reviewers:** §8, §11, §13 (references).
+- **General reader / want a quick picture:** read the **Preface** above, then Sections 1 and 3.
+- **Product owner / manager:** Sections 3–6, 10, 12, and 15.
+- **Engineer / architect / analyst:** Sections 5, 8, 11, and 13.
+- **Prospective contributor:** Section 14 (Governance & Contribution) and Section 15 (Versioning & Evolution).
+- **Academics / reviewers:** Sections 8, 11, and 13 (references).
 
 ---
 
@@ -185,7 +185,7 @@ layer, and the chosen combination is then checked for anti-patterns.
 > about your app at once — how to split it, how the parts talk, where data lives, how each part is
 > organized inside, and how the screens are built — and warns you when the combined choices clash.
 
-**Deferred (see the evolution roadmap, §15):** multi-stakeholder collaboration; saved
+**Deferred (see the evolution roadmap, Section 15):** multi-stakeholder collaboration; saved
 multi-project comparison; custom configuration import/export; generated C4 diagrams; an empirical
 validation study.
 
@@ -210,7 +210,7 @@ validation study.
 **Distrust triggers (design guardrails):** scores without explanation; claims without references;
 a slow/cluttered UI; losing input without warning; language that condescends to expert users;
 **an unclear contribution process**. All are mitigated (transparency, citations, mature states,
-Expert mode, §14).
+Expert mode, Section 14).
 
 ---
 
@@ -230,7 +230,7 @@ language, "what this means for you," presets, and a glossary. → **Guided mode*
 consequences without jargon. Needs plain summaries and reports.
 
 **P5 — Contributor (new).** Wants to help build. Needs clear onboarding documentation, *good
-first issues*, and contribution guidelines (§14).
+first issues*, and contribution guidelines (Section 14).
 
 ---
 
@@ -239,26 +239,26 @@ first issues*, and contribution guidelines (§14).
 **8.1 Technical — FEASIBLE.** Client-side (Vite + React + TypeScript), with no backend/DB.
 Scoring is lightweight arithmetic over a small matrix → instant. The stack is mature and widely
 known. The main risk (validity of the *fit* values) is methodological, mitigated through
-transparency + calibration (§10–§11).
+transparency + calibration (Sections 10–11).
 
 **8.2 Business — FEASIBLE (low cost).** Free hosting & CI/CD (GitHub Pages + Actions). No license
 fees. The main cost is time. *(Detailed business model: **ASSUMPTION**.)*
 
 **8.3 Operational — FEASIBLE with caveats.** Maintainable by a single maintainer + community. The
 *bus factor* is mitigated: documentation, separated configuration, automated testing, and
-**contribution governance (§14)**.
+**contribution governance (Section 14)**.
 
 **8.4 Legal/ethical — FEASIBLE.** No sensitive data; does not reproduce copyrighted material;
-references are cited correctly; WCAG AA [11]. An open license encourages contribution (§14).
+references are cited correctly; WCAG AA [11]. An open license encourages contribution (Section 14).
 
 **Conclusion:** **feasible** to proceed to design and implementation, with one academic
-prerequisite: a plan for **empirical validation** of the model (§11).
+prerequisite: a plan for **empirical validation** of the model (Section 11).
 
 ---
 
 ## 9. Assumptions, Constraints & Dependencies
 
-**Assumptions (need validation):** the open-source/education model; the KPIs in §4; the
+**Assumptions (need validation):** the open-source/education model; the KPIs in Section 4; the
 availability of a maintainer and contributors; an ID/EN audience; the code and document licenses.
 
 **Constraints:** client-side; bilingual ID/EN; desktop & mobile web (≥360px); WCAG AA; *fit* and
@@ -273,14 +273,14 @@ the standards [1], [2], [6].
 
 | ID | Risk | Impact | Likelihood | Mitigation |
 |---|---|---|---|---|
-| R1 | Validity of fit/weight values questioned | High | Medium | Transparency (scoring panel), grounding in [1],[2], tunable weights, validation plan (§11), domain-advisor review (§14) |
+| R1 | Validity of fit/weight values questioned | High | Medium | Transparency (scoring panel), grounding in [1],[2], tunable weights, validation plan (Section 11), domain-advisor review (Section 14) |
 | R2 | Over-reliance (scores treated as absolute truth) | High | Medium | Permanent disclaimer, *close-call* detection, sensitivity analysis |
-| R3 | Scope creep | Medium | High | A firm MVP scope (§5), phased build, version roadmap (§15) |
+| R3 | Scope creep | Medium | High | A firm MVP scope (Section 5), phased build, version roadmap (Section 15) |
 | R4 | Low adoption | High | Medium | Fast onboarding, presets, Guided mode, open-source, free distribution |
-| R5 | Bus factor (single maintainer) | Medium | Medium | Contribution governance (§14), documentation, automated tests, open license |
+| R5 | Bus factor (single maintainer) | Medium | Medium | Contribution governance (Section 14), documentation, automated tests, open license |
 | R6 | Academic claims without evidence | Medium | Medium | Verified citations; separate "literature-based" from "unvalidated heuristic" |
-| R7 | **Unmanaged contributions / quality decline** | Medium | Medium | CONTRIBUTING.md, mandatory review, CI gating, ADRs for model decisions (§14) |
-| R8 | **Old results unreadable after the model changes** | Medium | Medium | Model version stored in each result; backward compatibility (§15) |
+| R7 | **Unmanaged contributions / quality decline** | Medium | Medium | CONTRIBUTING.md, mandatory review, CI gating, ADRs for model decisions (Section 14) |
+| R8 | **Old results unreadable after the model changes** | Medium | Medium | Model version stored in each result; backward compatibility (Section 15) |
 
 ---
 
@@ -404,7 +404,7 @@ ISO revision) and the validation study's findings; update *fit*/weight values vi
 
 | Version | Focus | Example improvements |
 |---|---|---|
-| **v1.0** | MVP (scope of §5) | 4-step flow, 5 dimensions, radar, ADR export, Guided/Expert, ID/EN |
+| **v1.0** | MVP (scope of Section 5) | 4-step flow, 5 dimensions, radar, ADR export, Guided/Expert, ID/EN |
 | **v1.x** | Refinement | More factors & "learn more" content, stricter accessibility (a11y), new translations, UX fixes |
 | **v2.0** | Collaboration | Multi-stakeholder weighting, save & compare assessments, organization config import/export |
 | **v2.x** | Integration | Generated C4 diagrams, export to ADR tools/repos, industry templates |
@@ -434,7 +434,7 @@ ISO revision) and the validation study's findings; update *fit*/weight values vi
 **Tools & infrastructure:** entirely free/open-source (Vite, React, TypeScript, charting
 libraries, GitHub Pages + Actions). **Monetary cost ≈ 0**; the main cost is **time**.
 
-**MVP time estimate:** ±10–12 weeks of part-time work (see §12). The final figure depends on team
+**MVP time estimate:** ±10–12 weeks of part-time work (see Section 12). The final figure depends on team
 availability.
 
 ---
@@ -481,11 +481,11 @@ reader + detail for experts), consistent with the dual-readability principle.
 ## 20. Sustainability
 
 - **Operating cost ≈ 0** (free hosting/CI) → low financial sustainability risk.
-- **Main risk = maintainer time** → mitigated with contribution governance (§14), documentation,
+- **Main risk = maintainer time** → mitigated with contribution governance (Section 14), documentation,
   and separated configuration so others can maintain it easily.
 - Supporting options *(ASSUMPTION)*: sponsorship/donations (e.g. GitHub Sponsors) if the
   maintenance burden grows.
-- An annual review (§15.5) keeps it relevant year over year.
+- An annual review (Section 15.5) keeps it relevant year over year.
 
 ---
 
@@ -510,9 +510,9 @@ without consideration. This principle is embedded in the product (a permanent di
 | D5 | Document/content license | **CC BY 4.0** | — |
 | D6 | Budget & resources | **Monetary cost ≈ 0**; 1 person (the author) + AI-agent assistance | Free hosting/CI on GitHub |
 | D7 | Schedule/deadline | **Flexible, no hard deadline**; indicative target ±10–12 weeks part-time | Reasonable for solo |
-| D8 | Maintenance owner | **The author (solo)** for now → shifting to a community model as contributors join | Bus factor mitigated via §14 |
+| D8 | Maintenance owner | **The author (solo)** for now → shifting to a community model as contributors join | Bus factor mitigated via Section 14 |
 | D9 | Analytics | **None** by default (privacy-friendly) | Can be added later if privacy-respecting & open |
-| D10 | Evolution roadmap (§15.6) | **Adopted as indicative direction** (not a promise) | — |
+| D10 | Evolution roadmap (Section 15.6) | **Adopted as indicative direction** (not a promise) | — |
 | D11 | Reference formality level | **Mixed** (industry + standards) for now | Add peer-reviewed literature if entering the academic track |
 | D12 | Domain advisor | **Not yet appointed**; seeking candidates | Interim: the owner + literature [1]–[6] as a reference |
 
@@ -529,7 +529,7 @@ without consideration. This principle is embedded in the product (a permanent di
 | K7 | **Active contributors** (first year) | **≥ 3** |
 
 > Contributor-growth strategy (per the owner's direction): a free public release on GitHub →
-> provide onboarding & `good first issue`s (§14.5) → bilingual release notes →
+> provide onboarding & `good first issue`s (Section 14.5) → bilingual release notes →
 > invite open contribution → formal recruitment follows once traction forms.
 
 ---

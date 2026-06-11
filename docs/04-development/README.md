@@ -9,7 +9,7 @@ editable config — never hard-coded — so they stay auditable.
 
 **Expected outputs**
 
-- Source code, built in the phase order of [Build Spec v3 §12](../specs/build-spec-v3.md#12-build-phases-do-in-order-each-leaves-the-app-runnable).
+- Source code, built in the phase order of [Build Spec v3 Section 12](../specs/build-spec-v3.md#12-build-phases-do-in-order-each-leaves-the-app-runnable).
 - Coding standards & linting setup, naming conventions, pre-commit hooks.
 - Pull requests with mandatory review (see [CONTRIBUTING.md](../../CONTRIBUTING.md)).
 
@@ -18,6 +18,6 @@ editable config — never hard-coded — so they stay auditable.
 - [Feature-Maturity Playbook](../guides/feature-maturity-playbook.md) — `F0-02` (code standards),
   the `TECH-*` tasks, and the global Definition of Done.
 - [UI/UX Execution Playbook](../guides/uiux-execution-playbook.md) — implementing the prototype's UX.
-- [Build Spec v3 §13](../specs/build-spec-v3.md#13-code-organization) — code organization.
+- [Build Spec v3 Section 13](../specs/build-spec-v3.md#13-code-organization) — code organization.
 
 Contributions are welcome — see [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).

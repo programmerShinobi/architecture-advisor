@@ -97,7 +97,7 @@ diagram, is in **[docs/README.md](docs/README.md)**.
 
 Contributions are welcome — code, documentation, translations, and model review. Start with
 [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Governance,
-roles, and the contribution flow are described in §14 of the
+roles, and the contribution flow are described in Section 14 of the
 [discovery charter](docs/01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution).
 
 ## License

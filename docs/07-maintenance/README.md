@@ -13,9 +13,9 @@ maintenance also means keeping the **decision model** current as standards evolv
 
 **References**
 
-- Charter [§15](../01-discovery-and-planning/discovery-and-planning.md) — versioning policy & evolution
+- Charter [Section 15](../01-discovery-and-planning/discovery-and-planning.md) — versioning policy & evolution
   roadmap (SemVer, separate model version, backward compatibility).
-- Charter [§20](../01-discovery-and-planning/discovery-and-planning.md) — sustainability.
+- Charter [Section 20](../01-discovery-and-planning/discovery-and-planning.md) — sustainability.
 - [Feature-Maturity Playbook](../guides/feature-maturity-playbook.md) — `TECH-09` (maintainability),
   `TECH-10` (operational observability).
 

@@ -87,7 +87,7 @@ flowchart LR
 
 ## 3. Module & Code Structure
 
-The source layout follows [Build Spec v3 §13](../specs/build-spec-v3.md). All math is in pure,
+The source layout follows [Build Spec v3 Section 13](../specs/build-spec-v3.md). All math is in pure,
 unit-tested functions in `lib/`; every weight, fit value, rule, and string lives in `config/` or
 `i18n/` — never hard-coded in components (NFR-MAINT-1).
 
@@ -121,8 +121,8 @@ for the codebase: a build-time check **should** forbid `lib/` from importing Rea
 
 ## 4. Decision-Model Data Schema
 
-The `config/` datasets required by [SRS §5.2](../02-requirement-analysis/software-requirements-specification.md#5-data--decision-model-requirements)
-are typed as follows (sketch; authoritative values in [Build Spec v3 §3–§11](../specs/build-spec-v3.md)).
+The `config/` datasets required by [SRS Section 5.2](../02-requirement-analysis/software-requirements-specification.md#5-data--decision-model-requirements)
+are typed as follows (sketch; authoritative values in [Build Spec v3 Sections 3–11](../specs/build-spec-v3.md)).
 
 ```ts
 type Bilingual = { en: string; id: string };
@@ -130,23 +130,23 @@ type QaId = 'performance' | 'scalability' | 'availability' | 'security'
   | 'maintainability' | 'deployability' | 'testability' | 'observability'
   | 'dataConsistency' | 'interoperability' | 'costEfficiency' | 'timeToMarket';
 
-interface QualityAttribute {            // 12 of these — BS §3
+interface QualityAttribute {            // 12 of these — Build Spec Section 3
   id: QaId; name: Bilingual; definition: Bilingual;
   isoMapping: string; economicFlag: boolean;        // true = outside ISO product model
 }
 
-interface Factor {                       // ≥12 — BS §4
+interface Factor {                       // ≥12 — Build Spec Section 4
   id: string; label: Bilingual; group: string;
   levels: [Bilingual, Bilingual, Bilingual];        // index 0..2
   help: Bilingual;
 }
 
-type FactorQaMatrix = Record<string, Partial<Record<QaId, number>>>;  // influences — BS §5
+type FactorQaMatrix = Record<string, Partial<Record<QaId, number>>>;  // influences — Build Spec Section 5
 
 interface Risk { description: Bilingual; likelihood: Level; impact: Level; mitigation: Bilingual; }
 type Level = 'Low' | 'Med' | 'High';
 
-interface DimensionOption {              // BS §6, §7, §9
+interface DimensionOption {              // Build Spec Section 6, Section 7, Section 9
   id: string; name: string; summary: Bilingual;
   qaFit: Record<QaId, 1 | 2 | 3 | 4 | 5>;           // unlisted defaults to 3
   definition: Bilingual; pros: Bilingual[]; cons: Bilingual[];
@@ -156,15 +156,15 @@ interface DimensionOption {              // BS §6, §7, §9
 }
 interface Dimension { id: 'D1'|'D2'|'D3'|'D4'|'D5'; name: Bilingual; options: DimensionOption[]; }
 
-interface AntiPatternRule {              // BS §10
+interface AntiPatternRule {              // Build Spec Section 10
   id: string; severity: 'info' | 'warning' | 'danger';
   test: (s: Assessment) => boolean; message: Bilingual;
 }
-type FitnessTemplate = { qa: QaId; suggestion: Bilingual };          // BS §11
-interface Preset { id: string; name: Bilingual; factorLevels: Record<string, 0|1|2>; }  // BS §12
+type FitnessTemplate = { qa: QaId; suggestion: Bilingual };          // Build Spec Section 11
+interface Preset { id: string; name: Bilingual; factorLevels: Record<string, 0|1|2>; }  // Build Spec Section 12
 ```
 
-**Integrity rules** (SRS §5): unlisted `qaFit` → 3; normalized weights always sum to 100; a
+**Integrity rules** (SRS Section 5): unlisted `qaFit` → 3; normalized weights always sum to 100; a
 contribution breakdown always reconciles to the composite score.
 
 ---
@@ -193,7 +193,7 @@ interface AppState {
 - **Shareable URL:** `useUrlSyncedState` encodes `AppState` into the URL hash (serialize → compact
   → base64), and **decodes with validation/sanitization** before use (FR-STATE-2/4, NFR-SEC-1).
 - **Reproducibility:** `modelVersion` accompanies every result, export, and shared URL; on a model
-  change the app offers "recompute with the latest model" (FR-STATE-3, Charter §15.2 / R8).
+  change the app offers "recompute with the latest model" (FR-STATE-3, Charter Section 15.2 / R8).
 - **Backward compatibility:** the URL decoder tolerates older payloads (NFR-REL-2).
 
 ---
@@ -236,14 +236,14 @@ the prototype.
 | **Transparency & control** | Persistent save-state; **undo** for destructive actions; reset behind confirmation | FR-UI-1/4, FR-SHELL-6 |
 | **Three-layer errors** | What / why / how-to-fix + copyable request ID + retry for recoverable failures (e.g. share) | FR-UI-3 |
 | **Guiding empty state** | "No plan yet" + load-sample-data action | FR-UI-5 |
-| **Dual readability** | Every screen reads for experts and newcomers; permanent heuristics disclaimer | FR-SHELL-4, Charter §21 |
+| **Dual readability** | Every screen reads for experts and newcomers; permanent heuristics disclaimer | FR-SHELL-4, Charter Section 21 |
 
 ---
 
 ## 8. Key Design Decisions (ADRs)
 
 These app-level decisions are recorded here; model-value changes follow the ADR process in
-[Charter §14.4](../01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution).
+[Charter Section 14.4](../01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution).
 
 | ADR | Decision | Rationale / consequence |
 |---|---|---|
@@ -261,13 +261,13 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 
 | Design section | Satisfies (SRS) |
 |---|---|
-| §2 Architecture overview | NFR-MAINT-1, NFR-PRIV-1, NFR-COMPAT-2 |
-| §3 Module & code structure | NFR-MAINT-1/2; FR-DATA-* |
-| §4 Data schema | FR-DATA-1…9 |
-| §5 State & persistence | FR-STATE-1…4; NFR-REL-2, NFR-SEC-1 |
-| §6 Design system | NFR-A11Y-1; FR-SHELL-3 |
-| §7 UX patterns | FR-SHELL-*, FR-UI-*, FR-REC-13; NFR-PERF-1, NFR-A11Y-2 |
-| §8 ADRs | NFR-MAINT-1/3; FR-STATE-3 |
+| Section 2 Architecture overview | NFR-MAINT-1, NFR-PRIV-1, NFR-COMPAT-2 |
+| Section 3 Module & code structure | NFR-MAINT-1/2; FR-DATA-* |
+| Section 4 Data schema | FR-DATA-1…9 |
+| Section 5 State & persistence | FR-STATE-1…4; NFR-REL-2, NFR-SEC-1 |
+| Section 6 Design system | NFR-A11Y-1; FR-SHELL-3 |
+| Section 7 UX patterns | FR-SHELL-*, FR-UI-*, FR-REC-13; NFR-PERF-1, NFR-A11Y-2 |
+| Section 8 ADRs | NFR-MAINT-1/3; FR-STATE-3 |
 
 ---
 

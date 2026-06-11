@@ -15,10 +15,10 @@ tests, then **UAT** (user-acceptance testing), plus **security** and **performan
 
 **References**
 
-- [Build Spec v3 §14](../specs/build-spec-v3.md#14-acceptance-criteria-verify-before-finishing) — the
+- [Build Spec v3 Section 14](../specs/build-spec-v3.md#14-acceptance-criteria-verify-before-finishing) — the
   acceptance criteria to verify.
 - [Feature-Maturity Playbook](../guides/feature-maturity-playbook.md) — `TECH-01` (edge cases),
   `TECH-03` (security), `TECH-07` (performance), `TECH-08` (testing & coverage).
-- Charter [§11](../01-discovery-and-planning/discovery-and-planning.md) — project-level Definition of Done & quality gates.
+- Charter [Section 11](../01-discovery-and-planning/discovery-and-planning.md) — project-level Definition of Done & quality gates.
 
 Contributions are welcome — see [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).

@@ -102,5 +102,5 @@ the tool improve across versions.
 
 ---
 
-For the full governance model — roles, decision-making, and onboarding — see §14 of the
+For the full governance model — roles, decision-making, and onboarding — see Section 14 of the
 [Discovery & Planning charter](docs/01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution).

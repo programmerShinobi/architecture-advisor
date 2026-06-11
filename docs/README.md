@@ -37,7 +37,7 @@ These documents support multiple phases and are not tied to a single one:
 
 ## Reading paths
 
-- **Quick overview** → [Discovery charter](01-discovery-and-planning/discovery-and-planning.md), Preface + §1, §3.
+- **Quick overview** → [Discovery charter](01-discovery-and-planning/discovery-and-planning.md), Preface + Section 1, Section 3.
 - **Build the app** → [Build Spec v3](specs/build-spec-v3.md), then the [deployment guide](guides/deployment-github-pages.md).
 - **Polish the UX** → the two playbooks in [`guides/`](guides/).
-- **Contribute** → [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and §14 of the discovery charter.
+- **Contribute** → [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and Section 14 of the discovery charter.

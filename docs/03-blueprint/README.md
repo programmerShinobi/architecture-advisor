@@ -22,7 +22,7 @@ technical-user polish such as the command palette and three-layer error handling
 [`prototype/README.md`](prototype/README.md) for details.
 
 > Note: a backend ERD and API design are **not applicable** — Architecture Advisor is purely
-> client-side (see the design spec, §2). The "data schema" here is the in-app decision-model
-> configuration, covered in §4 of the design spec.
+> client-side (see the design spec, Section 2). The "data schema" here is the in-app decision-model
+> configuration, covered in Section 4 of the design spec.
 
 Contributions to this phase are welcome — see [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).
