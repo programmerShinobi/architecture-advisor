@@ -38,4 +38,7 @@ This is a clickable mockup (no real scoring engine yet) that shows the intended 
 - This prototype is the **design reference**; the production app will implement the same UX on
   the [planned tech stack](../../specs/build-spec-v3.md#2-tech-stack-use-exactly-this)
   (Vite + React + TypeScript) with the design values living in editable config.
-- Numbers shown are illustrative placeholders, consistent with the spec's scoring model.
+- The per-option **`qaFit` vectors** encoded here are the canonical baseline for D4/D5: they were
+  promoted verbatim into the [Model Data Sheet](../model-data-sheet.md) Section 4. The **composite
+  scores/percentages** displayed, however, are illustrative placeholders until the real scoring
+  engine exists.

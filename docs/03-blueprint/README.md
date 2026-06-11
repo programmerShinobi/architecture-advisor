@@ -7,9 +7,10 @@
 
 ## Deliverables
 
-➡️ **[Design Specification (Blueprint)](design-specification.md)** — draft v0.1: architecture
-overview, module & code structure, the decision-model data schema, state & persistence, the
-design system & tokens, UX patterns, and the key design decisions (ADRs).
+➡️ **[Design Specification (Blueprint)](design-specification.md)** — draft v0.3: architecture
+overview, module & code structure, the decision-model data schema, state & persistence (with a
+resilience & edge-case design), the design system & tokens, UX patterns, the key design decisions
+(ADRs), and a Definition-of-Ready gate for development.
 
 📊 **[Model Data Sheet](model-data-sheet.md)** — the single source of truth for every numeric
 model value (12 QAs, 14 factors + defaults, factor→QA matrix, D1–D5 `qaFit`, anti-pattern rules,

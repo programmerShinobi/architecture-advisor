@@ -7,14 +7,14 @@
 
 ## Deliverable
 
-➡️ **[Software Requirements Specification (SRS)](software-requirements-specification.md)** — draft v0.1.
+➡️ **[Software Requirements Specification (SRS)](software-requirements-specification.md)** — draft v0.3.
 
 It translates the charter and [Build Spec v3](../specs/build-spec-v3.md) into discrete, testable,
 traceable requirements (ISO/IEC/IEEE 29148 structure), covering:
 
-- Functional requirements for the 4-step flow (factors → priorities → recommendation → export).
-- Non-functional requirements (performance, accessibility/WCAG AA, i18n, security, privacy, maintainability).
-- The decision-model data requirements (factors, quality attributes, factor→QA matrix, fit vectors).
+- Functional requirements for the 4-step flow (factors → priorities → recommendation → export), plus edge-case, resilience & input-validation requirements.
+- Non-functional requirements (performance & budgets, accessibility/WCAG AA, i18n, security, privacy, maintainability).
+- The decision-model data requirements (factors, quality attributes, factor→QA matrix, fit vectors) and explicit non-goals.
 - Use cases, acceptance criteria, and a requirements traceability matrix back to the charter.
 
 Contributions to this phase are welcome — see [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).
