@@ -5,8 +5,8 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Project Charter / Product Vision |
-| **Version** | 1.2 |
-| **Date** | 2026-06-10 |
+| **Version** | 1.4 |
+| **Date** | 2026-06-11 |
 | **Status** | Approved — execution baseline |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Academic/IEEE & industry |
@@ -19,6 +19,8 @@
 | 1.0 | — | Initial Discovery & Planning draft |
 | 1.1 | — | Charter baseline established |
 | 1.2 | 2026-06-10 | Closing package added; approved as the execution baseline |
+| 1.3 | 2026-06-11 | Editorial clarification (no scope change, no re-approval): designated the Section 22 solo-stage KPI table as the operative v1.0 target set (Section 4 = aspirational); aligned the sign-off date with the v1.2 baseline |
+| 1.4 | 2026-06-11 | Scope clarification: a basic custom-configuration import/export (JSON) is in the MVP (matching Build Spec v3); the richer organization-level config import/export remains deferred to v2.0. Resolves a charter↔Build Spec↔SRS mismatch |
 
 ---
 
@@ -155,6 +157,11 @@ of contributors**.
 | K6 | Technical-user satisfaction | ≥ 70% | quarterly survey |
 | K7 | **Community health** (active contributors/quarter) | ≥ 5 *(ASSUMPTION)* | first year |
 
+> **Which targets govern?** The table above is the **full/aspirational** set, intended for the
+> team stage. For **v1.0 (solo stage)**, the **operative** targets are the moderated set in
+> [Section 22](#22-pre-sign-off-decision-log) — these are what acceptance and the release gate
+> (Section 11) are measured against. The numbers here apply once the project has a dedicated team.
+
 ---
 
 ## 5. Scope
@@ -165,9 +172,9 @@ recommendation → export), Guided & Expert modes; ≥12 factors; 12 quality att
 an interactive trade-off radar + ranking; *close-call* detection; sensitivity analysis; a risk
 register; fitness functions; anti-pattern detection; a migration path (brownfield); presets; a
 glossary; a "How scoring works" panel; ADR export (MADR — Markdown ADR — format) & reports;
-share-via-URL; ID/EN internationalization (i18n); dark mode; WCAG (Web Content Accessibility
-Guidelines) AA [11]; mature UI states (skeleton, 3-layer error + retry, undo, save-state, empty
-state).
+share-via-URL; a **basic custom-configuration import/export (JSON)** for extensibility; ID/EN
+internationalization (i18n); dark mode; WCAG (Web Content Accessibility Guidelines) AA [11];
+mature UI states (skeleton, 3-layer error + retry, undo, save-state, empty state).
 
 **The five architecture dimensions.** A recommendation is not a single label; it spans five
 **orthogonal** dimensions, chosen *together* rather than one instead of another:
@@ -186,8 +193,9 @@ layer, and the chosen combination is then checked for anti-patterns.
 > organized inside, and how the screens are built — and warns you when the combined choices clash.
 
 **Deferred (see the evolution roadmap, Section 15):** multi-stakeholder collaboration; saved
-multi-project comparison; custom configuration import/export; generated C4 diagrams; an empirical
-validation study.
+multi-project comparison; **organization-level** configuration import/export (the richer,
+shareable org config — the basic per-user JSON is in the MVP above); generated C4 diagrams; an
+empirical validation study.
 
 **Non-goals:** a replacement for human judgment / full ATAM; a code / Infrastructure-as-Code
 (IaC) generator; storage of sensitive data.
@@ -516,7 +524,10 @@ without consideration. This principle is embedded in the product (a permanent di
 | D11 | Reference formality level | **Mixed** (industry + standards) for now | Add peer-reviewed literature if entering the academic track |
 | D12 | Domain advisor | **Not yet appointed**; seeking candidates | Interim: the owner + literature [1]–[6] as a reference |
 
-### Solo-stage KPI targets (moderated version — adjustable)
+### Operative v1.0 KPI targets (solo stage — moderated)
+
+These targets **govern v1.0 acceptance and the release gate (Section 11)** and supersede the
+aspirational Section 4 table for the solo stage; they can be raised once the project has a team.
 
 | # | KPI | Initial target |
 |---|---|---|
@@ -541,7 +552,7 @@ This is a single-signatory approval. At present all roles are held by one person
 
 | Role | Name | Date |
 |---|---|---|
-| Product Owner / Sponsor (also Maintainer & user representative) | **Faqih Pratama Muhti** | 2026-06-09 |
+| Product Owner / Sponsor (also Maintainer & user representative) | **Faqih Pratama Muhti** | 2026-06-10 |
 
 *Other roles (additional Maintainers, an independent user representative, a Domain Advisor) will*
 *be filled as contributors join, and recorded as a document version update.*
