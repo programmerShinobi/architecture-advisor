@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
-| **Version** | 0.4 |
+| **Version** | 0.5 |
 | **Date** | 2026-06-12 |
 | **Status** | Baseline — build against this; model heuristics pending Domain-Advisor ratification |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -21,6 +21,7 @@
 | 0.2 | 2026-06-12 | Calibration pass, machine-verified by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs): pinned the default `budget` level at 2 (the no-signal level of the inverted factor — makes AC-2/AC-3 hold exactly); calibrated preset levels (regulated `scale`/`dataVolume` → 0, e-commerce `realtime` → 0, internal-tool `ttm` → 2); computation rules now live in the [Scoring Algorithm Specification](scoring-algorithm.md) |
 | 0.3 | 2026-06-12 | Added literature anchors (Section 8): the per-dimension trade-off shapes are tied to their established sources (Richards & Ford, Newman, Kleppmann, Cockburn, Martin, Lewis & Fowler, Jackson) for Domain-Advisor ratification |
 | 0.4 | 2026-06-12 | Authored the bilingual factor content (Section 2.1): EN/ID labels, level labels, and help text for all 14 factors — baseline copy pending Translator review |
+| 0.5 | 2026-06-13 | Linked the new [Option Content Sheet](option-content-sheet.md): the bilingual educational metadata for all 21 options, anti-pattern messages, and fitness-function templates are now authored |
 
 ---
 
@@ -307,7 +308,7 @@ value theory, sensitivity analysis, apportionment).
 | D4 / D5 `qaFit` vectors (Section 4) | 🧪 Baseline recorded | Domain Advisor ratifies → SRS OI-4 |
 | Preset factor levels (Section 6) | 🧪 **Calibrated & machine-verified** (all 25 targets hold) | Domain Advisor ratifies → SRS OI-2 |
 | Factor content EN/ID (labels, level labels, help) | 🧪 **Authored** (Section 2.1) | Translator review → Charter Section 14.2 |
-| Option educational metadata; fitness & anti-pattern messages (EN/ID) | ✍ To author | Build Spec Section 7, Section 10, Section 11 |
+| Option educational metadata; fitness & anti-pattern messages (EN/ID) | 🧪 **Authored** ([Option Content Sheet](option-content-sheet.md)) | Translator & Domain-Advisor review → Charter Section 14.2 |
 | C4 Mermaid stub in v1.0? | ❔ Scope | SRS OI-3 |
 | Performance budgets ratified | 🧪 Interim set | SRS OI-5 / design DI-4 |
 

@@ -328,7 +328,7 @@ free of guesswork — each line is either fixed or has a usable baseline.
 - [x] **Preset levels pass the calibration test** against SRS 5.3 — all 25 targets machine-verified (SRS OI-2; Domain-Advisor ratification still pending).
 - [ ] **D4/D5 `qaFit` ratified** by a Domain Advisor (SRS OI-4) — *baseline usable now*.
 - [x] **Factor content authored (EN/ID)**: labels, level labels, and help for all 14 factors — [Model Data Sheet Section 2.1](model-data-sheet.md) (Translator review pending).
-- [ ] **Option & message content authored (EN/ID)**: option pros/cons/whenToUse/learnMore; fitness & anti-pattern messages (Build Spec Section 7, Section 10, Section 11).
+- [x] **Option & message content authored (EN/ID)**: educational metadata for all 21 options, the 7 anti-pattern messages, and the 12 fitness-function templates — [Option Content Sheet](option-content-sheet.md) (Translator & Domain-Advisor review pending).
 - [ ] **C4 stub** scoped in or out of v1.0 (SRS OI-3).
 - [ ] **Performance budgets ratified** against the real bundle (SRS OI-5 / DI-4).
 

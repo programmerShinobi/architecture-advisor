@@ -20,6 +20,11 @@ calibrated preset levels), so Phase 4 development builds with no guesswork.
 every formula, tie-break, close-call/sensitivity definition, and rounding rule, with worked
 fixtures that [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs) re-checks automatically.
 
+📚 **[Option Content Sheet](option-content-sheet.md)** — the bilingual (EN · ID) educational
+copy for all 21 architecture options (definition, pros/cons, when to use/avoid, common mistakes,
+risks + mitigations, learn-more sources), plus the anti-pattern messages and fitness-function
+templates — the content that makes the tool trustworthy and teachable.
+
 🖼️ **[UI prototype](prototype/index.html)** — the interactive visual reference. Open it directly
 in any browser; what it demonstrates is described in [`prototype/README.md`](prototype/README.md).
 
