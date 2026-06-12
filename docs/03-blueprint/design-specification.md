@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Design Specification / Software Design Document (SDD) |
-| **Version** | 0.3 |
+| **Version** | 0.4 |
 | **Date** | 2026-06-12 |
 | **Status** | Draft |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, designers |
-| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.2 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.4 · [UI prototype](prototype/index.html) |
+| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.5 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.5 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -20,6 +20,7 @@
 | 0.1 | 2026-06-11 | Initial blueprint: architecture, module/data schema, design system, UX patterns, ADRs |
 | 0.2 | 2026-06-12 | Realigned to SRS v0.2 / Charter v1.4: added a resilience & edge-case design (Section 5.1) covering FR-EDGE-*, browser-baseline and performance-budget coverage, corrected the design-token source reference, and extended traceability |
 | 0.3 | 2026-06-12 | Build-readiness: linked the new [Model Data Sheet](model-data-sheet.md) (frozen numeric model values), added a Definition-of-Ready gate (Section 11), and updated DI-1 to the recorded baseline |
+| 0.4 | 2026-06-12 | Computation precision: linked the [Scoring Algorithm Specification](scoring-algorithm.md) as the exact contract for `lib/scoring.ts`/`lib/sensitivity.ts`; Definition of Ready updated — scoring computation pinned and preset calibration machine-verified |
 
 ---
 
@@ -51,8 +52,10 @@ not duplicated.
 
 **References:** [SRS](../02-requirement-analysis/software-requirements-specification.md) ·
 [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) ·
-[UI/UX Execution Playbook](../guides/uiux-execution-playbook.md) · ISO/IEC/IEEE 42010 (architecture
-description) · ISO/IEC 25010:2023.
+[UI/UX Execution Playbook](../guides/uiux-execution-playbook.md) · ISO/IEC/IEEE 42010:2022 (architecture
+description) · ISO/IEC 25010:2023 · A. Cockburn, "Hexagonal Architecture" (2005) — the `lib/` port
+boundary (Section 3) · R. C. Martin, *Clean Architecture* (2017) — the dependency rule (Section 3) ·
+*MADR* (adr.github.io/madr) — the ADR format (Section 8).
 
 ---
 
@@ -92,7 +95,11 @@ flowchart LR
 
 The source layout follows [Build Spec v3 Section 13](../specs/build-spec-v3.md). All math is in pure,
 unit-tested functions in `lib/`; every weight, fit value, rule, and string lives in `config/` or
-`i18n/` — never hard-coded in components (NFR-MAINT-1).
+`i18n/` — never hard-coded in components (NFR-MAINT-1). `lib/scoring.ts` and `lib/sensitivity.ts`
+implement the [Scoring Algorithm Specification](scoring-algorithm.md) **exactly** — formulas,
+tie-breaking, rounding, and fixtures are pinned there, and
+[`scripts/verify-model.mjs`](../../scripts/verify-model.mjs) re-checks them against the
+[Model Data Sheet](model-data-sheet.md).
 
 ```
 src/
@@ -289,6 +296,7 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 | Section 4 Data schema | FR-DATA-1…9 |
 | Section 5 State & persistence | FR-STATE-1…4; NFR-REL-2, NFR-SEC-1 |
 | Section 5.1 Resilience & edge cases | FR-EDGE-1…7 |
+| [Scoring Algorithm Specification](scoring-algorithm.md) (companion) | FR-QA-1, FR-QA-3, FR-REC-2/4/6/7, FR-EDGE-6/7 |
 | Section 6 Design system | NFR-A11Y-1; FR-SHELL-3 |
 | Section 7 UX patterns | FR-SHELL-*, FR-UI-*, FR-REC-13; NFR-PERF-1, NFR-A11Y-2 |
 | Section 8 ADRs | NFR-MAINT-1/3; FR-STATE-3 |
@@ -316,8 +324,9 @@ free of guesswork — each line is either fixed or has a usable baseline.
 - [x] **Architecture, module boundaries, data schema, and state model** fixed (Sections 2–5, incl. the resilience design 5.1).
 - [x] **Design tokens** fixed against the prototype (Section 6).
 - [x] **Acceptance criteria** enumerated and ready to wire as tests (SRS Section 7, AC-1…12).
+- [x] **Scoring computation pinned**: formulas, tie-breaking, close-call, sensitivity, rounding, and float-precision rules in the [Scoring Algorithm Specification](scoring-algorithm.md), with machine-verified fixtures (`node scripts/verify-model.mjs`).
+- [x] **Preset levels pass the calibration test** against SRS 5.3 — all 25 targets machine-verified (SRS OI-2; Domain-Advisor ratification still pending).
 - [ ] **D4/D5 `qaFit` ratified** by a Domain Advisor (SRS OI-4) — *baseline usable now*.
-- [ ] **Preset levels pass the calibration test** against SRS 5.3 (SRS OI-2) — *baseline usable now*.
 - [ ] **Bilingual content authored**: factor help; option pros/cons/whenToUse/learnMore; fitness & anti-pattern messages (EN/ID) (Build Spec Section 7, Section 11).
 - [ ] **C4 stub** scoped in or out of v1.0 (SRS OI-3).
 - [ ] **Performance budgets ratified** against the real bundle (SRS OI-5 / DI-4).

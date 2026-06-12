@@ -1,10 +1,11 @@
-# Guides (cross-cutting)
+# Guides (cross-cutting playbooks)
 
-> 📘 Reference guides that support multiple lifecycle phases — not tied to a single one.
+> 📘 Execution playbooks that span **multiple** lifecycle phases — anything tied to a single
+> phase lives in that phase's folder instead (e.g. the
+> [deployment guide](../06-deployment/deployment-github-pages.md) in `06-deployment/`).
 
 | Guide | Summary | Phases |
 |---|---|---|
-| **[Deployment — GitHub Pages](deployment-github-pages.md)** | Free hosting + CI/CD on GitHub Pages. | 6 |
 | **[UI/UX Execution Playbook](uiux-execution-playbook.md)** | Nine usability factors for technical users, as executable tasks. | 3–4 |
 | **[Feature-Maturity Playbook](feature-maturity-playbook.md)** | UX, technical, and analyst factors as concrete, verifiable tasks. | 4–7 |
 

@@ -70,7 +70,7 @@ traceable:
 | 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [Model Data Sheet](docs/03-blueprint/model-data-sheet.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | [Development](docs/04-development/) | Source code (standards, Git, review) | 🚧 Not started |
 | 5 | [Testing / QA](docs/05-testing-qa/) | Unit/integration/system/UAT + security & perf | 🚧 Not started |
-| 6 | [Deployment / Release](docs/06-deployment/) | CI/CD → staging → live ([guide ready](docs/guides/deployment-github-pages.md)) | 🚧 Not started |
+| 6 | [Deployment / Release](docs/06-deployment/) | CI/CD → staging → live ([guide ready](docs/06-deployment/deployment-github-pages.md)) | 🚧 Not started |
 | 7 | [Maintenance & Iteration](docs/07-maintenance/) | Monitoring, fixes, updates | 🚧 Ongoing |
 
 Cross-cutting references — the [Build Spec v3](docs/specs/build-spec-v3.md) and the

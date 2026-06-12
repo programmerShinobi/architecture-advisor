@@ -21,23 +21,24 @@ Each phase lives in its own numbered folder, and each produces a concrete delive
 | 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | [Design spec](03-blueprint/design-specification.md) + [Model Data Sheet](03-blueprint/model-data-sheet.md) + [UI prototype](03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | Development | [`04-development/`](04-development/) | Source code (standards, Git, code review) | 🚧 Not started |
 | 5 | Testing / QA | [`05-testing-qa/`](05-testing-qa/) | Unit / integration / system / UAT + security & perf | 🚧 Not started |
-| 6 | Deployment / Release | [`06-deployment/`](06-deployment/) | CI/CD pipeline → staging → live URL | 🚧 Not started ([guide ready](guides/deployment-github-pages.md)) |
+| 6 | Deployment / Release | [`06-deployment/`](06-deployment/) | CI/CD pipeline → staging → live URL | 🚧 Not started ([guide ready](06-deployment/deployment-github-pages.md)) |
 | 7 | Maintenance & Iteration | [`07-maintenance/`](07-maintenance/) | Monitoring, fixes, updates, changelog | 🚧 Ongoing (post-launch) |
 
 ## Cross-cutting references
 
-These documents support multiple phases and are not tied to a single one:
+**Placement rule:** a document tied to **one** phase lives in that phase's folder (e.g. the
+[deployment guide](06-deployment/deployment-github-pages.md) in `06-deployment/`); only documents
+spanning **multiple** phases live here:
 
 | Folder | Document | Summary |
 |--------|----------|---------|
 | [`specs/`](specs/) | [Build Spec v3](specs/build-spec-v3.md) | The complete technical specification the app is built from (feeds phases 2–5) |
-| [`guides/`](guides/) | [Deployment — GitHub Pages](guides/deployment-github-pages.md) | Free hosting + CI/CD on GitHub Pages (phase 6) |
 | [`guides/`](guides/) | [UI/UX Execution Playbook](guides/uiux-execution-playbook.md) | 9 usability factors for technical users as executable tasks (phases 3–4) |
 | [`guides/`](guides/) | [Feature-Maturity Playbook](guides/feature-maturity-playbook.md) | UX/technical/analyst factors as concrete, verifiable tasks (phases 4–7) |
 
 ## Reading paths
 
 - **Quick overview** → [Discovery charter](01-discovery-and-planning/discovery-and-planning.md), Preface + Section 1, Section 3.
-- **Build the app** → [Build Spec v3](specs/build-spec-v3.md), then the [deployment guide](guides/deployment-github-pages.md).
+- **Build the app** → [Build Spec v3](specs/build-spec-v3.md) + [Model Data Sheet](03-blueprint/model-data-sheet.md) + [Scoring Algorithm](03-blueprint/scoring-algorithm.md) (verify with `node scripts/verify-model.mjs`), then the [deployment guide](06-deployment/deployment-github-pages.md).
 - **Polish the UX** → the two playbooks in [`guides/`](guides/).
 - **Contribute** → [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and Section 14 of the discovery charter.

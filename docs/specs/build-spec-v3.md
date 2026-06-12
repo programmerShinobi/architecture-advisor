@@ -304,8 +304,8 @@ For each of the top ~4 weighted QAs, suggest one or two concrete, measurable fit
 
 - **Phase 1 — Core engine.** Scaffold; QAs(12); factors(14); factor→QA matrix; QA-weight
   derivation + normalization; D1 options + qaFit; composite scoring; ranked D1 results with
-  bars; QA priority chart; defaults (all level 0 except ttm=1); localStorage; permanent
-  disclaimer. Useful already.
+  bars; QA priority chart; defaults (all level 0 except ttm=1 and budget=2 — the no-signal level
+  of the inverted budget factor); localStorage; permanent disclaimer. Useful already.
 - **Phase 2 — Multi-dimensional.** D2, D3, D4 (and D5 conditionally); coherent per-dimension
   recommendations; combination view; anti-pattern detection (section 10).
 - **Phase 3 — Professional analysis.** Radar chart; QA contribution breakdown; comparison mode;
@@ -368,9 +368,9 @@ and extensible.
 
 1. `npm install && npm run dev` runs clean; `npm run test` and `npm run build` pass; CI workflow present.
 2. Changing any factor instantly updates QA weights, all dimension rankings, charts, and analyses.
-3. Defaults (all 0, ttm=1) → D1 top = **Monolith**; QA weights show `timeToMarket` highest.
+3. Defaults (all 0 except ttm=1, budget=2) → D1 top = **Monolith**; QA weights show `timeToMarket` highest.
 4. team=2, distribution=2, scale=2, devops=2, ttm=0 → D1 top = **Microservices**.
-5. domain=2, team=0, ttm=1 → D1 top ∈ {**Modular Monolith**} (at or near #1); D4 favors Hexagonal/Clean.
+5. domain=2, team=0, ttm=0 → D1 top = **Modular Monolith**; D4 favors Hexagonal/Clean (both score 5.0).
 6. async=2, realtime=2 → D2 favors **Event-driven/Streaming**; scalability & performance lead QA weights.
 7. consistency=2 → `dataConsistency` dominates QA weights; D3 favors **Single shared DB**;
    choosing Event Sourcing triggers the consistency-conflict anti-pattern warning.
@@ -397,3 +397,17 @@ and extensible.
 - Final chat summary — files created, run instructions, acceptance criteria verified.
 
 Begin now. Build all phases in order; do not stop halfway.
+
+---
+
+## 16. Method references
+
+The methods this specification operationalizes (full IEEE-style list: charter Section 13):
+
+- ISO/IEC 25010:2023, *SQuaRE — Product quality model* — the 12-QA spine (section 3).
+- R. Kazman, M. Klein, and P. Clements, "ATAM: Method for Architecture Evaluation," SEI, CMU/SEI-2000-TR-004, 2000 — utility tree & stakeholder prioritization (section 5).
+- R. Wojcik et al., "Attribute-Driven Design (ADD), Version 2.0," SEI, CMU/SEI-2006-TR-023, 2006 — QA-driven option selection (section 6).
+- N. Ford, R. Parsons, and P. Kua, *Building Evolutionary Architectures*, O'Reilly, 2017 — fitness functions (section 11).
+- N. Forsgren, J. Humble, and G. Kim, *Accelerate*, IT Revolution, 2018 — the DORA metrics referenced in section 11.
+- *MADR — Markdown Architectural Decision Records*, adr.github.io/madr — the ADR export format (Phase 5).
+- The exact computation rules and frozen values: [Scoring Algorithm Specification](../03-blueprint/scoring-algorithm.md) · [Model Data Sheet](../03-blueprint/model-data-sheet.md).

@@ -63,7 +63,8 @@ Based on the persona above, create design tokens for a technical, high-informati
 
 ## Task 1 — Speed & Responsiveness (perceived performance)
 
-**Target thresholds:** instant actions <100 ms, flows <1 second, >1 second must show progress,
+**Target thresholds** *(the classic response-time limits established by Miller [1] and
+popularized by Nielsen [2])*: instant actions <100 ms, flows <1 second, >1 second must show progress,
 >10 seconds must be cancelable.
 
 **Prompt:**
@@ -79,7 +80,7 @@ Build it as an artifact I can see directly, and explain where each pattern is ap
 
 **DoD:**
 - [ ] Immediate actions feel instant (optimistic update + rollback on failure).
-- [ ] Loading uses skeletons, not a full-screen spinner.
+- [ ] Loading uses skeletons, not a full-screen spinner [3].
 - [ ] Animations are 150–250 ms and do not block actions.
 - [ ] No layout shift when data arrives.
 - [ ] Long actions have progress + a cancel option.
@@ -190,7 +191,7 @@ Create 4 example error components: field validation, save failure, network timeo
 
 ---
 
-## Task 6 — Consistency & Predictability (Jakob's Law)
+## Task 6 — Consistency & Predictability (Jakob's Law [5])
 
 **Prompt:**
 ```
@@ -329,3 +330,18 @@ Mark any factor scoring <4 as "not yet passing" and give concrete remediation st
 > The psychological core: technical users judge a tool by whether it **respects their time and
 > intelligence**. They forgive a plain UI as long as it is fast, honest, and never loses their
 > work — not a pretty UI that is slow, opaque, or destroys data.
+
+---
+
+## Sources
+
+The usability factors in this playbook are grounded in established HCI research and standards:
+
+1. R. B. Miller, "Response time in man-computer conversational transactions," in *Proc. AFIPS Fall Joint Computer Conf.*, 1968, pp. 267–277 — the original 0.1 s / 1 s / 10 s response-time research.
+2. J. Nielsen, *Usability Engineering*. San Diego, CA: Academic Press, 1993, ch. 5 — the response-time limits as design guidance.
+3. L. Wroblewski, "Mobile Design Details: Avoid the Spinner," lukew.com, 2013. [Online] — skeleton screens over spinners.
+4. J. Nielsen, "10 Usability Heuristics for User Interface Design," Nielsen Norman Group, 1994. [Online] — visibility of system status (Task 4), error recovery (Task 5), consistency (Task 6).
+5. Nielsen Norman Group, "Jakob's Law of Internet User Experience." [Online].
+6. B. Shneiderman, C. Plaisant, M. Cohen, S. Jacobs, and N. Elmqvist, *Designing the User Interface*, 6th ed. Boston, MA: Pearson, 2016 — the Eight Golden Rules (feedback, reversal of actions, consistency).
+7. ISO 9241-110:2020, *Ergonomics of human-system interaction — Part 110: Interaction principles*, ISO, 2020.
+8. S. K. Card, T. P. Moran, and A. Newell, *The Psychology of Human-Computer Interaction*. Hillsdale, NJ: Lawrence Erlbaum, 1983 — keystroke-level efficiency (Task 2).

@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 0.3 |
+| **Version** | 0.5 |
 | **Date** | 2026-06-12 |
 | **Status** | Draft — review-ready |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, analysts, reviewers |
-| **Derived from** | [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) v1.4 · [Build Spec v3](../specs/build-spec-v3.md) |
+| **Derived from** | [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) v1.5 · [Build Spec v3](../specs/build-spec-v3.md) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -20,6 +20,8 @@
 | 0.1 | 2026-06-10 | Initial SRS draft derived from the charter and Build Spec v3 |
 | 0.2 | 2026-06-11 | Maturity pass: a verification method on every functional requirement; completed definitions; explicit non-goals (Section 2.6); edge-case, resilience & input-validation requirements (Section 3.8); quantified performance budgets and a browser-support baseline; open issues given target milestones |
 | 0.3 | 2026-06-12 | Build-readiness: pinned the factor count at 14 (closes OI-1); linked the new [Model Data Sheet](../03-blueprint/model-data-sheet.md) that freezes all numeric model values; OI-2/OI-4 now reference recorded baselines |
+| 0.4 | 2026-06-12 | Computation precision: linked the [Scoring Algorithm Specification](../03-blueprint/scoring-algorithm.md); pinned defaults exactly (budget = 2, the no-signal level of the inverted factor) in FR-FACT-5/AC-2; AC-2/AC-3 now state exact expected composites and the expected close-call flag; Section 5.3 presets machine-verified, IoT D5 target widened to SPA / SSR |
+| 0.5 | 2026-06-12 | Reference hardening: added peer-reviewed and standard sources (SUS and its acceptability threshold, MADR, Strangler Fig, additive multi-attribute value model, ADD technical report) and cited them inline at NFR-USE-1, FR-OUT-1, FR-REC-12/13, and Section 5.1 |
 
 ---
 
@@ -88,13 +90,20 @@ decision records. The authoritative scope (in/deferred/non-goals) is the charter
 
 ### 1.4 References
 
-1. [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) (v1.4) — problem, scope, KPIs, risks, governance.
+1. [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) (v1.5) — problem, scope, KPIs, risks, governance.
 2. [Build Spec v3](../specs/build-spec-v3.md) — technical specification and model definitions.
 3. [UI/UX Execution Playbook](../guides/uiux-execution-playbook.md) — usability requirements for technical users.
 4. ISO/IEC/IEEE 29148:2018 — Requirements engineering.
 5. ISO/IEC 25010:2023 — Product quality model.
 6. W3C WCAG 2.2 — Web Content Accessibility Guidelines.
 7. [Model Data Sheet](../03-blueprint/model-data-sheet.md) — the frozen numeric model values (QAs, factors, matrix, D1–D5 `qaFit`, anti-patterns, presets).
+8. [Scoring Algorithm Specification](../03-blueprint/scoring-algorithm.md) — the exact computation rules (formulas, tie-breaking, rounding, sensitivity) with machine-verified fixtures ([`scripts/verify-model.mjs`](../../scripts/verify-model.mjs)).
+9. J. Brooke, "SUS: A 'quick and dirty' usability scale," in *Usability Evaluation in Industry*, P. W. Jordan et al., Eds. London: Taylor & Francis, 1996, pp. 189–194.
+10. A. Bangor, P. T. Kortum, and J. T. Miller, "Determining what individual SUS scores mean: Adding an adjective rating scale," *Journal of Usability Studies*, vol. 4, no. 3, pp. 114–123, 2009.
+11. *MADR — Markdown Architectural Decision Records*, adr.github.io/madr. [Online].
+12. M. Fowler, "Strangler Fig Application," martinfowler.com, 2004. [Online].
+13. R. L. Keeney and H. Raiffa, *Decisions with Multiple Objectives: Preferences and Value Tradeoffs*. New York: Wiley, 1976.
+14. R. Wojcik et al., "Attribute-Driven Design (ADD), Version 2.0," SEI, Carnegie Mellon Univ., Tech. Rep. CMU/SEI-2006-TR-023, 2006.
 
 ### 1.5 Requirement Conventions
 
@@ -200,7 +209,7 @@ v1.0:
 | FR-FACT-2 | Show localized **help text** per factor (what it means + why it shifts QA priorities). | Must | Build Spec Section 4 | D |
 | FR-FACT-3 | On any factor change, **instantly update** QA priorities, all dimension rankings, charts, and analyses. | Must | Build Spec Section 14.2 | T |
 | FR-FACT-4 | Support **collapsible groups** and progressive disclosure of advanced factors. | Should | UI/UX Playbook Task 3, Task 9 | D |
-| FR-FACT-5 | Apply documented **default factor levels** (all level 0 except time-to-market = 1). | Must | Build Spec Section 12 | T |
+| FR-FACT-5 | Apply documented **default factor levels** (all level 0, except time-to-market = 1 and budget = 2 — the no-signal level of the inverted budget factor). | Must | Build Spec Section 12; Model Data Sheet Section 2 | T |
 
 ### 3.3 Step 2 — Quality-Attribute Priorities
 
@@ -226,14 +235,14 @@ v1.0:
 | FR-REC-9 | Detect **anti-patterns** on the chosen combination via rules with severity (info/warning/danger). | Must | Build Spec Section 10 | T |
 | FR-REC-10 | Generate suggested, measurable **fitness functions** from the top-weighted QAs. | Should | Build Spec Section 11 | T |
 | FR-REC-11 | Show qualitative **cost & operational-complexity indicators** (Low/Med/High) per D1 option. | Should | Build Spec Section 8 | D |
-| FR-REC-12 | Given an optional **current architecture**, suggest an incremental **migration path** (Strangler Fig where legacy is heavy). | Should | Build Spec Section 8 | T |
-| FR-REC-13 | Provide a **"How scoring works" / methodology panel** citing ISO/IEC 25010:2023, ATAM, ADD, and fitness functions. | Must | Build Spec Section 8; Charter Section 1 | I |
+| FR-REC-12 | Given an optional **current architecture**, suggest an incremental **migration path** (Strangler Fig [12] where legacy is heavy). | Should | Build Spec Section 8 | T |
+| FR-REC-13 | Provide a **"How scoring works" / methodology panel** citing ISO/IEC 25010:2023, ATAM, ADD [14], and fitness functions. | Must | Build Spec Section 8; Charter Section 1 | I |
 
 ### 3.5 Step 4 — Outputs & Sharing
 
 | ID | The system shall… | Priority | Trace | Verify |
 |---|---|---|---|---|
-| FR-OUT-1 | Export an **ADR in MADR format**. | Must | Build Spec Section 12 | T |
+| FR-OUT-1 | Export an **ADR in MADR format** [11]. | Must | Build Spec Section 12 | T |
 | FR-OUT-2 | Export a **full report** (Markdown + print stylesheet). | Must | Build Spec Section 12 | T |
 | FR-OUT-3 | Export **scores as CSV** and the **assessment as JSON**. | Should | Build Spec Section 12 | T |
 | FR-OUT-4 | Provide a **share-via-URL** link that round-trips to identical state. | Must | Build Spec Section 14.14 | T |
@@ -284,7 +293,7 @@ production. They are the most common source of "we never specified that" defects
 | NFR-PERF-1 | Reflect any factor change in priorities, charts, and rankings within **~100 ms perceived** latency on a mid-range device. | Must | UI/UX Playbook Task 1 | T |
 | NFR-PERF-2 | Enable a **median time-to-first-recommendation ≤ 5 minutes** (KPI K3). | Must | Charter Section 22 (K3) | T |
 | NFR-PERF-3 | Meet **interim performance budgets** on a mid-range device: initial JS bundle **≤ 300 KB gzipped**, First Contentful Paint **≤ 2 s** on a fast-3G profile, and a re-score interaction p95 **≤ 100 ms**. (Interim targets; confirmed at Phase 3 design — OI-5.) | Should | UI/UX Playbook Task 1 | T |
-| NFR-USE-1 | Achieve a **System Usability Scale ≥ 70** at beta (operative solo-stage KPI K5; aspirational target 75). | Should | Charter Section 22 (K5) | T |
+| NFR-USE-1 | Achieve a **System Usability Scale [9] ≥ 70** at beta — the empirically derived "acceptable" threshold [10] (operative solo-stage KPI K5; aspirational target 75). | Should | Charter Section 22 (K5) | T |
 | NFR-USE-2 | Be usable **without mandatory setup** (presets and sample data available immediately). | Must | UI/UX Playbook Task 9 | D |
 | NFR-USE-3 | Be **consistent and predictable**: honor standard shortcuts; one term per concept; consistent color meaning. | Must | UI/UX Playbook Task 6 | I |
 | NFR-A11Y-1 | Meet **WCAG 2.2 AA** contrast in both themes. | Must | Charter Section 5 | T |
@@ -316,7 +325,9 @@ this section states the scoring pipeline, the required datasets, and their integ
 A single set of factor answers drives **all five dimensions at once**, through a shared
 quality-attribute priority layer (the "utility tree"). The dimensions are **orthogonal** — chosen
 together, not one instead of another — and the resulting combination is then checked for
-anti-patterns.
+anti-patterns. The composite score is an **additive multi-attribute value model** [13] — the
+classical, well-studied form of multi-criteria decision analysis — computed exactly as pinned in
+the [Scoring Algorithm Specification](../03-blueprint/scoring-algorithm.md).
 
 ```mermaid
 flowchart TB
@@ -374,15 +385,18 @@ sum to 100; a contribution breakdown always reconciles to the composite score (F
 
 Each scenario preset **shall** set factor levels that produce the expected top recommendation
 below. These outcome targets make the model **verifiable** — a preset that no longer yields its
-expected result is a regression. The exact factor levels live in configuration ([Build Spec Section 12](../specs/build-spec-v3.md))
-and are confirmed with a Domain Advisor and recorded as an ADR ([Charter Section 14.4](../01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution)).
+expected result is a regression. The exact factor levels are frozen in the
+[Model Data Sheet Section 6](../03-blueprint/model-data-sheet.md) and **machine-verified** by
+[`scripts/verify-model.mjs`](../../scripts/verify-model.mjs) (all 25 targets currently hold,
+computed per the [Scoring Algorithm Specification](../03-blueprint/scoring-algorithm.md)); they
+are confirmed with a Domain Advisor and recorded as an ADR ([Charter Section 14.4](../01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution)).
 
 | Preset | D1 Deployment | D2 Communication | D3 Data | D4 Code | D5 Frontend | Primary driver |
 |---|---|---|---|---|---|---|
 | Startup MVP | Monolith | Synchronous | Single shared DB | Layered | SPA | time-to-market, low cost |
 | Bank / healthcare (regulated) | Modular Monolith | Synchronous | Single shared DB | Hexagonal / Clean | SPA / SSR | security, strong consistency |
 | High-traffic e-commerce | Microservices | Event-driven | Database-per-service | Hexagonal | Micro-frontends | scalability, availability |
-| Sensors / live data (IoT) | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal | SPA | performance, data volume |
+| Sensors / live data (IoT) | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal | SPA / SSR | performance, data volume |
 | Internal tool | Modular Monolith | Synchronous | Single shared DB | Layered | SPA | maintainability, simplicity |
 
 > Anti-pattern guardrails apply per preset — e.g. choosing CQRS/Event Sourcing for a short-lived
@@ -423,8 +437,8 @@ The executable, scenario-level acceptance criteria are enumerated in
 Key gates:
 
 - **AC-1.** `npm install && npm run dev` runs clean; `npm run test` and `npm run build` pass; CI present. *(NFR-MAINT-2)*
-- **AC-2.** Defaults (all 0, time-to-market = 1) → D1 top = **Monolith**; QA weights show time-to-market highest. *(FR-FACT-5, FR-QA-1)*
-- **AC-3.** team = 2, distribution = 2, scale = 2, devops = 2, ttm = 0 → D1 top = **Microservices**. *(FR-REC-2)*
+- **AC-2.** Defaults (all 0, except time-to-market = 1 and budget = 2) → D1 top = **Monolith** (composite 5.0, no close call); QA weights show time-to-market highest (100 %). *(FR-FACT-5, FR-QA-1)*
+- **AC-3.** team = 2, distribution = 2, scale = 2, devops = 2, ttm = 0 → D1 top = **Microservices** (composite 30/7 ≈ 4.286); a **close call vs Serverless is expected and flagged**. *(FR-REC-2, FR-REC-6)*
 - **AC-4.** Selecting Microservices + Single shared DB triggers the **distributed-monolith** danger. *(FR-REC-9)*
 - **AC-5.** A contribution table reconciles exactly to the composite score. *(FR-REC-4)*
 - **AC-6.** The sensitivity card names a flipping factor or correctly labels the result robust. *(FR-REC-7)*

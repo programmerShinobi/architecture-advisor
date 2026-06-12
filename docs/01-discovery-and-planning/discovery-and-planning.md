@@ -5,8 +5,8 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Project Charter / Product Vision |
-| **Version** | 1.4 |
-| **Date** | 2026-06-11 |
+| **Version** | 1.5 |
+| **Date** | 2026-06-12 |
 | **Status** | Approved — execution baseline |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Academic/IEEE & industry |
@@ -21,6 +21,7 @@
 | 1.2 | 2026-06-10 | Closing package added; approved as the execution baseline |
 | 1.3 | 2026-06-11 | Editorial clarification (no scope change, no re-approval): designated the Section 22 solo-stage KPI table as the operative v1.0 target set (Section 4 = aspirational); aligned the sign-off date with the v1.2 baseline |
 | 1.4 | 2026-06-11 | Scope clarification: a basic custom-configuration import/export (JSON) is in the MVP (matching Build Spec v3); the richer organization-level config import/export remains deferred to v2.0. Resolves a charter↔Build Spec↔SRS mismatch |
+| 1.5 | 2026-06-12 | Reference hardening (editorial, no scope change): added peer-reviewed and SEI sources [16]–[24] (ADD technical report, SUS and its acceptability threshold, architectural design decisions, technical debt, GQM, Strangler Fig, MADR) and cited them inline where claims rely on them |
 
 ---
 
@@ -84,7 +85,7 @@ pipeline: project factors → quality-attribute priorities (grounded in ISO/IEC 
 architecture fit across five dimensions → analysis of trade-offs, sensitivity, risk, and
 decision documentation (Architecture Decision Records, ADRs). The approach adapts established
 architecture-evaluation methods — ATAM (Architecture Tradeoff Analysis Method) [2] and
-Attribute-Driven Design [3] — into an interactive tool for engineers, architects,
+Attribute-Driven Design [3], [16] — into an interactive tool for engineers, architects,
 analysts, and newcomers alike. Being client-side, it can be hosted for free with no data risk,
 offers two modes (Guided/Expert), and is designed as an open project that evolves across many
 versions.
@@ -110,8 +111,8 @@ practitioners/students without a formal framework.
 **Status quo.** Formal methods (ATAM) are effective but heavy — multi-day workshops [2]. Existing
 lightweight tools generally help only to *document* (diagrams, ADR tools), not to *decide*.
 
-**Impact if left unaddressed.** Architectural debt is expensive and only surfaces months later;
-the absence of rationale complicates auditing and onboarding [6].
+**Impact if left unaddressed.** Architectural debt is expensive and only surfaces months later
+[20], [21]; the absence of rationale complicates auditing and onboarding [6], [19].
 
 **Why now.** (a) The quality model has been updated (ISO/IEC 25010:2023 [1]); (b) free static
 hosting enables client-side distribution at no cost; (c) interest in *evolutionary architecture*
@@ -145,7 +146,7 @@ become a credible and widely used architecture decision tool; (2) reduce time an
 quality of early decisions; (3) serve as an educational resource; (4) **grow a healthy community
 of contributors**.
 
-**Measurable KPIs (Key Performance Indicators)** *(numbers are **ASSUMPTIONS** — the first validation point)*
+**Measurable KPIs (Key Performance Indicators)** *(numbers are **ASSUMPTIONS** — the first validation point; metric structure follows the Goal-Question-Metric approach [22])*
 
 | # | KPI | Target | Deadline |
 |---|---|---|---|
@@ -153,7 +154,7 @@ of contributors**.
 | K2 | Full-assessment completion | ≥ 60% | continuous |
 | K3 | Median time to recommendation | ≤ 5 minutes | from MVP |
 | K4 | Export usage (ADR/report/CSV-JSON) | ≥ 30% of sessions | continuous |
-| K5 | Usability (System Usability Scale, SUS) | ≥ 75 | beta test |
+| K5 | Usability (System Usability Scale, SUS [17]) | ≥ 75 | beta test |
 | K6 | Technical-user satisfaction | ≥ 70% | quarterly survey |
 | K7 | **Community health** (active contributors/quarter) | ≥ 5 *(ASSUMPTION)* | first year |
 
@@ -170,8 +171,8 @@ of contributors**.
 recommendation → export), Guided & Expert modes; ≥12 factors; 12 quality attributes
 (ISO/IEC 25010:2023 [1]); recommendations across five dimensions with weighted composite scores;
 an interactive trade-off radar + ranking; *close-call* detection; sensitivity analysis; a risk
-register; fitness functions; anti-pattern detection; a migration path (brownfield); presets; a
-glossary; a "How scoring works" panel; ADR export (MADR — Markdown ADR — format) & reports;
+register; fitness functions; anti-pattern detection; a migration path (brownfield, Strangler Fig [23]); presets; a
+glossary; a "How scoring works" panel; ADR export (MADR — Markdown ADR — format [24]) & reports;
 share-via-URL; a **basic custom-configuration import/export (JSON)** for extensibility; ID/EN
 internationalization (i18n); dark mode; WCAG (Web Content Accessibility Guidelines) AA [11];
 mature UI states (skeleton, 3-layer error + retry, undo, save-state, empty state).
@@ -339,10 +340,19 @@ study comparing the tool's recommendations against expert/ATAM judgment + an SUS
 [13] Contributor Covenant, *Code of Conduct*, v2.1. [Online].
 [14] T. Preston-Werner, *Semantic Versioning 2.0.0*. [Online].
 [15] *Keep a Changelog 1.1.0*. [Online].
+[16] R. Wojcik, F. Bachmann, L. Bass, P. Clements, P. Merson, R. Nord, and B. Wood, "Attribute-Driven Design (ADD), Version 2.0," SEI, Carnegie Mellon Univ., Tech. Rep. CMU/SEI-2006-TR-023, 2006.
+[17] J. Brooke, "SUS: A 'quick and dirty' usability scale," in *Usability Evaluation in Industry*, P. W. Jordan et al., Eds. London: Taylor & Francis, 1996, pp. 189–194.
+[18] A. Bangor, P. T. Kortum, and J. T. Miller, "Determining what individual SUS scores mean: Adding an adjective rating scale," *Journal of Usability Studies*, vol. 4, no. 3, pp. 114–123, 2009.
+[19] A. Jansen and J. Bosch, "Software architecture as a set of architectural design decisions," in *Proc. 5th Working IEEE/IFIP Conf. Software Architecture (WICSA)*, 2005, pp. 109–120.
+[20] W. Cunningham, "The WyCash portfolio management system," in *Addendum to Proc. OOPSLA '92*, 1992 (origin of the "technical debt" metaphor).
+[21] P. Kruchten, R. Nord, and I. Ozkaya, *Managing Technical Debt: Reducing Friction in Software Development*. Boston, MA: Addison-Wesley/SEI, 2019.
+[22] V. R. Basili, G. Caldiera, and H. D. Rombach, "The Goal Question Metric approach," in *Encyclopedia of Software Engineering*. New York: Wiley, 1994.
+[23] M. Fowler, "Strangler Fig Application," martinfowler.com, 2004. [Online].
+[24] *MADR — Markdown Architectural Decision Records*, adr.github.io/madr. [Online].
 
-> Note: [7], [9], [12]–[15] are legitimate, widely cited industry/web sources; for a formal
-> academic publication, complete the access dates and final URLs and add peer-reviewed literature
-> appropriate to the study's focus.
+> Note: [7], [9], [12]–[15], [23], [24] are legitimate, widely cited industry/web sources; the
+> remainder are standards, SEI technical reports, peer-reviewed papers, or established academic
+> texts. For a formal academic publication, complete access dates and final URLs.
 
 ---
 
@@ -535,7 +545,7 @@ aspirational Section 4 table for the solo stage; they can be raised once the pro
 | K2 | Full-assessment completion | ≥ 50% |
 | K3 | Median time to recommendation | ≤ 5 minutes |
 | K4 | Export usage | ≥ 25% of sessions |
-| K5 | Usability (SUS) | ≥ 70 |
+| K5 | Usability (SUS [17]) | ≥ 70 — the empirically derived "acceptable" threshold [18] |
 | K6 | Technical-user satisfaction | ≥ 60% |
 | K7 | **Active contributors** (first year) | **≥ 3** |
 

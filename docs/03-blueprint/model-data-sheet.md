@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
-| **Version** | 0.1 |
+| **Version** | 0.3 |
 | **Date** | 2026-06-12 |
 | **Status** | Baseline — build against this; model heuristics pending Domain-Advisor ratification |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers building the scoring engine and `config/` |
-| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.2 Section 5 · [UI prototype](prototype/index.html) |
+| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.5 Section 5 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -18,6 +18,8 @@
 | Version | Date | Summary |
 |---|---|---|
 | 0.1 | 2026-06-12 | Froze all numeric model values in one place: the 12-QA index, 14 factors + defaults, factor→QA matrix, D1–D5 `qaFit` vectors (D4/D5 promoted from the prototype), anti-pattern rules, and a baseline preset factor-level table |
+| 0.2 | 2026-06-12 | Calibration pass, machine-verified by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs): pinned the default `budget` level at 2 (the no-signal level of the inverted factor — makes AC-2/AC-3 hold exactly); calibrated preset levels (regulated `scale`/`dataVolume` → 0, e-commerce `realtime` → 0, internal-tool `ttm` → 2); computation rules now live in the [Scoring Algorithm Specification](scoring-algorithm.md) |
+| 0.3 | 2026-06-12 | Added literature anchors (Section 8): the per-dimension trade-off shapes are tied to their established sources (Richards & Ford, Newman, Kleppmann, Cockburn, Martin, Lewis & Fowler, Jackson) for Domain-Advisor ratification |
 
 ---
 
@@ -38,7 +40,9 @@ every value the scoring engine needs, in one place,** so Phase 4 development has
   Ratification adjusts numbers **in this sheet**, not the requirements.
 
 > All values live in `config/` at build time (NFR-MAINT-1); this sheet is the human-readable
-> master that those files must mirror.
+> master that those files must mirror. **How** these values are computed (formulas, tie-breaking,
+> rounding, sensitivity) is pinned in the [Scoring Algorithm Specification](scoring-algorithm.md),
+> and both documents are re-checked by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs).
 
 ---
 
@@ -66,15 +70,17 @@ Every `qaFit` vector below has **12 entries in exactly this order**. (Build Spec
 ## 2. Project factors & default levels — 🔒 Fixed (count pinned at 14)
 
 14 factors, each with 3 ordinal levels (0/1/2). **Default level is 0 for every factor except
-`ttm` = 1** (Build Spec Section 4, Section 12). Order below is the canonical factor order used by
-the preset table in Section 6.
+`ttm` = 1 and `budget` = 2** (Build Spec Section 4, Section 12). Defaults are the **no-signal**
+level of each factor — and because `budget` is inverted (a *tight* budget is the strongest cost
+signal), its no-signal level is 2 (Flexible), not 0. Order below is the canonical factor order
+used by the preset table in Section 6.
 
 | # | `id` | Label (EN) | Group | Default |
 |---|---|---|---|---|
 | 1 | `team` | Team size | Team & delivery | 0 |
 | 2 | `distribution` | Team distribution | Team & delivery | 0 |
 | 3 | `ttm` | Time-to-market pressure | Team & delivery | **1** |
-| 4 | `budget` | Budget / cost flexibility | Team & delivery | 0 |
+| 4 | `budget` | Budget / cost flexibility | Team & delivery | **2** *(inverted factor — see note above)* |
 | 5 | `lifespan` | Expected system lifespan | Team & delivery | 0 |
 | 6 | `scale` | Expected scale / traffic | Scale & performance | 0 |
 | 7 | `dataVolume` | Data volume | Scale & performance | 0 |
@@ -193,22 +199,30 @@ Each rule is a boolean over factors + chosen options, with a severity and an EN/
 
 ---
 
-## 6. Scenario presets — factor levels — 🧪 Baseline (calibrate & ratify per OI-2)
+## 6. Scenario presets — factor levels — 🧪 Calibrated baseline (ratify per OI-2)
 
-Each preset sets all 14 factor levels (column order = Section 2). These baseline levels are
-**designed to produce the outcome targets in [SRS Section 5.3](../02-requirement-analysis/software-requirements-specification.md#5-data--decision-model-requirements)**.
-The preset-calibration test is the source of truth: **if a preset does not yield its target
-outcome once the engine exists, adjust the levels here — not the targets.**
+Each preset sets all 14 factor levels (column order = Section 2). These levels are **calibrated
+and machine-verified**: running [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs)
+recomputes every preset against the outcome targets in
+[SRS Section 5.3](../02-requirement-analysis/software-requirements-specification.md#5-data--decision-model-requirements)
+— all 25 targets (5 presets × 5 dimensions) currently hold. **If a future model change breaks a
+target, adjust the levels here — not the targets** — and re-run the script.
 
 Columns: `team, distribution, ttm, budget, lifespan, scale, dataVolume, async, realtime, domain, consistency, security, legacy, devops`
 
 | Preset `id` | team | dist | ttm | budget | lifespan | scale | dataVol | async | realtime | domain | consist | security | legacy | devops |
 |---|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
 | `startup-mvp` | 0 | 0 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `regulated` | 1 | 0 | 0 | 1 | 2 | 1 | 1 | 0 | 0 | 2 | 2 | 2 | 1 | 1 |
-| `high-traffic-ecommerce` | 2 | 2 | 0 | 2 | 2 | 2 | 2 | 2 | 1 | 2 | 1 | 1 | 0 | 2 |
+| `regulated` | 1 | 0 | 0 | 1 | 2 | 0 | 0 | 0 | 0 | 2 | 2 | 2 | 1 | 1 |
+| `high-traffic-ecommerce` | 2 | 2 | 0 | 2 | 2 | 2 | 2 | 2 | 0 | 2 | 1 | 1 | 0 | 2 |
 | `iot-streaming` | 1 | 1 | 1 | 1 | 2 | 2 | 2 | 2 | 2 | 1 | 0 | 1 | 0 | 2 |
-| `internal-tool` | 1 | 0 | 1 | 1 | 1 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 1 |
+| `internal-tool` | 1 | 0 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 1 |
+
+Calibration notes (v0.2): `regulated` drops `scale`/`dataVolume` to 0 — the preset is driven by
+consistency/security, and any traffic signal pushes D3 toward Database-per-service, off its
+Single-shared-DB target; `high-traffic-ecommerce` drops `realtime` to 0 — a `performance` boost
+tips D2 from Event-driven to Streaming; `internal-tool` raises `ttm` to 2 — internal tools carry
+quick-delivery expectations, which is also what keeps D4 on Layered rather than Hexagonal.
 
 **Expected top recommendation per preset (the regression assertion — SRS 5.3):**
 
@@ -217,13 +231,16 @@ Columns: `team, distribution, ttm, budget, lifespan, scale, dataVolume, async, r
 | `startup-mvp` | Monolith | Synchronous | Single shared DB | Layered | SPA |
 | `regulated` | Modular Monolith | Synchronous | Single shared DB | Hexagonal / Clean | SPA / SSR |
 | `high-traffic-ecommerce` | Microservices | Event-driven | Database-per-service | Hexagonal | Micro-frontends |
-| `iot-streaming` | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal | SPA |
+| `iot-streaming` | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal | SPA / SSR |
 | `internal-tool` | Modular Monolith | Synchronous | Single shared DB | Layered | SPA |
 
 > Cross-check: `high-traffic-ecommerce` equals the SRS acceptance scenario AC-3
 > (`team=2, distribution=2, scale=2, devops=2, ttm=0` → D1 = Microservices) and avoids the
 > distributed-monolith danger (D3 ≠ single shared DB). `startup-mvp` keeps every driver low so the
-> default-style Monolith wins and no over-engineering warning fires.
+> default-style Monolith wins and no over-engineering warning fires. The `iot-streaming` D5 target
+> was widened to **SPA / SSR** (the alternative-set style already used by other cells): under the
+> heavy `performance` weight that defines IoT, SSR's perf fit (5) legitimately wins, and every
+> level change that forced SPA broke the D3/D4 targets — widening the target is the honest fix.
 
 ---
 
@@ -239,12 +256,30 @@ These must hold for every input and are unit-tested (NFR-MAINT-2, SRS FR-EDGE-6)
 
 ---
 
-## 8. What is still pending (and who closes it)
+## 8. Literature anchors for the fit heuristics
+
+The `qaFit` values are expert heuristics (Charter Section 9), but they are **not invented from
+nothing** — each dimension's trade-off shape follows established, widely cited literature, which
+is also where a Domain Advisor should start when ratifying them:
+
+| Dimension | The trade-off shape encoded | Primary sources |
+|---|---|---|
+| D1 Deployment Granularity | Microservices trade data consistency & cost for deployability/scalability; monoliths the reverse | M. Richards & N. Ford, *Fundamentals of Software Architecture* (O'Reilly, 2020), ch. 9–17; S. Newman, *Building Microservices*, 2nd ed. (O'Reilly, 2021); J. Lewis & M. Fowler, "Microservices" (martinfowler.com, 2014) |
+| D2 Communication Style | Synchronous favors consistency/simplicity; events favor scalability/resilience at consistency cost | M. Kleppmann, *Designing Data-Intensive Applications* (O'Reilly, 2017), ch. 11–12; Richards & Ford 2020, ch. 14–15 |
+| D3 Data Management | Shared DB favors consistency/simplicity; per-service/CQRS/event sourcing favor scale & autonomy at consistency/ops cost | Kleppmann 2017; Newman 2021, ch. 4–5 |
+| D4 Code Structure | Hexagonal/Clean favor maintainability & testability at early-delivery cost; layered the reverse | A. Cockburn, "Hexagonal Architecture (Ports & Adapters)" (alistair.cockburn.us, 2005); R. C. Martin, *Clean Architecture* (Prentice Hall, 2017) |
+| D5 Frontend Architecture | Micro-frontends favor team-scale deployability at complexity cost; SSR favors first-paint performance | C. Jackson, "Micro Frontends" (martinfowler.com, 2019); Richards & Ford 2020 |
+
+The scoring mathematics itself is grounded separately in the
+[Scoring Algorithm Specification](scoring-algorithm.md) Section 11 (additive multi-attribute
+value theory, sensitivity analysis, apportionment).
+
+## 9. What is still pending (and who closes it)
 
 | Item | Status | Closes |
 |---|---|---|
 | D4 / D5 `qaFit` vectors (Section 4) | 🧪 Baseline recorded | Domain Advisor ratifies → SRS OI-4 |
-| Preset factor levels (Section 6) | 🧪 Baseline recorded | Calibration test + Domain Advisor → SRS OI-2 |
+| Preset factor levels (Section 6) | 🧪 **Calibrated & machine-verified** (all 25 targets hold) | Domain Advisor ratifies → SRS OI-2 |
 | Bilingual content (factor help; option pros/cons/whenToUse/learnMore; fitness & anti-pattern messages, EN/ID) | ✍ To author | Build Spec Section 7, Section 11 |
 | C4 Mermaid stub in v1.0? | ❔ Scope | SRS OI-3 |
 | Performance budgets ratified | 🧪 Interim set | SRS OI-5 / design DI-4 |

@@ -1,9 +1,14 @@
 # Phase 6 — Deployment / Release
 
-> 🚧 **Not started.** Phase 6 of 7. A complete deployment guide already exists.
+> 🚧 **Not started.** Phase 6 of 7. The deployment guide below is already written and ready to follow.
 
 Releasing to production through a **CI/CD pipeline**, ideally with a **staging** step before going
 live. For this project the target is free static hosting on **GitHub Pages** with **GitHub Actions**.
+
+## Deliverable (prepared)
+
+➡️ **[Deployment Guide — GitHub Pages](deployment-github-pages.md)** — step-by-step free
+hosting + CI/CD (public repo → unlimited Actions minutes + free Pages).
 
 **Expected outputs**
 
@@ -13,8 +18,6 @@ live. For this project the target is free static hosting on **GitHub Pages** wit
 
 **References**
 
-- ✅ [Deployment Guide — GitHub Pages](../guides/deployment-github-pages.md) — step-by-step free
-  hosting + CI/CD, already written and ready to follow.
 - [Build Spec v3 Section 2](../specs/build-spec-v3.md#2-tech-stack-use-exactly-this) — the CI workflow requirement.
 
 Contributions are welcome — see [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).

@@ -300,3 +300,16 @@ A feature is considered **"mature & comfortable"** only if ALL are checked:
 *Note: do Phase 0 first — without the foundation (design system, API standards, observability),
 tasks in later phases keep colliding with inconsistency. After Phase 0, new features can follow
 the Master Checklist from the design stage onward.*
+
+---
+
+## Sources
+
+The engineering practices in this playbook follow established, research-backed references:
+
+1. N. Forsgren, J. Humble, and G. Kim, *Accelerate: The Science of Lean Software and DevOps*. Portland, OR: IT Revolution, 2018 — the DORA research program behind delivery-performance metrics (deployment frequency, lead time, change failure rate, MTTR).
+2. B. Beyer, C. Jones, J. Petoff, and N. R. Murphy, Eds., *Site Reliability Engineering: How Google Runs Production Systems*. Sebastopol, CA: O'Reilly, 2016 — observability, SLOs, and error budgets (F0-04, TECH-10).
+3. OWASP Foundation, *OWASP Top Ten* and *Application Security Verification Standard (ASVS)*. [Online] — the security baseline behind TECH-03.
+4. M. Cohn, *Succeeding with Agile: Software Development Using Scrum*. Boston, MA: Addison-Wesley, 2009 — the test-automation pyramid behind TECH-08.
+5. N. Ford, R. Parsons, and P. Kua, *Building Evolutionary Architectures*. Sebastopol, CA: O'Reilly, 2017 — fitness functions as continuous architecture verification (TECH-07/TECH-09).
+6. P. Kruchten, R. Nord, and I. Ozkaya, *Managing Technical Debt*. Boston, MA: Addison-Wesley/SEI, 2019 — debt management discipline behind TECH-09 and the Master Checklist.

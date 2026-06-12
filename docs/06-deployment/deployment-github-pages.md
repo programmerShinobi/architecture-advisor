@@ -218,4 +218,13 @@ edit code on elementary OS  →  git push to main  →  GitHub Actions (free)
    builds + tests + deploys  →  GitHub Pages (free)  →  public live URL
 ```
 
+---
+
+## References (official documentation)
+
+- GitHub Docs, *GitHub Pages* — https://docs.github.com/en/pages
+- GitHub Docs, *GitHub Actions* — https://docs.github.com/en/actions
+- GitHub Docs, *Billing for GitHub Actions* (free minutes on public repositories) — https://docs.github.com/en/billing
+- Vite, *Deploying a Static Site* — https://vite.dev/guide/static-deploy
+
 No servers to manage, no monthly bill. Total cost: your time.
