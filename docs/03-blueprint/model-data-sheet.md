@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
-| **Version** | 0.3 |
+| **Version** | 0.4 |
 | **Date** | 2026-06-12 |
 | **Status** | Baseline — build against this; model heuristics pending Domain-Advisor ratification |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -20,6 +20,7 @@
 | 0.1 | 2026-06-12 | Froze all numeric model values in one place: the 12-QA index, 14 factors + defaults, factor→QA matrix, D1–D5 `qaFit` vectors (D4/D5 promoted from the prototype), anti-pattern rules, and a baseline preset factor-level table |
 | 0.2 | 2026-06-12 | Calibration pass, machine-verified by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs): pinned the default `budget` level at 2 (the no-signal level of the inverted factor — makes AC-2/AC-3 hold exactly); calibrated preset levels (regulated `scale`/`dataVolume` → 0, e-commerce `realtime` → 0, internal-tool `ttm` → 2); computation rules now live in the [Scoring Algorithm Specification](scoring-algorithm.md) |
 | 0.3 | 2026-06-12 | Added literature anchors (Section 8): the per-dimension trade-off shapes are tied to their established sources (Richards & Ford, Newman, Kleppmann, Cockburn, Martin, Lewis & Fowler, Jackson) for Domain-Advisor ratification |
+| 0.4 | 2026-06-12 | Authored the bilingual factor content (Section 2.1): EN/ID labels, level labels, and help text for all 14 factors — baseline copy pending Translator review |
 
 ---
 
@@ -92,8 +93,33 @@ used by the preset table in Section 6.
 | 13 | `legacy` | Legacy integration burden | Domain, data & risk | 0 |
 | 14 | `devops` | DevOps / platform maturity | Domain, data & risk | 0 |
 
-> Level labels (EN/ID) and help text per factor: Build Spec Section 4 (content to be authored —
-> see the build-readiness checklist in the design spec).
+### 2.1 Factor content — labels, level labels & help (EN · ID) — 🧪 Baseline copy
+
+The user-facing copy for all 14 factors, in both product languages. Each help text states *what
+the factor means* and *why it shifts the priorities* (Build Spec Section 4). English is the
+authoring language; the Indonesian copy follows the product's plain-language register and awaits
+Translator review (Charter Section 14.2).
+
+| `id` | Label & levels (EN · *ID*) | Help (EN) | Help (ID) |
+|---|---|---|---|
+| `team` | Team size · *Ukuran tim*<br>0 Small (1–5) · *Kecil (1–5)*<br>1 Medium (6–20) · *Sedang (6–20)*<br>2 Large / multiple teams · *Besar / banyak tim* | How many people build and maintain the system. Larger or multiple teams make independent releases and clear module boundaries more valuable (deployability, maintainability). | Berapa banyak orang yang membangun dan merawat sistem. Tim besar atau banyak tim membuat rilis mandiri dan batas modul yang jelas semakin penting (deployability, maintainability). |
+| `distribution` | Team distribution · *Sebaran tim*<br>0 Co-located · *Satu lokasi*<br>1 Partly remote · *Sebagian remote*<br>2 Fully distributed / global · *Terdistribusi penuh / global* | Where the team works from. Distributed teams coordinate less easily, so architectures that let each group ship independently matter more (deployability, maintainability). | Dari mana tim bekerja. Tim terdistribusi lebih sulit berkoordinasi, sehingga arsitektur yang memungkinkan tiap kelompok rilis secara mandiri menjadi lebih penting (deployability, maintainability). |
+| `ttm` | Time-to-market pressure · *Tekanan waktu rilis*<br>0 Relaxed · *Santai*<br>1 Moderate · *Sedang*<br>2 Very urgent · *Sangat mendesak* | How urgently the first version must ship. High pressure favors simple options that deliver fast (time-to-market), at a small cost to long-term structure (maintainability). | Seberapa mendesak versi pertama harus dirilis. Tekanan tinggi mengutamakan opsi sederhana yang cepat jadi (time-to-market), dengan sedikit mengorbankan struktur jangka panjang (maintainability). |
+| `budget` | Budget / cost flexibility · *Fleksibilitas anggaran*<br>0 Tight · *Ketat*<br>1 Moderate · *Sedang*<br>2 Flexible · *Longgar* | How much money is available to run the system. A tight budget raises the weight of cost efficiency — this factor is **inverted**: level 0 (Tight) is the strongest signal. | Seberapa besar dana untuk menjalankan sistem. Anggaran ketat menaikkan bobot efisiensi biaya — faktor ini **terbalik**: level 0 (Ketat) adalah sinyal terkuat. |
+| `lifespan` | Expected system lifespan · *Perkiraan umur sistem*<br>0 Throwaway / prototype · *Sekali pakai / prototipe*<br>1 Medium-term · *Jangka menengah*<br>2 Long-lived / strategic · *Jangka panjang / strategis* | How long the system is expected to live. Long-lived systems repay investment in clean structure, tests, and monitoring (maintainability, testability, observability). | Berapa lama sistem diperkirakan dipakai. Sistem berumur panjang layak diberi investasi struktur yang rapi, pengujian, dan pemantauan (maintainability, testability, observability). |
+| `scale` | Expected scale / traffic · *Perkiraan skala / trafik*<br>0 Low · *Rendah*<br>1 Medium · *Sedang*<br>2 High / extreme spikes · *Tinggi / lonjakan ekstrem* | How much traffic the system must handle. High scale raises scalability, performance, and availability — and cost efficiency, because waste multiplies at scale. | Seberapa besar trafik yang harus ditangani. Skala tinggi menaikkan bobot skalabilitas, performa, dan ketersediaan — juga efisiensi biaya, karena pemborosan ikut berlipat pada skala besar. |
+| `dataVolume` | Data volume · *Volume data*<br>0 Low · *Rendah*<br>1 Moderate · *Sedang*<br>2 Very large / big data · *Sangat besar / big data* | How much data is stored and processed. Very large data raises scalability and performance needs, and storage cost matters more (cost efficiency). | Seberapa banyak data yang disimpan dan diolah. Data sangat besar menaikkan kebutuhan skalabilitas dan performa, dan biaya penyimpanan semakin berpengaruh (efisiensi biaya). |
+| `async` | Async / event-driven workload · *Beban asinkron / berbasis event*<br>0 Minimal · *Minimal*<br>1 Some · *Sebagian*<br>2 Heavy / many integrations · *Berat / banyak integrasi* | How much work happens in the background or reacts to events. Heavy async workloads favor architectures that absorb bursts and keep running when one part is busy (scalability, availability, performance). | Seberapa banyak pekerjaan berjalan di latar belakang atau bereaksi terhadap event. Beban asinkron yang berat cocok dengan arsitektur yang mampu menyerap lonjakan dan tetap berjalan saat satu bagian sibuk (skalabilitas, ketersediaan, performa). |
+| `realtime` | Real-time / low-latency need · *Kebutuhan real-time / latensi rendah*<br>0 Not important · *Tidak penting*<br>1 Somewhat · *Cukup penting*<br>2 Critical (sub-second) · *Kritis (sub-detik)* | How fast responses must be. Sub-second requirements push performance to the top, with availability close behind. | Seberapa cepat respons harus diberikan. Kebutuhan sub-detik menempatkan performa di prioritas teratas, disusul ketersediaan. |
+| `domain` | Business domain complexity · *Kompleksitas domain bisnis*<br>0 Simple · *Sederhana*<br>1 Moderate · *Sedang*<br>2 Complex · *Kompleks* | How intricate the business rules are. Complex domains repay structures that isolate and test business logic (maintainability, testability). | Seberapa rumit aturan bisnisnya. Domain yang kompleks layak diberi struktur yang memisahkan dan menguji logika bisnis (maintainability, testability). |
+| `consistency` | Data consistency need · *Kebutuhan konsistensi data*<br>0 Eventual is fine · *Eventual cukup*<br>1 Mixed · *Campuran*<br>2 Strong consistency required · *Wajib konsistensi kuat* | How strictly data must agree at all times. A strong-consistency requirement dominates the data-management choice (data consistency). | Seberapa ketat data harus selalu sinkron. Kebutuhan konsistensi kuat sangat menentukan pilihan pengelolaan data (konsistensi data). |
+| `security` | Security / compliance need · *Kebutuhan keamanan / kepatuhan*<br>0 Standard · *Standar*<br>1 Elevated · *Lebih tinggi*<br>2 Strict (regulated data) · *Ketat (data teregulasi)* | How sensitive the data and rules are. Regulated data (finance, health) raises the security weight sharply. | Seberapa sensitif data dan aturannya. Data teregulasi (keuangan, kesehatan) menaikkan bobot keamanan secara tajam. |
+| `legacy` | Legacy integration burden · *Beban integrasi sistem lama*<br>0 None / greenfield · *Tidak ada / greenfield*<br>1 Some · *Sebagian*<br>2 Heavy legacy coupling · *Keterikatan legacy berat* | How much the system must connect to older systems. Heavy legacy coupling raises interoperability and rewards architectures with clean integration seams (maintainability). | Seberapa besar sistem harus terhubung ke sistem lama. Keterikatan legacy yang berat menaikkan bobot interoperabilitas dan menghargai arsitektur dengan titik integrasi yang rapi (maintainability). |
+| `devops` | DevOps / platform maturity · *Kematangan DevOps / platform*<br>0 Low · *Rendah*<br>1 Medium · *Sedang*<br>2 Mature (CI/CD, monitoring) · *Matang (CI/CD, pemantauan)* | How strong the team's automation and operations are. Mature platforms can safely run more independently deployed parts (deployability, observability). | Seberapa kuat otomasi dan operasional tim. Platform yang matang dapat menjalankan lebih banyak bagian yang dirilis mandiri secara aman (deployability, observability). |
+
+> English level labels are verbatim from Build Spec Section 4 (🔒); the Indonesian labels and both
+> help texts are 🧪 baseline copy pending Translator review. At build time this table maps 1:1 to
+> `config/factors.ts` (`label`, `levels[0..2]`, `help` — each `{ en, id }`).
 
 ---
 
@@ -280,7 +306,8 @@ value theory, sensitivity analysis, apportionment).
 |---|---|---|
 | D4 / D5 `qaFit` vectors (Section 4) | 🧪 Baseline recorded | Domain Advisor ratifies → SRS OI-4 |
 | Preset factor levels (Section 6) | 🧪 **Calibrated & machine-verified** (all 25 targets hold) | Domain Advisor ratifies → SRS OI-2 |
-| Bilingual content (factor help; option pros/cons/whenToUse/learnMore; fitness & anti-pattern messages, EN/ID) | ✍ To author | Build Spec Section 7, Section 11 |
+| Factor content EN/ID (labels, level labels, help) | 🧪 **Authored** (Section 2.1) | Translator review → Charter Section 14.2 |
+| Option educational metadata; fitness & anti-pattern messages (EN/ID) | ✍ To author | Build Spec Section 7, Section 10, Section 11 |
 | C4 Mermaid stub in v1.0? | ❔ Scope | SRS OI-3 |
 | Performance budgets ratified | 🧪 Interim set | SRS OI-5 / design DI-4 |
 

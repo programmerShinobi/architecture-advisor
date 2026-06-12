@@ -327,7 +327,8 @@ free of guesswork — each line is either fixed or has a usable baseline.
 - [x] **Scoring computation pinned**: formulas, tie-breaking, close-call, sensitivity, rounding, and float-precision rules in the [Scoring Algorithm Specification](scoring-algorithm.md), with machine-verified fixtures (`node scripts/verify-model.mjs`).
 - [x] **Preset levels pass the calibration test** against SRS 5.3 — all 25 targets machine-verified (SRS OI-2; Domain-Advisor ratification still pending).
 - [ ] **D4/D5 `qaFit` ratified** by a Domain Advisor (SRS OI-4) — *baseline usable now*.
-- [ ] **Bilingual content authored**: factor help; option pros/cons/whenToUse/learnMore; fitness & anti-pattern messages (EN/ID) (Build Spec Section 7, Section 11).
+- [x] **Factor content authored (EN/ID)**: labels, level labels, and help for all 14 factors — [Model Data Sheet Section 2.1](model-data-sheet.md) (Translator review pending).
+- [ ] **Option & message content authored (EN/ID)**: option pros/cons/whenToUse/learnMore; fitness & anti-pattern messages (Build Spec Section 7, Section 10, Section 11).
 - [ ] **C4 stub** scoped in or out of v1.0 (SRS OI-3).
 - [ ] **Performance budgets ratified** against the real bundle (SRS OI-5 / DI-4).
 
