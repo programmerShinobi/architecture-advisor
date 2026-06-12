@@ -6,7 +6,7 @@
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
 | **Version** | 0.6 |
-| **Date** | 2026-06-12 |
+| **Date** | 2026-06-13 |
 | **Status** | Draft — review-ready |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, analysts, reviewers |

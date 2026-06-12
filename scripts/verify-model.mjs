@@ -3,8 +3,12 @@
  * Architecture Advisor — model verification.
  *
  * Recomputes the scoring pipeline from the frozen values in
- * docs/03-blueprint/model-data-sheet.md and asserts every calibration target in
- * docs/03-blueprint/scoring-algorithm.md (fixtures A–C + the five presets).
+ * docs/03-blueprint/model-data-sheet.md and asserts everything pinned in
+ * docs/03-blueprint/scoring-algorithm.md: fixtures A–C, all 25 preset targets
+ * with their margins (flagging any under 2% as calibration-sensitive),
+ * largest-remainder display rounding, expert override/lock semantics, and 500
+ * seeded randomized property tests (weights sum to 100, composites in [1,5],
+ * deterministic ranking).
  * Run: node scripts/verify-model.mjs   (exit 0 = all assertions hold)
  */
 

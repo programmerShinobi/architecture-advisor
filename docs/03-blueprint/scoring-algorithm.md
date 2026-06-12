@@ -6,7 +6,7 @@
 |---|---|
 | **Document type** | Scoring Algorithm Specification (exact computation rules) |
 | **Version** | 0.2 |
-| **Date** | 2026-06-12 |
+| **Date** | 2026-06-13 |
 | **Status** | Baseline — every number below is machine-verified by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs) |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers implementing `lib/scoring.ts`, `lib/sensitivity.ts`, and their tests |

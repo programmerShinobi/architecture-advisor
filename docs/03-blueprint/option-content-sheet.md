@@ -30,7 +30,8 @@ the tool."* This sheet is that content, mapped 1:1 to `config/dimensions.ts` (pe
 `learnMore`, `risks`), `config/antiPatterns.ts` (messages), and `config/fitnessFunctions.ts`
 (templates). The numeric `qaFit` values live in the [Model Data Sheet](model-data-sheet.md);
 this sheet carries only words. Lists use `·` separators; each maps to one array entry. Every
-*learn more* link is a canonical, stable source. Risks are written `(likelihood/impact) risk →
+*learn more* link is a canonical, stable source and is **language-neutral** (one link list serves
+both languages — hence the `—` in its ID column). Risks are written `(likelihood/impact) risk →
 mitigation`.
 
 ---

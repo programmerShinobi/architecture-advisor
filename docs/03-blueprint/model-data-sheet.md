@@ -6,7 +6,7 @@
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
 | **Version** | 0.6 |
-| **Date** | 2026-06-12 |
+| **Date** | 2026-06-13 |
 | **Status** | Baseline — build against this; model heuristics pending Domain-Advisor ratification |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers building the scoring engine and `config/` |
