@@ -7,7 +7,7 @@
 
 ## Deliverable
 
-➡️ **[Software Requirements Specification (SRS)](software-requirements-specification.md)** — draft v0.5.
+➡️ **[Software Requirements Specification (SRS)](software-requirements-specification.md)** — draft v0.6.
 
 It translates the charter and [Build Spec v3](../specs/build-spec-v3.md) into discrete, testable,
 traceable requirements (ISO/IEC/IEEE 29148 structure), covering:

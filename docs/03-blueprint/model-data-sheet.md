@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
-| **Version** | 0.5 |
+| **Version** | 0.6 |
 | **Date** | 2026-06-12 |
 | **Status** | Baseline — build against this; model heuristics pending Domain-Advisor ratification |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers building the scoring engine and `config/` |
-| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.5 Section 5 · [UI prototype](prototype/index.html) |
+| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.6 Section 5 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -22,6 +22,7 @@
 | 0.3 | 2026-06-12 | Added literature anchors (Section 8): the per-dimension trade-off shapes are tied to their established sources (Richards & Ford, Newman, Kleppmann, Cockburn, Martin, Lewis & Fowler, Jackson) for Domain-Advisor ratification |
 | 0.4 | 2026-06-12 | Authored the bilingual factor content (Section 2.1): EN/ID labels, level labels, and help text for all 14 factors — baseline copy pending Translator review |
 | 0.5 | 2026-06-13 | Linked the new [Option Content Sheet](option-content-sheet.md): the bilingual educational metadata for all 21 options, anti-pattern messages, and fitness-function templates are now authored |
+| 0.6 | 2026-06-13 | Calibration-stability review: widened the e-commerce and IoT D4 targets to Hexagonal / Clean (exact tie whenever the interoperability weight is 0); target margins are now measured by the verification script, with the four sensitive targets documented in the [Scoring Algorithm Specification](scoring-algorithm.md) Section 9.4 |
 
 ---
 
@@ -232,8 +233,10 @@ Each preset sets all 14 factor levels (column order = Section 2). These levels a
 and machine-verified**: running [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs)
 recomputes every preset against the outcome targets in
 [SRS Section 5.3](../02-requirement-analysis/software-requirements-specification.md#5-data--decision-model-requirements)
-— all 25 targets (5 presets × 5 dimensions) currently hold. **If a future model change breaks a
-target, adjust the levels here — not the targets** — and re-run the script.
+— all 25 targets (5 presets × 5 dimensions) currently hold, and the script reports each target's
+**margin** over the best option outside its allowed set (four targets sit under 2 % — see the
+[Scoring Algorithm Specification](scoring-algorithm.md) Section 9.4). **If a future model change
+breaks a target, adjust the levels here — not the targets** — and re-run the script.
 
 Columns: `team, distribution, ttm, budget, lifespan, scale, dataVolume, async, realtime, domain, consistency, security, legacy, devops`
 
@@ -257,8 +260,8 @@ quick-delivery expectations, which is also what keeps D4 on Layered rather than 
 |---|---|---|---|---|---|
 | `startup-mvp` | Monolith | Synchronous | Single shared DB | Layered | SPA |
 | `regulated` | Modular Monolith | Synchronous | Single shared DB | Hexagonal / Clean | SPA / SSR |
-| `high-traffic-ecommerce` | Microservices | Event-driven | Database-per-service | Hexagonal | Micro-frontends |
-| `iot-streaming` | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal | SPA / SSR |
+| `high-traffic-ecommerce` | Microservices | Event-driven | Database-per-service | Hexagonal / Clean | Micro-frontends |
+| `iot-streaming` | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal / Clean | SPA / SSR |
 | `internal-tool` | Modular Monolith | Synchronous | Single shared DB | Layered | SPA |
 
 > Cross-check: `high-traffic-ecommerce` equals the SRS acceptance scenario AC-3

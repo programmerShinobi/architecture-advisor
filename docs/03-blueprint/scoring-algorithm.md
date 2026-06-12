@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Scoring Algorithm Specification (exact computation rules) |
-| **Version** | 0.1 |
+| **Version** | 0.2 |
 | **Date** | 2026-06-12 |
 | **Status** | Baseline — every number below is machine-verified by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs) |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -18,6 +18,7 @@
 | Version | Date | Summary |
 |---|---|---|
 | 0.1 | 2026-06-12 | Initial specification: exact formulas for every pipeline step, override/lock semantics, tie-breaking, close-call and sensitivity definitions, display rounding (largest remainder), float-precision policy, and machine-verified worked fixtures |
+| 0.2 | 2026-06-13 | Validity review: added Section 11 (methodological validity & known limitations) grounded in the MCDA research literature; calibration margins measured and the four sensitive targets documented (Section 9.4); the verification script now also asserts margins, largest-remainder display rounding, override/lock semantics, and 500 randomized property tests |
 
 ---
 
@@ -33,7 +34,8 @@
 - [8. Numeric precision policy](#8-numeric-precision-policy)
 - [9. Worked fixtures (machine-verified)](#9-worked-fixtures-machine-verified)
 - [10. Engine invariants & required property tests](#10-engine-invariants--required-property-tests)
-- [11. References](#11-references)
+- [11. Methodological validity & known limitations](#11-methodological-validity--known-limitations)
+- [12. References](#12-references)
 
 ---
 
@@ -264,6 +266,25 @@ Many preset dimensions are intentionally close calls (the tool flags them); the 
 the assertion, with alternative sets (`Hexagonal/Clean`, `SPA/SSR`, `Microservices/Serverless`,
 `CQRS/Event Sourcing`) where SRS Section 5.3 allows them.
 
+**Calibration margins.** For every target, the verification script also reports the **margin**:
+the relative gap between the winner and the best option *outside* the allowed set. Four targets
+are **calibration-sensitive** (margin < 2 %) — they hold today, but a small ratification change
+could flip them, so any model change must re-run `node scripts/verify-model.mjs` and, if a
+fragile target flips, either recalibrate the preset levels or re-ratify the target via an ADR
+(Charter Section 14.4):
+
+| Preset · dimension | Winner | Best outside the target set | Margin |
+|---|---|---|---|
+| iot-streaming · D3 | CQRS 3.7143 | Database-per-service 3.6825 | **0.85 %** |
+| internal-tool · D1 | Modular Monolith 3.8846 | Monolith 3.8462 | **0.99 %** |
+| regulated · D3 | Single shared DB 3.3158 | Database-per-service 3.2632 | **1.59 %** |
+| high-traffic-ecommerce · D2 | Event-driven 3.4032 | Streaming 3.3387 | **1.90 %** |
+
+All remaining targets hold with margins ≥ 2.98 %. (The two former exact ties — Hexagonal vs Clean
+in the e-commerce and IoT D4 columns — were resolved by widening those targets to
+`Hexagonal / Clean`: the pair differs only on `interoperability`, so whenever that weight is 0
+they tie exactly and only the canonical order separated them.)
+
 ## 10. Engine invariants & required property tests
 
 Beyond the fixtures, the test suite (NFR-MAINT-2) **shall** assert these properties over random
@@ -280,13 +301,47 @@ valid inputs:
 
 ---
 
-## 11. References
+## 11. Methodological validity & known limitations
+
+Stated openly so reviewers can judge the model on the same terms its authors do — and so the
+documented mitigations are recognized as deliberate, not accidental.
+
+1. **Commensurability is satisfied.** The weighted-sum model is only meaningful when all criteria
+   share a common scale [2]; here every `qaFit` uses one absolute 1–5 scale, so the classic
+   unit-aggregation objection to WSM does not apply.
+2. **Rank stability by construction.** An option's composite depends only on its own fits and the
+   weights — never on the other options — so adding or removing an option can never reorder the
+   rest. The rank-reversal phenomenon documented for AHP [7] cannot occur here. AHP-style pairwise
+   comparison [8] was deliberately rejected: 12 QAs would demand 66 pairwise judgments per user,
+   incompatible with the ≤ 5-minute KPI (K3); the factor→QA matrix instead follows the
+   simple-multiattribute (SMART-family) tradition, shown to be robust in practice [9].
+3. **Ordinal scales treated as interval.** Factor levels (0–2) and fits (1–5) are ordinal
+   measurements used arithmetically — a known approximation in measurement theory [10]. This is
+   precisely why the values are editable, a sensitivity analysis is built in [12], and every
+   result carries a permanent heuristics disclaimer (Charter Section 21).
+4. **Preferential independence is assumed.** Additive aggregation formally requires mutual
+   preferential independence of criteria [1]; some QAs correlate in practice (e.g. deployability
+   and maintainability). This is a standard, accepted simplification in applied MCDA [11],
+   mitigated by full transparency, close-call detection, and the sensitivity analysis.
+5. **Calibration sensitivity is measured, not hidden.** The verification script reports the margin
+   of every preset target (Section 9.4); the four targets under 2 % are flagged in its output, and
+   the maintenance rule is: **re-run the script after any model change** — a flipped fragile
+   target means recalibrating levels or re-ratifying the target via ADR.
+
+## 12. References
 
 1. R. L. Keeney and H. Raiffa, *Decisions with Multiple Objectives: Preferences and Value Tradeoffs*. New York: Wiley, 1976.
 2. E. Triantaphyllou, *Multi-Criteria Decision Making Methods: A Comparative Study*. Dordrecht: Kluwer Academic (Springer), 2000.
 3. M. L. Balinski and H. P. Young, *Fair Representation: Meeting the Ideal of One Man, One Vote*. New Haven, CT: Yale University Press, 1982.
 4. R. Kazman, M. Klein, and P. Clements, "ATAM: Method for Architecture Evaluation," SEI, Carnegie Mellon Univ., Tech. Rep. CMU/SEI-2000-TR-004, 2000.
 5. IEEE Std 754-2019, *IEEE Standard for Floating-Point Arithmetic*, IEEE, 2019.
+6. P. C. Fishburn, "Additive utilities with incomplete product sets: Application to priorities and assignments," *Operations Research*, vol. 15, no. 3, 1967.
+7. V. Belton and T. Gear, "On a short-coming of Saaty's method of analytic hierarchies," *Omega*, vol. 11, no. 3, pp. 228–230, 1983.
+8. T. L. Saaty, *The Analytic Hierarchy Process*. New York: McGraw-Hill, 1980.
+9. W. Edwards and F. H. Barron, "SMARTS and SMARTER: Improved simple methods for multiattribute utility measurement," *Organizational Behavior and Human Decision Processes*, vol. 60, no. 3, pp. 306–325, 1994.
+10. S. S. Stevens, "On the theory of scales of measurement," *Science*, vol. 103, no. 2684, pp. 677–680, 1946.
+11. V. Belton and T. J. Stewart, *Multiple Criteria Decision Analysis: An Integrated Approach*. Boston, MA: Kluwer Academic, 2002.
+12. E. Triantaphyllou and A. Sánchez, "A sensitivity analysis approach for some deterministic multi-criteria decision-making methods," *Decision Sciences*, vol. 28, no. 1, pp. 151–194, 1997.
 
 ---
 

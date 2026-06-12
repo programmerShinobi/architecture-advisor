@@ -10,7 +10,7 @@
 | **Status** | Draft |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, designers |
-| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.5 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.5 · [UI prototype](prototype/index.html) |
+| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.6 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.5 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**

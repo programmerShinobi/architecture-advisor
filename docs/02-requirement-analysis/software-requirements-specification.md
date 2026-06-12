@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 0.5 |
+| **Version** | 0.6 |
 | **Date** | 2026-06-12 |
 | **Status** | Draft — review-ready |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -22,6 +22,7 @@
 | 0.3 | 2026-06-12 | Build-readiness: pinned the factor count at 14 (closes OI-1); linked the new [Model Data Sheet](../03-blueprint/model-data-sheet.md) that freezes all numeric model values; OI-2/OI-4 now reference recorded baselines |
 | 0.4 | 2026-06-12 | Computation precision: linked the [Scoring Algorithm Specification](../03-blueprint/scoring-algorithm.md); pinned defaults exactly (budget = 2, the no-signal level of the inverted factor) in FR-FACT-5/AC-2; AC-2/AC-3 now state exact expected composites and the expected close-call flag; Section 5.3 presets machine-verified, IoT D5 target widened to SPA / SSR |
 | 0.5 | 2026-06-12 | Reference hardening: added peer-reviewed and standard sources (SUS and its acceptability threshold, MADR, Strangler Fig, additive multi-attribute value model, ADD technical report) and cited them inline at NFR-USE-1, FR-OUT-1, FR-REC-12/13, and Section 5.1 |
+| 0.6 | 2026-06-13 | Calibration-stability review: widened the e-commerce and IoT D4 targets to Hexagonal / Clean (the pair differs only on interoperability and ties exactly whenever that weight is 0); margins for every preset target are now machine-measured (Scoring Algorithm Section 9.4) |
 
 ---
 
@@ -395,8 +396,8 @@ are confirmed with a Domain Advisor and recorded as an ADR ([Charter Section 14.
 |---|---|---|---|---|---|---|
 | Startup MVP | Monolith | Synchronous | Single shared DB | Layered | SPA | time-to-market, low cost |
 | Bank / healthcare (regulated) | Modular Monolith | Synchronous | Single shared DB | Hexagonal / Clean | SPA / SSR | security, strong consistency |
-| High-traffic e-commerce | Microservices | Event-driven | Database-per-service | Hexagonal | Micro-frontends | scalability, availability |
-| Sensors / live data (IoT) | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal | SPA / SSR | performance, data volume |
+| High-traffic e-commerce | Microservices | Event-driven | Database-per-service | Hexagonal / Clean | Micro-frontends | scalability, availability |
+| Sensors / live data (IoT) | Microservices / Serverless | Streaming | CQRS / Event Sourcing | Hexagonal / Clean | SPA / SSR | performance, data volume |
 | Internal tool | Modular Monolith | Synchronous | Single shared DB | Layered | SPA | maintainability, simplicity |
 
 > Anti-pattern guardrails apply per preset — e.g. choosing CQRS/Event Sourcing for a short-lived

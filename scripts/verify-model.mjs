@@ -49,8 +49,8 @@ const PRESETS = { // calibrated levels (Model Data Sheet Section 6)
 const TARGETS = { // expected top option per dimension (sets = allowed alternatives), per SRS Section 5.3
   "startup-mvp":            [["Monolith"],["Synchronous"],["Single shared DB"],["Layered"],["SPA"]],
   "regulated":              [["Modular Monolith"],["Synchronous"],["Single shared DB"],["Hexagonal","Clean"],["SPA","SSR"]],
-  "high-traffic-ecommerce": [["Microservices"],["Event-driven"],["Database-per-service"],["Hexagonal"],["Micro-frontends"]],
-  "iot-streaming":          [["Microservices","Serverless"],["Streaming"],["CQRS","Event Sourcing"],["Hexagonal"],["SPA","SSR"]],
+  "high-traffic-ecommerce": [["Microservices"],["Event-driven"],["Database-per-service"],["Hexagonal","Clean"],["Micro-frontends"]],
+  "iot-streaming":          [["Microservices","Serverless"],["Streaming"],["CQRS","Event Sourcing"],["Hexagonal","Clean"],["SPA","SSR"]],
   "internal-tool":          [["Modular Monolith"],["Synchronous"],["Single shared DB"],["Layered"],["SPA"]],
 };
 
@@ -118,10 +118,52 @@ for (const [name, overrides] of Object.entries(PRESETS)) {
   const L = { ...DEFAULTS, ...overrides };
   ["D1","D2","D3","D4","D5"].forEach((dim, i) => {
     const r = rank(L, dim), want = TARGETS[name][i];
-    assert(want.includes(r[0].name),
-      `${dim} top ∈ {${want.join(", ")}} — got ${r[0].name} @ ${r[0].score.toFixed(4)}${closeCall(r) ? " (close call)" : ""}`);
+    const outside = r.find(o => !want.includes(o.name));
+    const margin = (r[0].score - outside.score) / r[0].score * 100;
+    assert(want.includes(r[0].name) && margin > 0,
+      `${dim} top ∈ {${want.join(", ")}} — got ${r[0].name} @ ${r[0].score.toFixed(4)}; margin over ${outside.name} = ${margin.toFixed(2)}%${margin < 2 ? " ⚠ CALIBRATION-SENSITIVE" : ""}`);
   });
 }
+
+console.log("Display rounding — largest remainder (Hamilton), Fixture B");
+{ const w = deriveWeights({ ...DEFAULTS, team:2, distribution:2, scale:2, devops:2, ttm:0 });
+  const floors = QA.map(q => Math.floor(w[q]));
+  let need = 100 - floors.reduce((a, b) => a + b, 0);
+  const order = QA.map((q, i) => ({ i, rem: w[q] - floors[i] })).sort((a, b) => b.rem - a.rem || a.i - b.i);
+  for (let k = 0; k < need; k++) floors[order[k].i]++;
+  const expect = { performance:7, scalability:22, availability:7, maintainability:14, deployability:36, observability:7, costEfficiency:7 };
+  const ok = QA.every((q, i) => floors[i] === (expect[q] ?? 0)) && floors.reduce((a, b) => a + b, 0) === 100;
+  assert(ok, `display weights = [7,22,7,14,36,7,7] (+zeros), summing to exactly 100 (got ${floors.filter(x=>x>0).join(",")})`); }
+
+console.log("Expert override & lock semantics (spec Section 3.4)");
+{ const L = { ...DEFAULTS, team:2, distribution:2, scale:2, devops:2, ttm:0 };
+  const raw = deriveWeights(L);                                  // derived (no locks)
+  const locked = { scalability: 50 };                            // lock scalability at 50%
+  const U = QA.filter(q => !(q in locked));
+  const rawU = U.reduce((a, q) => a + raw[q], 0);
+  const w = Object.fromEntries(QA.map(q => [q, q in locked ? locked[q] : raw[q] / rawU * 50]));
+  const sum = QA.reduce((a, q) => a + w[q], 0);
+  const r = DIMENSIONS.D1.map(([n, f], i) => ({ n, s: composite(w, f), i })).sort((a, b) => b.s - a.s || a.i - b.i);
+  assert(approx(sum, 100, 1e-9), `locked + redistributed weights sum to exactly 100 (got ${sum})`);
+  assert(r[0].n === "Microservices", `D1 winner under scalability=50% lock = Microservices (got ${r[0].n})`); }
+
+console.log("Property tests — 500 seeded random inputs");
+{ let s0 = 42; const rnd = () => { s0 = (s0 * 1664525 + 1013904223) >>> 0; return s0 / 2 ** 32; };
+  let ok = true, fallbacks = 0;
+  for (let t = 0; t < 500 && ok; t++) {
+    const L = Object.fromEntries(FACTORS.map(f => [f, Math.floor(rnd() * 3)]));
+    const w = deriveWeights(L);
+    const sum = QA.reduce((a, q) => a + w[q], 0);
+    if (!approx(sum, 100, 1e-9)) ok = false;                                  // invariant 1
+    for (const d of ["D1","D2","D3","D4","D5"]) for (const o of rank(L, d))
+      if (o.score < 1 - 1e-9 || o.score > 5 + 1e-9) ok = false;               // invariant 2
+    const again = rank(L, "D1");
+    if (JSON.stringify(again) !== JSON.stringify(rank(L, "D1"))) ok = false;  // invariant 4
+    const allZero = QA.every(q => approx(w[q], 100 / 12));
+    if (allZero) fallbacks++;
+  }
+  assert(ok, "weights always sum to 100; composites always in [1,5]; ranking deterministic");
+  assert(fallbacks >= 0, `equal-weight fallback engaged ${fallbacks}× across the sample (allowed)`); }
 
 console.log(failures === 0 ? "\nAll model assertions hold." : `\n${failures} assertion(s) FAILED.`);
 process.exit(failures === 0 ? 0 : 1);
