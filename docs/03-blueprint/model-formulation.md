@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Formal model formulation — the decision model as mathematics, open to expert correction |
-| **Version** | 0.1 |
+| **Version** | 0.2 |
 | **Date** | 2026-06-13 |
 | **Status** | Baseline — formulation stable; coefficients pending Domain-Advisor ratification (Charter Section 14.4) |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -18,6 +18,7 @@
 | Version | Date | Summary |
 |---|---|---|
 | 0.1 | 2026-06-13 | Initial formal formulation: sets, parameters, the pipeline as equations, properties with proof sketches, per-construct literature grounding, and an explicit "how to correct this" section |
+| 0.2 | 2026-06-13 | Usability pass: added a by-audience reading guide, a renderer-independent worked example (Section 3.6, = Fixture A), and a note on reading the math in viewers without MathJax; simplified `cases` spacing for robust rendering |
 
 ---
 
@@ -54,6 +55,18 @@ The *computation* (rounding, tie-breaking, float precision, fixtures) lives in t
 [Model Data Sheet](model-data-sheet.md). This document is the *theory* that ties them together, and
 every equation here is the one the verification script `scripts/verify-model.mjs` exercises.
 
+**Read by who you are.** You do not need all of it:
+
+- **Practitioner / engineer** → Section 3 (the four steps) and the [worked example](#36-worked-example--one-full-pass-the-default-scenario) (3.6). That is the whole model in one read.
+- **Software architect** → add Section 5 (what the model guarantees) and Section 7 (where it simplifies).
+- **Decision-analysis / MCDA researcher** → Sections 5, 6, and 9 (proofs, grounding, and the sources to check).
+- **Proposing a change** → Section 8 (how a correction is made and accepted).
+
+> **Reading the math.** The formulas below render as mathematics on GitHub. In an editor or viewer
+> without math support you will see the raw `$…$` source; the same steps are also written in plain
+> ASCII — fully renderer-independent — in the [worked example](#36-worked-example--one-full-pass-the-default-scenario) (3.6)
+> and in [Scoring Algorithm Specification](scoring-algorithm.md) Sections 3–4.
+
 ## 2. Sets, indices, and data
 
 **Sets.**
@@ -87,7 +100,7 @@ Raw weight, clamp, normalize, with an equal-weight fallback when there is no sig
 
 $$r_j = \sum_{i=1}^{14} a_{ij}\,\hat{e}_i, \qquad \tilde{r}_j = \max(0,\, r_j), \qquad S = \sum_{j=1}^{12} \tilde{r}_j,$$
 
-$$w_j = \begin{cases} \dfrac{\tilde{r}_j}{S} \cdot 100 & S > 0 \\[2.2mm] \dfrac{100}{12} & S = 0 \end{cases}$$
+$$w_j = \begin{cases} \dfrac{\tilde{r}_j}{S} \cdot 100 & S > 0 \\ \dfrac{100}{12} & S = 0 \end{cases}$$
 
 The weight vector $w = (w_1, \dots, w_{12})$ lives on the scaled simplex
 $\Delta = \{\, w : w_j \ge 0,\ \sum_j w_j = 100 \,\}$ — it is the prioritized utility tree of ATAM [15].
@@ -128,11 +141,43 @@ Let $L \subseteq Q$ be the user-locked attributes with chosen values $v_q \in [0
 $U = Q \setminus L$. The remainder $R = \max\!\big(0,\ 100 - \sum_{q \in L} v_q\big)$ is split over the
 unlocked attributes in proportion to their derived raw weights:
 
-$$w_q = \begin{cases} v_q & q \in L \\[1mm] \dfrac{\tilde{r}_q}{\sum_{q' \in U} \tilde{r}_{q'}}\,R & q \in U \end{cases}$$
+$$w_q = \begin{cases} v_q & q \in L \\ \dfrac{\tilde{r}_q}{\sum_{q' \in U} \tilde{r}_{q'}}\,R & q \in U \end{cases}$$
 
 (degenerate cases — all unlocked raw weights zero, or $\sum_{q\in L} v_q > 100$ — are pinned in
 [Scoring Algorithm Specification](scoring-algorithm.md) Section 3.4). This is an analyst-driven
 re-weighting, the spirit of ATAM's stakeholder prioritization [15].
+
+### 3.6 Worked example — one full pass (the default scenario)
+
+To make the equations concrete — and to show they read fine even without a math renderer — here is
+the default scenario step by step. It is **Fixture A** in `scripts/verify-model.mjs`:
+
+```
+Input:   all 14 factors = level 0, except  ttm = 1  and  budget = 2
+
+Step 1 — weights
+  Among influencing factors only ttm is non-zero:
+      ttm → timeToMarket +3 ,  ttm → maintainability −1
+  budget's effective level = 2 − 2 = 0  → contributes nothing
+  raw    = { timeToMarket: 3, maintainability: −1, all others: 0 }
+  clamp  = { timeToMarket: 3,                       all others: 0 }   (−1 → 0)
+  S = 3  →  w = { timeToMarket: 100%, all others: 0% }
+
+Step 2 — composites for D1 (100% weight on timeToMarket ⇒ V = that option's ttm-fit)
+  Monolith          ttm-fit 5  →  V = 5.0
+  Layered / Modular / Serverless   ttm-fit 4  →  V = 4.0
+  Microservices     ttm-fit 2  →  V = 2.0
+
+Step 3 — winner = Monolith ;  gap = (5.0 − 4.0) / 5.0 = 20% ≥ 10%  →  not a close call
+
+What-if — set ttm = 0 as well → every signal is now 0 → equal-weight fallback (wⱼ = 100/12)
+          → winner shifts to Modular Monolith (mean fit 3.75)
+```
+
+The lesson in one line: **change a factor and the weights — and often the winner — change; the
+coefficients themselves never move** (the note on dynamism in Section 4). Every number above is
+re-derived and asserted by the verification script, so this example cannot silently drift from the
+model.
 
 ## 4. The recommendation as a function
 
