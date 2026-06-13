@@ -11,7 +11,8 @@
  * Hard-fail checks (data must match): qaFit vectors, influence matrix, preset
  * levels, preset targets (Model Data Sheet ↔ verify-model.mjs ↔ SRS), default
  * factor levels, anti-pattern rule IDs, fitness-template coverage, and the EN factor
- * level labels (Section 2.1 vs Build Spec Section 4).
+ * level labels (Section 2.1 vs Build Spec Section 4), option ids + names (Option Content
+ * Sheet vs Model Data Sheet Section 4), and EN/ID list parity.
  */
 import { readFileSync } from 'node:fs';
 
@@ -184,11 +185,13 @@ function mjsDefaults(s) {
 
 // ---- 7. anti-pattern rule IDs: Model Data Sheet Section 5 vs Option Content Sheet Section 6 ----
 {
-  const rx = /^\|\s*`([a-z-]+)`\s*\|\s*(?:danger|warning|info)\s*\|/gm;
-  const a = new Set([...MDS.matchAll(rx)].map((m) => m[1]));
-  const b = new Set([...OCS.matchAll(rx)].map((m) => m[1]));
-  if (setEq(a, b) && a.size === 7) ok(7, `anti-pattern rule IDs: MDS Section 5 == Option Content Sheet Section 6 (7 rules)`);
-  else bad(7, `anti-pattern IDs differ (MDS-only ${[...a].filter((x) => !b.has(x))}, OCS-only ${[...b].filter((x) => !a.has(x))})`);
+  const rx = /^\|\s*`([a-z-]+)`\s*\|\s*(danger|warning|info)\s*\|/gm;
+  const parse = (s) => Object.fromEntries([...s.matchAll(rx)].map((m) => [m[1], m[2]]));
+  const a = parse(MDS), b = parse(OCS);
+  const ka = Object.keys(a);
+  const same = ka.length === 7 && ka.length === Object.keys(b).length && ka.every((k) => a[k] === b[k]);
+  if (same) ok(7, `anti-pattern id + severity: MDS Section 5 == Option Content Sheet Section 6 (7 rules)`);
+  else bad(7, `anti-pattern id/severity differ (MDS ${JSON.stringify(a)} vs OCS ${JSON.stringify(b)})`);
 }
 
 // ---- 8. fitness-function templates: one per QA in Option Content Sheet Section 7 ----
@@ -222,6 +225,32 @@ function mds21Levels(s) {
   const diff = Object.keys(b).filter((f) => JSON.stringify(a[f]) !== JSON.stringify(b[f]));
   if (diff.length === 0 && Object.keys(b).length === 14) ok(9, `factor level labels (EN): MDS Section 2.1 == Build Spec Section 4 (14 × 3, verbatim)`);
   else bad(9, `factor level labels differ at: ${diff.map((f) => `${f} (MDS ${JSON.stringify(a[f])} vs BS ${JSON.stringify(b[f])})`).join('; ')}`);
+}
+
+// ---- 10. option ids + names: Option Content Sheet vs Model Data Sheet Section 4 (in order) ----
+{
+  const ocs = [...OCS.matchAll(/^### `([a-z0-9-]+)` — (.+?)\s*$/gm)].map((m) => `${m[1]}|${m[2].trim()}`);
+  const sec = MDS.slice(MDS.indexOf('## 4. Dimension'), MDS.indexOf('## 5.'));
+  const mds = [...sec.matchAll(/^\| `([a-z0-9-]+)` \| ([^|]+?) \| `/gm)].map((m) => `${m[1]}|${m[2].trim()}`);
+  if (JSON.stringify(ocs) === JSON.stringify(mds) && ocs.length === 21) ok(10, `option ids + names: Option Content Sheet == Model Data Sheet Section 4 (21 options, in order)`);
+  else bad(10, `option ids/names differ (OCS ${ocs.length}, MDS ${mds.length}; first diff ${ocs.find((x, i) => x !== mds[i]) || '—'})`);
+}
+
+// ---- 11. EN/ID list parity: every list field has equal item count in both languages (Bilingual[]) ----
+{
+  const region = OCS.slice(0, OCS.indexOf('## 6.'));
+  const LIST = new Set(['Pros', 'Cons', 'When to use', 'When to avoid', 'Common mistakes', 'Risks']);
+  const mism = []; let cur = '';
+  for (const line of region.split('\n')) {
+    const h = line.match(/^### `([a-z0-9-]+)`/); if (h) { cur = h[1]; continue; }
+    const r = line.match(/^\| ([^|]+?) \| (.+?) \| (.+?) \|\s*$/);
+    if (r && LIST.has(r[1].trim())) {
+      const en = (r[2].match(/·/g) || []).length, id = (r[3].match(/·/g) || []).length;
+      if (en !== id) mism.push(`${cur}/${r[1].trim()} (EN ${en + 1} vs ID ${id + 1})`);
+    }
+  }
+  if (mism.length === 0) ok(11, `EN/ID list parity: every Pros/Cons/When/Mistakes/Risks list has equal item count in both languages`);
+  else bad(11, `EN/ID list-length mismatch: ${mism.join('; ')}`);
 }
 
 console.log('');

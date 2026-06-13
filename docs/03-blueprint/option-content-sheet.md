@@ -288,7 +288,7 @@ mitigation`.
 | Risks | (Med/Med) duplication drift → scheduled refactors and a small shared kernel · (Low/Med) inconsistent patterns per slice → templates and linting | (Sedang/Sedang) duplikasi menyimpang → refactor terjadwal dan shared kernel kecil · (Rendah/Sedang) pola tak konsisten antar-irisan → template dan linting |
 | Learn more | [Bogard — Vertical Slice Architecture](https://www.jimmybogard.com/vertical-slice-architecture/) | — |
 
-### `layered` — Layered (code structure)
+### `layered` — Layered
 
 | Field | EN | ID |
 |---|---|---|
@@ -334,7 +334,7 @@ mitigation`.
 | Risks | (Med/Med) bundle growth → performance budgets enforced in CI · (Low/Med) SEO gaps → prerender or a hybrid SSR if it ever matters | (Sedang/Sedang) bundle membengkak → anggaran performa ditegakkan di CI · (Rendah/Sedang) celah SEO → prerender atau hibrida SSR bila kelak dibutuhkan |
 | Learn more | [MDN — SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA) · [web.dev — Rendering on the Web](https://web.dev/articles/rendering-on-the-web) | — |
 
-### `ssr` — Server-side rendering (SSR/SSG)
+### `ssr` — Server-rendered (SSR/SSG)
 
 | Field | EN | ID |
 |---|---|---|
