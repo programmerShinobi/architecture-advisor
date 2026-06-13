@@ -35,6 +35,7 @@ spanning **multiple** phases live here:
 | [`specs/`](specs/) | [Build Spec v3](specs/build-spec-v3.md) | The complete technical specification the app is built from (feeds phases 2–5) |
 | [`guides/`](guides/) | [UI/UX Execution Playbook](guides/uiux-execution-playbook.md) | 9 usability factors for technical users as executable tasks (phases 3–4) |
 | [`guides/`](guides/) | [Feature-Maturity Playbook](guides/feature-maturity-playbook.md) | UX/technical/analyst factors as concrete, verifiable tasks (phases 4–7) |
+| [`adr/`](adr/) | [Architecture Decision Records](adr/) | The model-decision log (e.g. the D4/D5 fit & preset ratifications), per charter governance |
 
 ## Reading paths
 

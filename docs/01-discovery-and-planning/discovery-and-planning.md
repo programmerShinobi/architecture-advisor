@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Project Charter / Product Vision |
-| **Version** | 1.5 |
+| **Version** | 1.6 |
 | **Date** | 2026-06-12 |
 | **Status** | Approved — execution baseline |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -22,6 +22,7 @@
 | 1.3 | 2026-06-11 | Editorial clarification (no scope change, no re-approval): designated the Section 22 solo-stage KPI table as the operative v1.0 target set (Section 4 = aspirational); aligned the sign-off date with the v1.2 baseline |
 | 1.4 | 2026-06-11 | Scope clarification: a basic custom-configuration import/export (JSON) is in the MVP (matching Build Spec v3); the richer organization-level config import/export remains deferred to v2.0. Resolves a charter↔Build Spec↔SRS mismatch |
 | 1.5 | 2026-06-12 | Reference hardening (editorial, no scope change): added peer-reviewed and SEI sources [16]–[24] (ADD technical report, SUS and its acceptability threshold, architectural design decisions, technical debt, GQM, Strangler Fig, MADR) and cited them inline where claims rely on them |
+| 1.6 | 2026-06-13 | Editorial: clarified the ADR decision-log path to `docs/adr/` (Section 14.5), where the model-decision records now live |
 
 ---
 
@@ -383,7 +384,7 @@ decisions documents its own.)
 
 **14.5 Onboarding new contributors.** Required files in the repo: `README.md`, `CONTRIBUTING.md`
 (how to set up and contribute), `EXTENDING.md` (how to add factors/QAs/dimensions/anti-patterns/
-translations), `CODE_OF_CONDUCT.md` (adopting the Contributor Covenant [13]), `ADR/` (decision
+translations), `CODE_OF_CONDUCT.md` (adopting the Contributor Covenant [13]), [`docs/adr/`](../adr/) (decision
 history), Issue & PR templates. Provide several `good first issue`s for newcomers.
 
 **14.6 Recognition.** Record contributors (e.g. an `all-contributors` file), mention them in

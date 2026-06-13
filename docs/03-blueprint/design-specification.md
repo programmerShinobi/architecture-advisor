@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Design Specification / Software Design Document (SDD) |
-| **Version** | 0.4 |
+| **Version** | 0.5 |
 | **Date** | 2026-06-12 |
 | **Status** | Draft |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, designers |
-| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.6 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.5 · [UI prototype](prototype/index.html) |
+| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.7 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.6 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -21,6 +21,7 @@
 | 0.2 | 2026-06-12 | Realigned to SRS v0.2 / Charter v1.4: added a resilience & edge-case design (Section 5.1) covering FR-EDGE-*, browser-baseline and performance-budget coverage, corrected the design-token source reference, and extended traceability |
 | 0.3 | 2026-06-12 | Build-readiness: linked the new [Model Data Sheet](model-data-sheet.md) (frozen numeric model values), added a Definition-of-Ready gate (Section 11), and updated DI-1 to the recorded baseline |
 | 0.4 | 2026-06-12 | Computation precision: linked the [Scoring Algorithm Specification](scoring-algorithm.md) as the exact contract for `lib/scoring.ts`/`lib/sensitivity.ts`; Definition of Ready updated — scoring computation pinned and preset calibration machine-verified |
+| 0.5 | 2026-06-13 | Definition of Ready: D4/D5 `qaFit` and preset calibration interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md), [ADR-0002](../adr/0002-ratify-preset-calibration.md)); DI-1 closed |
 
 ---
 
@@ -307,7 +308,7 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 
 | # | Open issue | Notes |
 |---|---|---|
-| DI-1 | Ratify D4/D5 `qaFit` values | Baseline now recorded in the [Model Data Sheet](model-data-sheet.md) Section 4; Domain Advisor ratifies & ADR-logs (SRS OI-4) |
+| DI-1 | ~~Ratify D4/D5 `qaFit` values~~ — **Done (interim)** | [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md) accepts the [Model Data Sheet](model-data-sheet.md) Section 4 baseline; closes SRS OI-4 |
 | DI-2 | Whether URL-hash state needs a compression library | Decide against a size budget (DI-4) |
 | DI-3 | Final design-token values vs the prototype | Promote the prototype `:root` blocks to the token source of truth |
 | DI-4 | Ratify the performance budgets against the real bundle | Interim targets already set in SRS NFR-PERF-3 (≤ 300 KB gzip, FCP ≤ 2 s, p95 ≤ 100 ms); inherits SRS OI-5 |
@@ -325,8 +326,8 @@ free of guesswork — each line is either fixed or has a usable baseline.
 - [x] **Design tokens** fixed against the prototype (Section 6).
 - [x] **Acceptance criteria** enumerated and ready to wire as tests (SRS Section 7, AC-1…12).
 - [x] **Scoring computation pinned**: formulas, tie-breaking, close-call, sensitivity, rounding, and float-precision rules in the [Scoring Algorithm Specification](scoring-algorithm.md), with machine-verified fixtures (`node scripts/verify-model.mjs`).
-- [x] **Preset levels pass the calibration test** against SRS 5.3 — all 25 targets machine-verified (SRS OI-2; Domain-Advisor ratification still pending).
-- [ ] **D4/D5 `qaFit` ratified** by a Domain Advisor (SRS OI-4) — *baseline usable now*.
+- [x] **Preset levels pass the calibration test** against SRS 5.3 — all 25 targets machine-verified, **interim-ratified** ([ADR-0002](../adr/0002-ratify-preset-calibration.md), closes SRS OI-2).
+- [x] **D4/D5 `qaFit` interim-ratified** by the Owner ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md), closes SRS OI-4); an independent Domain Advisor / the v3.0 study may still revise the values.
 - [x] **Factor content authored (EN/ID)**: labels, level labels, and help for all 14 factors — [Model Data Sheet Section 2.1](model-data-sheet.md) (Translator review pending).
 - [x] **Option & message content authored (EN/ID)**: educational metadata for all 21 options, the 7 anti-pattern messages, and the 12 fitness-function templates — [Option Content Sheet](option-content-sheet.md) (Translator & Domain-Advisor review pending).
 - [ ] **C4 stub** scoped in or out of v1.0 (SRS OI-3).

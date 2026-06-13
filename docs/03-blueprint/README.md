@@ -7,7 +7,7 @@
 
 ## Deliverables
 
-➡️ **[Design Specification (Blueprint)](design-specification.md)** — draft v0.4: architecture
+➡️ **[Design Specification (Blueprint)](design-specification.md)** — draft v0.5: architecture
 overview, module & code structure, the decision-model data schema, state & persistence (with a
 resilience & edge-case design), the design system & tokens, UX patterns, the key design decisions
 (ADRs), and a Definition-of-Ready gate for development.

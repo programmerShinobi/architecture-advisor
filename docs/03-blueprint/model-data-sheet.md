@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
-| **Version** | 0.7 |
+| **Version** | 0.8 |
 | **Date** | 2026-06-13 |
-| **Status** | Baseline — build against this; model heuristics pending Domain-Advisor ratification |
+| **Status** | Baseline — build against this; D4/D5 fit & presets interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)/[0002](../adr/0002-ratify-preset-calibration.md)), pending independent review |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers building the scoring engine and `config/` |
-| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.6 Section 5 · [UI prototype](prototype/index.html) |
+| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.7 Section 5 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -24,6 +24,7 @@
 | 0.5 | 2026-06-13 | Linked the new [Option Content Sheet](option-content-sheet.md): the bilingual educational metadata for all 21 options, anti-pattern messages, and fitness-function templates are now authored |
 | 0.6 | 2026-06-13 | Calibration-stability review: widened the e-commerce and IoT D4 targets to Hexagonal / Clean (exact tie whenever the interoperability weight is 0); target margins are now measured by the verification script, with the four sensitive targets documented in the [Scoring Algorithm Specification](scoring-algorithm.md) Section 9.4 |
 | 0.7 | 2026-06-13 | Factor-content consistency (Section 2.1): made the Indonesian QA names uniform across all help texts (no more mixed EN/ID tokens) and established the baseline ID QA vocabulary; fixed two English level labels so they are truly verbatim from Build Spec Section 4 (lifespan "prototype", dataVolume "big data") |
+| 0.8 | 2026-06-13 | Interim ratification: D4/D5 `qaFit` ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) and preset calibration ([ADR-0002](../adr/0002-ratify-preset-calibration.md)) accepted as v1.0 defaults by the Owner (interim Domain-Advisor role, charter D12); values remain editable, pending independent review and the v3.0 empirical study |
 
 ---
 
@@ -38,10 +39,12 @@ every value the scoring engine needs, in one place,** so Phase 4 development has
 
 - 🔒 **Fixed** — taken verbatim from Build Spec v3; change only via the model-change ADR process
   ([Charter Section 14.4](../01-discovery-and-planning/discovery-and-planning.md#14-governance--contribution)).
-- 🧪 **Baseline** — a defensible default (promoted from the prototype or derived to hit the SRS
-  outcome targets); **valid to build against now**, to be ratified by a Domain Advisor
-  (SRS [OI-2](../02-requirement-analysis/software-requirements-specification.md#9-open-issues--to-be-determined), OI-4).
-  Ratification adjusts numbers **in this sheet**, not the requirements.
+- ✅ **Ratified (interim)** — accepted as the v1.0 default by the Owner via an ADR
+  ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md), [ADR-0002](../adr/0002-ratify-preset-calibration.md));
+  still editable — an independent Domain Advisor or the v3.0 empirical study may revise it.
+- 🧪 **Baseline copy** — authored content pending review (Translator for the Indonesian copy,
+  Charter Section 14.2); **valid to build against now**. Review adjusts wording **in this sheet**,
+  not the requirements.
 
 > All values live in `config/` at build time (NFR-MAINT-1); this sheet is the human-readable
 > master that those files must mirror. **How** these values are computed (formulas, tie-breaking,
@@ -192,7 +195,7 @@ Values are integers 1–5; any unlisted entry defaults to **3**.
 | `event-sourcing` | Event Sourcing | `3,4,3,3,2,3,3,5,4,3,2,2` |
 | `polyglot` | Polyglot persistence | `4,4,3,3,3,3,3,3,3,4,2,3` |
 
-### D4 — Code Structure (4 options) — 🧪 Baseline (promoted from prototype; ratify per OI-4)
+### D4 — Code Structure (4 options) — ✅ Ratified (interim, [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md); promoted from prototype)
 
 Build Spec Section 6 left D4 `qaFit` "to be assigned & documented." These are the values the
 prototype already encodes and displays; they follow the Build Spec principle (Hexagonal/Clean
@@ -205,7 +208,7 @@ favor maintainability/testability at a time-to-market cost; simpler structures f
 | `vertical-slice` | Vertical Slice | `3,3,3,3,4,3,4,3,3,3,3,4` |
 | `layered` | Layered | `3,3,3,3,3,3,3,3,3,3,4,5` |
 
-### D5 — Frontend Architecture (3 options) — 🧪 Baseline (promoted from prototype; ratify per OI-4)
+### D5 — Frontend Architecture (3 options) — ✅ Ratified (interim, [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md); promoted from prototype)
 
 Build Spec Section 6 left D5 `qaFit` "to be assigned & documented." Micro-frontends favor
 deployability/scalability at a maintainability/`ttm` cost.
@@ -234,7 +237,7 @@ Each rule is a boolean over factors + chosen options, with a severity and an EN/
 
 ---
 
-## 6. Scenario presets — factor levels — 🧪 Calibrated baseline (ratify per OI-2)
+## 6. Scenario presets — factor levels — ✅ Ratified (interim, [ADR-0002](../adr/0002-ratify-preset-calibration.md); calibrated & machine-verified)
 
 Each preset sets all 14 factor levels (column order = Section 2). These levels are **calibrated
 and machine-verified**: running [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs)
@@ -315,8 +318,8 @@ value theory, sensitivity analysis, apportionment).
 
 | Item | Status | Closes |
 |---|---|---|
-| D4 / D5 `qaFit` vectors (Section 4) | 🧪 Baseline recorded | Domain Advisor ratifies → SRS OI-4 |
-| Preset factor levels (Section 6) | 🧪 **Calibrated & machine-verified** (all 25 targets hold) | Domain Advisor ratifies → SRS OI-2 |
+| D4 / D5 `qaFit` vectors (Section 4) | ✅ **Ratified (interim)** — [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md) | Independent Domain Advisor / empirical study (v3.0) may revise |
+| Preset factor levels (Section 6) | ✅ **Ratified (interim)** — [ADR-0002](../adr/0002-ratify-preset-calibration.md); all 25 targets hold | Independent Domain Advisor may revise |
 | Factor content EN/ID (labels, level labels, help) | 🧪 **Authored** (Section 2.1) | Translator review → Charter Section 14.2 |
 | Option educational metadata; fitness & anti-pattern messages (EN/ID) | 🧪 **Authored** ([Option Content Sheet](option-content-sheet.md)) | Translator & Domain-Advisor review → Charter Section 14.2 |
 | C4 Mermaid stub in v1.0? | ❔ Scope | SRS OI-3 |
