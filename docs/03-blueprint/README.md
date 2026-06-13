@@ -20,6 +20,10 @@ calibrated preset levels), so Phase 4 development builds with no guesswork.
 every formula, tie-break, close-call/sensitivity definition, and rounding rule, with worked
 fixtures that [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs) re-checks automatically.
 
+∑ **[Formal Model Formulation](model-formulation.md)** — the decision model as peer-reviewable
+mathematics: sets, equations, properties with proof sketches, every construct grounded in the
+MCDA/decision-analysis literature, and an explicit "how to correct this" path for experts.
+
 📚 **[Option Content Sheet](option-content-sheet.md)** — the bilingual (EN · ID) educational
 copy for all 21 architecture options (definition, pros/cons, when to use/avoid, common mistakes,
 risks + mitigations, learn-more sources), plus the anti-pattern messages and fitness-function

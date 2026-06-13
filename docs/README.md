@@ -40,5 +40,6 @@ spanning **multiple** phases live here:
 
 - **Quick overview** → [Discovery charter](01-discovery-and-planning/discovery-and-planning.md), Preface + Section 1, Section 3.
 - **Build the app** → [Build Spec v3](specs/build-spec-v3.md) + [Model Data Sheet](03-blueprint/model-data-sheet.md) + [Scoring Algorithm](03-blueprint/scoring-algorithm.md) (verify with `node scripts/verify-model.mjs`), then the [deployment guide](06-deployment/deployment-github-pages.md).
+- **Audit or challenge the model** → [Formal Model Formulation](03-blueprint/model-formulation.md) (the math + the decision-analysis literature) and [Scoring Algorithm Section 11](03-blueprint/scoring-algorithm.md) (validity & limitations).
 - **Polish the UX** → the two playbooks in [`guides/`](guides/).
 - **Contribute** → [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and Section 14 of the discovery charter.

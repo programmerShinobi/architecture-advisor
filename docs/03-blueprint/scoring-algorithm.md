@@ -48,6 +48,8 @@ pinned, and every worked number is asserted by [`scripts/verify-model.mjs`](../.
 (`node scripts/verify-model.mjs` — exit 0 means the spec, data sheet, and fixtures agree).
 
 Anything ambiguous here is a **defect in this document** — fix the document, never improvise in code.
+The *mathematical* view of the same model — formal sets, equations, properties with proof sketches,
+and the literature grounding — is the [Formal Model Formulation](model-formulation.md).
 
 ## 2. Notation
 

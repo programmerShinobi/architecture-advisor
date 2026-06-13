@@ -105,6 +105,7 @@ decision records. The authoritative scope (in/deferred/non-goals) is the charter
 12. M. Fowler, "Strangler Fig Application," martinfowler.com, 2004. [Online].
 13. R. L. Keeney and H. Raiffa, *Decisions with Multiple Objectives: Preferences and Value Tradeoffs*. New York: Wiley, 1976.
 14. R. Wojcik et al., "Attribute-Driven Design (ADD), Version 2.0," SEI, Carnegie Mellon Univ., Tech. Rep. CMU/SEI-2006-TR-023, 2006.
+15. [Formal Model Formulation](../03-blueprint/model-formulation.md) — the decision model as peer-reviewable mathematics (MAVT additive value model), with properties and MCDA literature grounding.
 
 ### 1.5 Requirement Conventions
 
