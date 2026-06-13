@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Option Content Sheet (the user-facing educational copy for every option) |
-| **Version** | 0.2 |
+| **Version** | 0.3 |
 | **Date** | 2026-06-13 |
 | **Status** | Baseline copy — interim ID review done (2026-06-13); professional Translator review still welcome; Domain Advisor reviews the technical content (Charter Section 14.2) |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -19,6 +19,7 @@
 |---|---|---|
 | 0.1 | 2026-06-13 | Authored the full bilingual educational metadata for all 21 options (definition, pros/cons, when to use/avoid, real-world pattern, common mistakes, risks + mitigations, learn-more links), the 7 anti-pattern messages, and the 12 fitness-function templates |
 | 0.2 | 2026-06-13 | Interim Indonesian review (Owner/assistant): fixed one stray English token (observability → observabilitas), confirmed QA terminology matches the Model Data Sheet Section 2.1 vocabulary, and documented the loanword policy; professional Translator review still welcome |
+| 0.3 | 2026-06-13 | Terminology re-review: corrected a throughput mistranslation ("bervolume tinggi" → "throughput tinggi") and fixed the terminology note, which wrongly listed deploy and schema as kept-English when the Indonesian uses *rilis* and *skema* — now split into kept-English vs standard Indonesian renderings |
 
 ---
 
@@ -38,10 +39,14 @@ mitigation`.
 **Indonesian terminology.** Quality-attribute names follow the baseline vocabulary in
 [Model Data Sheet Section 2.1](model-data-sheet.md) (skalabilitas, performa, ketersediaan, keamanan,
 kemudahan pemeliharaan, kemudahan rilis, kemudahan pengujian, observabilitas, konsistensi data,
-interoperabilitas, efisiensi biaya, waktu rilis). Established architecture loanwords are kept in
-English by design (monolith, microservices, serverless, event-driven, CQRS, event sourcing,
-deploy/rilis, schema, cache, throughput, eventual, saga, outbox), consistent with Indonesian
-software-writing practice.
+interoperabilitas, efisiensi biaya, waktu rilis). Two conventions keep the Indonesian consistent:
+
+- **Kept in English** (proper names or terms with no clean Indonesian equivalent): monolith,
+  modular monolith, microservices, serverless, event-driven, pub/sub, CQRS, event sourcing, API,
+  cache, throughput, eventual (as in *konsistensi eventual*), saga, outbox, bounded context.
+- **Standard Indonesian renderings**: deploy/release → *rilis*, schema → *skema*, service →
+  *layanan*, scale/scaling → *skala / naik skala*, layer → *lapisan*, bottleneck → *leher botol*,
+  background → *latar belakang*, trade-off → *kompromi*.
 
 ---
 
@@ -167,7 +172,7 @@ software-writing practice.
 
 | Field | EN | ID |
 |---|---|---|
-| Definition | Continuous flows of records processed in near real time over a durable log. Built for high-throughput telemetry and analytics — the heaviest communication style to operate. | Aliran rekaman berkelanjutan yang diproses hampir real time di atas log tahan lama. Dibangun untuk telemetri dan analitik bervolume tinggi — gaya komunikasi paling berat untuk dioperasikan. |
+| Definition | Continuous flows of records processed in near real time over a durable log. Built for high-throughput telemetry and analytics — the heaviest communication style to operate. | Aliran rekaman berkelanjutan yang diproses hampir real time di atas log tahan lama. Dibangun untuk telemetri dan analitik throughput tinggi — gaya komunikasi paling berat untuk dioperasikan. |
 | Pros | Highest throughput · real-time processing with replay · consumers decoupled from producers and from each other | Throughput tertinggi · pemrosesan real-time dengan kemampuan replay · konsumen terpisah dari produsen dan satu sama lain |
 | Cons | Complex operations: partitions, retention, state stores · eventual consistency · steep learning curve | Operasional kompleks: partisi, retensi, penyimpanan state · konsistensi eventual · kurva belajar terjal |
 | When to use | IoT and telemetry · clickstreams · real-time analytics | IoT dan telemetri · clickstream · analitik real-time |
