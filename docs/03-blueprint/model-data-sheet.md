@@ -45,7 +45,9 @@ every value the scoring engine needs, in one place,** so Phase 4 development has
 > All values live in `config/` at build time (NFR-MAINT-1); this sheet is the human-readable
 > master that those files must mirror. **How** these values are computed (formulas, tie-breaking,
 > rounding, sensitivity) is pinned in the [Scoring Algorithm Specification](scoring-algorithm.md),
-> and both documents are re-checked by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs).
+> and both documents are re-checked by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs)
+> (the math) and [`scripts/cross-check-docs.mjs`](../../scripts/cross-check-docs.mjs) (cross-document
+> consistency) — both run in CI.
 
 ---
 

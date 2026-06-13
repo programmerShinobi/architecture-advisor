@@ -1,0 +1,37 @@
+name: Docs integrity
+
+# Guards the decision model's documentation: the math must be correct and every
+# document must agree. Runs only when the model docs or scripts change. This is a
+# docs-only planning repo today; the application CI (lint/test/build) arrives in
+# Phase 4 as a separate workflow.
+
+on:
+  push:
+    paths:
+      - 'docs/03-blueprint/**'
+      - 'docs/02-requirement-analysis/**'
+      - 'docs/specs/**'
+      - 'scripts/**'
+      - '.github/workflows/docs-integrity.yml'
+  pull_request:
+    paths:
+      - 'docs/03-blueprint/**'
+      - 'docs/02-requirement-analysis/**'
+      - 'docs/specs/**'
+      - 'scripts/**'
+
+permissions:
+  contents: read
+
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify the scoring model (fixtures, preset targets + margins, rounding, properties)
+        run: node scripts/verify-model.mjs
+      - name: Cross-check the documents for mismatches
+        run: node scripts/cross-check-docs.mjs

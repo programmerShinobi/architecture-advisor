@@ -278,9 +278,9 @@ Every part of the model is meant to be inspectable and replaceable. To propose a
 
 A correction is **accepted** when: the equation(s) are updated here, the affected proofs in Section 5
 are re-derived, the [Scoring Algorithm Specification](scoring-algorithm.md) and
-[Model Data Sheet](model-data-sheet.md) are made consistent, and `scripts/verify-model.mjs` passes
-(exit 0). That single command is the guard that the theory, the coefficients, and the fixtures still
-agree.
+[Model Data Sheet](model-data-sheet.md) are made consistent, and **both** guard scripts pass
+(exit 0): `node scripts/verify-model.mjs` (the math is correct) and `node scripts/cross-check-docs.mjs`
+(the documents agree). They run automatically in CI via `.github/workflows/docs-integrity.yml`.
 
 ## 9. References
 

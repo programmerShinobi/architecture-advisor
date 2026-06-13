@@ -29,9 +29,14 @@ By participating, you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
 2. **Fork** the repository and create a branch from `main`.
 3. Make your change. Keep every model value (factors, weights, fit vectors, rules, strings)
    in configuration — never hard-coded — so it stays auditable and testable.
-4. Ensure quality gates pass (once the app exists): lint, tests, and build must be green in CI.
-5. Open a **Pull Request** with a clear description and link to the related issue.
-6. A maintainer reviews; at least one approval is required before merge.
+4. If you touch the **decision model** (the [Model Data Sheet](docs/03-blueprint/model-data-sheet.md),
+   the [Scoring Algorithm](docs/03-blueprint/scoring-algorithm.md), or the SRS preset targets), run
+   both guards locally — `node scripts/verify-model.mjs` and `node scripts/cross-check-docs.mjs` —
+   and log the change in an ADR (Charter Section 14.4). They also run in CI
+   (`.github/workflows/docs-integrity.yml`).
+5. Ensure quality gates pass (once the app exists): lint, tests, and build must be green in CI.
+6. Open a **Pull Request** with a clear description and link to the related issue.
+7. A maintainer reviews; at least one approval is required before merge.
 
 Small changes (typos, translations) follow a light path. Larger changes need discussion first.
 

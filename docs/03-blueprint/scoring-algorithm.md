@@ -45,7 +45,9 @@ The [Model Data Sheet](model-data-sheet.md) freezes every model *value*; this do
 every model *computation*. Together they make the scoring engine implementable with **zero
 judgment calls**: formulas, edge semantics, tie-breaking, rounding, and float precision are all
 pinned, and every worked number is asserted by [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs)
-(`node scripts/verify-model.mjs` — exit 0 means the spec, data sheet, and fixtures agree).
+(`node scripts/verify-model.mjs` — exit 0 means the spec, data sheet, and fixtures agree). A second
+guard, `node scripts/cross-check-docs.mjs`, diffs the model values across documents so they cannot
+drift apart; both run in CI (`.github/workflows/docs-integrity.yml`). See [`scripts/README.md`](../../scripts/README.md).
 
 Anything ambiguous here is a **defect in this document** — fix the document, never improvise in code.
 The *mathematical* view of the same model — formal sets, equations, properties with proof sketches,
