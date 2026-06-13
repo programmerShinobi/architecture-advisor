@@ -5,9 +5,9 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Formal model formulation — the decision model as mathematics, open to expert correction |
-| **Version** | 0.2 |
+| **Version** | 0.3 |
 | **Date** | 2026-06-13 |
-| **Status** | Baseline — formulation stable; coefficients pending Domain-Advisor ratification (Charter Section 14.4) |
+| **Status** | Baseline — formulation stable; coefficients interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)/[0002](../adr/0002-ratify-preset-calibration.md)), pending independent review (Charter Section 14.4) |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Software architects, MCDA researchers, reviewers — anyone auditing or challenging the model |
 | **Derived from** | [Scoring Algorithm Specification](scoring-algorithm.md) (computation contract) · [Model Data Sheet](model-data-sheet.md) (coefficients) |
@@ -19,6 +19,7 @@
 |---|---|---|
 | 0.1 | 2026-06-13 | Initial formal formulation: sets, parameters, the pipeline as equations, properties with proof sketches, per-construct literature grounding, and an explicit "how to correct this" section |
 | 0.2 | 2026-06-13 | Usability pass: added a by-audience reading guide, a renderer-independent worked example (Section 3.6, = Fixture A), and a note on reading the math in viewers without MathJax; simplified `cases` spacing for robust rendering |
+| 0.3 | 2026-06-13 | Status sync: coefficients now interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md), [ADR-0002](../adr/0002-ratify-preset-calibration.md)) — updated the status line and assumption 6 (no longer "pending ratification") |
 
 ---
 
@@ -256,8 +257,9 @@ State openly, so reviewers judge the model on its own declared terms:
 5. **Fixed close-call threshold** $\tau = 0.10$ and the equal-weight fallback are conventions, not
    derived constants.
 6. **Coefficient values.** $A$ and the $\varphi$ vectors (especially the D4/D5 baseline) are expert
-   estimates pending Domain-Advisor ratification and, ultimately, empirical validation (Charter
-   Section 11; roadmap v3.0).
+   estimates — **interim-ratified** by the Owner ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md),
+   [ADR-0002](../adr/0002-ratify-preset-calibration.md)), still pending an independent Domain-Advisor
+   review and, ultimately, empirical validation (Charter Section 11; roadmap v3.0).
 
 ## 8. How to challenge or correct this formulation
 

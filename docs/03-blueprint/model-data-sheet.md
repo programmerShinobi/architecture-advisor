@@ -300,7 +300,7 @@ These must hold for every input and are unit-tested (NFR-MAINT-2, SRS FR-EDGE-6)
 
 The `qaFit` values are expert heuristics (Charter Section 9), but they are **not invented from
 nothing** — each dimension's trade-off shape follows established, widely cited literature, which
-is also where a Domain Advisor should start when ratifying them:
+underpin the interim ratification in [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md) and are where an independent Domain Advisor should start when reviewing them:
 
 | Dimension | The trade-off shape encoded | Primary sources |
 |---|---|---|
@@ -325,5 +325,6 @@ value theory, sensitivity analysis, apportionment).
 | C4 Mermaid stub in v1.0? | ❔ Scope | SRS OI-3 |
 | Performance budgets ratified | 🧪 Interim set | SRS OI-5 / design DI-4 |
 
-> Numbers in this sheet (🔒 and 🧪) are sufficient to **build and run** the engine today. Ratifying
-> the 🧪 values changes only these tables, never the requirements that reference them.
+> Numbers in this sheet (🔒, ✅, and 🧪) are sufficient to **build and run** the engine today.
+> Reviewing or revising the ✅/🧪 values changes only these tables, never the requirements that
+> reference them.
