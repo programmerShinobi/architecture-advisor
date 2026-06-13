@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
-| **Version** | 0.8 |
+| **Version** | 0.9 |
 | **Date** | 2026-06-13 |
 | **Status** | Baseline — build against this; D4/D5 fit & presets interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)/[0002](../adr/0002-ratify-preset-calibration.md)), pending independent review |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -25,6 +25,7 @@
 | 0.6 | 2026-06-13 | Calibration-stability review: widened the e-commerce and IoT D4 targets to Hexagonal / Clean (exact tie whenever the interoperability weight is 0); target margins are now measured by the verification script, with the four sensitive targets documented in the [Scoring Algorithm Specification](scoring-algorithm.md) Section 9.4 |
 | 0.7 | 2026-06-13 | Factor-content consistency (Section 2.1): made the Indonesian QA names uniform across all help texts (no more mixed EN/ID tokens) and established the baseline ID QA vocabulary; fixed two English level labels so they are truly verbatim from Build Spec Section 4 (lifespan "prototype", dataVolume "big data") |
 | 0.8 | 2026-06-13 | Interim ratification: D4/D5 `qaFit` ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) and preset calibration ([ADR-0002](../adr/0002-ratify-preset-calibration.md)) accepted as v1.0 defaults by the Owner (interim Domain-Advisor role, charter D12); values remain editable, pending independent review and the v3.0 empirical study |
+| 0.9 | 2026-06-13 | Interim Indonesian review of the factor content (Section 2.1): terminology confirmed against the baseline ID QA vocabulary; status updated (professional Translator review still welcome) |
 
 ---
 
@@ -105,8 +106,8 @@ used by the preset table in Section 6.
 
 The user-facing copy for all 14 factors, in both product languages. Each help text states *what
 the factor means* and *why it shifts the priorities* (Build Spec Section 4). English is the
-authoring language; the Indonesian copy follows the product's plain-language register and awaits
-Translator review (Charter Section 14.2).
+authoring language; the Indonesian copy follows the product's plain-language register; it has had an **interim ID
+review** (2026-06-13) and a professional Translator review is still welcome (Charter Section 14.2).
 
 | `id` | Label & levels (EN · *ID*) | Help (EN) | Help (ID) |
 |---|---|---|---|
@@ -126,12 +127,12 @@ Translator review (Charter Section 14.2).
 | `devops` | DevOps / platform maturity · *Kematangan DevOps / platform*<br>0 Low · *Rendah*<br>1 Medium · *Sedang*<br>2 Mature (CI/CD, monitoring) · *Matang (CI/CD, pemantauan)* | How strong the team's automation and operations are. Mature platforms can safely run more independently deployed parts (deployability, observability). | Seberapa kuat otomasi dan operasional tim. Platform yang matang dapat menjalankan lebih banyak bagian yang dirilis mandiri secara aman (kemudahan rilis, observabilitas). |
 
 > English level labels are verbatim from Build Spec Section 4 (🔒); the Indonesian labels and both
-> help texts are 🧪 baseline copy pending Translator review. At build time this table maps 1:1 to
+> help texts are 🧪 baseline copy, interim ID-reviewed (professional Translator review welcome). At build time this table maps 1:1 to
 > `config/factors.ts` (`label`, `levels[0..2]`, `help` — each `{ en, id }`). The Indonesian
 > quality-attribute names used in the help (skalabilitas, performa, ketersediaan, keamanan,
 > kemudahan pemeliharaan, kemudahan rilis, kemudahan pengujian, observabilitas, konsistensi
 > data, interoperabilitas, efisiensi biaya, waktu rilis) are a baseline vocabulary, to be
-> finalized as the i18n QA names (Build Spec Section 3) during Translator review.
+> finalized as the i18n QA names (Build Spec Section 3) at professional Translator review.
 
 ---
 
@@ -320,8 +321,8 @@ value theory, sensitivity analysis, apportionment).
 |---|---|---|
 | D4 / D5 `qaFit` vectors (Section 4) | ✅ **Ratified (interim)** — [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md) | Independent Domain Advisor / empirical study (v3.0) may revise |
 | Preset factor levels (Section 6) | ✅ **Ratified (interim)** — [ADR-0002](../adr/0002-ratify-preset-calibration.md); all 25 targets hold | Independent Domain Advisor may revise |
-| Factor content EN/ID (labels, level labels, help) | 🧪 **Authored** (Section 2.1) | Translator review → Charter Section 14.2 |
-| Option educational metadata; fitness & anti-pattern messages (EN/ID) | 🧪 **Authored** ([Option Content Sheet](option-content-sheet.md)) | Translator & Domain-Advisor review → Charter Section 14.2 |
+| Factor content EN/ID (labels, level labels, help) | 🧪 **Authored + interim ID-reviewed** (Section 2.1) | Professional Translator review → Charter Section 14.2 |
+| Option educational metadata; fitness & anti-pattern messages (EN/ID) | 🧪 **Authored + interim ID-reviewed** ([Option Content Sheet](option-content-sheet.md)) | Professional Translator + Domain-Advisor review → Charter Section 14.2 |
 | C4 Mermaid stub in v1.0? | ❔ Scope | SRS OI-3 |
 | Performance budgets ratified | 🧪 Interim set | SRS OI-5 / design DI-4 |
 

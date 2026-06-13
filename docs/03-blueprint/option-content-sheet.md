@@ -5,9 +5,9 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Option Content Sheet (the user-facing educational copy for every option) |
-| **Version** | 0.1 |
+| **Version** | 0.2 |
 | **Date** | 2026-06-13 |
-| **Status** | Baseline copy — pending Translator & Domain-Advisor review (Charter Section 14.2) |
+| **Status** | Baseline copy — interim ID review done (2026-06-13); professional Translator review still welcome; Domain Advisor reviews the technical content (Charter Section 14.2) |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers building `config/dimensions.ts`, `config/antiPatterns.ts`, `config/fitnessFunctions.ts`; reviewers |
 | **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 7, 9–11 · [Model Data Sheet](model-data-sheet.md) |
@@ -18,6 +18,7 @@
 | Version | Date | Summary |
 |---|---|---|
 | 0.1 | 2026-06-13 | Authored the full bilingual educational metadata for all 21 options (definition, pros/cons, when to use/avoid, real-world pattern, common mistakes, risks + mitigations, learn-more links), the 7 anti-pattern messages, and the 12 fitness-function templates |
+| 0.2 | 2026-06-13 | Interim Indonesian review (Owner/assistant): fixed one stray English token (observability → observabilitas), confirmed QA terminology matches the Model Data Sheet Section 2.1 vocabulary, and documented the loanword policy; professional Translator review still welcome |
 
 ---
 
@@ -33,6 +34,14 @@ this sheet carries only words. Lists use `·` separators; each maps to one array
 *learn more* link is a canonical, stable source and is **language-neutral** (one link list serves
 both languages — hence the `—` in its ID column). Risks are written `(likelihood/impact) risk →
 mitigation`.
+
+**Indonesian terminology.** Quality-attribute names follow the baseline vocabulary in
+[Model Data Sheet Section 2.1](model-data-sheet.md) (skalabilitas, performa, ketersediaan, keamanan,
+kemudahan pemeliharaan, kemudahan rilis, kemudahan pengujian, observabilitas, konsistensi data,
+interoperabilitas, efisiensi biaya, waktu rilis). Established architecture loanwords are kept in
+English by design (monolith, microservices, serverless, event-driven, CQRS, event sourcing,
+deploy/rilis, schema, cache, throughput, eventual, saga, outbox), consistent with Indonesian
+software-writing practice.
 
 ---
 
@@ -87,7 +96,7 @@ mitigation`.
 | Definition | Many small, independently deployable services, each owning its own data, communicating over the network. Optimizes team autonomy, release independence, and scaling — at a high operational price. | Banyak layanan kecil yang dirilis secara independen, masing-masing memiliki datanya sendiri, dan berkomunikasi lewat jaringan. Mengoptimalkan otonomi tim, kebebasan rilis, dan skala — dengan harga operasional yang tinggi. |
 | Pros | Independent deploys and scaling per service · clear team ownership · fault isolation between services | Rilis dan skala independen per layanan · kepemilikan tim yang jelas · isolasi kegagalan antarlayanan |
 | Cons | Distributed-system complexity: latency, partial failure · eventual consistency between services · a much heavier platform and operations bill | Kompleksitas sistem terdistribusi: latensi, kegagalan parsial · konsistensi eventual antarlayanan · beban platform dan operasional yang jauh lebih berat |
-| When to use | Many teams shipping in parallel · high or spiky scale · mature CI/CD and observability | Banyak tim rilis paralel · skala tinggi atau melonjak · CI/CD dan observability yang matang |
+| When to use | Many teams shipping in parallel · high or spiky scale · mature CI/CD and observability | Banyak tim rilis paralel · skala tinggi atau melonjak · CI/CD dan observabilitas yang matang |
 | When to avoid | A small team or low DevOps maturity · strong cross-entity consistency requirements · MVPs | Tim kecil atau kematangan DevOps rendah · kebutuhan konsistensi kuat lintas entitas · MVP |
 | Real-world pattern | Large consumer platforms with dozens of independent teams. | Platform konsumen besar dengan puluhan tim independen. |
 | Common mistakes | Splitting by nouns instead of bounded contexts · sharing one database (a distributed monolith) · long synchronous call chains · skipping the platform investment | Memecah berdasarkan kata benda alih-alih bounded context · berbagi satu database (distributed monolith) · rantai panggilan sinkron yang panjang · melewatkan investasi platform |
