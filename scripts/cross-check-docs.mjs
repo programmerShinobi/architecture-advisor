@@ -10,12 +10,13 @@
  *
  * Hard-fail checks (data must match): qaFit vectors, influence matrix, preset
  * levels, preset targets (Model Data Sheet ↔ verify-model.mjs ↔ SRS), default
- * factor levels, anti-pattern rule IDs, fitness-template coverage.
+ * factor levels, anti-pattern rule IDs, fitness-template coverage, and the EN factor
+ * level labels (Section 2.1 vs Build Spec Section 4).
  */
 import { readFileSync } from 'node:fs';
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
-const norm = (s) => s.replace(/−/g, '-'); // unicode minus → ASCII hyphen
+const norm = (s) => s.replaceAll('−', '-'); // unicode minus → ASCII hyphen
 
 const MDS = norm(read('docs/03-blueprint/model-data-sheet.md'));
 const MJS = norm(read('scripts/verify-model.mjs'));
@@ -45,7 +46,7 @@ function mdsVecs(s) {
 }
 function mjsVecs(s) {
   const blk = s.slice(s.indexOf('const DIMENSIONS'), s.indexOf('const DEFAULTS'));
-  const out = []; const re = /\[([0-9]+(?:,[0-9]+){11})\]/g; let m;
+  const out = []; const re = /\[(\d+(?:,\d+){11})\]/g; let m;
   while ((m = re.exec(blk))) out.push(m[1].split(',').map(Number));
   return out;
 }
@@ -108,7 +109,7 @@ function mjsPresets(s) {
   const a = mdsPresets(MDS), b = mjsPresets(MJS);
   const diff = [];
   for (const k of new Set([...Object.keys(a), ...Object.keys(b)]))
-    for (const f of FACT) if ((a[k] || {})[f] !== (b[k] || {})[f]) diff.push(`${k}.${f}`);
+    for (const f of FACT) if (a[k]?.[f] !== b[k]?.[f]) diff.push(`${k}.${f}`);
   if (diff.length === 0 && Object.keys(b).length === 5) ok(3, `preset levels: MDS Section 6 == verify-model.mjs (5 presets × 14 factors)`);
   else bad(3, `preset levels differ at: ${diff.join(', ') || 'preset count'}`);
 }
@@ -196,6 +197,31 @@ function mjsDefaults(s) {
   const present = QA.filter((q) => new RegExp(`^\\|\\s*${q}\\s*\\|`, 'm').test(sec));
   if (present.length === 12) ok(8, `fitness templates: one per QA in Option Content Sheet Section 7 (12/12)`);
   else bad(8, `fitness templates missing: ${QA.filter((q) => !present.includes(q)).join(', ')}`);
+}
+
+// ---- 9. factor level labels (EN): Model Data Sheet Section 2.1 == Build Spec Section 4 ----
+const BS = read('docs/specs/build-spec-v3.md');
+function bsLevels(s) {
+  const sec = s.slice(s.indexOf('## 4. Project factors'), s.indexOf('## 5.'));
+  const out = {}; const re = /^\|\s*([a-zA-Z]+)\s*\|[^|]*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|/gm; let m;
+  while ((m = re.exec(sec))) { if (m[1] === 'id') continue; out[m[1]] = [m[2], m[3], m[4]]; }
+  return out;
+}
+function mds21Levels(s) {
+  const sec = s.slice(s.indexOf('### 2.1'), s.indexOf('## 3.'));
+  const out = {}; const row = /^\|\s*`([a-zA-Z]+)`\s*\|([^|]+)\|/gm; let m;
+  while ((m = row.exec(sec))) {
+    const lv = []; const lr = /[0-2] ([^·]+?) ·/g; let e;
+    while ((e = lr.exec(m[2]))) lv.push(e[1].trim());
+    if (lv.length === 3) out[m[1]] = lv;
+  }
+  return out;
+}
+{
+  const a = mds21Levels(MDS), b = bsLevels(BS);
+  const diff = Object.keys(b).filter((f) => JSON.stringify(a[f]) !== JSON.stringify(b[f]));
+  if (diff.length === 0 && Object.keys(b).length === 14) ok(9, `factor level labels (EN): MDS Section 2.1 == Build Spec Section 4 (14 × 3, verbatim)`);
+  else bad(9, `factor level labels differ at: ${diff.map((f) => `${f} (§2.1 ${JSON.stringify(a[f])} vs BS ${JSON.stringify(b[f])})`).join('; ')}`);
 }
 
 console.log('');

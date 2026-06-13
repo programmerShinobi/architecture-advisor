@@ -104,9 +104,9 @@ materially drive real architecture decisions; mark them visibly (e.g. an "econom
 | distribution| Team distribution                | Co-located        | Partly remote    | Fully distributed / global | Team & delivery |
 | ttm         | Time-to-market pressure          | Relaxed           | Moderate         | Very urgent                | Team & delivery |
 | budget      | Budget / cost flexibility        | Tight             | Moderate         | Flexible                   | Team & delivery |
-| lifespan    | Expected system lifespan         | Throwaway / proto | Medium-term      | Long-lived / strategic     | Team & delivery |
+| lifespan    | Expected system lifespan         | Throwaway / prototype | Medium-term      | Long-lived / strategic     | Team & delivery |
 | scale       | Expected scale / traffic         | Low               | Medium           | High / extreme spikes      | Scale & performance |
-| dataVolume  | Data volume                      | Low               | Moderate         | Very large / big-data      | Scale & performance |
+| dataVolume  | Data volume                      | Low               | Moderate         | Very large / big data      | Scale & performance |
 | async       | Async / event-driven workload    | Minimal           | Some             | Heavy / many integrations  | Scale & performance |
 | realtime    | Real-time / low-latency need     | Not important     | Somewhat         | Critical (sub-second)      | Scale & performance |
 | domain      | Business domain complexity       | Simple            | Moderate         | Complex                    | Domain, data & risk |
