@@ -429,7 +429,7 @@ ISO revision) and the validation study's findings; update *fit*/weight values vi
 | **v1.0** | MVP (scope of Section 5) | 4-step flow, 5 dimensions, radar, ADR export, Guided/Expert, ID/EN |
 | **v1.x** | Refinement | More factors & "learn more" content, stricter accessibility (a11y), new translations, UX fixes |
 | **v2.0** | Collaboration | Multi-stakeholder weighting, save & compare assessments, organization config import/export |
-| **v2.x** | Integration | Generated C4 diagrams, export to ADR tools/repos, industry templates |
+| **v2.x** | Integration | Auto-generated C4 diagrams (beyond the v1.0 basic stub), export to ADR tools/repos, industry templates |
 | **v3.0** | Evidence-based | Recalibrating *fit* values from empirical validation results; community-contributed architecture packs |
 | **vN (annual)** | Maintenance | Aligned with the latest standards, dependency refresh, fixes from community feedback |
 

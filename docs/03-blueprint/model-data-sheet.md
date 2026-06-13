@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Model Data Sheet (the single source of truth for every model value) |
-| **Version** | 0.9 |
+| **Version** | 0.10 |
 | **Date** | 2026-06-13 |
 | **Status** | Baseline — build against this; D4/D5 fit & presets interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)/[0002](../adr/0002-ratify-preset-calibration.md)), pending independent review |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers building the scoring engine and `config/` |
-| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.7 Section 5 · [UI prototype](prototype/index.html) |
+| **Derived from** | [Build Spec v3](../specs/build-spec-v3.md) Sections 3–12 · [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.8 Section 5 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -26,6 +26,7 @@
 | 0.7 | 2026-06-13 | Factor-content consistency (Section 2.1): made the Indonesian QA names uniform across all help texts (no more mixed EN/ID tokens) and established the baseline ID QA vocabulary; fixed two English level labels so they are truly verbatim from Build Spec Section 4 (lifespan "prototype", dataVolume "big data") |
 | 0.8 | 2026-06-13 | Interim ratification: D4/D5 `qaFit` ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) and preset calibration ([ADR-0002](../adr/0002-ratify-preset-calibration.md)) accepted as v1.0 defaults by the Owner (interim Domain-Advisor role, charter D12); values remain editable, pending independent review and the v3.0 empirical study |
 | 0.9 | 2026-06-13 | Interim Indonesian review of the factor content (Section 2.1): terminology confirmed against the baseline ID QA vocabulary; status updated (professional Translator review still welcome) |
+| 0.10 | 2026-06-13 | Synced the C4 row to the OI-3 decision (basic stub in v1.0; richer auto-generated C4 deferred to v2.x); SRS pointer → v0.8 |
 
 ---
 
@@ -323,7 +324,7 @@ value theory, sensitivity analysis, apportionment).
 | Preset factor levels (Section 6) | ✅ **Ratified (interim)** — [ADR-0002](../adr/0002-ratify-preset-calibration.md); all 25 targets hold | Independent Domain Advisor may revise |
 | Factor content EN/ID (labels, level labels, help) | 🧪 **Authored + interim ID-reviewed** (Section 2.1) | Professional Translator review → Charter Section 14.2 |
 | Option educational metadata; fitness & anti-pattern messages (EN/ID) | 🧪 **Authored + interim ID-reviewed** ([Option Content Sheet](option-content-sheet.md)) | Professional Translator + Domain-Advisor review → Charter Section 14.2 |
-| C4 Mermaid stub in v1.0? | ❔ Scope | SRS OI-3 |
+| C4 Mermaid stub | ✅ **Resolved: in v1.0 as a basic stub** (richer auto-generated C4 deferred to v2.x) | SRS OI-3 closed |
 | Performance budgets ratified | 🧪 Interim set | SRS OI-5 / design DI-4 |
 
 > Numbers in this sheet (🔒, ✅, and 🧪) are sufficient to **build and run** the engine today.
