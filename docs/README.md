@@ -18,7 +18,7 @@ Each phase lives in its own numbered folder, and each produces a concrete delive
 |---|-------|--------|-----------|--------|
 | 1 | Discovery & Planning | [`01-discovery-and-planning/`](01-discovery-and-planning/discovery-and-planning.md) | Project charter / product vision | ✅ Complete |
 | 2 | Requirement Analysis | [`02-requirement-analysis/`](02-requirement-analysis/) | [SRS](02-requirement-analysis/software-requirements-specification.md) (functional + non-functional) | 🔬 In progress — draft |
-| 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | [Design spec](03-blueprint/design-specification.md) + [Model Data Sheet](03-blueprint/model-data-sheet.md) + [UI prototype](03-blueprint/prototype/index.html) | 🔬 In progress |
+| 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | [Design spec](03-blueprint/design-specification.md) + the model docs ([data sheet](03-blueprint/model-data-sheet.md), [scoring algorithm](03-blueprint/scoring-algorithm.md), [formulation](03-blueprint/model-formulation.md), [option content](03-blueprint/option-content-sheet.md)) + [UI prototype](03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | Development | [`04-development/`](04-development/) | Source code (standards, Git, code review) | 🚧 Not started |
 | 5 | Testing / QA | [`05-testing-qa/`](05-testing-qa/) | Unit / integration / system / UAT + security & perf | 🚧 Not started |
 | 6 | Deployment / Release | [`06-deployment/`](06-deployment/) | CI/CD pipeline → staging → live URL | 🚧 Not started ([guide ready](06-deployment/deployment-github-pages.md)) |
@@ -39,7 +39,7 @@ spanning **multiple** phases live here:
 ## Reading paths
 
 - **Quick overview** → [Discovery charter](01-discovery-and-planning/discovery-and-planning.md), Preface + Section 1, Section 3.
-- **Build the app** → [Build Spec v3](specs/build-spec-v3.md) + [Model Data Sheet](03-blueprint/model-data-sheet.md) + [Scoring Algorithm](03-blueprint/scoring-algorithm.md) (verify with `node scripts/verify-model.mjs`), then the [deployment guide](06-deployment/deployment-github-pages.md).
+- **Build the app** → [Build Spec v3](specs/build-spec-v3.md) + [Model Data Sheet](03-blueprint/model-data-sheet.md) + [Scoring Algorithm](03-blueprint/scoring-algorithm.md) (verify with `node scripts/verify-model.mjs`) + [Option Content Sheet](03-blueprint/option-content-sheet.md) for the bilingual UI copy, then the [deployment guide](06-deployment/deployment-github-pages.md).
 - **Audit or challenge the model** → [Formal Model Formulation](03-blueprint/model-formulation.md) (the math + the decision-analysis literature) and [Scoring Algorithm Section 11](03-blueprint/scoring-algorithm.md) (validity & limitations).
 - **Polish the UX** → the two playbooks in [`guides/`](guides/).
 - **Contribute** → [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and Section 14 of the discovery charter.
