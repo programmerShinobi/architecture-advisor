@@ -221,7 +221,7 @@ function mds21Levels(s) {
   const a = mds21Levels(MDS), b = bsLevels(BS);
   const diff = Object.keys(b).filter((f) => JSON.stringify(a[f]) !== JSON.stringify(b[f]));
   if (diff.length === 0 && Object.keys(b).length === 14) ok(9, `factor level labels (EN): MDS Section 2.1 == Build Spec Section 4 (14 × 3, verbatim)`);
-  else bad(9, `factor level labels differ at: ${diff.map((f) => `${f} (§2.1 ${JSON.stringify(a[f])} vs BS ${JSON.stringify(b[f])})`).join('; ')}`);
+  else bad(9, `factor level labels differ at: ${diff.map((f) => `${f} (MDS ${JSON.stringify(a[f])} vs BS ${JSON.stringify(b[f])})`).join('; ')}`);
 }
 
 console.log('');
