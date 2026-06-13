@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 0.8 |
+| **Version** | 0.9 |
 | **Date** | 2026-06-13 |
 | **Status** | Draft — review-ready |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -25,6 +25,7 @@
 | 0.6 | 2026-06-13 | Calibration-stability review: widened the e-commerce and IoT D4 targets to Hexagonal / Clean (the pair differs only on interoperability and ties exactly whenever that weight is 0); margins for every preset target are now machine-measured (Scoring Algorithm Section 9.4) |
 | 0.7 | 2026-06-13 | Closed OI-2 and OI-4: the preset calibration and the D4/D5 `qaFit` vectors are interim-ratified ([ADR-0002](../adr/0002-ratify-preset-calibration.md), [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) |
 | 0.8 | 2026-06-13 | Closed OI-3: a basic C4-style stub is in v1.0 (FR-OUT-5, Could); richer auto-generated C4 deferred to v2.x. Charter pointer → v1.7 |
+| 0.9 | 2026-06-13 | Performance-budget targets ratified (NFR-PERF-3, design ADR-008): numbers committed with mandatory lazy-loading of mermaid/recharts; OI-5 target-setting closed, real-bundle measurement remains a Phase 4/5 verification step |
 
 ---
 
@@ -296,7 +297,7 @@ production. They are the most common source of "we never specified that" defects
 |---|---|---|---|---|
 | NFR-PERF-1 | Reflect any factor change in priorities, charts, and rankings within **~100 ms perceived** latency on a mid-range device. | Must | UI/UX Playbook Task 1 | T |
 | NFR-PERF-2 | Enable a **median time-to-first-recommendation ≤ 5 minutes** (KPI K3). | Must | Charter Section 22 (K3) | T |
-| NFR-PERF-3 | Meet **interim performance budgets** on a mid-range device: initial JS bundle **≤ 300 KB gzipped**, First Contentful Paint **≤ 2 s** on a fast-3G profile, and a re-score interaction p95 **≤ 100 ms**. (Interim targets; confirmed at Phase 3 design — OI-5.) | Should | UI/UX Playbook Task 1 | T |
+| NFR-PERF-3 | Meet the **ratified performance budgets** on a mid-range device: initial JS bundle **≤ 300 KB gzipped** (requires lazy-loading mermaid & recharts), First Contentful Paint **≤ 2 s** on a fast-3G profile, and a re-score interaction p95 **≤ 100 ms**. Verified by a CI bundle-size gate + Lighthouse in Phase 4/5 (design [ADR-008](../03-blueprint/design-specification.md#8-key-design-decisions-adrs)). | Should | UI/UX Playbook Task 1 | T |
 | NFR-USE-1 | Achieve a **System Usability Scale [9] ≥ 70** at beta — the empirically derived "acceptable" threshold [10] (operative solo-stage KPI K5; aspirational target 75). | Should | Charter Section 22 (K5) | T |
 | NFR-USE-2 | Be usable **without mandatory setup** (presets and sample data available immediately). | Must | UI/UX Playbook Task 9 | D |
 | NFR-USE-3 | Be **consistent and predictable**: honor standard shortcuts; one term per concept; consistent color meaning. | Must | UI/UX Playbook Task 6 | I |
@@ -486,7 +487,7 @@ all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.
 | OI-2 | ~~Preset factor-level values~~ — **Resolved: interim-ratified** ([ADR-0002](../adr/0002-ratify-preset-calibration.md)) | Owner | Closed (2026-06-13) | Levels in [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 6; all 25 targets machine-verified; independent Domain Advisor may revise |
 | OI-3 | ~~C4 stub in v1.0 or deferred~~ — **Resolved: in v1.0 as a basic stub** (FR-OUT-5, Could) | Owner | Closed (2026-06-13) | Richer auto-generated C4 deferred to v2.x (Charter Section 5, Section 15.6) |
 | OI-4 | ~~D4/D5 `qaFit` values~~ — **Resolved: interim-ratified** ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) | Owner | Closed (2026-06-13) | Values in [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 4; independent Domain Advisor / empirical study (v3.0) may revise |
-| OI-5 | Confirm/ratify the quantitative performance budgets in NFR-PERF-3 (bundle size, FCP, p95 interaction) | Engineer | M2 (Phase 3 design) | Interim targets already set in NFR-PERF-3; ratify against the real bundle |
+| OI-5 | ~~Confirm/ratify the performance budgets~~ — **Targets ratified** ([ADR-008](../03-blueprint/design-specification.md#8-key-design-decisions-adrs)) | Engineer | Targets closed (2026-06-13) | Numbers committed; **measuring the real bundle** against them is a Phase 4/5 verification step (CI bundle gate + Lighthouse) |
 | OI-6 | Empirical-validation study design (deferred per Charter Section 5) | Owner | v3.0 | Out of MVP scope; tracked for v3.0 |
 
 ---

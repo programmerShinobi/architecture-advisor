@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Design Specification / Software Design Document (SDD) |
-| **Version** | 0.6 |
+| **Version** | 0.7 |
 | **Date** | 2026-06-12 |
 | **Status** | Draft |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, designers |
-| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.8 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.7 · [UI prototype](prototype/index.html) |
+| **Derived from** | [SRS](../02-requirement-analysis/software-requirements-specification.md) v0.9 · [Build Spec v3](../specs/build-spec-v3.md) · [Charter](../01-discovery-and-planning/discovery-and-planning.md) v1.7 · [UI prototype](prototype/index.html) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -23,6 +23,7 @@
 | 0.4 | 2026-06-12 | Computation precision: linked the [Scoring Algorithm Specification](scoring-algorithm.md) as the exact contract for `lib/scoring.ts`/`lib/sensitivity.ts`; Definition of Ready updated — scoring computation pinned and preset calibration machine-verified |
 | 0.5 | 2026-06-13 | Definition of Ready: D4/D5 `qaFit` and preset calibration interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md), [ADR-0002](../adr/0002-ratify-preset-calibration.md)); DI-1 closed |
 | 0.6 | 2026-06-13 | Resolved DI-5 / SRS OI-3: a basic C4 Mermaid stub is in v1.0 (richer auto-generated C4 deferred to v2.x); Definition-of-Ready C4 item checked |
+| 0.7 | 2026-06-13 | Ratified the performance budgets as v1.0 targets (ADR-008, closes DI-4 / SRS OI-5), with mandatory lazy-loading of mermaid/recharts; real-bundle measurement remains a Phase 4/5 verification step |
 
 ---
 
@@ -286,6 +287,7 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 | ADR-005 | **recharts** (radar/bar) + **mermaid** (C4 stub) | Mature, declarative; must ship in `dependencies` |
 | ADR-006 | **CSS custom properties + Tailwind** `class` dark mode for tokens | One token contract, two themes; matches the prototype |
 | ADR-007 | **Model version separate from app SemVer** | Reproducible results across model changes (R8) |
+| ADR-008 | **Performance budgets** as v1.0 targets — initial JS ≤ 300 KB gzip, FCP ≤ 2 s (fast-3G), re-score p95 ≤ 100 ms | Grounded in the 100 ms response limit [Miller/Nielsen] and Core-Web-Vitals FCP guidance. **Requires lazy-loading `mermaid` and `recharts`** (dynamic import, off the first-paint path) — they are too large for the initial bundle. Verified by a CI bundle-size gate + Lighthouse in Phase 4/5 |
 
 ---
 
@@ -312,7 +314,7 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 | DI-1 | ~~Ratify D4/D5 `qaFit` values~~ — **Done (interim)** | [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md) accepts the [Model Data Sheet](model-data-sheet.md) Section 4 baseline; closes SRS OI-4 |
 | DI-2 | Whether URL-hash state needs a compression library | Decide against a size budget (DI-4) |
 | DI-3 | Final design-token values vs the prototype | Promote the prototype `:root` blocks to the token source of truth |
-| DI-4 | Ratify the performance budgets against the real bundle | Interim targets already set in SRS NFR-PERF-3 (≤ 300 KB gzip, FCP ≤ 2 s, p95 ≤ 100 ms); inherits SRS OI-5 |
+| DI-4 | ~~Ratify the performance budgets~~ — **Targets ratified** ([ADR-008](#8-key-design-decisions-adrs)) | Numbers committed as v1.0 budgets (SRS OI-5 closed); the real-bundle measurement is a Phase 4/5 verification step (CI bundle gate + Lighthouse) |
 | DI-5 | ~~C4 Mermaid stub — in v1.0 or deferred~~ — **Resolved** | In v1.0 as a basic stub (FR-OUT-5, Could; SRS OI-3 closed); richer auto-generated C4 deferred to v2.x |
 
 ---
@@ -332,7 +334,7 @@ free of guesswork — each line is either fixed or has a usable baseline.
 - [x] **Factor content authored (EN/ID)**: labels, level labels, and help for all 14 factors — [Model Data Sheet Section 2.1](model-data-sheet.md) (Translator review pending).
 - [x] **Option & message content authored (EN/ID)**: educational metadata for all 21 options, the 7 anti-pattern messages, and the 12 fitness-function templates — [Option Content Sheet](option-content-sheet.md) (Translator & Domain-Advisor review pending).
 - [x] **C4 stub** scoped: in v1.0 as a basic Mermaid stub (FR-OUT-5, Could); richer auto-generated C4 deferred to v2.x (SRS OI-3 closed).
-- [ ] **Performance budgets ratified** against the real bundle (SRS OI-5 / DI-4).
+- [x] **Performance budget targets ratified** ([ADR-008](#8-key-design-decisions-adrs); SRS OI-5 closed) — committed as v1.0 budgets, with mandatory lazy-loading of mermaid/recharts. *Measuring the real production bundle against them is the one remaining item, inherently a Phase 4/5 verification step (CI bundle gate + Lighthouse).*
 
 Checked items are done. The unchecked items all have **baseline values recorded in the Model Data
 Sheet**, so development is unblocked today — closing them refines numbers, never the structure.
