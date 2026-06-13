@@ -9,7 +9,7 @@ requires.
 
 > **Scope.** *App-level design* decisions (pure functional core, client-side only, recharts, etc.)
 > are recorded inline in the [Design Specification Section 8](../03-blueprint/design-specification.md#8-key-design-decisions-adrs)
-> as ADR-001…007. **This log** records *model* decisions, numbered **ADR-0001…**.
+> as ADR-001…008 (3-digit). **This log** records *model* decisions, numbered **ADR-0001…** (4-digit).
 
 > **Reviewer.** Model changes are reviewed by a Domain Advisor. None is appointed yet
 > (charter decision D12), so the **interim** reviewer is the Owner using the documented literature

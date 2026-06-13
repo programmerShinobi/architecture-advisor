@@ -452,7 +452,7 @@ Key gates:
 - **AC-9.** Fully keyboard-operable; AA contrast in both themes. *(NFR-A11Y-1/2)*
 - **AC-10.** A tampered/truncated share URL falls back to saved or default state with a notice (no crash, no blank page); with `localStorage` disabled, the app still runs and warns that progress will not be saved. *(FR-EDGE-1/2)*
 - **AC-11.** An older-model-version share link or export renders as-is and offers "recompute with the current model"; importing an invalid config JSON is rejected with a field-level error and leaves the current config intact. *(FR-EDGE-3/5)*
-- **AC-12.** The production build meets the interim performance budgets (bundle ≤ 300 KB gzipped; re-score p95 ≤ 100 ms). *(NFR-PERF-3)*
+- **AC-12.** The production build meets the ratified performance budgets — bundle ≤ 300 KB gzipped (mermaid/recharts lazy-loaded), FCP ≤ 2 s on fast-3G, re-score p95 ≤ 100 ms — enforced by a CI bundle-size gate + Lighthouse. *(NFR-PERF-3; design ADR-008)*
 
 **Release gate (Charter [Section 11](../01-discovery-and-planning/discovery-and-planning.md#11-success-criteria--project-level-definition-of-done)):**
 all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.
