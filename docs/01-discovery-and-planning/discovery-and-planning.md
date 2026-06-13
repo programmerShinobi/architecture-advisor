@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Project Charter / Product Vision |
-| **Version** | 1.6 |
+| **Version** | 1.7 |
 | **Date** | 2026-06-12 |
 | **Status** | Approved — execution baseline |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -23,6 +23,7 @@
 | 1.4 | 2026-06-11 | Scope clarification: a basic custom-configuration import/export (JSON) is in the MVP (matching Build Spec v3); the richer organization-level config import/export remains deferred to v2.0. Resolves a charter↔Build Spec↔SRS mismatch |
 | 1.5 | 2026-06-12 | Reference hardening (editorial, no scope change): added peer-reviewed and SEI sources [16]–[24] (ADD technical report, SUS and its acceptability threshold, architectural design decisions, technical debt, GQM, Strangler Fig, MADR) and cited them inline where claims rely on them |
 | 1.6 | 2026-06-13 | Editorial: clarified the ADR decision-log path to `docs/adr/` (Section 14.5), where the model-decision records now live |
+| 1.7 | 2026-06-13 | Scope clarification (resolves OI-3): a basic C4-style Mermaid diagram stub is in the MVP (matching Build Spec v3); richer auto-generated C4 diagrams remain deferred to v2.x |
 
 ---
 
@@ -174,7 +175,8 @@ recommendation → export), Guided & Expert modes; ≥12 factors; 12 quality att
 an interactive trade-off radar + ranking; *close-call* detection; sensitivity analysis; a risk
 register; fitness functions; anti-pattern detection; a migration path (brownfield, Strangler Fig [23]); presets; a
 glossary; a "How scoring works" panel; ADR export (MADR — Markdown ADR — format [24]) & reports;
-share-via-URL; a **basic custom-configuration import/export (JSON)** for extensibility; ID/EN
+share-via-URL; a **basic custom-configuration import/export (JSON)** for extensibility; a
+**basic C4-style architecture diagram stub** (Mermaid) reflecting the chosen deployment style; ID/EN
 internationalization (i18n); dark mode; WCAG (Web Content Accessibility Guidelines) AA [11];
 mature UI states (skeleton, 3-layer error + retry, undo, save-state, empty state).
 
@@ -196,7 +198,8 @@ layer, and the chosen combination is then checked for anti-patterns.
 
 **Deferred (see the evolution roadmap, Section 15):** multi-stakeholder collaboration; saved
 multi-project comparison; **organization-level** configuration import/export (the richer,
-shareable org config — the basic per-user JSON is in the MVP above); generated C4 diagrams; an
+shareable org config — the basic per-user JSON is in the MVP above); **richer auto-generated C4
+diagrams** (the basic stub is in the MVP above); an
 empirical validation study.
 
 **Non-goals:** a replacement for human judgment / full ATAM; a code / Infrastructure-as-Code

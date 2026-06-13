@@ -5,12 +5,12 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 0.7 |
+| **Version** | 0.8 |
 | **Date** | 2026-06-13 |
 | **Status** | Draft — review-ready |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, analysts, reviewers |
-| **Derived from** | [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) v1.6 · [Build Spec v3](../specs/build-spec-v3.md) |
+| **Derived from** | [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) v1.7 · [Build Spec v3](../specs/build-spec-v3.md) |
 | **License** | [CC BY 4.0](../../LICENSE-docs.md) |
 
 **Document history**
@@ -24,6 +24,7 @@
 | 0.5 | 2026-06-12 | Reference hardening: added peer-reviewed and standard sources (SUS and its acceptability threshold, MADR, Strangler Fig, additive multi-attribute value model, ADD technical report) and cited them inline at NFR-USE-1, FR-OUT-1, FR-REC-12/13, and Section 5.1 |
 | 0.6 | 2026-06-13 | Calibration-stability review: widened the e-commerce and IoT D4 targets to Hexagonal / Clean (the pair differs only on interoperability and ties exactly whenever that weight is 0); margins for every preset target are now machine-measured (Scoring Algorithm Section 9.4) |
 | 0.7 | 2026-06-13 | Closed OI-2 and OI-4: the preset calibration and the D4/D5 `qaFit` vectors are interim-ratified ([ADR-0002](../adr/0002-ratify-preset-calibration.md), [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) |
+| 0.8 | 2026-06-13 | Closed OI-3: a basic C4-style stub is in v1.0 (FR-OUT-5, Could); richer auto-generated C4 deferred to v2.x. Charter pointer → v1.7 |
 
 ---
 
@@ -92,7 +93,7 @@ decision records. The authoritative scope (in/deferred/non-goals) is the charter
 
 ### 1.4 References
 
-1. [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) (v1.6) — problem, scope, KPIs, risks, governance.
+1. [Discovery & Planning charter](../01-discovery-and-planning/discovery-and-planning.md) (v1.7) — problem, scope, KPIs, risks, governance.
 2. [Build Spec v3](../specs/build-spec-v3.md) — technical specification and model definitions.
 3. [UI/UX Execution Playbook](../guides/uiux-execution-playbook.md) — usability requirements for technical users.
 4. ISO/IEC/IEEE 29148:2018 — Requirements engineering.
@@ -249,7 +250,7 @@ v1.0:
 | FR-OUT-2 | Export a **full report** (Markdown + print stylesheet). | Must | Build Spec Section 12 | T |
 | FR-OUT-3 | Export **scores as CSV** and the **assessment as JSON**. | Should | Build Spec Section 12 | T |
 | FR-OUT-4 | Provide a **share-via-URL** link that round-trips to identical state. | Must | Build Spec Section 14.14 | T |
-| FR-OUT-5 | Render a **C4-style Mermaid diagram stub** reflecting the chosen D1 style. | Could | Build Spec Section 12 | D |
+| FR-OUT-5 | Render a **basic C4-style Mermaid diagram stub** reflecting the chosen D1 style (richer auto-generated C4 is deferred to v2.x). | Could | Build Spec Section 12; Charter Section 5 | D |
 | FR-OUT-6 | Support **import/export of a basic custom-configuration JSON** for extensibility (per-user; organization-level config is deferred to v2.0). | Should | Build Spec Section 12; Charter Section 5 | T |
 
 ### 3.6 State, Persistence & Reproducibility
@@ -483,7 +484,7 @@ all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.
 |---|---|---|---|---|
 | OI-1 | ~~Final factor count~~ — **Resolved: fixed at 14** (Build Spec Section 4 / [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 2) | Owner | Closed (2026-06-12) | Grouping also fixed in the Model Data Sheet |
 | OI-2 | ~~Preset factor-level values~~ — **Resolved: interim-ratified** ([ADR-0002](../adr/0002-ratify-preset-calibration.md)) | Owner | Closed (2026-06-13) | Levels in [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 6; all 25 targets machine-verified; independent Domain Advisor may revise |
-| OI-3 | Whether the C4 Mermaid stub (FR-OUT-5) is in v1.0 or deferred | Owner | M1 | Currently **Could**-priority |
+| OI-3 | ~~C4 stub in v1.0 or deferred~~ — **Resolved: in v1.0 as a basic stub** (FR-OUT-5, Could) | Owner | Closed (2026-06-13) | Richer auto-generated C4 deferred to v2.x (Charter Section 5, Section 15.6) |
 | OI-4 | ~~D4/D5 `qaFit` values~~ — **Resolved: interim-ratified** ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) | Owner | Closed (2026-06-13) | Values in [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 4; independent Domain Advisor / empirical study (v3.0) may revise |
 | OI-5 | Confirm/ratify the quantitative performance budgets in NFR-PERF-3 (bundle size, FCP, p95 interaction) | Engineer | M2 (Phase 3 design) | Interim targets already set in NFR-PERF-3; ratify against the real bundle |
 | OI-6 | Empirical-validation study design (deferred per Charter Section 5) | Owner | v3.0 | Out of MVP scope; tracked for v3.0 |
