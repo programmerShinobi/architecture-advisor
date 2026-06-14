@@ -9,11 +9,10 @@
     />
     <title>Architecture Advisor</title>
     <script>
-      // Apply persisted theme before paint to avoid a flash of the wrong theme.
+      // Dark by default (matches the design reference); apply light pre-paint if chosen.
       try {
-        var t = localStorage.getItem('aa.theme');
-        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
+        if (JSON.parse(localStorage.getItem('aa.theme')) === 'light') {
+          document.documentElement.classList.add('light');
         }
       } catch (e) {}
     </script>
