@@ -157,6 +157,12 @@ A recommendation spans 5 orthogonal dimensions. Each dimension has options; each
 `id`, `name`, `summary` (EN+ID), full educational metadata (section 7), a `qaFit` vector
 (integer 1–5 per QA: 1 = poor fit, 5 = excellent), and a list of `risks` (section 9).
 
+> **Canonical values.** Every `qaFit` vector below is reproduced from the
+> [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 4, which is the **single source of
+> truth** (machine-verified by [`verify-model.mjs`](../../scripts/verify-model.mjs)). Build the
+> `config/dimensions.ts` values from the Model Data Sheet, not by eye from this prose — if anything
+> ever differs, the Model Data Sheet wins.
+
 Composite score of an option = `Σ_QA ( normalizedWeight[QA]/100 * qaFit[option][QA] )`.
 Within each dimension, rank options by composite score. Round all displayed numbers.
 
@@ -193,14 +199,16 @@ Polyglot persistence  : perf 4, scal 4, maint 3, cost 2, ttm 3, interop 4
 
 **Dimension D4 — Code Structure** *(Guided label: "How each app is organized inside")*. Options: Layered, Hexagonal (Ports & Adapters),
 Clean Architecture, Vertical Slice. These differ mainly on maintainability/testability/ttm.
-Assign defensible qaFit vectors following this principle: simpler structures favor `ttm`;
-Hexagonal/Clean favor `maintainability`/`testability` at some `ttm` cost; reflect that
-`domain` complexity is what makes the extra structure pay off. Document your chosen values.
+**Use the ratified qaFit vectors in the [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 4**
+(interim-ratified, [ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) — do not re-invent them. The encoded
+rationale: simpler structures favor `ttm`; Hexagonal/Clean favor `maintainability`/`testability` at
+some `ttm` cost; `domain` complexity is what makes the extra structure pay off.
 
 **Dimension D5 — Frontend Architecture** *(Guided label: "How the screens are built"; optional, show only if relevant)*. Options:
-Monolithic SPA, Server-side rendering (SSR/SSG), Micro-frontends. Assign defensible qaFit;
-micro-frontends favor `deployability`/`scalability` for large/distributed teams at a
-`maintainability`/`ttm` cost. Document values.
+Monolithic SPA, Server-side rendering (SSR/SSG), Micro-frontends. **Use the ratified qaFit vectors in
+the [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 4** ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md)) —
+do not re-invent them. Rationale: micro-frontends favor `deployability`/`scalability` for
+large/distributed teams at a `maintainability`/`ttm` cost.
 
 Allow unlisted qaFit entries to default to a neutral 3 so the config stays maintainable.
 
@@ -393,7 +401,8 @@ and extensible.
   that scores are tunable heuristics, not facts.
 - `EXTENDING.md` — how to add/edit QAs, factors, the factor→QA matrix, dimensions/options/qaFit,
   anti-pattern rules, presets, and translations; how to import/export a custom config JSON.
-- `DECISIONS.md` — any unspecified choices you made (e.g. the D4/D5 qaFit values you assigned).
+- `DECISIONS.md` — any unspecified choices you made. (The D4/D5 qaFit values are **not** among them —
+  they are ratified in the [Model Data Sheet](../03-blueprint/model-data-sheet.md) Section 4; use those.)
 - Final chat summary — files created, run instructions, acceptance criteria verified.
 
 Begin now. Build all phases in order; do not stop halfway.
