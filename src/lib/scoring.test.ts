@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { deriveWeights, composite, rank, isCloseCall, sensitivity } from './scoring';
-import { DIMENSION_ORDER } from '../config/dimensions';
+import { deriveWeights, composite, rank, isCloseCall, sensitivity, contributions } from './scoring';
+import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
 import { DEFAULT_LEVELS } from '../config/defaults';
 import { QA_ORDER } from '../config/qualityAttributes';
 import type { Levels } from '../types';
@@ -75,6 +75,17 @@ describe('Invariants — 500 seeded random inputs', () => {
         }
       }
       expect(JSON.stringify(rank(L, 'D1'))).toBe(JSON.stringify(rank(L, 'D1')));
+    }
+  });
+});
+
+describe('contributions reconcile to the composite (FR-REC-4)', () => {
+  it('sum of weighted points equals composite for every D1 option', () => {
+    const L: Levels = { ...DEFAULT_LEVELS, team: 2, scale: 2, security: 2 };
+    const w = deriveWeights(L);
+    for (const opt of DIMENSIONS.D1.options) {
+      const sum = contributions(w, opt.qaFit).reduce((a, c) => a + c.points, 0);
+      expect(approx(sum, composite(w, opt.qaFit))).toBe(true);
     }
   });
 });

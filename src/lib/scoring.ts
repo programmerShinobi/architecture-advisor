@@ -69,6 +69,25 @@ export function isCloseCall(ranked: RankedOption[]): boolean {
   return (ranked[0].score - ranked[1].score) / ranked[0].score < 0.1;
 }
 
+export interface Contribution {
+  qa: QaId;
+  weight: number;
+  fit: number;
+  points: number;
+}
+
+/**
+ * Per-QA contribution breakdown for one option: weight%, fit (1–5), and weighted points
+ * (weight/100 × fit). Sorted by contribution. The points sum exactly to the composite score
+ * (FR-REC-4 reconciliation).
+ */
+export function contributions(weights: Weights, qaFit: number[]): Contribution[] {
+  return QA_ORDER.map((q, i) => {
+    const fit = qaFit[i] ?? 3;
+    return { qa: q, weight: weights[q], fit, points: (weights[q] / 100) * fit };
+  }).sort((a, b) => b.points - a.points);
+}
+
 export interface Flip {
   factor: string;
   to: number;

@@ -5,6 +5,12 @@ import { FactorPanel } from './components/FactorPanel';
 import { DimensionCard } from './components/DimensionCard';
 import { CombinationView } from './components/CombinationView';
 import { AntiPatternAlerts } from './components/AntiPatternAlerts';
+import { ContributionTable } from './components/ContributionTable';
+import { SensitivityCard } from './components/SensitivityCard';
+import { RiskRegister } from './components/RiskRegister';
+import { FitnessFunctions } from './components/FitnessFunctions';
+import { CostOpsBadges } from './components/CostOpsBadges';
+import { MethodologyPanel } from './components/MethodologyPanel';
 import { useI18n } from './i18n/I18nContext';
 import { usePersistedState } from './hooks/usePersistedState';
 import { DEFAULT_LEVELS } from './config/defaults';
@@ -13,9 +19,16 @@ import { deriveWeights, rank } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
 import type { DimensionId, Levels, RankedOption } from './types';
 
-// recharts is lazy-loaded into its own chunk, off the first-paint path (ADR-008 / NFR-PERF-3).
+// recharts components are lazy-loaded, off the first-paint path (ADR-008 / NFR-PERF-3).
 const QaWeightChart = lazy(() =>
   import('./components/QaWeightChart').then((m) => ({ default: m.QaWeightChart })),
+);
+const RadarTradeoff = lazy(() =>
+  import('./components/RadarTradeoff').then((m) => ({ default: m.RadarTradeoff })),
+);
+
+const chartFallback = (
+  <div className="h-72 animate-pulse rounded-xl border border-line bg-surface-2" />
 );
 
 type Selections = Partial<Record<DimensionId, string>>;
@@ -50,6 +63,8 @@ export default function App() {
     [levels, effective],
   );
 
+  const selectedD1 = DIMENSIONS.D1.options.find((o) => o.id === effective.D1) ?? DIMENSIONS.D1.options[0];
+
   const resetAll = () => {
     setLevels(DEFAULT_LEVELS);
     setSelections({});
@@ -83,9 +98,7 @@ export default function App() {
           </div>
 
           <div className="space-y-6">
-            <Suspense
-              fallback={<div className="h-48 animate-pulse rounded-xl border border-line bg-surface-2" />}
-            >
+            <Suspense fallback={chartFallback}>
               <QaWeightChart weights={weights} />
             </Suspense>
             <CombinationView selections={effective} />
@@ -108,6 +121,25 @@ export default function App() {
                 onSelect={(id) => setSelections({ ...selections, [dim]: id })}
               />
             ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="analysis-heading">
+          <h2 id="analysis-heading" className="text-lg font-semibold tracking-tight">
+            {t('analysis.heading')}
+          </h2>
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <Suspense fallback={chartFallback}>
+              <RadarTradeoff ranked={rankings.D1} />
+            </Suspense>
+            <ContributionTable weights={weights} option={selectedD1} />
+            <SensitivityCard levels={levels} />
+            <CostOpsBadges />
+            <FitnessFunctions weights={weights} />
+            <RiskRegister selections={effective} />
+          </div>
+          <div className="mt-4">
+            <MethodologyPanel />
           </div>
         </section>
       </main>
