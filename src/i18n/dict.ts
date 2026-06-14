@@ -82,10 +82,26 @@ export const DICT = {
   'severity.warning': { en: 'Warning', id: 'Peringatan' },
   'severity.info': { en: 'Info', id: 'Info' },
   'analysis.heading': { en: 'Professional analysis', id: 'Analisis profesional' },
-  'radar.heading': { en: 'Trade-off radar (top options)', id: 'Radar trade-off (opsi teratas)' },
-  'radar.intro': {
-    en: 'The top three deployment options overlaid across all 12 quality attributes.',
-    id: 'Tiga opsi deployment teratas ditumpuk pada seluruh 12 atribut kualitas.',
+  'radar.title.g': { en: 'See exactly why — compare the options', id: 'Lihat persis alasannya — bandingkan opsinya' },
+  'radar.title.e': {
+    en: 'Trade-off radar — options × 12 quality attributes',
+    id: 'Radar trade-off — opsi × 12 atribut kualitas',
+  },
+  'radar.help': {
+    en: 'Pick a layer, then tap a name to show or hide it. Further out = stronger; the ranking scores each against your priorities.',
+    id: 'Pilih satu lapisan, lalu ketuk nama untuk menampilkan/menyembunyikan. Makin ke luar = makin kuat; peringkat menilai tiap opsi terhadap prioritas Anda.',
+  },
+  'radar.compareFrom': { en: 'Compare options from this layer:', id: 'Bandingkan opsi dari lapisan ini:' },
+  'radar.bestFor': { en: 'Best fit for your priorities', id: 'Paling cocok untuk prioritas Anda' },
+  'radar.dataGrid': { en: 'Data grid', id: 'Tabel data' },
+  'radar.topPick': { en: 'Top pick', id: 'Pilihan utama' },
+  'radar.verdictClose': {
+    en: 'Close call: {a} ({as}%) and {b} ({bs}%) are within {gap} points. Both reasonable — let team experience decide.',
+    id: 'Selisih tipis: {a} ({as}%) dan {b} ({bs}%) berselisih {gap} poin. Keduanya masuk akal — serahkan pada pengalaman tim.',
+  },
+  'radar.verdictLead': {
+    en: '{a} leads at {as}%, ahead of {b} ({bs}%). Strongest where you cared most.',
+    id: '{a} unggul di {as}%, di atas {b} ({bs}%). Terkuat pada yang paling Anda pentingkan.',
   },
   'contribution.heading': { en: 'QA contribution breakdown', id: 'Rincian kontribusi QA' },
   'contribution.intro': {

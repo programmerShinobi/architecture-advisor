@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Header, type Mode } from './components/Header';
 import { GuidedBanner } from './components/GuidedBanner';
 import { StepTracker } from './components/StepTracker';
@@ -9,6 +9,7 @@ import { FactorInputs } from './components/FactorInputs';
 import { PrioritiesCard } from './components/PrioritiesCard';
 import { DimensionCards } from './components/DimensionCards';
 import { DimensionDetail } from './components/DimensionDetail';
+import { RadarPanel } from './components/RadarPanel';
 import { AntiPatternAlerts } from './components/AntiPatternAlerts';
 import { QaOverridePanel } from './components/QaOverridePanel';
 import { ContributionTable } from './components/ContributionTable';
@@ -29,15 +30,6 @@ import { generateC4 } from './lib/c4';
 import type { ExportInput } from './lib/snapshot';
 import type { ScenarioState } from './lib/scenarioIO';
 import type { DimensionId, Levels, RankedOption } from './types';
-
-// recharts components are lazy-loaded, off the first-paint path (ADR-008 / NFR-PERF-3).
-const RadarTradeoff = lazy(() =>
-  import('./components/RadarTradeoff').then((m) => ({ default: m.RadarTradeoff })),
-);
-
-const chartFallback = (
-  <div className="h-72 animate-pulse rounded-xl border border-line bg-surface-2" />
-);
 
 type Selections = Partial<Record<DimensionId, string>>;
 
@@ -176,6 +168,7 @@ export default function App() {
         </div>
         <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
         <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
+        <RadarPanel weights={weights} mode={mode} />
         <div style={{ marginTop: '14px' }}>
           <AntiPatternAlerts rules={antiPatterns} />
         </div>
@@ -185,9 +178,6 @@ export default function App() {
             {t('analysis.heading')}
           </h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
-            <Suspense fallback={chartFallback}>
-              <RadarTradeoff ranked={rankings.D1} />
-            </Suspense>
             <ContributionTable weights={weights} option={selectedD1} />
             <SensitivityCard flips={flips} levels={levels} />
             <CostOpsBadges />
