@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Project Charter / Product Vision |
-| **Version** | 1.7 |
+| **Version** | 1.8 |
 | **Date** | 2026-06-12 |
 | **Status** | Approved — execution baseline |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -24,6 +24,7 @@
 | 1.5 | 2026-06-12 | Reference hardening (editorial, no scope change): added peer-reviewed and SEI sources [16]–[24] (ADD technical report, SUS and its acceptability threshold, architectural design decisions, technical debt, GQM, Strangler Fig, MADR) and cited them inline where claims rely on them |
 | 1.6 | 2026-06-13 | Editorial: clarified the ADR decision-log path to `docs/adr/` (Section 14.5), where the model-decision records now live |
 | 1.7 | 2026-06-13 | Scope clarification (resolves OI-3): a basic C4-style Mermaid diagram stub is in the MVP (matching Build Spec v3); richer auto-generated C4 diagrams remain deferred to v2.x |
+| 1.8 | 2026-06-14 | Editorial (no scope change): noted that the ≥12-factor MVP floor is met by the 14-factor v1.0 model, removing any ambiguity against the other docs |
 
 ---
 
@@ -170,7 +171,7 @@ of contributors**.
 ## 5. Scope
 
 **In the MVP (Minimum Viable Product, v1.0):** the 4-step flow (factors → priorities →
-recommendation → export), Guided & Expert modes; ≥12 factors; 12 quality attributes
+recommendation → export), Guided & Expert modes; ≥12 factors (the v1.0 model defines 14); 12 quality attributes
 (ISO/IEC 25010:2023 [1]); recommendations across five dimensions with weighted composite scores;
 an interactive trade-off radar + ranking; *close-call* detection; sensitivity analysis; a risk
 register; fitness functions; anti-pattern detection; a migration path (brownfield, Strangler Fig [23]); presets; a
