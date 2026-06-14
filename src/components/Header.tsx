@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+import { IconCircleCheck, IconCommand, IconMoon, IconSitemap, IconSun } from '@tabler/icons-react';
 import { useI18n } from '../i18n/I18nContext';
 import { useTheme } from '../hooks/useTheme';
 
@@ -5,64 +7,124 @@ export type Mode = 'guided' | 'expert';
 
 interface Props {
   mode: Mode;
-  onToggleMode: () => void;
+  onToggleMode: (mode: Mode) => void;
+  onCmdK: () => void;
+  onHelp: () => void;
+  /** Changes whenever persisted state changes, to flash the save indicator. */
+  saveSig: string;
 }
 
-export function Header({ mode, onToggleMode }: Props) {
-  const { t, lang, toggleLang } = useI18n();
+export function Header({ mode, onToggleMode, onCmdK, onHelp, saveSig }: Props) {
+  const { t, lang, setLang } = useI18n();
   const [theme, toggleTheme] = useTheme();
+  const [saving, setSaving] = useState(false);
+  const firstRun = useRef(true);
+
+  useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    setSaving(true);
+    const id = setTimeout(() => setSaving(false), 700);
+    return () => clearTimeout(id);
+  }, [saveSig]);
 
   return (
-    <header className="border-b border-line">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
-        <div>
-          <h1 className="text-lg font-semibold tracking-tight">{t('app.title')}</h1>
-          <p className="text-sm text-ink-soft">{t('app.tagline')}</p>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '16px 20px',
+        borderBottom: '0.5px solid var(--color-border-tertiary)',
+        flexWrap: 'wrap',
+        gap: '10px',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: 'var(--border-radius-md)',
+            background: 'var(--color-background-info)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <IconSitemap size={21} style={{ color: 'var(--color-text-info)' }} aria-hidden />
         </div>
-        <div className="flex items-center gap-2">
-          <div role="group" aria-label="Mode" className="flex rounded-md border border-line p-0.5 text-sm">
-            <button
-              type="button"
-              onClick={() => mode !== 'guided' && onToggleMode()}
-              aria-pressed={mode === 'guided'}
-              className={
-                'rounded px-2.5 py-1 font-medium ' +
-                (mode === 'guided' ? 'bg-brand text-white' : 'text-ink-soft hover:bg-surface-2')
-              }
-            >
-              {t('mode.guided')}
-            </button>
-            <button
-              type="button"
-              onClick={() => mode !== 'expert' && onToggleMode()}
-              aria-pressed={mode === 'expert'}
-              className={
-                'rounded px-2.5 py-1 font-medium ' +
-                (mode === 'expert' ? 'bg-brand text-white' : 'text-ink-soft hover:bg-surface-2')
-              }
-            >
-              {t('mode.expert')}
-            </button>
-          </div>
-          <button
-            type="button"
-            onClick={toggleLang}
-            className="rounded-md border border-line px-3 py-1.5 text-sm font-medium hover:bg-surface-2"
-            aria-label={lang === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
-          >
-            {lang === 'id' ? 'EN' : 'ID'}
+        <div>
+          <div style={{ fontSize: '16px', fontWeight: 500, lineHeight: 1.25 }}>{t('app.title')}</div>
+          <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)' }}>{t('app.tagline')}</div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: 'var(--color-text-tertiary)' }}>
+          {saving ? (
+            <>
+              <span className="spin" />
+              {t('save.saving')}
+            </>
+          ) : (
+            <>
+              <IconCircleCheck size={13} style={{ color: 'var(--color-text-success)' }} aria-hidden />
+              {t('save.saved')}
+            </>
+          )}
+        </span>
+
+        <button type="button" className="f-btn" onClick={onCmdK} aria-label={t('cmd.open')}>
+          <IconCommand size={13} aria-hidden />
+          <span className="kbd">⌘K</span>
+        </button>
+        <button type="button" className="f-btn" onClick={onHelp} title={t('shortcuts.title')}>
+          ?
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'var(--color-background-secondary)', borderRadius: '99px', padding: '2px' }}>
+          <button type="button" className={'f-mode' + (mode === 'guided' ? ' on' : '')} onClick={() => onToggleMode('guided')}>
+            {t('mode.guided')}
+          </button>
+          <button type="button" className={'f-mode' + (mode === 'expert' ? ' on' : '')} onClick={() => onToggleMode('expert')}>
+            {t('mode.expert')}
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+          <button type="button" className={'f-chip' + (lang === 'en' ? ' on' : '')} style={{ padding: '4px 11px' }} onClick={() => setLang('en')}>
+            EN
+          </button>
+          <button type="button" className={'f-chip' + (lang === 'id' ? ' on' : '')} style={{ padding: '4px 11px' }} onClick={() => setLang('id')}>
+            ID
           </button>
           <button
             type="button"
             onClick={toggleTheme}
-            className="rounded-md border border-line px-3 py-1.5 text-sm hover:bg-surface-2"
             aria-label={t('action.theme')}
-            aria-pressed={theme === 'dark'}
+            style={{
+              width: '28px',
+              height: '28px',
+              border: '0.5px solid var(--color-border-secondary)',
+              borderRadius: 'var(--border-radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              background: 'transparent',
+            }}
           >
-            {theme === 'dark' ? '☀' : '☾'}
+            {theme === 'light' ? (
+              <IconSun size={16} style={{ color: 'var(--color-text-secondary)' }} aria-hidden />
+            ) : (
+              <IconMoon size={16} style={{ color: 'var(--color-text-secondary)' }} aria-hidden />
+            )}
           </button>
         </div>
       </div>
-    </header>
+    </div>
   );
 }

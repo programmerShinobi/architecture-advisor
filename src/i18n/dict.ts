@@ -5,8 +5,25 @@ import type { Bilingual } from '../types';
 export const DICT = {
   'app.title': { en: 'Architecture Advisor', id: 'Architecture Advisor' },
   'app.tagline': {
-    en: 'Quality-attribute-driven architecture decisions — transparent, not an oracle.',
-    id: 'Keputusan arsitektur berbasis atribut kualitas — transparan, bukan ramalan.',
+    en: 'Answer a few questions — get a clear, explained plan',
+    id: 'Jawab beberapa pertanyaan — dapatkan rencana yang jelas dan dijelaskan',
+  },
+  'save.saving': { en: 'Saving…', id: 'Menyimpan…' },
+  'save.saved': { en: 'All changes saved', id: 'Semua perubahan tersimpan' },
+  'cmd.open': { en: 'Command palette', id: 'Command palette' },
+  'shortcuts.title': { en: 'Keyboard shortcuts', id: 'Pintasan keyboard' },
+  'step1.g': { en: 'Tell us about your project', id: 'Ceritakan tentang proyek Anda' },
+  'step1.e': { en: 'Project factors', id: 'Faktor proyek' },
+  'step2.g': { en: 'See what matters most', id: 'Lihat yang paling penting' },
+  'step2.e': { en: 'Quality priorities', id: 'Prioritas kualitas' },
+  'step3.g': { en: 'Get your plan', id: 'Dapatkan rencana Anda' },
+  'step3.e': { en: 'Recommendation', id: 'Rekomendasi' },
+  'step4.g': { en: 'Save & share', id: 'Simpan & bagikan' },
+  'step4.e': { en: 'Export', id: 'Ekspor' },
+  'banner.new': { en: 'New here?', id: 'Baru di sini?' },
+  'banner.body': {
+    en: 'Tell the tool about your project. It works out what matters, suggests how to build, and shows why. Power user? Press ⌘K for the command palette, or switch to Expert mode.',
+    id: 'Ceritakan proyek Anda ke alat ini. Ia menentukan apa yang penting, menyarankan cara membangun, dan menunjukkan alasannya. Pengguna mahir? Tekan ⌘K untuk command palette, atau beralih ke mode Ahli.',
   },
   'disclaimer': {
     en: 'Decision support, not an oracle. The encoded weights are defensible expert defaults, not validated facts — every value is editable. Always apply team judgment and context this tool cannot capture.',

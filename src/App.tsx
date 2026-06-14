@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
 import { Header, type Mode } from './components/Header';
-import { Disclaimer } from './components/Disclaimer';
+import { GuidedBanner } from './components/GuidedBanner';
+import { StepTracker } from './components/StepTracker';
 import { PresetBar } from './components/PresetBar';
 import { Toolbar } from './components/Toolbar';
 import { C4Preview } from './components/C4Preview';
@@ -98,12 +99,34 @@ export default function App() {
     setOverrides(st.overrides);
   };
 
-  return (
-    <div className="min-h-full">
-      <Disclaimer />
-      <Header mode={mode} onToggleMode={() => setMode(mode === 'guided' ? 'expert' : 'guided')} />
+  const saveSig = `${JSON.stringify(levels)}|${JSON.stringify(selections)}|${JSON.stringify(overrides)}|${mode}|${lang}`;
 
-      <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
+  return (
+    <div style={{ padding: '24px' }}>
+      <div className="page" style={{ maxWidth: '1180px', margin: '0 auto' }}>
+        <div style={{ background: 'var(--color-background-secondary)', borderRadius: 'var(--border-radius-xl)', padding: '16px' }}>
+          <div
+            id="f-app"
+            className={mode}
+            style={{
+              position: 'relative',
+              background: 'var(--color-background-primary)',
+              border: '0.5px solid var(--color-border-tertiary)',
+              borderRadius: 'var(--border-radius-lg)',
+              overflow: 'hidden',
+            }}
+          >
+            <Header
+              mode={mode}
+              onToggleMode={setMode}
+              onCmdK={() => {}}
+              onHelp={() => {}}
+              saveSig={saveSig}
+            />
+            <GuidedBanner />
+            <StepTracker />
+
+            <div style={{ padding: '18px 20px' }} className="space-y-6">
         <PresetBar onApply={applyPreset} />
         <Toolbar exportInput={exportInput} scenario={scenario} onImport={importScenario} />
 
@@ -192,7 +215,17 @@ export default function App() {
             <Glossary />
           </div>
         </section>
-      </main>
+
+              <p
+                className="f-gloss"
+                style={{ marginTop: '20px', paddingTop: '14px', borderTop: '0.5px solid var(--color-border-tertiary)' }}
+              >
+                {t('disclaimer')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
