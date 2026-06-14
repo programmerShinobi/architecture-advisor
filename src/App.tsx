@@ -7,8 +7,8 @@ import { Toolbar } from './components/Toolbar';
 import { C4Preview } from './components/C4Preview';
 import { FactorInputs } from './components/FactorInputs';
 import { PrioritiesCard } from './components/PrioritiesCard';
-import { DimensionCard } from './components/DimensionCard';
-import { CombinationView } from './components/CombinationView';
+import { DimensionCards } from './components/DimensionCards';
+import { DimensionDetail } from './components/DimensionDetail';
 import { AntiPatternAlerts } from './components/AntiPatternAlerts';
 import { QaOverridePanel } from './components/QaOverridePanel';
 import { ContributionTable } from './components/ContributionTable';
@@ -80,6 +80,7 @@ export default function App() {
 
   const [showC4, setShowC4] = useState(false);
   const [editWeights, setEditWeights] = useState(false);
+  const [currentDim, setCurrentDim] = useState<DimensionId>('D1');
   const undoRef = useRef<{ levels: Levels; selections: Selections; overrides: Overrides } | null>(null);
 
   const scenario: ScenarioState = { v: 1, mode, lang, levels, selections, overrides };
@@ -165,26 +166,19 @@ export default function App() {
 
         <div className="f-div" />
 
-        <CombinationView selections={effective} />
-        <AntiPatternAlerts rules={antiPatterns} />
-
-        <section aria-labelledby="dimensions-heading">
-          <h2 id="dimensions-heading" className="text-lg font-semibold tracking-tight">
-            {t('dimensions.heading')}
-          </h2>
-          <p className="mt-1 text-sm text-ink-soft">{t('dimensions.intro')}</p>
-          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {DIMENSION_ORDER.map((dim) => (
-              <DimensionCard
-                key={dim}
-                dimension={DIMENSIONS[dim]}
-                ranked={rankings[dim]}
-                selectedId={effective[dim]}
-                onSelect={(id) => setSelections({ ...selections, [dim]: id })}
-              />
-            ))}
-          </div>
-        </section>
+        {/* Step 3 — recommendation across dimensions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '13px' }}>
+          <span className="f-num">3</span>
+          <span style={{ fontSize: '15px', fontWeight: 500 }}>
+            <span className="guided-only">{t('results.title.g')}</span>
+            <span className="expert-only">{t('results.title.e')}</span>
+          </span>
+        </div>
+        <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
+        <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
+        <div style={{ marginTop: '14px' }}>
+          <AntiPatternAlerts rules={antiPatterns} />
+        </div>
 
         <section aria-labelledby="analysis-heading">
           <h2 id="analysis-heading" className="text-lg font-semibold tracking-tight">

@@ -46,13 +46,26 @@ export const DICT = {
     id: 'Selisih tipis — tak ada pemenang jelas. Dua teratas berselisih di bawah 10%; pertimbangkan penilaian tim dan konteks.',
   },
   'results.scoreUnit': { en: '/ 100', id: '/ 100' },
-  'dimensions.heading': {
-    en: 'Recommendation across dimensions',
-    id: 'Rekomendasi lintas dimensi',
+  'results.title.g': { en: 'Your recommended plan', id: 'Rencana yang direkomendasikan' },
+  'results.title.e': { en: 'Recommendation across 5 dimensions', id: 'Rekomendasi di 5 dimensi' },
+  'results.pickLayer': {
+    en: 'Pick a layer to see its plan and the reasoning:',
+    id: 'Pilih satu lapisan untuk melihat rencananya dan alasannya:',
   },
-  'dimensions.intro': {
-    en: 'A coherent architecture spans several orthogonal dimensions. Pick an option in each to refine the combination.',
-    id: 'Arsitektur yang koheren mencakup beberapa dimensi ortogonal. Pilih opsi di tiap dimensi untuk menyempurnakan kombinasi.',
+  'detail.bestFit': { en: 'Best fit', id: 'Paling cocok' },
+  'detail.robust': { en: 'Robust pick', id: 'Pilihan tangguh' },
+  'detail.closeCall': { en: 'Close call', id: 'Selisih tipis' },
+  'detail.means': { en: 'What this means for you', id: 'Apa artinya bagi Anda' },
+  'detail.good': { en: 'The good:', id: 'Sisi baik:' },
+  'detail.cost': { en: 'The cost:', id: 'Biayanya:' },
+  'detail.know': { en: 'Good to know:', id: 'Perlu diketahui:' },
+  'detail.contrib': {
+    en: 'Top contributing attributes (weight × fit)',
+    id: 'Atribut penyumbang teratas (bobot × kecocokan)',
+  },
+  'detail.radarNote': {
+    en: 'All five build styles are compared in the radar below.',
+    id: 'Kelima gaya build dibandingkan pada radar di bawah.',
   },
   'dim.recommended': { en: 'recommended', id: 'rekomendasi' },
   'combination.heading': { en: 'Your architecture', id: 'Arsitektur Anda' },
