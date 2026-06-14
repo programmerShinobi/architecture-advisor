@@ -42,3 +42,23 @@ This is a clickable mockup (no real scoring engine yet) that shows the intended 
   promoted verbatim into the [Model Data Sheet](../model-data-sheet.md) Section 4. The **composite
   scores/percentages** displayed, however, are illustrative placeholders until the real scoring
   engine exists.
+
+## Canonical vs illustrative — what to take from the specs, not the mockup
+
+To avoid any mismatch in development, treat this prototype as a **UX/interaction reference only**.
+The data, scope, and copy come from the specs. A cross-check guard
+([`scripts/cross-check-docs.mjs`](../../../scripts/cross-check-docs.mjs), check 12) enforces the one
+piece that must agree.
+
+| Aspect | Source of truth for the build |
+|---|---|
+| **`qaFit` vectors** | ✅ **Canonical here** — identical to [Model Data Sheet](../model-data-sheet.md) Section 4, guarded by cross-check 12 |
+| Composite scores / percentages (e.g. "84") | *Illustrative* — the engine computes them per the [Scoring Algorithm](../scoring-algorithm.md) |
+| Option display names (e.g. "Layered (N-tier)") | Use the canonical names in [Model Data Sheet](../model-data-sheet.md) Section 4 + [Option Content Sheet](../option-content-sheet.md) |
+| Factors shown | The mockup shows only a **few** for illustration; build **all 14** from [Model Data Sheet](../model-data-sheet.md) Section 2 |
+| Presets shown | The mockup shows **4**; build **all 5** from [Model Data Sheet](../model-data-sheet.md) Section 6 — **`internal-tool` is not in the mockup** |
+| Bilingual (ID/EN) copy | From the factor content (Model Data Sheet Section 2.1) and the [Option Content Sheet](../option-content-sheet.md) |
+| Scope (what features exist in v1.0) | The [SRS](../../02-requirement-analysis/software-requirements-specification.md), not the mockup (e.g. the C4 stub is in v1.0 even though the mockup doesn't render one) |
+
+In short: **build the model and scope from the specs; use the prototype for look, layout, and
+interaction.** Only the `qaFit` vectors are shared canonical data, and they are machine-checked.

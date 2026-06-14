@@ -12,7 +12,8 @@
  * levels, preset targets (Model Data Sheet ↔ verify-model.mjs ↔ SRS), default
  * factor levels, anti-pattern rule IDs, fitness-template coverage, and the EN factor
  * level labels (Section 2.1 vs Build Spec Section 4), option ids + names (Option Content
- * Sheet vs Model Data Sheet Section 4), and EN/ID list parity.
+ * Sheet vs Model Data Sheet Section 4), EN/ID list parity, and the prototype qaFit vectors
+ * (vs Model Data Sheet Section 4).
  */
 import { readFileSync } from 'node:fs';
 
@@ -251,6 +252,38 @@ function mds21Levels(s) {
   }
   if (mism.length === 0) ok(11, `EN/ID list parity: every Pros/Cons/When/Mistakes/Risks list has equal item count in both languages`);
   else bad(11, `EN/ID list-length mismatch: ${mism.join('; ')}`);
+}
+
+// ---- 12. prototype qaFit vectors == Model Data Sheet Section 4 (the prototype is a canonical source for D4/D5) ----
+const HTML = read('docs/03-blueprint/prototype/index.html');
+function protoVecs(s) {
+  const blk = s.slice(s.indexOf('var RADARDATA={'), s.indexOf('function buildArchs'));
+  const order = ['deployment', 'comm', 'data', 'structure', 'frontend'];
+  const out = {};
+  order.forEach((dim, i) => {
+    const start = blk.indexOf(dim + ':[');
+    const end = i + 1 < order.length ? blk.indexOf(order[i + 1] + ':[') : blk.length;
+    out[dim] = [...blk.slice(start, end).matchAll(/fit:\[([0-9,]+)\]/g)].map((m) => m[1]).sort();
+  });
+  return out;
+}
+function mdsVecsByDim(s) {
+  const sec = s.slice(s.indexOf('## 4. Dimension'), s.indexOf('## 5.'));
+  const map = { D1: 'deployment', D2: 'comm', D3: 'data', D4: 'structure', D5: 'frontend' };
+  const out = {};
+  for (const [d, key] of Object.entries(map)) {
+    const dstart = sec.indexOf('### ' + d + ' —');
+    let dend = sec.length;
+    for (const x of ['D1', 'D2', 'D3', 'D4', 'D5']) { const p = sec.indexOf('### ' + x + ' —'); if (p > dstart && p < dend) dend = p; }
+    out[key] = [...sec.slice(dstart, dend).matchAll(/`([0-9](?:,[0-9]){11})`/g)].map((m) => m[1]).sort();
+  }
+  return out;
+}
+{
+  const a = protoVecs(HTML), b = mdsVecsByDim(MDS);
+  const diff = ['deployment', 'comm', 'data', 'structure', 'frontend'].filter((k) => JSON.stringify(a[k]) !== JSON.stringify(b[k]));
+  if (diff.length === 0) ok(12, `prototype qaFit == Model Data Sheet Section 4 (5 dimensions, vector sets equal)`);
+  else bad(12, `prototype qaFit drift vs Model Data Sheet in: ${diff.join(', ')}`);
 }
 
 console.log('');
