@@ -51,6 +51,10 @@ export type Weights = Record<QaId, number>;
 export interface QualityAttribute {
   id: QaId;
   name: Bilingual;
+  /** Plain-language label shown in guided mode (the prototype's friendly voice). */
+  plain: Bilingual;
+  /** One-line plain explanation shown under the label in guided mode. */
+  gloss: Bilingual;
   isoMapping: string;
   /** true for concerns OUTSIDE the ISO 25010 product model (economic/delivery goals). */
   economicFlag: boolean;
@@ -59,10 +63,16 @@ export interface QualityAttribute {
 export interface Factor {
   id: FactorId;
   label: Bilingual;
+  /** Friendly question shown in guided mode (the prototype's voice). */
+  question: Bilingual;
+  /** One-line plain hint shown under the question in guided mode. */
+  gloss: Bilingual;
   /** Exactly three level labels, for indices 0/1/2. */
   levels: [Bilingual, Bilingual, Bilingual];
   help: Bilingual;
   group: Bilingual;
+  /** Shown by default (the prototype surfaces 3); the rest sit behind "show other factors". */
+  primary?: boolean;
   /** budget is inverted: level 0 (Tight) is the strongest cost-efficiency signal. */
   inverted?: boolean;
 }

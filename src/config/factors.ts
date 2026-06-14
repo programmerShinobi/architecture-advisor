@@ -30,6 +30,12 @@ export const FACTORS: Record<FactorId, Factor> = {
   team: {
     id: 'team',
     label: { en: 'Team size', id: 'Ukuran tim' },
+    question: { en: 'How big is your team?', id: 'Seberapa besar tim Anda?' },
+    gloss: {
+      en: "More people means you'll want pieces that can be worked on separately.",
+      id: 'Makin banyak orang, makin perlu bagian yang bisa dikerjakan terpisah.',
+    },
+    primary: true,
     levels: [
       { en: 'Small (1–5)', id: 'Kecil (1–5)' },
       { en: 'Medium (6–20)', id: 'Sedang (6–20)' },
@@ -44,6 +50,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   distribution: {
     id: 'distribution',
     label: { en: 'Team distribution', id: 'Sebaran tim' },
+    question: { en: 'Where does your team work?', id: 'Dari mana tim Anda bekerja?' },
+    gloss: {
+      en: 'All in one office, or spread across places and time zones?',
+      id: 'Satu kantor, atau tersebar di banyak tempat dan zona waktu?',
+    },
     levels: [
       { en: 'Co-located', id: 'Satu lokasi' },
       { en: 'Partly remote', id: 'Sebagian remote' },
@@ -58,6 +69,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   ttm: {
     id: 'ttm',
     label: { en: 'Time-to-market pressure', id: 'Tekanan waktu rilis' },
+    question: { en: 'How soon must it launch?', id: 'Seberapa cepat harus diluncurkan?' },
+    gloss: {
+      en: "A relaxed timeline, or a hard deadline that can't slip?",
+      id: 'Jadwal santai, atau tenggat ketat yang tak bisa mundur?',
+    },
     levels: [
       { en: 'Relaxed', id: 'Santai' },
       { en: 'Moderate', id: 'Sedang' },
@@ -72,6 +88,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   budget: {
     id: 'budget',
     label: { en: 'Budget / cost flexibility', id: 'Fleksibilitas anggaran' },
+    question: { en: 'How tight is the budget?', id: 'Seberapa ketat anggarannya?' },
+    gloss: {
+      en: 'A tight budget favors cheaper-to-run choices.',
+      id: 'Anggaran ketat mengutamakan pilihan yang murah dijalankan.',
+    },
     levels: [
       { en: 'Tight', id: 'Ketat' },
       { en: 'Moderate', id: 'Sedang' },
@@ -87,6 +108,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   lifespan: {
     id: 'lifespan',
     label: { en: 'Expected system lifespan', id: 'Perkiraan umur sistem' },
+    question: { en: 'How long will it live?', id: 'Berapa lama akan dipakai?' },
+    gloss: {
+      en: "A quick experiment, or a system you'll run for years?",
+      id: 'Eksperimen singkat, atau sistem yang dipakai bertahun-tahun?',
+    },
     levels: [
       { en: 'Throwaway / prototype', id: 'Sekali pakai / prototipe' },
       { en: 'Medium-term', id: 'Jangka menengah' },
@@ -101,6 +127,12 @@ export const FACTORS: Record<FactorId, Factor> = {
   scale: {
     id: 'scale',
     label: { en: 'Expected scale / traffic', id: 'Perkiraan skala / trafik' },
+    question: { en: 'How many people will use it?', id: 'Berapa banyak orang akan memakainya?' },
+    gloss: {
+      en: 'An office tool is "low". A nationwide app during a sale is "high".',
+      id: 'Alat kantor itu "rendah". Aplikasi nasional saat promo itu "tinggi".',
+    },
+    primary: true,
     levels: [
       { en: 'Low', id: 'Rendah' },
       { en: 'Medium', id: 'Sedang' },
@@ -115,6 +147,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   dataVolume: {
     id: 'dataVolume',
     label: { en: 'Data volume', id: 'Volume data' },
+    question: { en: 'How much data will it hold?', id: 'Seberapa banyak data yang disimpan?' },
+    gloss: {
+      en: 'A little, or huge amounts that grow fast?',
+      id: 'Sedikit, atau sangat banyak dan tumbuh cepat?',
+    },
     levels: [
       { en: 'Low', id: 'Rendah' },
       { en: 'Moderate', id: 'Sedang' },
@@ -129,6 +166,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   async: {
     id: 'async',
     label: { en: 'Async / event-driven workload', id: 'Beban asinkron / berbasis event' },
+    question: { en: 'How much happens in the background?', id: 'Seberapa banyak proses di latar belakang?' },
+    gloss: {
+      en: 'Mostly instant requests, or lots of jobs and events?',
+      id: 'Kebanyakan permintaan instan, atau banyak job dan event?',
+    },
     levels: [
       { en: 'Minimal', id: 'Minimal' },
       { en: 'Some', id: 'Sebagian' },
@@ -143,6 +185,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   realtime: {
     id: 'realtime',
     label: { en: 'Real-time / low-latency need', id: 'Kebutuhan real-time / latensi rendah' },
+    question: { en: 'How fast must it react?', id: 'Seberapa cepat harus merespons?' },
+    gloss: {
+      en: 'Normal web speed, or split-second live updates?',
+      id: 'Kecepatan web biasa, atau pembaruan langsung sepersekian detik?',
+    },
     levels: [
       { en: 'Not important', id: 'Tidak penting' },
       { en: 'Somewhat', id: 'Cukup penting' },
@@ -157,6 +204,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   domain: {
     id: 'domain',
     label: { en: 'Business domain complexity', id: 'Kompleksitas domain bisnis' },
+    question: { en: 'How complex are the business rules?', id: 'Seberapa rumit aturan bisnisnya?' },
+    gloss: {
+      en: 'Simple forms, or intricate logic with many cases?',
+      id: 'Formulir sederhana, atau logika rumit dengan banyak kasus?',
+    },
     levels: [
       { en: 'Simple', id: 'Sederhana' },
       { en: 'Moderate', id: 'Sedang' },
@@ -171,6 +223,12 @@ export const FACTORS: Record<FactorId, Factor> = {
   consistency: {
     id: 'consistency',
     label: { en: 'Data consistency need', id: 'Kebutuhan konsistensi data' },
+    question: { en: 'Must the data always be exact?', id: 'Haruskah data selalu tepat?' },
+    gloss: {
+      en: 'Money must be exact instantly. A "likes" count can lag a second — fine.',
+      id: 'Uang harus tepat seketika. Jumlah "suka" boleh telat sedetik — tak apa.',
+    },
+    primary: true,
     levels: [
       { en: 'Eventual is fine', id: 'Eventual cukup' },
       { en: 'Mixed', id: 'Campuran' },
@@ -185,6 +243,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   security: {
     id: 'security',
     label: { en: 'Security / compliance need', id: 'Kebutuhan keamanan / kepatuhan' },
+    question: { en: 'How sensitive is the data?', id: 'Seberapa sensitif datanya?' },
+    gloss: {
+      en: 'Ordinary data, or regulated info like health or finance?',
+      id: 'Data biasa, atau info teregulasi seperti kesehatan atau keuangan?',
+    },
     levels: [
       { en: 'Standard', id: 'Standar' },
       { en: 'Elevated', id: 'Lebih tinggi' },
@@ -199,6 +262,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   legacy: {
     id: 'legacy',
     label: { en: 'Legacy integration burden', id: 'Beban integrasi sistem lama' },
+    question: { en: 'Any old systems to connect to?', id: 'Ada sistem lama yang harus dihubungkan?' },
+    gloss: {
+      en: 'Greenfield, or lots of legacy to integrate with?',
+      id: 'Greenfield, atau banyak sistem lama yang harus diintegrasikan?',
+    },
     levels: [
       { en: 'None / greenfield', id: 'Tidak ada / greenfield' },
       { en: 'Some', id: 'Sebagian' },
@@ -213,6 +281,11 @@ export const FACTORS: Record<FactorId, Factor> = {
   devops: {
     id: 'devops',
     label: { en: 'DevOps / platform maturity', id: 'Kematangan DevOps / platform' },
+    question: { en: 'How strong is your automation?', id: 'Seberapa kuat otomasi Anda?' },
+    gloss: {
+      en: 'Manual deploys, or mature CI/CD and monitoring?',
+      id: 'Deploy manual, atau CI/CD dan pemantauan yang matang?',
+    },
     levels: [
       { en: 'Low', id: 'Rendah' },
       { en: 'Medium', id: 'Sedang' },

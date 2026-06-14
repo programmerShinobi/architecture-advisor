@@ -23,7 +23,7 @@ const levels = (v: number[]): Levels => ({
 export const PRESETS: Preset[] = [
   {
     id: 'startup-mvp',
-    label: { en: 'Startup MVP', id: 'MVP startup' },
+    label: { en: 'New idea / small startup', id: 'Ide baru / startup kecil' },
     description: {
       en: 'New product, small team, ship fast — keep it simple.',
       id: 'Produk baru, tim kecil, rilis cepat — buat sesederhana mungkin.',
@@ -32,7 +32,7 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'regulated',
-    label: { en: 'Regulated / enterprise', id: 'Teregulasi / enterprise' },
+    label: { en: 'Bank or healthcare', id: 'Bank atau kesehatan' },
     description: {
       en: 'Strong consistency, strict compliance, long-lived complex domain.',
       id: 'Konsistensi kuat, kepatuhan ketat, domain kompleks berumur panjang.',
@@ -41,7 +41,7 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'high-traffic-ecommerce',
-    label: { en: 'High-traffic e-commerce', id: 'E-commerce trafik tinggi' },
+    label: { en: 'Busy online shop', id: 'Toko online ramai' },
     description: {
       en: 'Large distributed team, high scale and data volume, mature DevOps.',
       id: 'Tim besar terdistribusi, skala & volume data tinggi, DevOps matang.',
@@ -50,7 +50,7 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'iot-streaming',
-    label: { en: 'IoT / streaming', id: 'IoT / streaming' },
+    label: { en: 'Sensors / live data', id: 'Sensor / data langsung' },
     description: {
       en: 'Real-time, heavy async and data volume, high scale.',
       id: 'Real-time, beban asinkron & volume data berat, skala tinggi.',

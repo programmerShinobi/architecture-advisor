@@ -1,11 +1,12 @@
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useRef, useState } from 'react';
 import { Header, type Mode } from './components/Header';
 import { GuidedBanner } from './components/GuidedBanner';
 import { StepTracker } from './components/StepTracker';
 import { PresetBar } from './components/PresetBar';
 import { Toolbar } from './components/Toolbar';
 import { C4Preview } from './components/C4Preview';
-import { FactorPanel } from './components/FactorPanel';
+import { FactorInputs } from './components/FactorInputs';
+import { PrioritiesCard } from './components/PrioritiesCard';
 import { DimensionCard } from './components/DimensionCard';
 import { CombinationView } from './components/CombinationView';
 import { AntiPatternAlerts } from './components/AntiPatternAlerts';
@@ -20,6 +21,7 @@ import { Glossary } from './components/Glossary';
 import { useI18n } from './i18n/I18nContext';
 import { usePersistedState } from './hooks/usePersistedState';
 import { DEFAULT_LEVELS } from './config/defaults';
+import { PRESETS } from './config/presets';
 import { DIMENSIONS, DIMENSION_ORDER } from './config/dimensions';
 import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
@@ -29,9 +31,6 @@ import type { ScenarioState } from './lib/scenarioIO';
 import type { DimensionId, Levels, RankedOption } from './types';
 
 // recharts components are lazy-loaded, off the first-paint path (ADR-008 / NFR-PERF-3).
-const QaWeightChart = lazy(() =>
-  import('./components/QaWeightChart').then((m) => ({ default: m.QaWeightChart })),
-);
 const RadarTradeoff = lazy(() =>
   import('./components/RadarTradeoff').then((m) => ({ default: m.RadarTradeoff })),
 );
@@ -80,16 +79,31 @@ export default function App() {
     DIMENSIONS.D1.options.find((o) => o.id === effective.D1) ?? DIMENSIONS.D1.options[0];
 
   const [showC4, setShowC4] = useState(false);
+  const [editWeights, setEditWeights] = useState(false);
+  const undoRef = useRef<{ levels: Levels; selections: Selections; overrides: Overrides } | null>(null);
 
   const scenario: ScenarioState = { v: 1, mode, lang, levels, selections, overrides };
   const exportInput: ExportInput = { levels, overrides, selections: effective, lang };
+
+  const activePresetId =
+    PRESETS.find((p) => JSON.stringify(p.levels) === JSON.stringify(levels))?.id ?? null;
 
   const applyPreset = (next: Levels) => {
     setLevels(next);
     setSelections({});
     setOverrides({});
   };
-  const resetAll = () => applyPreset(DEFAULT_LEVELS);
+  const resetAll = () => {
+    undoRef.current = { levels, selections, overrides };
+    applyPreset(DEFAULT_LEVELS);
+  };
+  const undoReset = () => {
+    const snap = undoRef.current;
+    if (!snap) return;
+    setLevels(snap.levels);
+    setSelections(snap.selections);
+    setOverrides(snap.overrides);
+  };
 
   const importScenario = (st: ScenarioState) => {
     setMode(st.mode);
@@ -127,41 +141,32 @@ export default function App() {
             <StepTracker />
 
             <div style={{ padding: '18px 20px' }} className="space-y-6">
-        <PresetBar onApply={applyPreset} />
-        <Toolbar exportInput={exportInput} scenario={scenario} onImport={importScenario} />
+        <PresetBar activeId={activePresetId} onApply={applyPreset} onReset={resetAll} onUndo={undoReset} />
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-          <div className="space-y-3">
-            <FactorPanel levels={levels} onChange={setLevels} />
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={resetAll}
-                className="rounded-md border border-line px-3 py-1.5 text-sm font-medium hover:bg-surface-2"
-              >
-                {t('action.reset')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelections({})}
-                className="rounded-md border border-line px-3 py-1.5 text-sm font-medium hover:bg-surface-2"
-              >
-                {t('action.followRec')}
-              </button>
-            </div>
-            {mode === 'expert' && (
-              <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />
-            )}
-          </div>
+        <div className="f-div" />
 
-          <div className="space-y-6">
-            <Suspense fallback={chartFallback}>
-              <QaWeightChart weights={weights} />
-            </Suspense>
-            <CombinationView selections={effective} />
-            <AntiPatternAlerts rules={antiPatterns} />
-          </div>
+        {/* Step 1 — project factors + derived priorities */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+          <span className="f-num">1</span>
+          <span style={{ fontSize: '15px', fontWeight: 500 }}>
+            <span className="guided-only">{t('step1.g')}</span>
+            <span className="expert-only">{t('step1.e')}</span>
+          </span>
         </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '18px' }}>
+          <FactorInputs levels={levels} onChange={setLevels} />
+          <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} />
+        </div>
+        {mode === 'expert' && editWeights && (
+          <div style={{ marginTop: '14px' }}>
+            <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />
+          </div>
+        )}
+
+        <div className="f-div" />
+
+        <CombinationView selections={effective} />
+        <AntiPatternAlerts rules={antiPatterns} />
 
         <section aria-labelledby="dimensions-heading">
           <h2 id="dimensions-heading" className="text-lg font-semibold tracking-tight">
@@ -215,6 +220,9 @@ export default function App() {
             <Glossary />
           </div>
         </section>
+
+        <div className="f-div" />
+        <Toolbar exportInput={exportInput} scenario={scenario} onImport={importScenario} />
 
               <p
                 className="f-gloss"
