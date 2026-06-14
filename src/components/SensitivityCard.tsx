@@ -1,16 +1,16 @@
 import { useI18n } from '../i18n/I18nContext';
 import { FACTORS } from '../config/factors';
-import { sensitivity } from '../lib/scoring';
+import type { Flip } from '../lib/scoring';
 import type { FactorId, Levels } from '../types';
 
 interface Props {
+  flips: Flip[];
   levels: Levels;
 }
 
 // Robustness analysis for D1: which single factor change (±1 level) would flip the winner.
-export function SensitivityCard({ levels }: Props) {
+export function SensitivityCard({ flips, levels }: Props) {
   const { t, tr } = useI18n();
-  const flips = sensitivity(levels, 'D1');
 
   return (
     <section aria-labelledby="sensitivity-heading" className="rounded-xl border border-line bg-surface p-4">

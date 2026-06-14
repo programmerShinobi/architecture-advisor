@@ -1,7 +1,14 @@
 import { useI18n } from '../i18n/I18nContext';
 import { useTheme } from '../hooks/useTheme';
 
-export function Header() {
+export type Mode = 'guided' | 'expert';
+
+interface Props {
+  mode: Mode;
+  onToggleMode: () => void;
+}
+
+export function Header({ mode, onToggleMode }: Props) {
   const { t, lang, toggleLang } = useI18n();
   const [theme, toggleTheme] = useTheme();
 
@@ -13,6 +20,30 @@ export function Header() {
           <p className="text-sm text-ink-soft">{t('app.tagline')}</p>
         </div>
         <div className="flex items-center gap-2">
+          <div role="group" aria-label="Mode" className="flex rounded-md border border-line p-0.5 text-sm">
+            <button
+              type="button"
+              onClick={() => mode !== 'guided' && onToggleMode()}
+              aria-pressed={mode === 'guided'}
+              className={
+                'rounded px-2.5 py-1 font-medium ' +
+                (mode === 'guided' ? 'bg-brand text-white' : 'text-ink-soft hover:bg-surface-2')
+              }
+            >
+              {t('mode.guided')}
+            </button>
+            <button
+              type="button"
+              onClick={() => mode !== 'expert' && onToggleMode()}
+              aria-pressed={mode === 'expert'}
+              className={
+                'rounded px-2.5 py-1 font-medium ' +
+                (mode === 'expert' ? 'bg-brand text-white' : 'text-ink-soft hover:bg-surface-2')
+              }
+            >
+              {t('mode.expert')}
+            </button>
+          </div>
           <button
             type="button"
             onClick={toggleLang}

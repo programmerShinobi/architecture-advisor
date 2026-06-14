@@ -1,9 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import { deriveWeights, composite, rank, isCloseCall, sensitivity, contributions } from './scoring';
+import {
+  deriveWeights,
+  composite,
+  rank,
+  rankWith,
+  effectiveWeights,
+  isCloseCall,
+  sensitivity,
+  contributions,
+} from './scoring';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
 import { DEFAULT_LEVELS } from '../config/defaults';
+import { PRESETS } from '../config/presets';
 import { QA_ORDER } from '../config/qualityAttributes';
-import type { Levels } from '../types';
+import type { DimensionId, Levels } from '../types';
 
 const approx = (a: number, b: number, eps = 1e-9) => Math.abs(a - b) < eps;
 
@@ -88,6 +98,46 @@ describe('contributions reconcile to the composite (FR-REC-4)', () => {
       expect(approx(sum, composite(w, opt.qaFit))).toBe(true);
     }
   });
+});
+
+describe('effectiveWeights — expert override & lock (scoring-algorithm.md Section 3.4)', () => {
+  const L: Levels = { ...DEFAULT_LEVELS, team: 2, distribution: 2, scale: 2, devops: 2, ttm: 0 };
+
+  it('no overrides → equals derived weights', () => {
+    expect(effectiveWeights(L)).toEqual(deriveWeights(L));
+  });
+
+  it('locking scalability at 50 keeps the sum at 100 and Microservices wins', () => {
+    const w = effectiveWeights(L, { scalability: 50 });
+    expect(approx(QA_ORDER.reduce((a, q) => a + w[q], 0), 100)).toBe(true);
+    expect(w.scalability).toBe(50);
+    expect(rankWith(w, 'D1')[0].name).toBe('Microservices');
+  });
+
+  it('locked values summing over 100 are rescaled to 100; unlocked get 0', () => {
+    const w = effectiveWeights(L, { performance: 80, security: 80 });
+    expect(approx(QA_ORDER.reduce((a, q) => a + w[q], 0), 100)).toBe(true);
+    expect(approx(w.performance, 50)).toBe(true);
+    expect(approx(w.scalability, 0)).toBe(true);
+  });
+});
+
+describe('preset regression — all 25 targets hold (SRS Section 5.3 / ADR-0002)', () => {
+  const TARGETS: Record<string, string[][]> = {
+    'startup-mvp': [['Monolith'], ['Synchronous (request/response)'], ['Single shared database'], ['Layered'], ['Single-page app (SPA)']],
+    regulated: [['Modular Monolith'], ['Synchronous (request/response)'], ['Single shared database'], ['Hexagonal (Ports & Adapters)', 'Clean Architecture'], ['Single-page app (SPA)', 'Server-rendered (SSR/SSG)']],
+    'high-traffic-ecommerce': [['Microservices'], ['Event-driven (pub/sub)'], ['Database-per-service'], ['Hexagonal (Ports & Adapters)', 'Clean Architecture'], ['Micro-frontends']],
+    'iot-streaming': [['Microservices', 'Serverless (FaaS)'], ['Streaming'], ['CQRS', 'Event Sourcing'], ['Hexagonal (Ports & Adapters)', 'Clean Architecture'], ['Single-page app (SPA)', 'Server-rendered (SSR/SSG)']],
+    'internal-tool': [['Modular Monolith'], ['Synchronous (request/response)'], ['Single shared database'], ['Layered'], ['Single-page app (SPA)']],
+  };
+  for (const preset of PRESETS) {
+    it(`${preset.id} hits its target in every dimension`, () => {
+      DIMENSION_ORDER.forEach((dim: DimensionId, i) => {
+        const top = rank(preset.levels, dim)[0].name;
+        expect(TARGETS[preset.id][i]).toContain(top);
+      });
+    });
+  }
 });
 
 describe('composite() defaults unlisted qaFit entries to 3', () => {

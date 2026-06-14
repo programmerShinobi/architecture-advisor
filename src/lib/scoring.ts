@@ -27,17 +27,54 @@ export function deriveWeights(levels: Levels): Weights {
   return Object.fromEntries(QA_ORDER.map((q) => [q, (raw[q] / sum) * 100])) as Weights;
 }
 
+/** Override values for locked QAs (expert mode). Keys present = locked at that value (0..100). */
+export type Overrides = Partial<Record<QaId, number>>;
+
+/**
+ * Effective weights with expert overrides (scoring-algorithm.md Section 3.4): locked QAs keep
+ * their override; unlocked QAs share the remainder R = max(0, 100 − Σlocked) proportionally to
+ * their derived raw weights. Deterministic edge cases (all locked / Σ>100 / unlocked all zero).
+ */
+export function effectiveWeights(levels: Levels, overrides: Overrides = {}): Weights {
+  const raw = deriveWeights(levels);
+  const locked = QA_ORDER.filter((q) => overrides[q] !== undefined);
+  if (locked.length === 0) return raw;
+
+  const sumL = locked.reduce((a, q) => a + (overrides[q] as number), 0);
+  const unlocked = QA_ORDER.filter((q) => overrides[q] === undefined);
+  const result = {} as Weights;
+
+  // Everything locked, or locked values already meet/exceed 100 → rescale locked to 100, unlocked 0.
+  if (unlocked.length === 0 || sumL >= 100) {
+    const scale = sumL > 0 ? 100 / sumL : 0;
+    for (const q of QA_ORDER) result[q] = overrides[q] !== undefined ? (overrides[q] as number) * scale : 0;
+    return result;
+  }
+
+  const R = 100 - sumL;
+  const rawU = unlocked.reduce((a, q) => a + raw[q], 0);
+  for (const q of QA_ORDER) {
+    if (overrides[q] !== undefined) result[q] = overrides[q] as number;
+    else result[q] = rawU > 0 ? (raw[q] / rawU) * R : R / unlocked.length;
+  }
+  return result;
+}
+
 /** Step 2 — composite score of an option given weights and its qaFit vector. Result ∈ [1, 5]. */
 export function composite(weights: Weights, qaFit: number[]): number {
   return QA_ORDER.reduce((s, q, i) => s + (weights[q] / 100) * (qaFit[i] ?? 3), 0);
 }
 
-/** Step 3 — rank a dimension's options by composite, tie-broken by canonical config order. */
-export function rank(levels: Levels, dim: DimensionId): RankedOption[] {
-  const weights = deriveWeights(levels);
+/** Rank a dimension's options from a weights vector, tie-broken by canonical config order. */
+export function rankWith(weights: Weights, dim: DimensionId): RankedOption[] {
   return DIMENSIONS[dim].options
     .map((opt, index) => ({ name: opt.name, id: opt.id, score: composite(weights, opt.qaFit), index }))
     .sort((a, b) => b.score - a.score || a.index - b.index);
+}
+
+/** Step 3 — rank a dimension's options from factor levels (no overrides). */
+export function rank(levels: Levels, dim: DimensionId): RankedOption[] {
+  return rankWith(deriveWeights(levels), dim);
 }
 
 /** Display score 0–100: composite / 5 × 100, rounded (scoring-algorithm.md Section 7). */
@@ -95,14 +132,14 @@ export interface Flip {
 }
 
 /** Step 4 — single-factor (±1 level) sensitivity: which changes would flip the winner. */
-export function sensitivity(levels: Levels, dim: DimensionId = 'D1'): Flip[] {
-  const winner = rank(levels, dim)[0].name;
+export function sensitivity(levels: Levels, dim: DimensionId = 'D1', overrides: Overrides = {}): Flip[] {
+  const winner = rankWith(effectiveWeights(levels, overrides), dim)[0].name;
   const flips: Flip[] = [];
   for (const f of FACTOR_ORDER) {
     for (const delta of [-1, 1] as const) {
       const next = (levels[f] ?? 0) + delta;
       if (next < 0 || next > 2) continue;
-      const top = rank({ ...levels, [f]: next }, dim)[0].name;
+      const top = rankWith(effectiveWeights({ ...levels, [f]: next }, overrides), dim)[0].name;
       if (top !== winner) flips.push({ factor: f, to: next, newWinner: top });
     }
   }

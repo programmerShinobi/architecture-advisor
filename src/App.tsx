@@ -1,21 +1,24 @@
 import { lazy, Suspense, useMemo } from 'react';
-import { Header } from './components/Header';
+import { Header, type Mode } from './components/Header';
 import { Disclaimer } from './components/Disclaimer';
+import { PresetBar } from './components/PresetBar';
 import { FactorPanel } from './components/FactorPanel';
 import { DimensionCard } from './components/DimensionCard';
 import { CombinationView } from './components/CombinationView';
 import { AntiPatternAlerts } from './components/AntiPatternAlerts';
+import { QaOverridePanel } from './components/QaOverridePanel';
 import { ContributionTable } from './components/ContributionTable';
 import { SensitivityCard } from './components/SensitivityCard';
 import { RiskRegister } from './components/RiskRegister';
 import { FitnessFunctions } from './components/FitnessFunctions';
 import { CostOpsBadges } from './components/CostOpsBadges';
 import { MethodologyPanel } from './components/MethodologyPanel';
+import { Glossary } from './components/Glossary';
 import { useI18n } from './i18n/I18nContext';
 import { usePersistedState } from './hooks/usePersistedState';
 import { DEFAULT_LEVELS } from './config/defaults';
 import { DIMENSIONS, DIMENSION_ORDER } from './config/dimensions';
-import { deriveWeights, rank } from './lib/scoring';
+import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
 import type { DimensionId, Levels, RankedOption } from './types';
 
@@ -35,18 +38,20 @@ type Selections = Partial<Record<DimensionId, string>>;
 
 export default function App() {
   const { t } = useI18n();
+  const [mode, setMode] = usePersistedState<Mode>('aa.mode', 'guided');
   const [levels, setLevels] = usePersistedState<Levels>('aa.levels', DEFAULT_LEVELS);
   const [selections, setSelections] = usePersistedState<Selections>('aa.selections', {});
+  const [overrides, setOverrides] = usePersistedState<Overrides>('aa.overrides', {});
 
-  const weights = useMemo(() => deriveWeights(levels), [levels]);
+  const weights = useMemo(() => effectiveWeights(levels, overrides), [levels, overrides]);
 
   const rankings = useMemo(
     () =>
-      Object.fromEntries(DIMENSION_ORDER.map((d) => [d, rank(levels, d)])) as Record<
+      Object.fromEntries(DIMENSION_ORDER.map((d) => [d, rankWith(weights, d)])) as Record<
         DimensionId,
         RankedOption[]
       >,
-    [levels],
+    [weights],
   );
 
   // Effective selection per dimension: the user's explicit choice, else the #1 recommendation.
@@ -63,23 +68,30 @@ export default function App() {
     [levels, effective],
   );
 
-  const selectedD1 = DIMENSIONS.D1.options.find((o) => o.id === effective.D1) ?? DIMENSIONS.D1.options[0];
+  const flips = useMemo(() => sensitivity(levels, 'D1', overrides), [levels, overrides]);
 
-  const resetAll = () => {
-    setLevels(DEFAULT_LEVELS);
+  const selectedD1 =
+    DIMENSIONS.D1.options.find((o) => o.id === effective.D1) ?? DIMENSIONS.D1.options[0];
+
+  const applyPreset = (next: Levels) => {
+    setLevels(next);
     setSelections({});
+    setOverrides({});
   };
+  const resetAll = () => applyPreset(DEFAULT_LEVELS);
 
   return (
     <div className="min-h-full">
       <Disclaimer />
-      <Header />
+      <Header mode={mode} onToggleMode={() => setMode(mode === 'guided' ? 'expert' : 'guided')} />
 
       <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
+        <PresetBar onApply={applyPreset} />
+
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-          <div>
+          <div className="space-y-3">
             <FactorPanel levels={levels} onChange={setLevels} />
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={resetAll}
@@ -95,6 +107,9 @@ export default function App() {
                 {t('action.followRec')}
               </button>
             </div>
+            {mode === 'expert' && (
+              <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />
+            )}
           </div>
 
           <div className="space-y-6">
@@ -133,13 +148,14 @@ export default function App() {
               <RadarTradeoff ranked={rankings.D1} />
             </Suspense>
             <ContributionTable weights={weights} option={selectedD1} />
-            <SensitivityCard levels={levels} />
+            <SensitivityCard flips={flips} levels={levels} />
             <CostOpsBadges />
             <FitnessFunctions weights={weights} />
             <RiskRegister selections={effective} />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 space-y-4">
             <MethodologyPanel />
+            <Glossary />
           </div>
         </section>
       </main>

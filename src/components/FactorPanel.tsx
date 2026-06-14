@@ -32,10 +32,10 @@ export function FactorPanel({ levels, onChange }: Props) {
       <p className="mt-1 text-sm text-ink-soft">{t('factors.intro')}</p>
 
       {groups.map((g) => (
-        <fieldset key={g.label} className="mt-4 border-t border-line pt-2">
-          <legend className="text-xs font-semibold uppercase tracking-wide text-ink-soft">
-            {g.label}
-          </legend>
+        <details key={g.label} open className="group mt-3 border-t border-line pt-2">
+          <summary className="cursor-pointer list-none text-xs font-semibold uppercase tracking-wide text-ink-soft">
+            <span className="inline-block transition-transform group-open:rotate-90">▸</span> {g.label}
+          </summary>
           <div className="divide-y divide-line">
             {g.ids.map((id) => (
               <FactorControl
@@ -46,7 +46,7 @@ export function FactorPanel({ levels, onChange }: Props) {
               />
             ))}
           </div>
-        </fieldset>
+        </details>
       ))}
     </section>
   );
