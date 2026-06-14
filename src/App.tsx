@@ -1,7 +1,9 @@
-import { lazy, Suspense, useMemo } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { Header, type Mode } from './components/Header';
 import { Disclaimer } from './components/Disclaimer';
 import { PresetBar } from './components/PresetBar';
+import { Toolbar } from './components/Toolbar';
+import { C4Preview } from './components/C4Preview';
 import { FactorPanel } from './components/FactorPanel';
 import { DimensionCard } from './components/DimensionCard';
 import { CombinationView } from './components/CombinationView';
@@ -20,6 +22,9 @@ import { DEFAULT_LEVELS } from './config/defaults';
 import { DIMENSIONS, DIMENSION_ORDER } from './config/dimensions';
 import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
+import { generateC4 } from './lib/c4';
+import type { ExportInput } from './lib/snapshot';
+import type { ScenarioState } from './lib/scenarioIO';
 import type { DimensionId, Levels, RankedOption } from './types';
 
 // recharts components are lazy-loaded, off the first-paint path (ADR-008 / NFR-PERF-3).
@@ -37,7 +42,7 @@ const chartFallback = (
 type Selections = Partial<Record<DimensionId, string>>;
 
 export default function App() {
-  const { t } = useI18n();
+  const { t, lang, setLang } = useI18n();
   const [mode, setMode] = usePersistedState<Mode>('aa.mode', 'guided');
   const [levels, setLevels] = usePersistedState<Levels>('aa.levels', DEFAULT_LEVELS);
   const [selections, setSelections] = usePersistedState<Selections>('aa.selections', {});
@@ -73,12 +78,25 @@ export default function App() {
   const selectedD1 =
     DIMENSIONS.D1.options.find((o) => o.id === effective.D1) ?? DIMENSIONS.D1.options[0];
 
+  const [showC4, setShowC4] = useState(false);
+
+  const scenario: ScenarioState = { v: 1, mode, lang, levels, selections, overrides };
+  const exportInput: ExportInput = { levels, overrides, selections: effective, lang };
+
   const applyPreset = (next: Levels) => {
     setLevels(next);
     setSelections({});
     setOverrides({});
   };
   const resetAll = () => applyPreset(DEFAULT_LEVELS);
+
+  const importScenario = (st: ScenarioState) => {
+    setMode(st.mode);
+    setLang(st.lang);
+    setLevels(st.levels);
+    setSelections(st.selections);
+    setOverrides(st.overrides);
+  };
 
   return (
     <div className="min-h-full">
@@ -87,6 +105,7 @@ export default function App() {
 
       <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
         <PresetBar onApply={applyPreset} />
+        <Toolbar exportInput={exportInput} scenario={scenario} onImport={importScenario} />
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
           <div className="space-y-3">
@@ -154,6 +173,21 @@ export default function App() {
             <RiskRegister selections={effective} />
           </div>
           <div className="mt-4 space-y-4">
+            <div>
+              <button
+                type="button"
+                onClick={() => setShowC4((v) => !v)}
+                className="rounded-md border border-line px-3 py-1.5 text-sm font-medium hover:bg-surface-2"
+                aria-expanded={showC4}
+              >
+                {showC4 ? t('c4.hide') : t('c4.show')}
+              </button>
+              {showC4 && (
+                <div className="mt-3">
+                  <C4Preview code={generateC4(effective.D1)} />
+                </div>
+              )}
+            </div>
             <MethodologyPanel />
             <Glossary />
           </div>
