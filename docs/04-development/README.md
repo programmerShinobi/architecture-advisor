@@ -1,6 +1,10 @@
 # Phase 4 — Development
 
-> 🚧 **Not started.** Phase 4 of 7. Begins once the [Blueprint](../03-blueprint/) is stable.
+> ✅ **v1.0 implemented.** The client-side app lives in [`src/`](../../src/); run it with
+> `npm install && npm run dev`. How to run, tailor the model, and the build-time choices are in the
+> root [README](../../README.md#run-it-locally), [EXTENDING.md](../../EXTENDING.md), and
+> [DECISIONS.md](../../DECISIONS.md). The scoring engine is a TypeScript twin of the verified model
+> ([`scripts/verify-model.mjs`](../../scripts/verify-model.mjs)); CI runs lint + tests + build.
 
 Writing the code on the [planned tech stack](../specs/build-spec-v3.md#2-tech-stack-use-exactly-this)
 with consistent standards and conventions, under version control (Git), with code review to keep
