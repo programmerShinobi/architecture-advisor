@@ -214,7 +214,7 @@ export default function App() {
         </section>
 
         <div className="f-div" />
-        <Toolbar exportInput={exportInput} scenario={scenario} onImport={importScenario} />
+        <Toolbar exportInput={exportInput} scenario={scenario} weights={weights} mode={mode} onImport={importScenario} />
 
               <p
                 className="f-gloss"
