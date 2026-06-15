@@ -1,5 +1,7 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Header, type Mode } from './components/Header';
+import { CommandPalette, type Command } from './components/CommandPalette';
+import { ShortcutsModal } from './components/ShortcutsModal';
 import { GuidedBanner } from './components/GuidedBanner';
 import { StepTracker } from './components/StepTracker';
 import { PresetBar } from './components/PresetBar';
@@ -23,6 +25,7 @@ import { MethodologyPanel } from './components/MethodologyPanel';
 import { Glossary } from './components/Glossary';
 import { useI18n } from './i18n/I18nContext';
 import { usePersistedState } from './hooks/usePersistedState';
+import { useExportActions } from './hooks/useExportActions';
 import { DEFAULT_LEVELS } from './config/defaults';
 import { PRESETS } from './config/presets';
 import type { MigrationKey } from './config/migrationPaths';
@@ -112,6 +115,41 @@ export default function App() {
 
   const saveSig = `${JSON.stringify(levels)}|${JSON.stringify(selections)}|${JSON.stringify(overrides)}|${mode}|${lang}`;
 
+  const { status: exportStatus, setStatus: setExportStatus, run } = useExportActions(exportInput, scenario, weights);
+  const [overlay, setOverlay] = useState<'palette' | 'shortcuts' | null>(null);
+
+  const commands: Command[] = [
+    { label: t('pal.save'), hint: '⌘S', run: run.adr },
+    { label: t('pal.report'), run: run.report },
+    { label: t('pal.csv'), run: () => { setMode('expert'); run.csv(); } },
+    { label: t('pal.json'), run: () => { setMode('expert'); run.json(); } },
+    { label: t('pal.share'), run: () => void run.share() },
+    { label: t('pal.reset'), run: resetAll },
+    { label: t('pal.expert'), run: () => setMode('expert') },
+    { label: t('pal.guided'), run: () => setMode('guided') },
+    { label: t('pal.sample'), run: () => applyPreset(PRESETS[0].levels) },
+    { label: t('pal.shortcuts'), run: () => setOverlay('shortcuts') },
+  ];
+
+  // Global shortcuts: ⌘K palette, ⌘S save, Esc close. Use a ref so the listener stays stable.
+  const adrRef = useRef(run.adr);
+  adrRef.current = run.adr;
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        setOverlay('palette');
+      } else if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        adrRef.current();
+      } else if (e.key === 'Escape') {
+        setOverlay(null);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <div style={{ padding: '24px' }}>
       <div className="page" style={{ maxWidth: '1180px', margin: '0 auto' }}>
@@ -130,8 +168,8 @@ export default function App() {
             <Header
               mode={mode}
               onToggleMode={setMode}
-              onCmdK={() => {}}
-              onHelp={() => {}}
+              onCmdK={() => setOverlay('palette')}
+              onHelp={() => setOverlay('shortcuts')}
               saveSig={saveSig}
             />
             <GuidedBanner />
@@ -214,7 +252,7 @@ export default function App() {
         </section>
 
         <div className="f-div" />
-        <Toolbar exportInput={exportInput} scenario={scenario} weights={weights} mode={mode} onImport={importScenario} />
+        <Toolbar run={run} status={exportStatus} setStatus={setExportStatus} mode={mode} onImport={importScenario} />
 
               <p
                 className="f-gloss"
@@ -223,6 +261,9 @@ export default function App() {
                 {t('disclaimer')}
               </p>
             </div>
+
+            <CommandPalette open={overlay === 'palette'} commands={commands} onClose={() => setOverlay(null)} />
+            <ShortcutsModal open={overlay === 'shortcuts'} onClose={() => setOverlay(null)} />
           </div>
         </div>
       </div>

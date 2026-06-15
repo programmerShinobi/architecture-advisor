@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import {
   IconCircleCheck,
   IconCode,
@@ -10,24 +10,22 @@ import {
   IconUpload,
 } from '@tabler/icons-react';
 import { useI18n } from '../i18n/I18nContext';
-import { generateAdr } from '../lib/adr';
-import { generateReport } from '../lib/report';
-import { generateScoresCsv, generateAssessmentJson } from '../lib/exportData';
-import { buildShareUrl } from '../lib/urlState';
 import { parseScenario, type ScenarioState } from '../lib/scenarioIO';
-import { copyToClipboard, downloadText } from '../lib/download';
-import type { ExportInput } from '../lib/snapshot';
-import type { Weights } from '../types';
+import type { ExportStatus } from '../hooks/useExportActions';
 
 interface Props {
-  exportInput: ExportInput;
-  scenario: ScenarioState;
-  weights: Weights;
+  run: {
+    adr: () => void;
+    report: () => void;
+    csv: () => void;
+    json: () => void;
+    share: () => void | Promise<void>;
+  };
+  status: ExportStatus | null;
+  setStatus: (s: ExportStatus | null) => void;
   mode: 'guided' | 'expert';
   onImport: (state: ScenarioState) => void;
 }
-
-type Status = { ok: boolean; msg: string } | null;
 
 const secondary: React.CSSProperties = {
   display: 'flex',
@@ -42,23 +40,16 @@ const secondary: React.CSSProperties = {
   background: 'transparent',
 };
 
-export function Toolbar({ exportInput, scenario, weights, mode, onImport }: Props) {
+export function Toolbar({ run, status, setStatus, mode, onImport }: Props) {
   const { t } = useI18n();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [status, setStatus] = useState<Status>(null);
 
-  const ok = (msg: string) => setStatus({ ok: true, msg });
-
-  const onShare = async () => {
-    const done = await copyToClipboard(buildShareUrl(scenario));
-    setStatus({ ok: done, msg: done ? t('status.shared') : t('status.shareErr') });
-  };
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     const st = parseScenario(await file.text());
     if (st) {
       onImport(st);
-      ok(t('status.json'));
+      setStatus({ ok: true, msg: t('status.json') });
     } else setStatus({ ok: false, msg: t('action.importError') });
   };
 
@@ -75,10 +66,7 @@ export function Toolbar({ exportInput, scenario, weights, mode, onImport }: Prop
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '9px' }}>
         <button
           type="button"
-          onClick={() => {
-            downloadText('architecture-adr.md', generateAdr(exportInput));
-            ok(t('status.adr'));
-          }}
+          onClick={run.adr}
           style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12px', color: 'var(--color-background-primary)', background: 'var(--color-text-info)', borderRadius: 'var(--border-radius-md)', padding: '10px 16px', cursor: 'pointer', fontWeight: 500, border: 'none' }}
         >
           <IconFileText size={16} aria-hidden />
@@ -87,46 +75,25 @@ export function Toolbar({ exportInput, scenario, weights, mode, onImport }: Prop
           <span className="kbd" style={{ marginLeft: '2px' }}>⌘S</span>
         </button>
 
-        <button
-          type="button"
-          style={secondary}
-          onClick={() => {
-            downloadText('architecture-report.md', generateReport(exportInput));
-            ok(t('status.report'));
-          }}
-        >
+        <button type="button" style={secondary} onClick={run.report}>
           <IconReportAnalytics size={16} aria-hidden />
           {t('action.fullReport')}
         </button>
 
         {mode === 'expert' && (
           <>
-            <button
-              type="button"
-              style={secondary}
-              onClick={() => {
-                downloadText('scores.csv', generateScoresCsv(weights), 'text/csv');
-                ok(t('status.csv'));
-              }}
-            >
+            <button type="button" style={secondary} onClick={run.csv}>
               <IconFileSpreadsheet size={16} aria-hidden />
               {t('action.csv')}
             </button>
-            <button
-              type="button"
-              style={secondary}
-              onClick={() => {
-                downloadText('assessment.json', generateAssessmentJson(exportInput), 'application/json');
-                ok(t('status.json'));
-              }}
-            >
+            <button type="button" style={secondary} onClick={run.json}>
               <IconCode size={16} aria-hidden />
               {t('action.json')}
             </button>
           </>
         )}
 
-        <button type="button" style={secondary} onClick={onShare}>
+        <button type="button" style={secondary} onClick={() => void run.share()}>
           <IconShare2 size={16} aria-hidden />
           <span className="guided-only">{t('action.share.g')}</span>
           <span className="expert-only">{t('action.share.e')}</span>
