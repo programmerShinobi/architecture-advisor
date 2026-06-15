@@ -1,6 +1,7 @@
 import { useI18n } from '../i18n/I18nContext';
 import { buildSnapshot, type ExportInput } from '../lib/snapshot';
 import { label } from '../lib/exportLabels';
+import { executiveSummary } from '../lib/summary';
 import { contributions, displayScore } from '../lib/scoring';
 import { QUALITY_ATTRIBUTES } from '../config/qualityAttributes';
 import { FACTOR_ORDER, FACTORS } from '../config/factors';
@@ -29,6 +30,9 @@ export function PrintReport({ exportInput }: { exportInput: ExportInput }) {
       <div style={{ color: '#666', fontSize: '11px' }}>
         {t('print.generated')}: {new Date().toISOString().slice(0, 10)}
       </div>
+
+      <h2 style={h2}>{L('execSummary')}</h2>
+      <p style={{ margin: '6px 0' }}>{executiveSummary(exportInput).replace(/\*\*/g, '')}</p>
 
       <h2 style={h2}>{L('factorInputs')}</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>

@@ -1,9 +1,11 @@
 import { buildSnapshot, type ExportInput } from './snapshot';
 import { contributions, displayScore } from './scoring';
 import { label } from './exportLabels';
+import { executiveSummary } from './summary';
 import { QUALITY_ATTRIBUTES } from '../config/qualityAttributes';
 import { FACTOR_ORDER, FACTORS } from '../config/factors';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
+import { OPTION_BLURB } from '../config/dimensionContent';
 import { RISKS } from '../config/risks';
 import { FITNESS_TEMPLATES } from '../config/fitnessFunctions';
 import { METHOD_REFERENCES } from '../config/references';
@@ -19,6 +21,11 @@ export function generateReport(input: ExportInput): string {
   out.push(`# ${L('reportTitle')}`);
   out.push('');
   out.push(`> ${L('disclaimer')}`);
+  out.push('');
+
+  out.push(`## ${L('execSummary')}`);
+  out.push('');
+  out.push(executiveSummary(input));
   out.push('');
 
   out.push(`## ${L('factorInputs')}`);
@@ -40,6 +47,8 @@ export function generateReport(input: ExportInput): string {
   out.push('');
   for (const dim of DIMENSION_ORDER) {
     out.push(`### ${tr(DIMENSIONS[dim].name)}`);
+    const blurb = OPTION_BLURB[`${dim}:${s.selections[dim]}`];
+    if (blurb) out.push(`*${L('inPlainTerms')}: ${tr(blurb.plain)}.*`, '');
     for (const o of s.rankings[dim]) {
       const star = o.id === s.selections[dim] ? ` ✅ ${L('recommended')}` : '';
       out.push(`- ${o.name} — ${displayScore(o.score)}/100${star}`);

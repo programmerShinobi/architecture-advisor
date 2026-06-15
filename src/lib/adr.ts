@@ -1,6 +1,7 @@
 import { buildSnapshot, type ExportInput } from './snapshot';
 import { displayScore } from './scoring';
 import { label } from './exportLabels';
+import { executiveSummary } from './summary';
 import { QUALITY_ATTRIBUTES } from '../config/qualityAttributes';
 import { FACTOR_ORDER, FACTORS } from '../config/factors';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
@@ -26,6 +27,8 @@ export function generateAdr(input: ExportInput): string {
   out.push('');
 
   out.push(`## ${L('context')}`);
+  out.push('');
+  out.push(executiveSummary(input));
   out.push('');
   out.push(L('contextBody'));
   out.push('');

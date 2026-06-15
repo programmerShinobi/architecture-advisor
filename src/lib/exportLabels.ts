@@ -30,6 +30,8 @@ const LABELS = {
   links: { en: 'Links', id: 'Tautan' },
 
   reportTitle: { en: 'Architecture Recommendation Report', id: 'Laporan Rekomendasi Arsitektur' },
+  execSummary: { en: 'Executive summary', id: 'Ringkasan eksekutif' },
+  inPlainTerms: { en: 'In plain terms', id: 'Dalam bahasa sederhana' },
   factorInputs: { en: 'Project factors', id: 'Faktor proyek' },
   qaPriorities: { en: 'Quality-attribute priorities', id: 'Prioritas atribut kualitas' },
   recommendations: { en: 'Per-dimension recommendations', id: 'Rekomendasi per dimensi' },
