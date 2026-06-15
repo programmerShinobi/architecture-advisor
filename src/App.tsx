@@ -17,7 +17,6 @@ import { MigrationCard } from './components/MigrationCard';
 import { AntiPatternWarning } from './components/AntiPatternWarning';
 import { HowItDecides } from './components/HowItDecides';
 import { QaOverridePanel } from './components/QaOverridePanel';
-import { ContributionTable } from './components/ContributionTable';
 import { RiskRegister } from './components/RiskRegister';
 import { FitnessFunctions } from './components/FitnessFunctions';
 import { CostOpsBadges } from './components/CostOpsBadges';
@@ -29,7 +28,7 @@ import { useExportActions } from './hooks/useExportActions';
 import { DEFAULT_LEVELS } from './config/defaults';
 import { PRESETS } from './config/presets';
 import type { MigrationKey } from './config/migrationPaths';
-import { DIMENSIONS, DIMENSION_ORDER } from './config/dimensions';
+import { DIMENSION_ORDER } from './config/dimensions';
 import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
 import { generateC4 } from './lib/c4';
@@ -72,9 +71,6 @@ export default function App() {
   );
 
   const flips = useMemo(() => sensitivity(levels, 'D1', overrides), [levels, overrides]);
-
-  const selectedD1 =
-    DIMENSIONS.D1.options.find((o) => o.id === effective.D1) ?? DIMENSIONS.D1.options[0];
 
   const [showC4, setShowC4] = useState(false);
   const [editWeights, setEditWeights] = useState(false);
@@ -220,28 +216,27 @@ export default function App() {
         <AntiPatternWarning rules={antiPatterns} mode={mode} />
         <HowItDecides />
 
-        <section aria-labelledby="analysis-heading">
-          <h2 id="analysis-heading" className="text-lg font-semibold tracking-tight">
-            {t('analysis.heading')}
-          </h2>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
-            <ContributionTable weights={weights} option={selectedD1} />
+        {/* Expert-only depth (build-spec features beyond the prototype mockup). Guided mode
+            stays faithful to the prototype; experts get the extra analysis. */}
+        <section className="expert-only" aria-labelledby="analysis-heading">
+          <div className="f-div" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '13px' }}>
+            <span style={{ fontSize: '15px', fontWeight: 500 }} id="analysis-heading">
+              {t('analysis.heading')}
+            </span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '14px' }}>
             <CostOpsBadges />
             <FitnessFunctions weights={weights} />
             <RiskRegister selections={effective} />
           </div>
-          <div className="mt-4 space-y-4">
+          <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
-              <button
-                type="button"
-                onClick={() => setShowC4((v) => !v)}
-                className="rounded-md border border-line px-3 py-1.5 text-sm font-medium hover:bg-surface-2"
-                aria-expanded={showC4}
-              >
+              <button type="button" className="f-btn" onClick={() => setShowC4((v) => !v)} aria-expanded={showC4}>
                 {showC4 ? t('c4.hide') : t('c4.show')}
               </button>
               {showC4 && (
-                <div className="mt-3">
+                <div style={{ marginTop: '12px' }}>
                   <C4Preview code={generateC4(effective.D1)} />
                 </div>
               )}
