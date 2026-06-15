@@ -10,10 +10,12 @@ import { PrioritiesCard } from './components/PrioritiesCard';
 import { DimensionCards } from './components/DimensionCards';
 import { DimensionDetail } from './components/DimensionDetail';
 import { RadarPanel } from './components/RadarPanel';
-import { AntiPatternAlerts } from './components/AntiPatternAlerts';
+import { SensitivityCard } from './components/SensitivityCard';
+import { MigrationCard } from './components/MigrationCard';
+import { AntiPatternWarning } from './components/AntiPatternWarning';
+import { HowItDecides } from './components/HowItDecides';
 import { QaOverridePanel } from './components/QaOverridePanel';
 import { ContributionTable } from './components/ContributionTable';
-import { SensitivityCard } from './components/SensitivityCard';
 import { RiskRegister } from './components/RiskRegister';
 import { FitnessFunctions } from './components/FitnessFunctions';
 import { CostOpsBadges } from './components/CostOpsBadges';
@@ -23,6 +25,7 @@ import { useI18n } from './i18n/I18nContext';
 import { usePersistedState } from './hooks/usePersistedState';
 import { DEFAULT_LEVELS } from './config/defaults';
 import { PRESETS } from './config/presets';
+import type { MigrationKey } from './config/migrationPaths';
 import { DIMENSIONS, DIMENSION_ORDER } from './config/dimensions';
 import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
@@ -73,6 +76,7 @@ export default function App() {
   const [showC4, setShowC4] = useState(false);
   const [editWeights, setEditWeights] = useState(false);
   const [currentDim, setCurrentDim] = useState<DimensionId>('D1');
+  const [migKey, setMigKey] = useState<MigrationKey>('big');
   const undoRef = useRef<{ levels: Levels; selections: Selections; overrides: Overrides } | null>(null);
 
   const scenario: ScenarioState = { v: 1, mode, lang, levels, selections, overrides };
@@ -169,9 +173,14 @@ export default function App() {
         <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
         <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
         <RadarPanel weights={weights} mode={mode} />
-        <div style={{ marginTop: '14px' }}>
-          <AntiPatternAlerts rules={antiPatterns} />
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '14px', marginTop: '16px' }}>
+          <SensitivityCard flips={flips} levels={levels} />
+          <MigrationCard value={migKey} onChange={setMigKey} />
         </div>
+
+        <AntiPatternWarning rules={antiPatterns} mode={mode} />
+        <HowItDecides />
 
         <section aria-labelledby="analysis-heading">
           <h2 id="analysis-heading" className="text-lg font-semibold tracking-tight">
@@ -179,7 +188,6 @@ export default function App() {
           </h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <ContributionTable weights={weights} option={selectedD1} />
-            <SensitivityCard flips={flips} levels={levels} />
             <CostOpsBadges />
             <FitnessFunctions weights={weights} />
             <RiskRegister selections={effective} />
