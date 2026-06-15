@@ -3,6 +3,7 @@ import { Header, type Mode } from './components/Header';
 import { CommandPalette, type Command } from './components/CommandPalette';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { ManualBook } from './components/ManualBook';
+import { ScenarioCompare } from './components/ScenarioCompare';
 import { GuidedBanner } from './components/GuidedBanner';
 import { StepTracker } from './components/StepTracker';
 import { PresetBar } from './components/PresetBar';
@@ -113,7 +114,9 @@ export default function App() {
   const saveSig = `${JSON.stringify(levels)}|${JSON.stringify(selections)}|${JSON.stringify(overrides)}|${mode}|${lang}`;
 
   const { status: exportStatus, setStatus: setExportStatus, run } = useExportActions(exportInput, scenario, weights);
-  const [overlay, setOverlay] = useState<'palette' | 'shortcuts' | 'manual' | null>(null);
+  const [overlay, setOverlay] = useState<'palette' | 'shortcuts' | 'manual' | 'compare' | null>(null);
+  const [snapA, setSnapA] = usePersistedState<ScenarioState | null>('aa.snapA', null);
+  const [snapB, setSnapB] = usePersistedState<ScenarioState | null>('aa.snapB', null);
 
   const commands: Command[] = [
     { label: t('pal.save'), hint: '⌘S', run: run.adr },
@@ -126,6 +129,9 @@ export default function App() {
     { label: t('pal.guided'), run: () => setMode('guided') },
     { label: t('pal.sample'), run: () => applyPreset(PRESETS[0].levels) },
     { label: t('pal.manual'), run: () => setOverlay('manual') },
+    { label: t('pal.pinA'), run: () => setSnapA(scenario) },
+    { label: t('pal.pinB'), run: () => setSnapB(scenario) },
+    { label: t('pal.compare'), run: () => setOverlay('compare') },
     { label: t('pal.shortcuts'), run: () => setOverlay('shortcuts') },
   ];
 
@@ -263,6 +269,23 @@ export default function App() {
             <CommandPalette open={overlay === 'palette'} commands={commands} onClose={() => setOverlay(null)} />
             <ShortcutsModal open={overlay === 'shortcuts'} onClose={() => setOverlay(null)} />
             <ManualBook open={overlay === 'manual'} onClose={() => setOverlay(null)} levels={levels} weights={weights} />
+            <ScenarioCompare
+              open={overlay === 'compare'}
+              onClose={() => setOverlay(null)}
+              snapA={snapA}
+              snapB={snapB}
+              onPinA={() => setSnapA(scenario)}
+              onPinB={() => setSnapB(scenario)}
+              onClear={() => {
+                setSnapA(null);
+                setSnapB(null);
+              }}
+              onSwap={() => {
+                const a = snapA;
+                setSnapA(snapB);
+                setSnapB(a);
+              }}
+            />
           </div>
         </div>
       </div>
