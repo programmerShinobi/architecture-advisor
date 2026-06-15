@@ -4,6 +4,7 @@ import { CommandPalette, type Command } from './components/CommandPalette';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { ManualBook } from './components/ManualBook';
 import { ScenarioCompare } from './components/ScenarioCompare';
+import { PrintReport } from './components/PrintReport';
 import { GuidedBanner } from './components/GuidedBanner';
 import { StepTracker } from './components/StepTracker';
 import { PresetBar } from './components/PresetBar';
@@ -132,6 +133,7 @@ export default function App() {
     { label: t('pal.pinA'), run: () => setSnapA(scenario) },
     { label: t('pal.pinB'), run: () => setSnapB(scenario) },
     { label: t('pal.compare'), run: () => setOverlay('compare') },
+    { label: t('pal.print'), run: () => window.print() },
     { label: t('pal.shortcuts'), run: () => setOverlay('shortcuts') },
   ];
 
@@ -155,7 +157,8 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ padding: '24px' }}>
+    <>
+    <div className="screen-only" style={{ padding: '24px' }}>
       <div className="page" style={{ maxWidth: '1180px', margin: '0 auto' }}>
         <div style={{ background: 'var(--color-background-secondary)', borderRadius: 'var(--border-radius-xl)', padding: '16px' }}>
           <div
@@ -290,5 +293,7 @@ export default function App() {
         </div>
       </div>
     </div>
+    <PrintReport exportInput={exportInput} />
+    </>
   );
 }

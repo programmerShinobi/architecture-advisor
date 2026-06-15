@@ -5,6 +5,7 @@ import {
   IconFileSpreadsheet,
   IconFileText,
   IconHistory,
+  IconPrinter,
   IconReportAnalytics,
   IconShare2,
   IconUpload,
@@ -78,6 +79,11 @@ export function Toolbar({ run, status, setStatus, mode, onImport }: Props) {
         <button type="button" style={secondary} onClick={run.report}>
           <IconReportAnalytics size={16} aria-hidden />
           {t('action.fullReport')}
+        </button>
+
+        <button type="button" style={secondary} onClick={() => window.print()}>
+          <IconPrinter size={16} aria-hidden />
+          {t('action.print')}
         </button>
 
         {mode === 'expert' && (

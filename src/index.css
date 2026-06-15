@@ -445,3 +445,19 @@ button:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* Print / PDF: hide the app chrome and render the clean report (white, black text). */
+.print-only {
+  display: none;
+}
+@media print {
+  body {
+    background: #fff;
+  }
+  .screen-only {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
