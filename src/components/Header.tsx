@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { IconCircleCheck, IconCommand, IconMoon, IconSitemap, IconSun } from '@tabler/icons-react';
+import { IconBook2, IconCircleCheck, IconCommand, IconMoon, IconSitemap, IconSun } from '@tabler/icons-react';
 import { useI18n } from '../i18n/I18nContext';
 import { useTheme } from '../hooks/useTheme';
 
@@ -10,11 +10,12 @@ interface Props {
   onToggleMode: (mode: Mode) => void;
   onCmdK: () => void;
   onHelp: () => void;
+  onManual: () => void;
   /** Changes whenever persisted state changes, to flash the save indicator. */
   saveSig: string;
 }
 
-export function Header({ mode, onToggleMode, onCmdK, onHelp, saveSig }: Props) {
+export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }: Props) {
   const { t, lang, setLang } = useI18n();
   const [theme, toggleTheme] = useTheme();
   const [saving, setSaving] = useState(false);
@@ -77,6 +78,10 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, saveSig }: Props) {
           )}
         </span>
 
+        <button type="button" className="f-btn" onClick={onManual}>
+          <IconBook2 size={13} aria-hidden />
+          {t('manual.open')}
+        </button>
         <button type="button" className="f-btn" onClick={onCmdK} aria-label={t('cmd.open')}>
           <IconCommand size={13} aria-hidden />
           <span className="kbd">⌘K</span>
