@@ -18,6 +18,7 @@ import { DIMENSIONS } from '../config/dimensions';
 import { DIM_NARRATIVE, OPTION_BLURB } from '../config/dimensionContent';
 import { QUALITY_ATTRIBUTES } from '../config/qualityAttributes';
 import { contributions, displayScore } from '../lib/scoring';
+import { WhyNotRunnerUp } from './WhyNotRunnerUp';
 import type { DimensionId, RankedOption, Weights } from '../types';
 
 const DIM_ICON: Record<DimensionId, Icon> = {
@@ -126,6 +127,8 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
           </div>
         )}
       </div>
+
+      <WhyNotRunnerUp dim={dim} ranked={ranked} weights={weights} />
 
       {/* Non-top options (for non-D1 dimensions, mirroring the prototype) */}
       {dim !== 'D1' && (

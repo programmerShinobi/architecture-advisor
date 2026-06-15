@@ -81,6 +81,19 @@ export const DICT = {
     en: 'Top contributing attributes (weight × fit)',
     id: 'Atribut penyumbang teratas (bobot × kecocokan)',
   },
+  'why.title': { en: 'Why not the runner-up?', id: 'Kenapa bukan peringkat-2?' },
+  'why.beats': {
+    en: '{top} ({ts}/100) edges out {second} ({ss}/100) — it fits your priorities better on:',
+    id: '{top} ({ts}/100) unggul tipis atas {second} ({ss}/100) — lebih cocok dengan prioritas Anda pada:',
+  },
+  'why.tie': {
+    en: '{top} and {second} are effectively tied ({ts} vs {ss}/100) — a close call; weigh team judgment.',
+    id: '{top} dan {second} praktis seri ({ts} vs {ss}/100) — selisih tipis; pertimbangkan penilaian tim.',
+  },
+  'why.secondEdge': {
+    en: '{second} would pull ahead if {qa} mattered more.',
+    id: '{second} akan unggul bila {qa} lebih dipentingkan.',
+  },
   'detail.radarNote': {
     en: 'All five build styles are compared in the radar below.',
     id: 'Kelima gaya build dibandingkan pada radar di bawah.',
