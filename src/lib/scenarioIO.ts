@@ -19,6 +19,22 @@ export function serializeScenario(state: ScenarioState): string {
 const isLevelMap = (o: unknown): o is Record<string, number> =>
   !!o && typeof o === 'object' && Object.values(o).every((v) => typeof v === 'number');
 
+/** Runtime guard for a well-formed scenario object (e.g. one loaded from localStorage). */
+export function isScenario(o: unknown): o is ScenarioState {
+  const s = o as Partial<ScenarioState> | null;
+  return (
+    !!s &&
+    typeof s === 'object' &&
+    s.v === 1 &&
+    (s.mode === 'guided' || s.mode === 'expert') &&
+    (s.lang === 'en' || s.lang === 'id') &&
+    isLevelMap(s.levels) &&
+    isLevelMap(s.overrides ?? {}) &&
+    !!s.selections &&
+    typeof s.selections === 'object'
+  );
+}
+
 /** Parse + validate a scenario JSON string. Returns null on anything malformed. */
 export function parseScenario(json: string): ScenarioState | null {
   try {

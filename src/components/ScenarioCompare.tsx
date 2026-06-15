@@ -4,7 +4,7 @@ import { DIMENSIONS, DIMENSION_ORDER } from '../config/dimensions';
 import { FACTORS, FACTOR_ORDER } from '../config/factors';
 import { PRESETS } from '../config/presets';
 import { effectiveWeights, rankWith, displayScore } from '../lib/scoring';
-import type { ScenarioState } from '../lib/scenarioIO';
+import { isScenario, type ScenarioState } from '../lib/scenarioIO';
 import type { DimensionId } from '../types';
 
 interface Props {
@@ -20,9 +20,14 @@ interface Props {
 
 // Pin two scenarios and compare the recommendation + scores side by side — a standout
 // decision-support feature. Pure: derived from each snapshot via the engine.
-export function ScenarioCompare({ open, onClose, snapA, snapB, onPinA, onPinB, onClear, onSwap }: Props) {
+export function ScenarioCompare({ open, onClose, snapA: rawA, snapB: rawB, onPinA, onPinB, onClear, onSwap }: Props) {
   const { t, tr, lang } = useI18n();
   if (!open) return null;
+
+  // Defensive: a stale/corrupt snapshot from localStorage (e.g. after a future schema change)
+  // is treated as empty instead of crashing the comparison.
+  const snapA = isScenario(rawA) ? rawA : null;
+  const snapB = isScenario(rawB) ? rawB : null;
 
   const presetLabel = (s: ScenarioState) => {
     const p = PRESETS.find((x) => JSON.stringify(x.levels) === JSON.stringify(s.levels));

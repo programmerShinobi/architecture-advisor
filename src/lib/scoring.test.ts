@@ -89,6 +89,25 @@ describe('Invariants — 500 seeded random inputs', () => {
   });
 });
 
+describe('requirement scenarios (build spec §14 AC-6, AC-7)', () => {
+  it('AC-6 — async=2, realtime=2 → D2 favors Event-driven/Streaming; performance leads', () => {
+    const L: Levels = { ...DEFAULT_LEVELS, async: 2, realtime: 2 };
+    expect(['Event-driven (pub/sub)', 'Streaming']).toContain(rank(L, 'D2')[0].name);
+    const w = deriveWeights(L);
+    const topQA = QA_ORDER.reduce((a, b) => (w[b] > w[a] ? b : a), QA_ORDER[0]);
+    expect(topQA).toBe('performance');
+    expect(w.scalability).toBeGreaterThan(0); // scalability is elevated (just not the top weight)
+  });
+
+  it('AC-7 — consistency=2 → dataConsistency leads; D3 top = Single shared database', () => {
+    const L: Levels = { ...DEFAULT_LEVELS, consistency: 2 };
+    const w = deriveWeights(L);
+    const top = QA_ORDER.reduce((a, b) => (w[b] > w[a] ? b : a));
+    expect(top).toBe('dataConsistency');
+    expect(rank(L, 'D3')[0].name).toBe('Single shared database');
+  });
+});
+
 describe('contributions reconcile to the composite (FR-REC-4)', () => {
   it('sum of weighted points equals composite for every D1 option', () => {
     const L: Levels = { ...DEFAULT_LEVELS, team: 2, scale: 2, security: 2 };
