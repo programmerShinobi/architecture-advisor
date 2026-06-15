@@ -1,9 +1,8 @@
 name: Docs integrity
 
-# Guards the decision model's documentation: the math must be correct and every
-# document must agree. Runs only when the model docs or scripts change. This is a
-# docs-only planning repo today; the application CI (lint/test/build) arrives in
-# Phase 4 as a separate workflow.
+# Guards the decision model: the math must be correct, every document must agree, and the
+# implemented app config (src/config) must mirror the docs. Runs when the model docs, the
+# app config, or the scripts change. The full application CI (lint/test/build) is in ci.yml.
 
 on:
   push:
@@ -11,6 +10,7 @@ on:
       - 'docs/03-blueprint/**'
       - 'docs/02-requirement-analysis/**'
       - 'docs/specs/**'
+      - 'src/config/**'
       - 'scripts/**'
       - '.github/workflows/docs-integrity.yml'
   pull_request:
@@ -18,6 +18,7 @@ on:
       - 'docs/03-blueprint/**'
       - 'docs/02-requirement-analysis/**'
       - 'docs/specs/**'
+      - 'src/config/**'
       - 'scripts/**'
 
 permissions:
@@ -35,3 +36,5 @@ jobs:
         run: node scripts/verify-model.mjs
       - name: Cross-check the documents for mismatches
         run: node scripts/cross-check-docs.mjs
+      - name: Check the app config mirrors the model
+        run: node scripts/check-app-config.mjs
