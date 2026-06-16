@@ -5,6 +5,7 @@ import { ShortcutsModal } from './components/ShortcutsModal';
 import { ManualBook } from './components/ManualBook';
 import { ScenarioCompare } from './components/ScenarioCompare';
 import { PrintReport } from './components/PrintReport';
+import { Collapsible } from './components/Collapsible';
 import { GuidedBanner } from './components/GuidedBanner';
 import { StepTracker } from './components/StepTracker';
 import { PresetBar } from './components/PresetBar';
@@ -237,12 +238,20 @@ export default function App() {
               {t('analysis.heading')}
             </span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '14px' }}>
-            <CostOpsBadges />
-            <FitnessFunctions weights={weights} />
-            <RiskRegister selections={effective} />
-          </div>
-          <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <Collapsible title={t('costops.heading')}>
+              <CostOpsBadges bare />
+            </Collapsible>
+            <Collapsible title={t('fitness.heading')}>
+              <FitnessFunctions weights={weights} bare />
+            </Collapsible>
+            <Collapsible title={t('risk.heading')}>
+              <RiskRegister selections={effective} bare />
+            </Collapsible>
+            <Collapsible title={t('methodology.heading')}>
+              <MethodologyPanel bare />
+            </Collapsible>
+            <Glossary />
             <div>
               <button type="button" className="f-btn" onClick={() => setShowC4((v) => !v)} aria-expanded={showC4}>
                 {showC4 ? t('c4.hide') : t('c4.show')}
@@ -253,8 +262,6 @@ export default function App() {
                 </div>
               )}
             </div>
-            <MethodologyPanel />
-            <Glossary />
           </div>
         </section>
 

@@ -6,10 +6,11 @@ import type { DimensionId } from '../types';
 
 interface Props {
   selections: Record<DimensionId, string>;
+  bare?: boolean;
 }
 
 // Risks of the options in the current combination, with likelihood/impact and mitigation.
-export function RiskRegister({ selections }: Props) {
+export function RiskRegister({ selections, bare = false }: Props) {
   const { t, tr } = useI18n();
 
   const entries = DIMENSION_ORDER.flatMap((dim) => {
@@ -19,12 +20,9 @@ export function RiskRegister({ selections }: Props) {
     return risks.map((risk, i) => ({ key: `${dim}-${i}`, optionName: opt?.name ?? optId, risk }));
   });
 
-  return (
-    <section aria-labelledby="risk-heading" className="rounded-xl border border-line bg-surface p-4">
-      <h3 id="risk-heading" className="text-base font-semibold">
-        {t('risk.heading')}
-      </h3>
-      <p className="mt-1 text-sm text-ink-soft">{t('risk.intro')}</p>
+  const body = (
+    <>
+      <p className={bare ? 'text-sm text-ink-soft' : 'mt-1 text-sm text-ink-soft'}>{t('risk.intro')}</p>
 
       {entries.length === 0 ? (
         <p className="mt-2 text-sm text-ink-soft">{t('risk.none')}</p>
@@ -51,6 +49,16 @@ export function RiskRegister({ selections }: Props) {
           ))}
         </ul>
       )}
+    </>
+  );
+
+  if (bare) return body;
+  return (
+    <section aria-labelledby="risk-heading" className="rounded-xl border border-line bg-surface p-4">
+      <h3 id="risk-heading" className="text-base font-semibold">
+        {t('risk.heading')}
+      </h3>
+      {body}
     </section>
   );
 }

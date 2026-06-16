@@ -8,10 +8,11 @@ interface Props {
   weights: Weights;
   /** How many top-weighted QAs to surface (Build Spec Section 11: ~4). */
   topN?: number;
+  bare?: boolean;
 }
 
 // Suggested measurable fitness functions for the top-weighted quality attributes.
-export function FitnessFunctions({ weights, topN = 4 }: Props) {
+export function FitnessFunctions({ weights, topN = 4, bare = false }: Props) {
   const { t, tr } = useI18n();
   const rounded = roundWeights(weights);
   const top = (Object.keys(rounded) as QaId[])
@@ -19,12 +20,9 @@ export function FitnessFunctions({ weights, topN = 4 }: Props) {
     .sort((a, b) => rounded[b] - rounded[a])
     .slice(0, topN);
 
-  return (
-    <section aria-labelledby="fitness-heading" className="rounded-xl border border-line bg-surface p-4">
-      <h3 id="fitness-heading" className="text-base font-semibold">
-        {t('fitness.heading')}
-      </h3>
-      <p className="mt-1 text-sm text-ink-soft">{t('fitness.intro')}</p>
+  const body = (
+    <>
+      <p className={bare ? 'text-sm text-ink-soft' : 'mt-1 text-sm text-ink-soft'}>{t('fitness.intro')}</p>
 
       <ul className="mt-3 space-y-2">
         {top.map((q) => (
@@ -37,6 +35,16 @@ export function FitnessFunctions({ weights, topN = 4 }: Props) {
           </li>
         ))}
       </ul>
+    </>
+  );
+
+  if (bare) return body;
+  return (
+    <section aria-labelledby="fitness-heading" className="rounded-xl border border-line bg-surface p-4">
+      <h3 id="fitness-heading" className="text-base font-semibold">
+        {t('fitness.heading')}
+      </h3>
+      {body}
     </section>
   );
 }

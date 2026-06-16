@@ -4,15 +4,12 @@ import { COST_OPS } from '../config/costOps';
 import { LevelBadge } from './LevelBadge';
 
 // Qualitative cost & operational-complexity profile per D1 deployment option.
-export function CostOpsBadges() {
+export function CostOpsBadges({ bare = false }: { bare?: boolean }) {
   const { t, tr } = useI18n();
 
-  return (
-    <section aria-labelledby="costops-heading" className="rounded-xl border border-line bg-surface p-4">
-      <h3 id="costops-heading" className="text-base font-semibold">
-        {t('costops.heading')}
-      </h3>
-      <p className="mt-1 text-sm text-ink-soft">{t('costops.intro')}</p>
+  const body = (
+    <>
+      <p className={bare ? 'text-sm text-ink-soft' : 'mt-1 text-sm text-ink-soft'}>{t('costops.intro')}</p>
 
       <ul className="mt-3 space-y-2">
         {DIMENSIONS.D1.options.map((opt) => {
@@ -36,6 +33,16 @@ export function CostOpsBadges() {
           );
         })}
       </ul>
+    </>
+  );
+
+  if (bare) return body;
+  return (
+    <section aria-labelledby="costops-heading" className="rounded-xl border border-line bg-surface p-4">
+      <h3 id="costops-heading" className="text-base font-semibold">
+        {t('costops.heading')}
+      </h3>
+      {body}
     </section>
   );
 }
