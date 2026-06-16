@@ -8,14 +8,14 @@ few notable interpretations. The model values themselves are canonical — see t
 ## Model
 
 - **D4/D5 `qaFit` were not invented here.** The Build Spec left them "to assign & document," but
-  they are already ratified in [Model Data Sheet §4](docs/03-blueprint/model-data-sheet.md)
+  they are already ratified in [Model Data Sheet Section 4](docs/03-blueprint/model-data-sheet.md)
   (interim, ADR-0001). `src/config/dimensions.ts` reproduces those exact vectors.
 - **Cost & operational-complexity indicators** (`src/config/costOps.ts`) are **defensible expert
   defaults**, not values from the Model Data Sheet (the prototype shows none). Chosen profile per
   D1 option: Layered/Monolith/Modular-Monolith = ops *low* / infra *low*; Microservices = *high* /
   *high*; Serverless = *med* / *med* (scales to zero but variable + lock-in). Editable like any
   config; an independent reviewer may revise.
-- **Display normalization** is `round(composite / 5 × 100)` (Scoring Algorithm §7), **not** min-max
+- **Display normalization** is `round(composite / 5 × 100)` (Scoring Algorithm Section 7), **not** min-max
   — min-max would always show the worst option as 0 and exaggerate small gaps.
 - **`migrationPathChosen` is kept `false`** in the anti-pattern engine so the `legacy-without-plan`
   rule still fires; the migration card is informational guidance, not a model input.
@@ -52,7 +52,7 @@ few notable interpretations. The model values themselves are canonical — see t
   know" narrative, per-option blurbs, migration steps, and short radar labels were ported from the
   prototype (English) and **translated to Indonesian** to match. The 3 factor questions and 4 QA
   labels shown in the prototype are verbatim; the rest follow the same register. Indonesian copy is
-  **interim** — a professional translator review is welcome (charter §14.2).
+  **interim** — a professional translator review is welcome (charter Section 14.2).
 - **Canonical bilingual content** (factor labels/levels/help, option names, anti-pattern messages,
   fitness templates, risks) is reproduced verbatim from the Model Data Sheet and Option Content
   Sheet — see [EXTENDING.md](EXTENDING.md) for where each lives.

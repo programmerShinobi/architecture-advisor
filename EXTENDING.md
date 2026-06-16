@@ -21,7 +21,7 @@ edit data, not UI.
 | Factor → QA influence matrix | `src/config/factorQaMatrix.ts` | `budget` is inverted in the engine — don't add a sign here |
 | Dimension options + `qaFit` | `src/config/dimensions.ts` | Vectors in `QA_ORDER`; option order = tie-break order |
 | Default factor levels | `src/config/defaults.ts` | All 0 except `ttm:1`, `budget:2` |
-| Scenario presets | `src/config/presets.ts` | Full 14-level sets; must hit the SRS §5.3 targets |
+| Scenario presets | `src/config/presets.ts` | Full 14-level sets; must hit the SRS Section 5.3 targets |
 | Anti-pattern rules | `src/config/antiPatterns.ts` | Pure predicate over factors + selected options |
 | Fitness-function templates | `src/config/fitnessFunctions.ts` | One per QA |
 | Risk register data | `src/config/risks.ts` | Keyed `"<dim>:<optId>"`; ported from the Option Content Sheet |
@@ -54,4 +54,4 @@ npm run lint && npm run build      # types + lint + production build
 ```
 
 If a model change breaks a preset target, **adjust the preset levels — not the targets** — and
-re-run, per the Model Data Sheet §6.
+re-run, per the Model Data Sheet Section 6.
