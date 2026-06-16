@@ -7,10 +7,11 @@ import type { QaId, Weights } from '../types';
 interface Props {
   weights: Weights;
   onAdjust: () => void;
+  editing?: boolean;
 }
 
 // "What matters most" / "Quality priorities" — the derived QA weights as labelled bars.
-export function PrioritiesCard({ weights, onAdjust }: Props) {
+export function PrioritiesCard({ weights, onAdjust, editing = false }: Props) {
   const { t, tr } = useI18n();
   const rounded = roundWeights(weights);
   const rows = (QA_ORDER.filter((q) => rounded[q] > 0) as QaId[]).sort((a, b) => rounded[b] - rounded[a]);
@@ -27,12 +28,17 @@ export function PrioritiesCard({ weights, onAdjust }: Props) {
         </div>
         <button
           type="button"
-          className="expert-only"
+          className="expert-only f-btn"
           onClick={onAdjust}
-          style={{ fontSize: '11px', color: 'var(--color-text-info)', border: '0.5px solid var(--color-border-info)', borderRadius: '99px', padding: '3px 10px', cursor: 'pointer', background: 'none' }}
+          aria-pressed={editing}
+          style={
+            editing
+              ? { background: 'var(--color-text-info)', color: 'var(--color-background-primary)', borderColor: 'var(--color-text-info)' }
+              : undefined
+          }
         >
-          <IconPencil size={12} style={{ verticalAlign: '-1px', marginRight: '3px' }} aria-hidden />
-          {t('prio.adjust')}
+          <IconPencil size={13} aria-hidden />
+          {editing ? t('prio.adjustDone') : t('prio.adjust')}
         </button>
       </div>
       <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '14px' }}>

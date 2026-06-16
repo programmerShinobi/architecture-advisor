@@ -5,7 +5,7 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 1.0 |
+| **Version** | 1.1 |
 | **Date** | 2026-06-16 |
 | **Status** | Baseline — v1.0 implemented |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
@@ -27,6 +27,7 @@
 | 0.8 | 2026-06-13 | Closed OI-3: a basic C4-style stub is in v1.0 (FR-OUT-5, Could); richer auto-generated C4 deferred to v2.x. Charter pointer → v1.7 |
 | 0.9 | 2026-06-13 | Performance-budget targets ratified (NFR-PERF-3, design ADR-008): numbers committed with mandatory lazy-loading of mermaid/recharts; OI-5 target-setting closed, real-bundle measurement remains a Phase 4/5 verification step |
 | 1.0 | 2026-06-16 | v1.0 implemented. Added the v1.1 enhancement requirements realized in the app — FR-SHELL-9 (in-app Manual with a live worked calculation), FR-REC-14 (runner-up explainer), FR-REC-15 (A/B scenario comparison), FR-OUT-7 (Print/PDF). Reconciled the chart technology to hand-built SVG (`recharts` dropped — NFR-PERF-3, AC-12, Section 2.4; see [DECISIONS.md](../../DECISIONS.md)). Charter pointer → v1.8 |
+| 1.1 | 2026-06-16 | UI/UX polish: the **C4 stub is now hand-built SVG** (`mermaid` dropped — it failed to render; FR-OUT-5, NFR-PERF-3, AC-12, Section 2.4); project factors and the expert analysis panels use **collapsible dropdowns**; the expert QA-weight override panel UI fixed; exports gained a **plain-language executive summary** (report/ADR/print). No requirements removed |
 
 ---
 
@@ -170,8 +171,9 @@ plain, readable degraded experience rather than a blank page (see FR-EDGE-4).
 
 Client-side only; bilingual ID/EN; all model values held in configuration (not hard-coded);
 tech stack fixed by [Build Spec v3 Section 2](../specs/build-spec-v3.md) (Vite + React + TypeScript,
-Tailwind, mermaid). The trade-off radar and bar charts are **hand-built SVG/CSS** — `recharts` was
-dropped in implementation (see [DECISIONS.md](../../DECISIONS.md)). See charter
+Tailwind). All charts (trade-off radar, bar charts) **and the C4 diagram** are **hand-built
+SVG/CSS** — `recharts` and `mermaid` were dropped in implementation (see
+[DECISIONS.md](../../DECISIONS.md)). See charter
 [Section 9](../01-discovery-and-planning/discovery-and-planning.md#9-assumptions-constraints--dependencies).
 
 ### 2.5 Assumptions & Dependencies
@@ -186,7 +188,7 @@ Stated explicitly so these never re-enter as implicit requirements. The system *
 v1.0:
 
 - **Replace human judgment** or perform a full ATAM workshop — it is decision *support* only (Charter Section 21).
-- **Generate application code or Infrastructure-as-Code** — the C4 Mermaid stub (FR-OUT-5) is a diagram, not runnable artifacts (Charter Section 5).
+- **Generate application code or Infrastructure-as-Code** — the C4 diagram stub (FR-OUT-5) is a diagram, not runnable artifacts (Charter Section 5).
 - **Store sensitive data, accounts, or any server-side state** — there is no backend, database, or login (Charter Section 17).
 - **Make network or AI calls** to score, recommend, or explain — all computation is local arithmetic (Build Spec Section 2).
 - **Claim empirical validity** for its heuristics — the validation study is deferred (Charter Section 11; OI-6).
@@ -257,7 +259,7 @@ v1.0:
 | FR-OUT-2 | Export a **full report** (Markdown + print stylesheet). | Must | Build Spec Section 12 | T |
 | FR-OUT-3 | Export **scores as CSV** and the **assessment as JSON**. | Should | Build Spec Section 12 | T |
 | FR-OUT-4 | Provide a **share-via-URL** link that round-trips to identical state. | Must | Build Spec Section 14.14 | T |
-| FR-OUT-5 | Render a **basic C4-style Mermaid diagram stub** reflecting the chosen D1 style (richer auto-generated C4 is deferred to v2.x). | Could | Build Spec Section 12; Charter Section 5 | D |
+| FR-OUT-5 | Render a **basic C4-style diagram stub** (hand-built SVG) reflecting the chosen D1 style (richer auto-generated C4 is deferred to v2.x). | Could | Build Spec Section 12; Charter Section 5 | D |
 | FR-OUT-6 | Support **import/export of a basic custom-configuration JSON** for extensibility (per-user; organization-level config is deferred to v2.0). | Should | Build Spec Section 12; Charter Section 5 | T |
 | FR-OUT-7 | Provide a **Print / PDF** action that renders a clean, theme-independent one-page decision report via the browser's print dialog. | Should | v1.1 enhancement; FR-OUT-2 | D |
 
@@ -304,7 +306,7 @@ production. They are the most common source of "we never specified that" defects
 |---|---|---|---|---|
 | NFR-PERF-1 | Reflect any factor change in priorities, charts, and rankings within **~100 ms perceived** latency on a mid-range device. | Must | UI/UX Playbook Task 1 | T |
 | NFR-PERF-2 | Enable a **median time-to-first-recommendation ≤ 5 minutes** (KPI K3). | Must | Charter Section 22 (K3) | T |
-| NFR-PERF-3 | Meet the **ratified performance budgets** on a mid-range device: initial JS bundle **≤ 300 KB gzipped** (mermaid lazy-loaded; charts are hand-built SVG, no chart library), First Contentful Paint **≤ 2 s** on a fast-3G profile, and a re-score interaction p95 **≤ 100 ms**. Verified by a CI bundle-size gate + Lighthouse in Phase 4/5 (design [ADR-008](../03-blueprint/design-specification.md#8-key-design-decisions-adrs)). | Should | UI/UX Playbook Task 1 | T |
+| NFR-PERF-3 | Meet the **ratified performance budgets** on a mid-range device: initial JS bundle **≤ 300 KB gzipped** (no chart or diagram library — all visuals are hand-built SVG), First Contentful Paint **≤ 2 s** on a fast-3G profile, and a re-score interaction p95 **≤ 100 ms**. Verified by a CI bundle-size gate + Lighthouse in Phase 4/5 (design [ADR-008](../03-blueprint/design-specification.md#8-key-design-decisions-adrs)). | Should | UI/UX Playbook Task 1 | T |
 | NFR-USE-1 | Achieve a **System Usability Scale [9] ≥ 70** at beta — the empirically derived "acceptable" threshold [10] (operative solo-stage KPI K5; aspirational target 75). | Should | Charter Section 22 (K5) | T |
 | NFR-USE-2 | Be usable **without mandatory setup** (presets and sample data available immediately). | Must | UI/UX Playbook Task 9 | D |
 | NFR-USE-3 | Be **consistent and predictable**: honor standard shortcuts; one term per concept; consistent color meaning. | Must | UI/UX Playbook Task 6 | I |
@@ -459,7 +461,7 @@ Key gates:
 - **AC-9.** Fully keyboard-operable; AA contrast in both themes. *(NFR-A11Y-1/2)*
 - **AC-10.** A tampered/truncated share URL falls back to saved or default state with a notice (no crash, no blank page); with `localStorage` disabled, the app still runs and warns that progress will not be saved. *(FR-EDGE-1/2)*
 - **AC-11.** An older-model-version share link or export renders as-is and offers "recompute with the current model"; importing an invalid config JSON is rejected with a field-level error and leaves the current config intact. *(FR-EDGE-3/5)*
-- **AC-12.** The production build meets the ratified performance budgets — bundle ≤ 300 KB gzipped (mermaid lazy-loaded; charts hand-built SVG), FCP ≤ 2 s on fast-3G, re-score p95 ≤ 100 ms — enforced by a CI bundle-size gate + Lighthouse. *(NFR-PERF-3; design ADR-008)*
+- **AC-12.** The production build meets the ratified performance budgets — bundle ≤ 300 KB gzipped (no chart/diagram library; all visuals hand-built SVG), FCP ≤ 2 s on fast-3G, re-score p95 ≤ 100 ms — enforced by a CI bundle-size gate + Lighthouse. *(NFR-PERF-3; design ADR-008)*
 
 **Release gate (Charter [Section 11](../01-discovery-and-planning/discovery-and-planning.md#11-success-criteria--project-level-definition-of-done)):**
 all UX-quality criteria met; KPIs K3 and K5 met at beta; no critical defects.

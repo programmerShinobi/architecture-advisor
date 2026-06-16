@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { generateAdr } from './adr';
 import { generateReport } from './report';
-import { generateC4 } from './c4';
+import { buildC4 } from './c4';
 import { serializeScenario, parseScenario, type ScenarioState } from './scenarioIO';
 import { buildShareUrl, hydrateFromUrl } from './urlState';
 import { DEFAULT_LEVELS } from '../config/defaults';
@@ -46,11 +46,18 @@ describe('generateReport', () => {
   });
 });
 
-describe('generateC4', () => {
+describe('buildC4', () => {
+  const labels = (id: string) => buildC4(id).rows.flat().map((n) => n.label);
   it('reflects the chosen D1 style', () => {
-    expect(generateC4('microservices')).toContain('API Gateway');
-    expect(generateC4('monolith')).toContain('Monolith');
-    expect(generateC4('layered')).toContain('Presentation tier');
+    expect(labels('microservices')).toContain('API Gateway');
+    expect(labels('monolith').join(' ')).toContain('Monolith');
+    expect(labels('layered')).toContain('Presentation tier');
+  });
+  it('ends in a data store for every style', () => {
+    for (const id of ['monolith', 'microservices', 'serverless', 'layered', 'modular-monolith']) {
+      const rows = buildC4(id).rows;
+      expect(rows[rows.length - 1].every((n) => n.kind === 'store')).toBe(true);
+    }
   });
 });
 

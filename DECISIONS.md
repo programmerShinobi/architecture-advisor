@@ -31,8 +31,10 @@ few notable interpretations. The model values themselves are canonical — see t
 
 - **Icons:** `@tabler/icons-react` (tree-shaken) instead of the prototype's full icon **webfont** —
   identical glyphs at a few KB vs a 457 KB font + 249 KB CSS, protecting the FCP budget (ADR-008).
-- **Charts are hand-built SVG/CSS** (radar + priority/score bars); **recharts was removed**. This
-  matches the prototype's custom radar exactly and drops a heavy dependency.
+- **All visuals are hand-built SVG/CSS** (radar, priority/score bars, **and the C4 diagram stub**);
+  **`recharts` and `mermaid` were both removed**. recharts duplicated the prototype's custom radar;
+  mermaid failed to render the C4 stub reliably and was a heavy lazy dependency. Hand-built SVG is
+  deterministic, theme-aware, always renders, and keeps the bundle small.
 - **Dark by default** (matches the prototype); light is opt-in via the `html.light` class.
 - **Guided/Expert reconciliation:** the prototype has no separate analysis section, but the Build
   Spec mandates a risk register, fitness functions, cost/ops indicators, a C4 stub, methodology

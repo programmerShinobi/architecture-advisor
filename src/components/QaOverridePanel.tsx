@@ -50,32 +50,39 @@ export function QaOverridePanel({ weights, overrides, onChange }: Props) {
           const locked = overrides[q] !== undefined;
           const value = locked ? (overrides[q] as number) : rounded[q];
           return (
-            <li key={q} className="flex items-center gap-2 py-1.5">
+            <li key={q} className="flex items-center gap-3 py-2">
               <span className="min-w-0 flex-1 truncate text-sm">{tr(QUALITY_ATTRIBUTES[q].name)}</span>
-              <input
-                type="number"
-                min={0}
-                max={100}
-                value={value}
-                aria-label={tr(QUALITY_ATTRIBUTES[q].name)}
-                onChange={(e) => setOverride(q, e.target.value)}
-                className={
-                  'w-16 rounded-md border px-2 py-1 text-right text-sm tabular-nums ' +
-                  (locked ? 'border-brand bg-brand/5' : 'border-line bg-surface')
-                }
-              />
-              <span className="text-xs text-ink-soft">%</span>
-              {locked ? (
-                <button
-                  type="button"
-                  onClick={() => unlock(q)}
-                  className="rounded border border-line px-1.5 py-0.5 text-[11px] hover:bg-surface-2"
-                >
-                  {t('override.unlock')}
-                </button>
-              ) : (
-                <span className="w-[52px]" aria-hidden />
-              )}
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={value}
+                  aria-label={tr(QUALITY_ATTRIBUTES[q].name)}
+                  onChange={(e) => setOverride(q, e.target.value)}
+                  className="no-spin w-14 rounded-md border px-2 py-1 text-right text-sm tabular-nums outline-none"
+                  style={{
+                    borderColor: locked ? 'var(--color-text-info)' : 'var(--color-border-secondary)',
+                    background: locked ? 'var(--color-background-info)' : 'var(--color-background-primary)',
+                    color: locked ? 'var(--color-text-info)' : 'var(--color-text-primary)',
+                    fontWeight: locked ? 600 : 400,
+                  }}
+                />
+                <span className="text-xs text-ink-faint">%</span>
+              </div>
+              <div className="w-16 text-right">
+                {locked ? (
+                  <button
+                    type="button"
+                    onClick={() => unlock(q)}
+                    className="rounded-md border border-line px-2 py-1 text-[11px] hover:bg-surface-2"
+                  >
+                    {t('override.unlock')}
+                  </button>
+                ) : (
+                  <span className="text-[11px] text-ink-faint">{t('override.auto')}</span>
+                )}
+              </div>
             </li>
           );
         })}

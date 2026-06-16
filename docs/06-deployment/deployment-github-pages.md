@@ -4,7 +4,7 @@ This guide deploys the v3 app to **GitHub Pages** for **free**, with a free **Gi
 CI/CD pipeline. It assumes a **public** repository (the only fully-free path: public repos get
 unlimited Actions minutes on standard runners and free Pages hosting).
 
-Everything in the stack (Vite, React, TypeScript, Tailwind, recharts, mermaid, vitest) is free
+Everything in the stack (Vite, React, TypeScript, Tailwind, Vitest) is free
 and open source. Your elementary OS machine (Ubuntu 24.04 base) is fine as the dev box.
 
 ---
@@ -206,8 +206,8 @@ With these you can leave `base: '/'` (no sub-path), which avoids the step-3 gotc
   doesn't match the repo name. Fix it, commit, push.
 - **Workflow fails on `npm ci`** → ensure `package-lock.json` is committed.
 - **Pages source not set** → Settings → Pages → Source must be "GitHub Actions".
-- **Charts/diagrams missing in prod but fine locally** → confirm recharts/mermaid are in
-  `dependencies` (not only `devDependencies`).
+- **Charts/diagrams look wrong in prod but fine locally** → all visuals are hand-built SVG; check
+  the browser console for runtime errors and that the CSS variables (theme tokens) are loaded.
 
 ---
 

@@ -96,7 +96,7 @@ diagram, is in **[docs/README.md](docs/README.md)**.
 ## Tech stack
 
 - **Vite + React + TypeScript** (strict), Tailwind CSS — **dark by default**, Inter + JetBrains Mono, Tabler icons
-- **Hand-built SVG/CSS charts** (trade-off radar + score bars); **mermaid** (C4-style diagram stub, lazy-loaded)
+- **Hand-built SVG/CSS** visuals (trade-off radar, score bars, C4-style diagram stub) — no chart or diagram library
 - React hooks only; state persisted to `localStorage` and encoded in the URL hash (shareable links)
 - Lightweight i18n (ID/EN), Vitest + Testing Library, ESLint + Prettier
 - **Pure client-side** — no backend, database, accounts, or AI calls

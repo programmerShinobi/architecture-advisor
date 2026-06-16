@@ -35,7 +35,6 @@ import type { MigrationKey } from './config/migrationPaths';
 import { DIMENSION_ORDER } from './config/dimensions';
 import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
-import { generateC4 } from './lib/c4';
 import type { ExportInput } from './lib/snapshot';
 import type { ScenarioState } from './lib/scenarioIO';
 import type { DimensionId, Levels, RankedOption } from './types';
@@ -76,7 +75,6 @@ export default function App() {
 
   const flips = useMemo(() => sensitivity(levels, 'D1', overrides), [levels, overrides]);
 
-  const [showC4, setShowC4] = useState(false);
   const [editWeights, setEditWeights] = useState(false);
   const [currentDim, setCurrentDim] = useState<DimensionId>('D1');
   const [migKey, setMigKey] = useState<MigrationKey>('big');
@@ -199,7 +197,7 @@ export default function App() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '18px' }}>
           <FactorInputs levels={levels} onChange={setLevels} />
-          <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} />
+          <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={mode === 'expert' && editWeights} />
         </div>
         {mode === 'expert' && editWeights && (
           <div style={{ marginTop: '14px' }}>
@@ -251,17 +249,10 @@ export default function App() {
             <Collapsible title={t('methodology.heading')}>
               <MethodologyPanel bare />
             </Collapsible>
+            <Collapsible title={t('c4.heading')}>
+              <C4Preview optionId={effective.D1} />
+            </Collapsible>
             <Glossary />
-            <div>
-              <button type="button" className="f-btn" onClick={() => setShowC4((v) => !v)} aria-expanded={showC4}>
-                {showC4 ? t('c4.hide') : t('c4.show')}
-              </button>
-              {showC4 && (
-                <div style={{ marginTop: '12px' }}>
-                  <C4Preview code={generateC4(effective.D1)} />
-                </div>
-              )}
-            </div>
           </div>
         </section>
 
