@@ -53,8 +53,7 @@ Design principles, in priority order:
 
 - Vite + React + TypeScript (strict mode)
 - Tailwind CSS with dark mode (`class` strategy + toggle)
-- Charts: `recharts` (radar + bar charts) — install via npm
-- Diagram preview: `mermaid` (render C4-style stub) — install via npm
+- Charts & diagram: **hand-built SVG** (radar, bar charts, C4-style stub) — no chart/diagram library *(implementation superseded the original `recharts` + `mermaid` plan; see [DECISIONS.md](../../DECISIONS.md))*
 - State: React hooks only (`useState`/`useReducer`/`useMemo`/`useContext`); no Redux
 - State persistence: `localStorage` + full state encoded in the URL hash (shareable links)
 - i18n: lightweight dictionary (`{ en, id }`) + `t(key)` helper; runtime toggle; default = `id`
@@ -231,7 +230,7 @@ Compute and display all of the following:
 1. **QA priority chart** — bar/horizontal chart of the normalized QA weights (the utility tree).
 2. **Per-dimension ranking** with composite scores normalized to 0–100 within the dimension.
 3. **Radar chart** — for the top 2–3 options of D1 (and on demand any dimension), overlay their
-   `qaFit` across all 12 QAs so trade-offs are visible at a glance (recharts RadarChart).
+   `qaFit` across all 12 QAs so trade-offs are visible at a glance (hand-built SVG radar).
 4. **QA contribution breakdown** — for a selected option, a table: QA, weight%, fit(1–5),
    weighted points, sorted by contribution. Must reconcile to the composite score.
 5. **Trade-off / comparison mode** — pick 2–3 options (across or within dimensions) and compare
@@ -327,7 +326,7 @@ For each of the top ~4 weighted QAs, suggest one or two concrete, measurable fit
   Statement, Decision Drivers, Considered Options, Decision Outcome, Consequences good/bad,
   Links); full report export (Markdown + print stylesheet) including factor inputs, QA priorities,
   per-dimension recommendations, QA scorecard, trade-offs, risks, anti-pattern warnings, fitness
-  functions, migration path, alternatives, references; C4-style Mermaid diagram stub reflecting
+  functions, migration path, alternatives, references; C4-style diagram stub reflecting
   the chosen D1 style; share-via-URL; import/export a custom config JSON (extensibility).
 - **Phase 6 — Polish & trust.** Migration paths; optional multi-stakeholder QA weighting (each
   stakeholder profile weights QAs; aggregate by average) ; accessibility pass; unit tests
@@ -356,7 +355,7 @@ src/
   lib/antiPatternEngine.ts
   lib/adr.ts                      // MADR markdown
   lib/report.ts                   // full report markdown
-  lib/c4.ts                       // mermaid C4 stub
+  lib/c4.ts                       // C4 stub (hand-built SVG)
   lib/urlState.ts                 // encode/decode (sec 2)
   lib/customConfig.ts             // import/export config JSON
   hooks/ (usePersistedState, useUrlSyncedState)

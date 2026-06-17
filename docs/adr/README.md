@@ -7,7 +7,7 @@ quality attributes, factor→QA matrix, fit vectors, anti-pattern rules, and pre
 [MADR](https://adr.github.io/madr/) format, each with rationale and references, as the charter
 requires.
 
-> **Scope.** *App-level design* decisions (pure functional core, client-side only, recharts, etc.)
+> **Scope.** *App-level design* decisions (pure functional core, client-side only, hand-built SVG, etc.)
 > are recorded inline in the [Design Specification Section 8](../03-blueprint/design-specification.md#8-key-design-decisions-adrs)
 > as ADR-001…008 (3-digit). **This log** records *model* decisions, numbered **ADR-0001…** (4-digit).
 

@@ -325,8 +325,6 @@ export const DICT = {
   'action.importSetup': { en: 'Import setup (JSON)', id: 'Impor setup (JSON)' },
   'action.importError': { en: 'Invalid setup file.', id: 'Berkas setup tidak valid.' },
   'c4.heading': { en: 'Architecture diagram (C4 stub)', id: 'Diagram arsitektur (stub C4)' },
-  'c4.show': { en: 'Show diagram', id: 'Tampilkan diagram' },
-  'c4.hide': { en: 'Hide diagram', id: 'Sembunyikan diagram' },
   'c4.error': { en: 'Could not render the diagram.', id: 'Tidak dapat merender diagram.' },
   'action.reset': { en: 'Reset to defaults', id: 'Atur ulang ke default' },
   'action.followRec': { en: 'Follow recommendations', id: 'Ikuti rekomendasi' },

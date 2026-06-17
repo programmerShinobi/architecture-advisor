@@ -5,8 +5,8 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Design Specification / Software Design Document (SDD) |
-| **Version** | 0.7 |
-| **Date** | 2026-06-12 |
+| **Version** | 0.8 |
+| **Date** | 2026-06-16 |
 | **Status** | Draft |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, designers |
@@ -24,6 +24,7 @@
 | 0.5 | 2026-06-13 | Definition of Ready: D4/D5 `qaFit` and preset calibration interim-ratified ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md), [ADR-0002](../adr/0002-ratify-preset-calibration.md)); DI-1 closed |
 | 0.6 | 2026-06-13 | Resolved DI-5 / SRS OI-3: a basic C4 Mermaid stub is in v1.0 (richer auto-generated C4 deferred to v2.x); Definition-of-Ready C4 item checked |
 | 0.7 | 2026-06-13 | Ratified the performance budgets as v1.0 targets (ADR-008, closes DI-4 / SRS OI-5), with mandatory lazy-loading of mermaid/recharts; real-bundle measurement remains a Phase 4/5 verification step |
+| 0.8 | 2026-06-16 | Implementation reconciliation: ADR-005 superseded — all charts **and** the C4 stub are hand-built SVG; `recharts` and `mermaid` removed (ADR-008 note, design-system + Definition-of-Ready updated). See [DECISIONS.md](../../DECISIONS.md). No design intent changed otherwise |
 
 ---
 
@@ -249,7 +250,7 @@ mode); the prototype's `:root` / `html.light` blocks are the source of truth.
 
 **Component inventory:** Button · Chip · Segmented control · Badge · Card · Data grid (sortable,
 sticky header, tabular numbers) · Modal / Command palette · Toast · Skeleton · Progress bar ·
-Radar (recharts) · Bar chart. Every component **shall** define all states
+Radar · bar chart (hand-built SVG). Every component **shall** define all states
 (default/hover/active/disabled/loading/error) and meet WCAG AA contrast in both themes
 (NFR-A11Y-1).
 
@@ -284,10 +285,10 @@ These app-level decisions are recorded here; model-value changes follow the ADR 
 | ADR-002 | **Config-driven model** — no hard-coded weights/fit/rules/strings | Auditable & extensible; enables custom-config import/export |
 | ADR-003 | **Client-side only**; state in `localStorage` + URL hash | Free hosting, no PII, shareable; cost: state-size limits in URL |
 | ADR-004 | **React hooks only** (`useState`/`useReducer`/`useMemo`/`useContext`), no Redux | Right-sized for one app state; lower ceremony |
-| ADR-005 | **recharts** (radar/bar) + **mermaid** (C4 stub) | Mature, declarative; must ship in `dependencies` |
+| ADR-005 | **Hand-built SVG** for charts (radar/bar) and the C4 stub | No chart/diagram library — deterministic, theme-aware, tiny. *(Superseded the original recharts + mermaid choice during implementation; see [DECISIONS.md](../../DECISIONS.md).)* |
 | ADR-006 | **CSS custom properties + Tailwind** `class` dark mode for tokens | One token contract, two themes; matches the prototype |
 | ADR-007 | **Model version separate from app SemVer** | Reproducible results across model changes (R8) |
-| ADR-008 | **Performance budgets** as v1.0 targets — initial JS ≤ 300 KB gzip, FCP ≤ 2 s (fast-3G), re-score p95 ≤ 100 ms | Grounded in the 100 ms response limit [Miller/Nielsen] and Core-Web-Vitals FCP guidance. **Requires lazy-loading `mermaid` and `recharts`** (dynamic import, off the first-paint path) — they are too large for the initial bundle. Verified by a CI bundle-size gate + Lighthouse in Phase 4/5 |
+| ADR-008 | **Performance budgets** as v1.0 targets — initial JS ≤ 300 KB gzip, FCP ≤ 2 s (fast-3G), re-score p95 ≤ 100 ms | Grounded in the 100 ms response limit [Miller/Nielsen] and Core-Web-Vitals FCP guidance. **Implementation:** all visuals are hand-built SVG (no chart/diagram library), so no heavy chunk needs lazy-loading (see [DECISIONS.md](../../DECISIONS.md)). Verified by a CI bundle-size gate + Lighthouse in Phase 4/5 |
 
 ---
 
@@ -333,8 +334,8 @@ free of guesswork — each line is either fixed or has a usable baseline.
 - [x] **D4/D5 `qaFit` interim-ratified** by the Owner ([ADR-0001](../adr/0001-ratify-d4-d5-qafit.md), closes SRS OI-4); an independent Domain Advisor / the v3.0 study may still revise the values.
 - [x] **Factor content authored (EN/ID)**: labels, level labels, and help for all 14 factors — [Model Data Sheet Section 2.1](model-data-sheet.md) (Translator review pending).
 - [x] **Option & message content authored (EN/ID)**: educational metadata for all 21 options, the 7 anti-pattern messages, and the 12 fitness-function templates — [Option Content Sheet](option-content-sheet.md) (Translator & Domain-Advisor review pending).
-- [x] **C4 stub** scoped: in v1.0 as a basic Mermaid stub (FR-OUT-5, Could); richer auto-generated C4 deferred to v2.x (SRS OI-3 closed).
-- [x] **Performance budget targets ratified** ([ADR-008](#8-key-design-decisions-adrs); SRS OI-5 closed) — committed as v1.0 budgets, with mandatory lazy-loading of mermaid/recharts. *Measuring the real production bundle against them is the one remaining item, inherently a Phase 4/5 verification step (CI bundle gate + Lighthouse).*
+- [x] **C4 stub** scoped: in v1.0 as a basic diagram stub (hand-built SVG; FR-OUT-5, Could); richer auto-generated C4 deferred to v2.x (SRS OI-3 closed).
+- [x] **Performance budget targets ratified** ([ADR-008](#8-key-design-decisions-adrs); SRS OI-5 closed) — committed as v1.0 budgets; in implementation all visuals are hand-built SVG (no chart/diagram libraries). *Measuring the real production bundle against them is the one remaining item, inherently a Phase 4/5 verification step (CI bundle gate + Lighthouse).*
 
 Checked items are done. The unchecked items all have **baseline values recorded in the Model Data
 Sheet**, so development is unblocked today — closing them refines numbers, never the structure.
