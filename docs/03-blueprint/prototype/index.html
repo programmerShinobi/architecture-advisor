@@ -114,6 +114,8 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
 #f-app details{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);}
 #f-app summary{list-style:none;cursor:pointer;padding:11px 14px;font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px;}
 #f-app summary::-webkit-details-marker{display:none;}
+#f-app summary .f-chev{transition:transform .15s;}
+#f-app details[open]>summary .f-chev{transform:rotate(90deg);}
 #f-grid table{width:100%;border-collapse:collapse;font-size:12px;}
 #f-grid th{position:sticky;top:0;background:var(--color-background-primary);text-align:right;padding:7px 10px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;border-bottom:0.5px solid var(--color-border-tertiary);}
 #f-grid th:first-child,#f-grid td:first-child{text-align:left;}
@@ -141,6 +143,7 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   </div>
   <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
     <span id="f-savestate" style="display:flex; align-items:center; gap:5px; font-size:11px; color:var(--color-text-tertiary);"><i class="ti ti-circle-check" style="font-size:13px; color:var(--color-text-success);" aria-hidden="true"></i>All changes saved</span>
+    <span id="f-guide" class="f-btn"><i class="ti ti-book-2" style="font-size:13px;" aria-hidden="true"></i>Guide</span>
     <span id="f-cmdk" class="f-btn"><i class="ti ti-command" style="font-size:13px;" aria-hidden="true"></i><span class="kbd">⌘K</span></span>
     <span id="f-help" class="f-btn" title="Keyboard shortcuts">?</span>
     <div style="display:flex; align-items:center; gap:2px; background:var(--color-background-secondary); border-radius:99px; padding:2px;"><span class="f-mode on" id="m-guided">Guided</span><span class="f-mode" id="m-expert">Expert</span></div>
@@ -171,10 +174,11 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   </div>
   <div class="f-gloss" style="margin-bottom:11px;">These fill in the answers for you — change anything afterward.</div>
   <div style="display:flex; flex-wrap:wrap; gap:8px;">
-    <span class="f-chip on f-preset"><i class="ti ti-rocket" style="font-size:14px;" aria-hidden="true"></i>New idea / small startup</span>
+    <span class="f-chip f-preset"><i class="ti ti-rocket" style="font-size:14px;" aria-hidden="true"></i>New idea / small startup</span>
     <span class="f-chip f-preset"><i class="ti ti-building-bank" style="font-size:14px;" aria-hidden="true"></i>Bank or healthcare</span>
-    <span class="f-chip f-preset"><i class="ti ti-shopping-cart" style="font-size:14px;" aria-hidden="true"></i>Busy online shop</span>
+    <span class="f-chip on f-preset"><i class="ti ti-shopping-cart" style="font-size:14px;" aria-hidden="true"></i>Busy online shop</span>
     <span class="f-chip f-preset"><i class="ti ti-cpu" style="font-size:14px;" aria-hidden="true"></i>Sensors / live data</span>
+    <span class="f-chip f-preset"><i class="ti ti-tool" style="font-size:14px;" aria-hidden="true"></i>Internal tool</span>
   </div>
   <div id="f-resetstatus" style="margin-top:10px;"></div>
 
@@ -183,30 +187,99 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;"><span class="f-num">1</span><span style="font-size:15px; font-weight:500; color:var(--color-text-primary);"><span class="guided-only">Tell us about your project</span><span class="expert-only">Project factors</span></span></div>
 
   <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px;">
-    <div>
-      <div style="margin-bottom:15px;">
-        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:3px;"><span style="color:var(--color-text-primary);"><span class="guided-only">How big is your team?</span><span class="expert-only">Team size</span></span><i class="ti ti-help-circle" style="font-size:14px; color:var(--color-text-info); cursor:pointer;" aria-hidden="true"></i></div>
-        <div class="f-gloss" style="margin-bottom:7px;">More people means you'll want pieces that can be worked on separately.</div>
-        <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Small</span><span class="on">Medium</span><span>Large</span></div>
-      </div>
-      <div style="margin-bottom:15px;">
-        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:3px;"><span style="color:var(--color-text-primary);"><span class="guided-only">How many people will use it?</span><span class="expert-only">Scale &amp; traffic</span></span><i class="ti ti-help-circle" style="font-size:14px; color:var(--color-text-info); cursor:pointer;" aria-hidden="true"></i></div>
-        <div class="f-gloss" style="margin-bottom:7px;">An office tool is "low". A nationwide app during a sale is "high".</div>
-        <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Low</span><span>Steady</span><span class="on">High</span></div>
-      </div>
-      <div>
-        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:3px;"><span style="color:var(--color-text-primary);"><span class="guided-only">Must the data always be exact?</span><span class="expert-only">Data consistency</span></span><i class="ti ti-help-circle" style="font-size:14px; color:var(--color-text-info); cursor:pointer;" aria-hidden="true"></i></div>
-        <div class="f-gloss" style="margin-bottom:7px;">Money must be exact instantly. A "likes" count can lag a second — fine.</div>
-        <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span class="on">Eventual OK</span><span>Mixed</span><span>Strong</span></div>
-      </div>
-      <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:12px; color:var(--color-text-info); margin-top:16px; cursor:pointer;"><i class="ti ti-chevron-down" style="font-size:14px;" aria-hidden="true"></i> Show the other 11 factors</div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <details open>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Team &amp; delivery<span style="margin-left:auto; font-size:11px; color:var(--color-text-tertiary);">5</span></summary>
+        <div style="padding:2px 14px 8px;">
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How big is your team?</span><span class="expert-only">Team size</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">More people means you'll want pieces that can be worked on separately.</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Small (1–5)</span><span>Medium (6–20)</span><span class="on">Large / multiple teams</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">Where does your team work?</span><span class="expert-only">Team distribution</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">All in one office, or spread across places and time zones?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Co-located</span><span>Partly remote</span><span class="on">Fully distributed / global</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How soon must it launch?</span><span class="expert-only">Time-to-market pressure</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">A relaxed timeline, or a hard deadline that can't slip?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span class="on">Relaxed</span><span>Moderate</span><span>Very urgent</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How tight is the budget?</span><span class="expert-only">Budget / cost flexibility</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">A tight budget favors cheaper-to-run choices.</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Tight</span><span>Moderate</span><span class="on">Flexible</span></div>
+          </div>
+          <div>
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How long will it live?</span><span class="expert-only">Expected system lifespan</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">A quick experiment, or a system you'll run for years?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Throwaway / prototype</span><span>Medium-term</span><span class="on">Long-lived / strategic</span></div>
+          </div>
+        </div>
+      </details>
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Scale &amp; performance<span style="margin-left:auto; font-size:11px; color:var(--color-text-tertiary);">4</span></summary>
+        <div style="padding:2px 14px 8px;">
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How many people will use it?</span><span class="expert-only">Expected scale / traffic</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">An office tool is "low". A nationwide app during a sale is "high".</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Low</span><span>Medium</span><span class="on">High / extreme spikes</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How much data will it hold?</span><span class="expert-only">Data volume</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">A little, or huge amounts that grow fast?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Low</span><span>Moderate</span><span class="on">Very large / big data</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How much happens in the background?</span><span class="expert-only">Async / event-driven workload</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">Mostly instant requests, or lots of jobs and events?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Minimal</span><span>Some</span><span class="on">Heavy / many integrations</span></div>
+          </div>
+          <div>
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How fast must it react?</span><span class="expert-only">Real-time / low-latency need</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">Normal web speed, or split-second live updates?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span class="on">Not important</span><span>Somewhat</span><span>Critical (sub-second)</span></div>
+          </div>
+        </div>
+      </details>
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Domain, data &amp; risk<span style="margin-left:auto; font-size:11px; color:var(--color-text-tertiary);">5</span></summary>
+        <div style="padding:2px 14px 8px;">
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How complex are the business rules?</span><span class="expert-only">Business domain complexity</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">Simple forms, or intricate logic with many cases?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Simple</span><span>Moderate</span><span class="on">Complex</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">Must the data always be exact?</span><span class="expert-only">Data consistency need</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">Money must be exact instantly. A "likes" count can lag a second — fine.</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Eventual is fine</span><span class="on">Mixed</span><span>Strong consistency required</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How sensitive is the data?</span><span class="expert-only">Security / compliance need</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">Ordinary data, or regulated info like health or finance?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Standard</span><span class="on">Elevated</span><span>Strict (regulated data)</span></div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">Any old systems to connect to?</span><span class="expert-only">Legacy integration burden</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">Greenfield, or lots of legacy to integrate with?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span class="on">None / greenfield</span><span>Some</span><span>Heavy legacy coupling</span></div>
+          </div>
+          <div>
+            <div style="font-size:13px; margin-bottom:3px;"><span class="guided-only">How strong is your automation?</span><span class="expert-only">DevOps / platform maturity</span></div>
+            <div class="f-gloss" style="margin-bottom:7px;">Manual deploys, or mature CI/CD and monitoring?</div>
+            <div class="f-seg" style="display:flex; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); overflow:hidden;"><span>Low</span><span>Medium</span><span class="on">Mature (CI/CD, monitoring)</span></div>
+          </div>
+        </div>
+      </details>
     </div>
 
     <div style="border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:15px 16px;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
         <div style="display:flex; align-items:center; gap:8px;"><span class="f-num">2</span><span style="font-size:14px; font-weight:500; color:var(--color-text-primary);"><span class="guided-only">What matters most</span><span class="expert-only">Quality priorities</span></span></div>
         <span id="f-updating" style="display:none; align-items:center; gap:5px; font-size:11px; color:var(--color-text-info);"><span class="spin"></span>Updating…</span>
-        <span class="expert-only" style="font-size:11px; color:var(--color-text-info); border:0.5px solid var(--color-border-info); border-radius:99px; padding:3px 10px; cursor:pointer;"><i class="ti ti-pencil" style="font-size:12px; vertical-align:-1px;" aria-hidden="true"></i> Adjust weights</span>
+        <span class="expert-only f-btn"><i class="ti ti-pencil" style="font-size:13px;" aria-hidden="true"></i>Adjust weights</span>
       </div>
       <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:14px;"><span class="guided-only">Worked out from your answers:</span><span class="expert-only">Derived from factors · normalized to 100%</span></div>
       <div style="display:flex; flex-direction:column; gap:12px;">
@@ -305,6 +378,95 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
       Each architecture is rated 1–5 on 12 quality attributes (based on the <span style="color:var(--color-text-primary); font-weight:500;">ISO/IEC 25010</span> model). Your answers set how much each quality matters; the score is each rating times its weight, added up. <span class="expert-only">Fit ratings and the factor–weight mapping live in editable config. Mirrors an ATAM-style utility-tree analysis.</span><span class="guided-only">Adjust the weights yourself in Expert mode and the recommendation updates instantly.</span>
     </div>
   </details>
+
+  <div class="expert-only" style="margin-top:16px;">
+    <div style="font-size:15px; font-weight:500; color:var(--color-text-primary); margin-bottom:11px;">Professional analysis</div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Cost &amp; operational complexity</summary>
+        <div style="padding:2px 14px 12px; font-size:12px; color:var(--color-text-secondary);">
+          <div style="font-size:11px; color:var(--color-text-tertiary); margin-bottom:8px;">Qualitative profile per deployment option.</div>
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 11px;"><div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;"><span style="color:var(--color-text-primary); font-weight:500;">Microservices</span><span>Ops overhead <span style="background:rgba(236,106,96,.18); color:var(--color-text-danger); border-radius:4px; padding:1px 7px;">High</span> · Infra <span style="background:rgba(236,106,96,.18); color:var(--color-text-danger); border-radius:4px; padding:1px 7px;">High</span></span></div><div style="font-size:11px; color:var(--color-text-tertiary); margin-top:3px;">High operational overhead and infra cost — justified mainly at real scale and team size.</div></div>
+            <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 11px;"><div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;"><span style="color:var(--color-text-primary); font-weight:500;">Modular Monolith</span><span>Ops overhead <span style="background:rgba(53,194,141,.18); color:var(--color-text-success); border-radius:4px; padding:1px 7px;">Low</span> · Infra <span style="background:rgba(53,194,141,.18); color:var(--color-text-success); border-radius:4px; padding:1px 7px;">Low</span></span></div><div style="font-size:11px; color:var(--color-text-tertiary); margin-top:3px;">Monolith economics with cleaner internal boundaries; still a single deploy.</div></div>
+            <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 11px;"><div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;"><span style="color:var(--color-text-primary); font-weight:500;">Serverless (FaaS)</span><span>Ops overhead <span style="background:rgba(224,169,59,.18); color:var(--color-text-warning); border-radius:4px; padding:1px 7px;">Med</span> · Infra <span style="background:rgba(224,169,59,.18); color:var(--color-text-warning); border-radius:4px; padding:1px 7px;">Med</span></span></div><div style="font-size:11px; color:var(--color-text-tertiary); margin-top:3px;">Scales to zero (cheap when idle) but cost and latency vary with load; watch vendor lock-in.</div></div>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Suggested fitness functions</summary>
+        <div style="padding:2px 14px 12px; font-size:12px; color:var(--color-text-secondary);">
+          <div style="font-size:11px; color:var(--color-text-tertiary); margin-bottom:8px;">Measurable checks for your top-weighted quality attributes (evolutionary architecture).</div>
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 11px;"><div style="display:flex; justify-content:space-between;"><span style="color:var(--color-text-primary); font-weight:500;">Scalability</span><span class="num">28%</span></div><div style="font-size:11px; margin-top:3px;">A load test sustains N req/s at p99 &lt; X ms with autoscaling enabled, run on every release.</div></div>
+            <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 11px;"><div style="display:flex; justify-content:space-between;"><span style="color:var(--color-text-primary); font-weight:500;">Deployability</span><span class="num">22%</span></div><div style="font-size:11px; margin-top:3px;">Each unit deploys independently in &lt; N minutes via CI; the build fails on cyclic dependencies.</div></div>
+            <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 11px;"><div style="display:flex; justify-content:space-between;"><span style="color:var(--color-text-primary); font-weight:500;">Performance</span><span class="num">17%</span></div><div style="font-size:11px; margin-top:3px;">p95/p99 latency of the critical path is measured continuously; alert when p99 exceeds X ms.</div></div>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Risk register</summary>
+        <div style="padding:2px 14px 12px; font-size:12px; color:var(--color-text-secondary);">
+          <div style="font-size:11px; color:var(--color-text-tertiary); margin-bottom:8px;">Risks of the options in your current combination.</div>
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <div style="border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-md); padding:9px 11px;"><span style="color:var(--color-text-primary); font-weight:500;">Microservices</span> · Likelihood <span style="background:rgba(224,169,59,.18); color:var(--color-text-warning); border-radius:4px; padding:1px 7px;">Med</span> Impact <span style="background:rgba(236,106,96,.18); color:var(--color-text-danger); border-radius:4px; padding:1px 7px;">High</span><div style="margin-top:4px;">Operational complexity outpaces team capability. <span style="color:var(--color-text-tertiary);">Mitigation: invest in platform/observability before splitting.</span></div></div>
+            <div style="border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-md); padding:9px 11px;"><span style="color:var(--color-text-primary); font-weight:500;">Database-per-service</span> · Likelihood <span style="background:rgba(224,169,59,.18); color:var(--color-text-warning); border-radius:4px; padding:1px 7px;">Med</span> Impact <span style="background:rgba(224,169,59,.18); color:var(--color-text-warning); border-radius:4px; padding:1px 7px;">Med</span><div style="margin-top:4px;">Cross-service consistency is harder. <span style="color:var(--color-text-tertiary);">Mitigation: sagas / outbox; embrace eventual consistency where safe.</span></div></div>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>How it works — methodology</summary>
+        <div style="padding:2px 14px 12px; font-size:12px; color:var(--color-text-secondary); line-height:1.6;">
+          This tool turns project factors into weighted quality-attribute priorities (a utility tree), then scores each option by how well it fits them — an additive value model grounded in recognized methods.
+          <ul style="padding-left:18px; margin:8px 0 0;">
+            <li><span style="color:var(--color-text-info);">ISO/IEC 25010:2023</span> — the 12-quality-attribute spine</li>
+            <li><span style="color:var(--color-text-info);">ATAM</span> — utility tree &amp; stakeholder prioritization</li>
+            <li><span style="color:var(--color-text-info);">Attribute-Driven Design</span> — QA-driven option selection</li>
+            <li><span style="color:var(--color-text-info);">Building Evolutionary Architectures</span> — fitness functions</li>
+            <li><span style="color:var(--color-text-info);">MADR</span> — the ADR export format</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Glossary</summary>
+        <div style="padding:2px 14px 12px; font-size:12px; color:var(--color-text-secondary); line-height:1.55;">
+          <div style="margin-bottom:6px;"><span style="color:var(--color-text-primary); font-weight:500;">Utility tree</span> — the weighted set of QA priorities derived from your factors (ATAM).</div>
+          <div style="margin-bottom:6px;"><span style="color:var(--color-text-primary); font-weight:500;">Composite score</span> — weighted sum of an option's fit values (1–5); shown 0–100 within a dimension.</div>
+          <div><span style="color:var(--color-text-primary); font-weight:500;">Close call</span> — when the top two options are within 10%; no clear winner.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Architecture diagram (C4 stub)</summary>
+        <div style="padding:6px 14px 14px;">
+          <svg viewBox="0 0 520 300" width="100%" style="max-width:520px;" role="img" aria-label="C4 stub for microservices">
+            <defs><marker id="c4arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--color-text-tertiary)"></path></marker></defs>
+            <g stroke="var(--color-text-tertiary)" stroke-width="1" marker-end="url(#c4arr)">
+              <line x1="260" y1="44" x2="260" y2="76"></line>
+              <line x1="260" y1="116" x2="120" y2="148"></line><line x1="260" y1="116" x2="260" y2="148"></line><line x1="260" y1="116" x2="400" y2="148"></line>
+              <line x1="120" y1="188" x2="120" y2="220"></line><line x1="260" y1="188" x2="260" y2="220"></line><line x1="400" y1="188" x2="400" y2="220"></line>
+            </g>
+            <g font-family="var(--font-sans)" font-size="11" text-anchor="middle">
+              <rect x="210" y="16" width="100" height="28" rx="14" fill="var(--color-background-info)" stroke="var(--color-text-info)"></rect><text x="260" y="34" fill="var(--color-text-info)">User</text>
+              <rect x="200" y="80" width="120" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="260" y="102" fill="var(--color-text-primary)">API Gateway</text>
+              <rect x="70" y="152" width="100" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="120" y="174" fill="var(--color-text-primary)">Service A</text>
+              <rect x="210" y="152" width="100" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="260" y="174" fill="var(--color-text-primary)">Service B</text>
+              <rect x="350" y="152" width="100" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="400" y="174" fill="var(--color-text-primary)">Service C</text>
+              <rect x="80" y="224" width="80" height="32" rx="6" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="120" y="244" fill="var(--color-text-secondary)">DB A</text>
+              <rect x="220" y="224" width="80" height="32" rx="6" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="260" y="244" fill="var(--color-text-secondary)">DB B</text>
+              <rect x="360" y="224" width="80" height="32" rx="6" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="400" y="244" fill="var(--color-text-secondary)">DB C</text>
+            </g>
+          </svg>
+        </div>
+      </details>
+
+    </div>
+  </div>
   </div>
 
   <div class="f-div"></div>
@@ -313,6 +475,7 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   <div style="display:flex; flex-wrap:wrap; gap:9px;">
     <span class="f-act" data-act="save" data-label="Document saved · ready to download" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-background-primary); background:var(--color-text-info); border-radius:var(--border-radius-md); padding:10px 16px; cursor:pointer; font-weight:500;"><i class="ti ti-file-text" style="font-size:16px;" aria-hidden="true"></i><span class="guided-only">Save as a document</span><span class="expert-only">Export ADR</span> <span class="kbd" style="margin-left:2px;">⌘S</span></span>
     <span class="f-act" data-act="report" data-label="Report generated" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-report-analytics" style="font-size:16px;" aria-hidden="true"></i>Full report</span>
+    <span class="f-act" data-act="print" data-label="Print dialog opened" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-printer" style="font-size:16px;" aria-hidden="true"></i>Print / PDF</span>
     <span class="f-act expert-only" data-act="csv" data-label="scores.csv downloaded" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-file-spreadsheet" style="font-size:16px;" aria-hidden="true"></i>CSV</span>
     <span class="f-act expert-only" data-act="json" data-label="assessment.json downloaded" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-code" style="font-size:16px;" aria-hidden="true"></i>JSON</span>
     <span class="f-act" data-act="share" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-share-2" style="font-size:16px;" aria-hidden="true"></i><span class="guided-only">Share a link</span><span class="expert-only">Share</span></span>
@@ -400,7 +563,7 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   function doExport(act, btn){
     if(btn){ if(btn.classList.contains('busy'))return; btn.classList.add('busy'); }
     if(act==='share'){ load('Creating share link…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); if(!shareFailed){ shareFailed=true; errShare(function(){ doExport('share'); }); } else { ok('Link copied to clipboard.'); } },820); }
-    else { var labels={save:'Building your document…',report:'Generating report…',csv:'Exporting CSV…',json:'Exporting JSON…'}; var done={save:'Document saved · ready to download',report:'Report generated',csv:'scores.csv downloaded',json:'assessment.json downloaded'}; load(labels[act]||'Working…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); ok(done[act]||'Done'); },820); }
+    else { var labels={save:'Building your document…',report:'Generating report…',print:'Opening print dialog…',csv:'Exporting CSV…',json:'Exporting JSON…'}; var done={save:'Document saved · ready to download',report:'Report generated',print:'Print dialog opened (Save as PDF)',csv:'scores.csv downloaded',json:'assessment.json downloaded'}; load(labels[act]||'Working…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); ok(done[act]||'Done'); },820); }
   }
   document.querySelectorAll('.f-act').forEach(function(b){ b.addEventListener('click',function(){ doExport(b.dataset.act,b); }); });
 
@@ -412,9 +575,14 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   var ACTIONS=[
     {l:"Save as document",h:"⌘S",fn:function(){doExport('save');}},
     {l:"Export full report",fn:function(){doExport('report');}},
+    {l:"Print / save as PDF",fn:function(){doExport('print');}},
     {l:"Export as CSV",fn:function(){setMode('expert');doExport('csv');}},
     {l:"Export as JSON",fn:function(){setMode('expert');doExport('json');}},
     {l:"Share link",fn:function(){doExport('share');}},
+    {l:"Open the manual / guide",fn:function(){flash('Manual opened');}},
+    {l:"Pin current scenario as A",fn:function(){flash('Pinned as A');}},
+    {l:"Pin current scenario as B",fn:function(){flash('Pinned as B');}},
+    {l:"Compare scenarios (A/B)",fn:function(){flash('Comparison opened');}},
     {l:"Reset answers",fn:function(){document.getElementById('m-reset').click();}},
     {l:"Switch to Expert mode",fn:function(){setMode('expert');}},
     {l:"Switch to Guided mode",fn:function(){setMode('guided');}},
@@ -427,6 +595,7 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   function closeOv(){ palette.classList.remove("open"); shortcuts.classList.remove("open"); }
   document.getElementById("f-cmdk").addEventListener("click",function(){openOv(palette);});
   document.getElementById("f-help").addEventListener("click",function(){openOv(shortcuts);});
+  document.getElementById("f-guide").addEventListener("click",function(){flash('Manual / guide opened');});
   palette.addEventListener("click",function(e){ if(e.target===palette) closeOv(); });
   shortcuts.addEventListener("click",function(e){ if(e.target===shortcuts) closeOv(); });
   palinput.addEventListener("input",function(){ renderPal(palinput.value); });
