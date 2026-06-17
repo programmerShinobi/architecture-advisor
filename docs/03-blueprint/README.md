@@ -32,7 +32,9 @@ templates — the content that makes the tool trustworthy and teachable.
 🖼️ **[UI prototype](prototype/index.html)** — the interactive visual reference. Open it directly
 in any browser; what it demonstrates is described in [`prototype/README.md`](prototype/README.md).
 
-[![Architecture Advisor UI prototype](prototype/preview.png)](prototype/index.html)
+| Guided mode | Expert mode |
+|:---:|:---:|
+| [![Architecture Advisor — Guided mode](prototype/preview-guided.png)](prototype/index.html) | [![Architecture Advisor — Expert mode](prototype/preview-expert.png)](prototype/index.html) |
 
 > Note: a backend ERD and API design are **not applicable** — Architecture Advisor is purely
 > client-side (see the design spec, Section 2). The "data schema" here is the in-app decision-model

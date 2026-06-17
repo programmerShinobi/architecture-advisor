@@ -5,7 +5,9 @@ sync with the implemented app** ([`src/`](../../../src/)). The shipped React app
 source of truth for the UI; this static mockup mirrors its look and interaction so the design can
 be reviewed in one file without a build step.
 
-![Architecture Advisor — the implemented app (Expert mode)](preview.png)
+| Guided mode | Expert mode |
+|:---:|:---:|
+| ![Architecture Advisor — Guided mode](preview-guided.png) | ![Architecture Advisor — Expert mode](preview-expert.png) |
 
 ## Open it
 
@@ -46,8 +48,8 @@ shipped UI:
 - This mockup is **kept in sync with the implemented app** — it now shows all 14 factors (as group
   dropdowns), all 5 presets, the expert "Professional analysis" dropdowns, and a hand-built-SVG C4
   stub, matching `src/`. When the app's UI changes, update this file too.
-- `preview.png` is a full-page screenshot of the **running app** in Expert mode
-  (`npm run dev`, 1240px wide @2×); **regenerate it** after UI changes.
+- `preview-guided.png` / `preview-expert.png` are full-page screenshots of the **running app** — the
+  same scenario in each mode (`npm run dev`, 1240px wide @2×); **regenerate them** after UI changes.
 - The displayed **composite scores/percentages are illustrative** (one fixed scenario); the real
   numbers are computed live by the app's engine per the [Scoring Algorithm](../scoring-algorithm.md).
 - The per-option **`qaFit` vectors** encoded here are canonical (identical to the

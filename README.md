@@ -12,12 +12,18 @@
 
 ## Preview
 
-The implemented app in **Expert mode** — Guided/Expert modes, project-factor dropdowns, the
-quality-priority breakdown, the trade-off radar, transparency panels, the professional-analysis
-section, and exports. Run it with `npm run dev`, or open the static
-[UI prototype](docs/03-blueprint/prototype/index.html) for a no-build preview of the same UI.
+The **same project, two audiences.** *Guided* mode gives newcomers plain-language explanations
+("Speed & quick response", a "what this means for you" narrative); *Expert* mode gives architects
+the technical attribute names, editable weights, per-attribute contribution bars, and a
+**Professional analysis** section (cost & ops, fitness functions, risk register, methodology, a C4
+stub, glossary). Both run from the same engine — toggle with one click. Run it with `npm run dev`.
 
-[![Architecture Advisor — the implemented app (Expert mode)](docs/03-blueprint/prototype/preview.png)](docs/03-blueprint/prototype/index.html)
+| Guided mode (newcomers) | Expert mode (architects) |
+|:---:|:---:|
+| [![Architecture Advisor — Guided mode](docs/03-blueprint/prototype/preview-guided.png)](docs/03-blueprint/prototype/index.html) | [![Architecture Advisor — Expert mode](docs/03-blueprint/prototype/preview-expert.png)](docs/03-blueprint/prototype/index.html) |
+
+> Prefer no build step? Open the static [UI prototype](docs/03-blueprint/prototype/index.html) — it
+> mirrors the app and opens in Expert mode (switch to Guided with the header toggle).
 
 ---
 
