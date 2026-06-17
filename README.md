@@ -12,12 +12,12 @@
 
 ## Preview
 
-An interactive UI prototype of the intended experience (Guided/Expert modes, the trade-off
-radar, transparency panels, and technical-user polish). Open
-[`docs/03-blueprint/prototype/index.html`](docs/03-blueprint/prototype/index.html) in a browser
-to try it.
+The implemented app in **Expert mode** — Guided/Expert modes, project-factor dropdowns, the
+quality-priority breakdown, the trade-off radar, transparency panels, the professional-analysis
+section, and exports. Run it with `npm run dev`, or open the static
+[UI prototype](docs/03-blueprint/prototype/index.html) for a no-build preview of the same UI.
 
-[![Architecture Advisor UI prototype](docs/03-blueprint/prototype/preview.png)](docs/03-blueprint/prototype/index.html)
+[![Architecture Advisor — the implemented app (Expert mode)](docs/03-blueprint/prototype/preview.png)](docs/03-blueprint/prototype/index.html)
 
 ---
 
