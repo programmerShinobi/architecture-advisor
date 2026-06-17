@@ -5,9 +5,16 @@ sync with the implemented app** ([`src/`](../../../src/)). The shipped React app
 source of truth for the UI; this static mockup mirrors its look and interaction so the design can
 be reviewed in one file without a build step.
 
-| Guided mode | Expert mode |
-|:---:|:---:|
-| ![Architecture Advisor — Guided mode](preview-guided.png) | ![Architecture Advisor — Expert mode](preview-expert.png) |
+<table>
+  <tr>
+    <th align="center" width="50%">Guided mode</th>
+    <th align="center" width="50%">Expert mode</th>
+  </tr>
+  <tr valign="top">
+    <td width="50%"><img alt="Architecture Advisor — Guided mode" src="preview-guided.png" /></td>
+    <td width="50%"><img alt="Architecture Advisor — Expert mode" src="preview-expert.png" /></td>
+  </tr>
+</table>
 
 ## Open it
 
