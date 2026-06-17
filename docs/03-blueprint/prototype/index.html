@@ -134,7 +134,7 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
 <h2 class="sr-only">Architecture Advisor tuned for technical users: command palette (Cmd/Ctrl+K), keyboard shortcuts, a persistent save-state indicator, skeleton loading, monospace tabular numbers with a sortable comparison data grid, three-layer error messages with request ID and retry, CSV/JSON export, and a guiding empty state with sample data.</h2>
 
 <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-xl); padding:16px;">
-<div id="f-app" class="guided" style="position:relative; background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden;">
+<div id="f-app" class="expert" style="position:relative; background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden;">
 
 <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:0.5px solid var(--color-border-tertiary); flex-wrap:wrap; gap:10px;">
   <div style="display:flex; align-items:center; gap:12px;">
@@ -146,7 +146,7 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
     <span id="f-guide" class="f-btn"><i class="ti ti-book-2" style="font-size:13px;" aria-hidden="true"></i>Guide</span>
     <span id="f-cmdk" class="f-btn"><i class="ti ti-command" style="font-size:13px;" aria-hidden="true"></i><span class="kbd">⌘K</span></span>
     <span id="f-help" class="f-btn" title="Keyboard shortcuts">?</span>
-    <div style="display:flex; align-items:center; gap:2px; background:var(--color-background-secondary); border-radius:99px; padding:2px;"><span class="f-mode on" id="m-guided">Guided</span><span class="f-mode" id="m-expert">Expert</span></div>
+    <div style="display:flex; align-items:center; gap:2px; background:var(--color-background-secondary); border-radius:99px; padding:2px;"><span class="f-mode" id="m-guided">Guided</span><span class="f-mode on" id="m-expert">Expert</span></div>
     <div style="display:flex; align-items:center; gap:7px;"><span class="f-chip on" style="padding:4px 11px;">EN</span><span class="f-chip" style="padding:4px 11px;">ID</span><span id="f-dark" style="width:28px; height:28px; border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); display:flex; align-items:center; justify-content:center; cursor:pointer;"><i class="ti ti-moon" style="font-size:16px; color:var(--color-text-secondary);" aria-hidden="true"></i></span></div>
   </div>
 </div>
@@ -439,35 +439,33 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
       </details>
 
       <details>
+        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Architecture diagram (C4 stub)</summary>
+        <div style="padding:6px 14px 14px;">
+          <svg viewBox="0 0 600 316" width="100%" style="max-width:600px;" role="img" aria-label="Architecture diagram (C4 stub)">
+            <defs><marker id="c4arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--color-text-tertiary)"></path></marker></defs>
+            <g stroke="var(--color-text-tertiary)" stroke-width="1" marker-end="url(#c4arr)">
+              <line x1="300" y1="58" x2="300" y2="98"></line>
+              <line x1="300" y1="138" x2="150" y2="178"></line><line x1="300" y1="138" x2="300" y2="178"></line><line x1="300" y1="138" x2="450" y2="178"></line>
+              <line x1="150" y1="218" x2="300" y2="258"></line><line x1="300" y1="218" x2="300" y2="258"></line><line x1="450" y1="218" x2="300" y2="258"></line>
+            </g>
+            <g font-family="var(--font-sans)" font-size="11" text-anchor="middle">
+              <rect x="252" y="18" width="96" height="40" rx="20" fill="var(--color-background-info)" stroke="var(--color-text-info)"></rect><text x="300" y="42" fill="var(--color-text-info)">User</text>
+              <rect x="190" y="98" width="220" height="40" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="300" y="122" fill="var(--color-text-primary)">Web App (Modular Monolith)</text>
+              <rect x="102" y="178" width="96" height="40" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="150" y="202" fill="var(--color-text-primary)">Module A</text>
+              <rect x="252" y="178" width="96" height="40" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="300" y="202" fill="var(--color-text-primary)">Module B</text>
+              <rect x="402" y="178" width="96" height="40" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="450" y="202" fill="var(--color-text-primary)">Module C</text>
+              <g><rect x="230.25" y="263" width="139.5" height="30" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><ellipse cx="300" cy="263" rx="69.75" ry="5" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></ellipse><ellipse cx="300" cy="293" rx="69.75" ry="5" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></ellipse><text x="300" y="282" fill="var(--color-text-secondary)">Shared Database</text></g>
+            </g>
+          </svg>
+        </div>
+      </details>
+
+      <details>
         <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Glossary</summary>
         <div style="padding:2px 14px 12px; font-size:12px; color:var(--color-text-secondary); line-height:1.55;">
           <div style="margin-bottom:6px;"><span style="color:var(--color-text-primary); font-weight:500;">Utility tree</span> — the weighted set of QA priorities derived from your factors (ATAM).</div>
           <div style="margin-bottom:6px;"><span style="color:var(--color-text-primary); font-weight:500;">Composite score</span> — weighted sum of an option's fit values (1–5); shown 0–100 within a dimension.</div>
           <div><span style="color:var(--color-text-primary); font-weight:500;">Close call</span> — when the top two options are within 10%; no clear winner.</div>
-        </div>
-      </details>
-
-      <details>
-        <summary><i class="ti ti-chevron-right f-chev" style="font-size:14px; color:var(--color-text-tertiary);" aria-hidden="true"></i>Architecture diagram (C4 stub)</summary>
-        <div style="padding:6px 14px 14px;">
-          <svg viewBox="0 0 520 300" width="100%" style="max-width:520px;" role="img" aria-label="C4 stub for microservices">
-            <defs><marker id="c4arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--color-text-tertiary)"></path></marker></defs>
-            <g stroke="var(--color-text-tertiary)" stroke-width="1" marker-end="url(#c4arr)">
-              <line x1="260" y1="44" x2="260" y2="76"></line>
-              <line x1="260" y1="116" x2="120" y2="148"></line><line x1="260" y1="116" x2="260" y2="148"></line><line x1="260" y1="116" x2="400" y2="148"></line>
-              <line x1="120" y1="188" x2="120" y2="220"></line><line x1="260" y1="188" x2="260" y2="220"></line><line x1="400" y1="188" x2="400" y2="220"></line>
-            </g>
-            <g font-family="var(--font-sans)" font-size="11" text-anchor="middle">
-              <rect x="210" y="16" width="100" height="28" rx="14" fill="var(--color-background-info)" stroke="var(--color-text-info)"></rect><text x="260" y="34" fill="var(--color-text-info)">User</text>
-              <rect x="200" y="80" width="120" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="260" y="102" fill="var(--color-text-primary)">API Gateway</text>
-              <rect x="70" y="152" width="100" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="120" y="174" fill="var(--color-text-primary)">Service A</text>
-              <rect x="210" y="152" width="100" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="260" y="174" fill="var(--color-text-primary)">Service B</text>
-              <rect x="350" y="152" width="100" height="36" rx="7" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="400" y="174" fill="var(--color-text-primary)">Service C</text>
-              <rect x="80" y="224" width="80" height="32" rx="6" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="120" y="244" fill="var(--color-text-secondary)">DB A</text>
-              <rect x="220" y="224" width="80" height="32" rx="6" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="260" y="244" fill="var(--color-text-secondary)">DB B</text>
-              <rect x="360" y="224" width="80" height="32" rx="6" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)"></rect><text x="400" y="244" fill="var(--color-text-secondary)">DB C</text>
-            </g>
-          </svg>
         </div>
       </details>
 
@@ -485,6 +483,8 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
     <span class="f-act expert-only" data-act="csv" data-label="scores.csv downloaded" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-file-spreadsheet" style="font-size:16px;" aria-hidden="true"></i>CSV</span>
     <span class="f-act expert-only" data-act="json" data-label="assessment.json downloaded" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-code" style="font-size:16px;" aria-hidden="true"></i>JSON</span>
     <span class="f-act" data-act="share" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-share-2" style="font-size:16px;" aria-hidden="true"></i><span class="guided-only">Share a link</span><span class="expert-only">Share</span></span>
+    <span class="f-act" data-act="import" data-label="Setup imported" style="display:flex; align-items:center; gap:7px; font-size:12px; color:var(--color-text-secondary); border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md); padding:10px 15px; cursor:pointer;"><i class="ti ti-upload" style="font-size:16px;" aria-hidden="true"></i>Import setup (JSON)</span>
+    <input type="file" accept="application/json,.json" style="display:none;" aria-hidden="true" tabindex="-1" />
   </div>
   <div id="f-exportstatus" style="margin-top:11px;"></div>
   <div style="display:flex; align-items:center; gap:7px; margin-top:12px; font-size:11px; color:var(--color-text-tertiary); flex-wrap:wrap;">
@@ -568,7 +568,7 @@ body{margin:0;padding:24px;background:var(--color-background-secondary);color:va
   function doExport(act, btn){
     if(btn){ if(btn.classList.contains('busy'))return; btn.classList.add('busy'); }
     if(act==='share'){ load('Creating share link…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); if(!shareFailed){ shareFailed=true; errShare(function(){ doExport('share'); }); } else { ok('Link copied to clipboard.'); } },820); }
-    else { var labels={save:'Building your document…',report:'Generating report…',print:'Opening print dialog…',csv:'Exporting CSV…',json:'Exporting JSON…'}; var done={save:'Document saved · ready to download',report:'Report generated',print:'Print dialog opened (Save as PDF)',csv:'scores.csv downloaded',json:'assessment.json downloaded'}; load(labels[act]||'Working…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); ok(done[act]||'Done'); },820); }
+    else { var labels={save:'Building your document…',report:'Generating report…',print:'Opening print dialog…',csv:'Exporting CSV…',json:'Exporting JSON…',import:'Reading setup file…'}; var done={save:'Document saved · ready to download',report:'Report generated',print:'Print dialog opened (Save as PDF)',csv:'scores.csv downloaded',json:'assessment.json downloaded',import:'Setup imported'}; load(labels[act]||'Working…'); setTimeout(function(){ if(btn)btn.classList.remove('busy'); ok(done[act]||'Done'); },820); }
   }
   document.querySelectorAll('.f-act').forEach(function(b){ b.addEventListener('click',function(){ doExport(b.dataset.act,b); }); });
 
