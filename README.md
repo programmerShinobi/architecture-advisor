@@ -98,7 +98,7 @@ traceable:
 | 2 | [Requirement Analysis](docs/02-requirement-analysis/) | [SRS](docs/02-requirement-analysis/software-requirements-specification.md) | 🔬 In progress |
 | 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [Model Data Sheet](docs/03-blueprint/model-data-sheet.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | [Development](docs/04-development/) | Source code (`src/`, scoring engine, components) | ✅ v1.0 implemented |
-| 5 | [Testing / QA](docs/05-testing-qa/) | Unit/integration/system/UAT + security & perf | 🚧 Not started |
+| 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 39 unit tests + 3 guards in CI; AC traceability | 🔬 In progress |
 | 6 | [Deployment / Release](docs/06-deployment/) | CI/CD → staging → live ([guide ready](docs/06-deployment/deployment-github-pages.md)) | 🚧 Not started |
 | 7 | [Maintenance & Iteration](docs/07-maintenance/) | Monitoring, fixes, updates | 🚧 Ongoing |
 
