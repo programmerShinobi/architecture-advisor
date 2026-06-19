@@ -1,8 +1,9 @@
 # Test Plan & QA — Architecture Advisor
 
-> **Phase 5 of 7 · Status: 🔬 In progress.** The core scoring engine and exporters are covered by
-> an automated suite (Vitest) plus three model-integrity guards wired into CI; component/E2E,
-> accessibility automation, formal UAT, and security/performance verification are planned. This
+> **Phase 5 of 7 · Status: 🔬 In progress.** The scoring engine and exporters are covered by an
+> automated suite (Vitest) plus three model-integrity guards wired into CI, and the **first
+> component/integration tests have landed** (reactivity, radar, sensitivity, language). E2E,
+> accessibility automation, formal UAT, and security/performance verification remain planned. This
 > document is the test strategy, the current inventory, the acceptance-criteria traceability
 > matrix, and the honest gap list.
 
@@ -37,7 +38,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 |---|---|---|---|
 | **L0 · Model guards** | Node scripts (no deps), CI | The docs, the reference model, and `src/config` cannot drift apart | ✅ Done |
 | **L1 · Unit** | Vitest | Scoring math, anti-patterns, exporters, i18n | ✅ Done |
-| **L2 · Component/Integration** | Vitest + Testing Library | The 4-step flow, reactivity, override panel, radar toggles | ⏳ Planned |
+| **L2 · Component/Integration** | Vitest + Testing Library | The 4-step flow, reactivity, override panel, radar toggles | 🟡 Started |
 | **L3 · System / E2E** | (Playwright, candidate) | Full user journeys in a real browser, share-URL deep-link | ⏳ Planned |
 | **L4 · Accessibility** | Manual now; `axe`/`vitest-axe` planned | WCAG AA contrast, keyboard operability, names/roles | 🟡 Manual |
 | **L5 · UAT** | Scripted scenarios (Section 7) | Real architects/newcomers confirm usefulness & clarity | ⏳ Planned |
@@ -50,14 +51,22 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.1 Automated unit suite — `npm run test` (Vitest)
 
-**39 tests across 4 files**, all green:
+**48 tests across 7 files**, all green:
 
 | File | Cases | Covers |
 |---|---:|---|
 | [`src/lib/scoring.test.ts`](../../src/lib/scoring.test.ts) | 22 | Fixtures A–C, equal-weight fallback, **500 seeded random invariants**, requirement scenarios (AC-6/AC-7), contribution reconciliation (FR-REC-4), expert override & lock, **all 25 preset targets** (SRS Section 5.3), qaFit defaulting |
 | [`src/lib/antiPatternEngine.test.ts`](../../src/lib/antiPatternEngine.test.ts) | 8 | Distributed monolith, premature microservices, and the other rules (Model Data Sheet Section 5) |
 | [`src/lib/exports.test.ts`](../../src/lib/exports.test.ts) | 8 | `generateAdr` (MADR), `generateReport`, `buildC4`, scenario JSON round-trip, **share-URL round-trip (AC-14)** |
+| [`src/App.test.tsx`](../../src/App.test.tsx) | 3 | **Integration:** preset & single-factor reactivity (AC-2), language toggle (AC-13) |
+| [`src/components/RadarPanel.test.tsx`](../../src/components/RadarPanel.test.tsx) | 3 | **Component:** D1 ranking + single top pick, option toggle, dimension switch (AC-12) |
+| [`src/components/SensitivityCard.test.tsx`](../../src/components/SensitivityCard.test.tsx) | 3 | **Component:** flip sentence + robust fallback, max-3 flips (AC-11) |
 | [`src/i18n/dict.test.ts`](../../src/i18n/dict.test.ts) | 1 | Dictionary completeness — every key has EN **and** ID |
+
+> Component/integration tests render via a small [`src/test/render.tsx`](../../src/test/render.tsx)
+> helper that wraps the unit under test in the i18n provider with the language pinned. (Vitest runs
+> with `css: false`, so assertions target accessible names, roles, and unique strings — not
+> CSS-driven `guided`/`expert` visibility.)
 
 ### 3.2 Model-integrity guards — L0 (run in CI on every push/PR)
 
@@ -86,7 +95,7 @@ the build on regression; **Manual** = on the release checklist (Section 6) until
 | # | Acceptance criterion (abridged) | Verified by | Status |
 |---|---|---|---|
 | 1 | install/dev/test/build clean; CI present | `ci.yml` | ✅ Automated |
-| 2 | Any factor change instantly updates weights/rankings/charts/analyses | L2 (planned); release checklist | 🟡 Manual |
+| 2 | Any factor change instantly updates weights/rankings/charts/analyses | `App.test` (preset + single factor → verdict recomputes) | ✅ Automated |
 | 3 | Defaults → D1 top **Monolith**; `timeToMarket` highest | `scoring.test` Fixture A | ✅ Automated |
 | 4 | team2/dist2/scale2/devops2/ttm0 → D1 top **Microservices** | `scoring.test` Fixture B | ✅ Automated |
 | 5 | domain2/team0/ttm0 → **Modular Monolith**; D4 Hexagonal/Clean = 5.0 | `scoring.test` Fixture C | ✅ Automated |
@@ -95,15 +104,15 @@ the build on regression; **Manual** = on the release checklist (Section 6) until
 | 8 | Microservices + Single shared DB → **distributed monolith** warning | `antiPatternEngine.test` | ✅ Automated |
 | 9 | team0/devops0 + Microservices → **premature microservices** warning | `antiPatternEngine.test` | ✅ Automated |
 | 10 | Contribution table reconciles exactly to the composite | `scoring.test` (FR-REC-4) | ✅ Automated |
-| 11 | Sensitivity names a flipping factor **or** correctly says "robust" | L2 (planned); release checklist | 🟡 Manual |
-| 12 | Radar overlays top options; compare 2–3 options | L2/L3 (planned); release checklist | 🟡 Manual |
-| 13 | Language toggle updates **all** strings; dark mode fully styled | `dict.test` (keys) + manual (dark) | 🟡 Partial |
+| 11 | Sensitivity names a flipping factor **or** correctly says "robust" | `SensitivityCard.test` | ✅ Automated |
+| 12 | Radar overlays top options; compare 2–3 options | `RadarPanel.test` (toggle + dimension switch) | ✅ Automated |
+| 13 | Language toggle updates **all** strings; dark mode fully styled | `dict.test` (keys) + `App.test` (toggle); dark mode manual | 🟡 Partial |
 | 14 | Share link round-trips; Export ADR = valid MADR | `exports.test` | ✅ Automated |
 | 15 | Keyboard-operable; accessible names; AA contrast both themes | L4 manual checklist (Section 7) | 🟡 Manual |
 | 16 | Every QA/factor/option/rule/template in config + documented | `check-app-config` + `cross-check-docs` | ✅ Automated |
 
-**Summary: 10/16 fully automated, 1 partial, 5 manual** — the 5 manual items are the L2–L4
-backlog (Section 10).
+**Summary: 14/16 fully automated, 1 partial (AC-13 dark mode), 1 manual (AC-15 accessibility)** —
+see the remaining L3–L4 backlog (Section 10).
 
 ---
 
@@ -187,7 +196,7 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 
 | Gap | Impact | Plan |
 |---|---|---|
-| No component/integration tests (L2) — `@testing-library/react` is installed but unused | AC-2, AC-11, AC-12 are manual | Add tests for the reducer/flow, override panel, radar toggles |
+| Component/integration (L2) **started** — reactivity (AC-2), radar (AC-12), sensitivity (AC-11), language (AC-13) covered; override panel, manual/palette overlays, A/B compare not yet | Those flows still rely on the release checklist | Extend L2 to the override panel + the remaining overlays |
 | No E2E (L3) | Share deep-link & full journeys are manual | Evaluate Playwright; one smoke journey first |
 | Accessibility is manual (L4) | Regressions only caught by hand | Add `vitest-axe` on key components |
 | UAT not yet executed (L5) | Real-user clarity unproven | Run Section 7 with ≥3 per persona before v1.1 |
@@ -206,3 +215,4 @@ affordance is covered by the release checklist (Section 6); and no acceptance cr
 | Version | Date | Notes |
 |---|---|---|
 | 0.1 | 2026-06-18 | Initial test plan: strategy, current inventory (39 tests + 3 guards + CI), AC traceability, manual checklist, security/perf/UAT/a11y approach, and the L2–L7 gap roadmap. |
+| 0.2 | 2026-06-20 | First L2 component/integration tests landed (9 cases via `src/test/render.tsx`): App reactivity (AC-2) + language (AC-13), RadarPanel (AC-12), SensitivityCard (AC-11). Inventory 39→48; automated AC 11→14 of 16. |
