@@ -78,7 +78,7 @@ about uncertainty: scores are *tunable heuristics, not facts*.
 ```bash
 npm install
 npm run dev      # start the dev server (fully client-side)
-npm run test     # scoring-engine + exporter unit tests
+npm run test     # unit + component + a11y tests (engine, exporters, UI, axe)
 npm run lint     # ESLint (strict)
 npm run build    # production build (static; deploys to GitHub Pages)
 ```
@@ -100,7 +100,7 @@ traceable:
 | 4 | [Development](docs/04-development/) | Source code (`src/`, scoring engine, components) | ✅ v1.0 implemented |
 | 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 62 Vitest + Playwright E2E + 3 guards; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
 | 6 | [Deployment / Release](docs/06-deployment/) | CI/CD → staging → live ([guide ready](docs/06-deployment/deployment-github-pages.md)) | 🚧 Not started |
-| 7 | [Maintenance & Iteration](docs/07-maintenance/) | Monitoring, fixes, updates | 🚧 Ongoing |
+| 7 | [Maintenance & Iteration](docs/07-maintenance/) | Monitoring, fixes, updates | 🚧 Not started |
 
 Cross-cutting references — the [Build Spec v3](docs/specs/build-spec-v3.md) and the
 [execution playbooks](docs/guides/) — support multiple phases. The full map, with an SDLC flow
