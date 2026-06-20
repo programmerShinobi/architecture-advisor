@@ -1,7 +1,7 @@
 {
   "name": "architecture-advisor",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "A quality-attribute-driven architecture decision framework — transparent, client-side, MAVT-based.",
   "license": "MIT",

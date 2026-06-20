@@ -1,0 +1,26 @@
+# Keeps dependencies and GitHub Actions current (Phase 7 maintenance). Production deps are gated
+# in CI by `npm run audit:prod`; this opens the update PRs that keep that gate green over time and
+# clears dev-tool advisories (e.g. the vite/esbuild line) as upstream fixes land.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Batch the noisy dev tooling into one PR; keep runtime deps separate for careful review.
+      dev-dependencies:
+        dependency-type: development
+      production-dependencies:
+        dependency-type: production
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - ci

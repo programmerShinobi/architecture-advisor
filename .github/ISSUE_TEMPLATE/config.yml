@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question / discussion
+    url: https://github.com/programmerShinobi/architecture-advisor/discussions
+    about: Ask a question or discuss an idea before filing an issue.
+  - name: Report a security vulnerability
+    url: https://github.com/programmerShinobi/architecture-advisor/security/advisories/new
+    about: Please report security issues privately (see SECURITY.md), not as a public issue.
+  - name: Contributing guide
+    url: https://github.com/programmerShinobi/architecture-advisor/blob/main/CONTRIBUTING.md
+    about: How to set up, the quality gates, and the contribution flow.

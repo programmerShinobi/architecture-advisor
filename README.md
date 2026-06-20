@@ -103,7 +103,7 @@ traceable:
 | 4 | [Development](docs/04-development/) | Source code (`src/`, scoring engine, components) | ✅ v1.0 implemented |
 | 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 62 Vitest + Playwright E2E + 3 guards; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
 | 6 | [Deployment / Release](docs/06-deployment/) | [Live on GitHub Pages](https://programmershinobi.github.io/architecture-advisor/) via `deploy.yml` (CI/CD) | ✅ Live |
-| 7 | [Maintenance & Iteration](docs/07-maintenance/) | Monitoring, fixes, updates | 🚧 Not started |
+| 7 | [Maintenance & Iteration](docs/07-maintenance/) | [Changelog](CHANGELOG.md), Dependabot, issue/PR templates, [security policy](SECURITY.md) | 🔄 Ongoing |
 
 Cross-cutting references — the [Build Spec v3](docs/specs/build-spec-v3.md) and the
 [execution playbooks](docs/guides/) — support multiple phases. The full map, with an SDLC flow

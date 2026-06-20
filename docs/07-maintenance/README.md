@@ -1,22 +1,55 @@
 # Phase 7 — Maintenance & Iteration
 
-> 🚧 **Not started.** Phase 7 of 7 — the ongoing phase after launch.
+> 🔄 **Ongoing** (since the v1.0.0 launch). Phase 7 of 7. The app is
+> [live](https://programmershinobi.github.io/architecture-advisor/); this phase keeps it correct,
+> current, and secure, and evolves the decision model as standards change.
 
-Monitoring, bug fixes, updates, and new features driven by user feedback. For this project,
-maintenance also means keeping the **decision model** current as standards evolve.
+Monitoring, bug fixes, dependency upkeep, and new features driven by feedback — plus keeping the
+**decision model** defensible over time.
 
-**Expected outputs**
+## Release process
 
-- A `CHANGELOG.md` (Keep a Changelog style) and bilingual release notes.
-- Issue triage and a roadmap shaped by user feedback and the evolution map.
-- Annual review of the model against the latest standards, recorded as ADRs.
+- **Versioning:** [SemVer](https://semver.org/) for the app (`package.json`); the scoring **model**
+  has its own version in the [ADR log](../adr/) (charter
+  [Section 15](../01-discovery-and-planning/discovery-and-planning.md#15-versioning-policy--evolution-roadmap)).
+- **Changelog:** every notable change is recorded in [`CHANGELOG.md`](../../CHANGELOG.md)
+  (Keep a Changelog). Tag releases `vX.Y.Z`.
+- **Ship:** merge to `main` → `deploy.yml` re-runs tests + build and publishes to GitHub Pages.
+  Backward compatibility: old share-URLs / exports must keep loading (charter 15.3) — covered by the
+  share round-trip tests.
 
-**References**
+## Monitoring & quality gates
 
-- Charter [Section 15](../01-discovery-and-planning/discovery-and-planning.md) — versioning policy & evolution
-  roadmap (SemVer, separate model version, backward compatibility).
-- Charter [Section 20](../01-discovery-and-planning/discovery-and-planning.md) — sustainability.
-- [Feature-Maturity Playbook](../guides/feature-maturity-playbook.md) — `TECH-09` (maintainability),
-  `TECH-10` (operational observability).
+This is a **static, client-side** app with **no backend and no telemetry** (privacy by design), so
+"monitoring" is the automated gate set plus GitHub-managed Pages uptime — not server dashboards:
+
+- **CI on every PR/push:** `ci.yml` (lint · test · build · bundle-size budget · prod-dep audit),
+  `e2e.yml` (Playwright), `docs-integrity.yml` (the three model guards).
+- **Deploy gate:** `deploy.yml` re-runs tests + build before publishing.
+- **Dependencies:** [Dependabot](../../.github/dependabot.yml) opens weekly npm + Actions update
+  PRs; `npm run audit:prod` fails CI on a high/critical production-dependency advisory.
+- **Security:** see [`SECURITY.md`](../../SECURITY.md) for the policy and private reporting.
+
+## Triage & contribution
+
+- Issues use templates (bug / feature / **model review**); PRs use a checklist tied to the gates.
+- The model is meant to be challenged — propose changes with evidence via the model-review template;
+  changes must keep the guards green (adjust presets/levels, not targets — see
+  [EXTENDING.md](../../EXTENDING.md)).
+
+## Open backlog (tracked)
+
+- **WCAG AA color-contrast** for de-emphasised muted text (off-state chips, dimmed rows, faint
+  hints) — `test.fixme` in the E2E a11y suite ([test plan](../05-testing-qa/test-plan.md)).
+- **UAT execution** — scripted scenarios authored ([UAT script](../05-testing-qa/uat-script.md));
+  run with ≥3 participants per persona.
+- **Dev-tooling advisories** (vite/esbuild, dev-only) and the Actions Node-20 deprecation — cleared
+  as Dependabot lands upstream updates.
+- **Annual model review** against the latest standards, recorded as ADRs (charter 15.5).
+
+**References:** charter [Section 15](../01-discovery-and-planning/discovery-and-planning.md#15-versioning-policy--evolution-roadmap)
+(versioning & roadmap), [Section 20](../01-discovery-and-planning/discovery-and-planning.md)
+(sustainability), and the [Feature-Maturity Playbook](../guides/feature-maturity-playbook.md)
+(`TECH-09` maintainability, `TECH-10` observability).
 
 Contributions are welcome — see [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).
