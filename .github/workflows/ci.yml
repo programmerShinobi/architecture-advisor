@@ -46,3 +46,7 @@ jobs:
         run: npm run test
       - name: Production build
         run: npm run build
+      - name: Bundle-size budget (gzip JS/CSS)
+        run: npm run size
+      - name: Audit production dependencies (high/critical)
+        run: npm run audit:prod
