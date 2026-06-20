@@ -6,7 +6,7 @@
 Layered testing to separate a prototype from a product: **unit**, **integration**, and **system**
 tests, then **UAT** (user-acceptance testing), plus **security** and **performance** checks.
 
-The scoring engine and exporters are covered by **50 Vitest cases** plus **three model-integrity
+The scoring engine and exporters are covered by **62 Vitest cases** plus **three model-integrity
 guards** wired into CI, and the **first component/integration + accessibility tests have landed**
 (reactivity, radar, sensitivity, language, and axe-core WCAG A/AA); E2E, formal UAT, and
 security/performance verification are the open backlog. Full strategy, current inventory, the
@@ -16,7 +16,7 @@ acceptance-criteria traceability matrix, and the honest gap list live in **[test
 
 - ✅ Unit tests (Vitest) for the scoring engine, anti-patterns, exporters, and i18n.
 - ✅ Component/integration tests (Testing Library) — App reactivity, radar, sensitivity, language.
-- ✅ Accessibility tests (`vitest-axe`, WCAG A/AA names/roles/ARIA) — caught & fixed an unlabeled input (50 cases total).
+- ✅ Accessibility tests (`vitest-axe`, WCAG A/AA names/roles/ARIA) — caught & fixed an unlabeled input (62 cases total).
 - ✅ Three model-integrity guards (`verify-model`, `cross-check-docs`, `check-app-config`) in CI.
 - ✅ Acceptance-criteria traceability (Build Spec Section 14 → tests): **14/16 automated**, 2 partial.
 - ⏳ E2E for the 4-step flow; AA **contrast** + full-keyboard automation (needs a real browser); override/overlay coverage.

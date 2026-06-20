@@ -35,4 +35,16 @@ describe('App integration', () => {
     expect(screen.getByText('Recommendation across 5 dimensions')).toBeInTheDocument();
     expect(screen.queryByText('Rekomendasi di 5 dimensi')).not.toBeInTheDocument();
   });
+
+  it('locking one QA weight in the override panel redistributes the others', () => {
+    renderWithI18n(<App />, 'en');
+    fireEvent.click(screen.getByRole('button', { name: 'Expert' }));
+    fireEvent.click(screen.getByRole('button', { name: /Adjust weights/ }));
+
+    const ttm = () => screen.getByRole('spinbutton', { name: 'Time-to-market / delivery speed' }) as HTMLInputElement;
+    const before = ttm().value; // highest weight by default (ttm=1)
+    // lock Security to 80% → the unlocked weights (incl. time-to-market) share the remaining 20%
+    fireEvent.change(screen.getByRole('spinbutton', { name: 'Security' }), { target: { value: '80' } });
+    expect(ttm().value).not.toBe(before);
+  });
 });

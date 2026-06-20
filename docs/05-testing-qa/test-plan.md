@@ -39,7 +39,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 |---|---|---|---|
 | **L0 · Model guards** | Node scripts (no deps), CI | The docs, the reference model, and `src/config` cannot drift apart | ✅ Done |
 | **L1 · Unit** | Vitest | Scoring math, anti-patterns, exporters, i18n | ✅ Done |
-| **L2 · Component/Integration** | Vitest + Testing Library | The 4-step flow, reactivity, override panel, radar toggles | 🟡 Started |
+| **L2 · Component/Integration** | Vitest + Testing Library | The 4-step flow, reactivity, override panel + redistribution, radar, command palette, manual & A/B compare overlays | ✅ Mostly done |
 | **L3 · System / E2E** | (Playwright, candidate) | Full user journeys in a real browser, share-URL deep-link | ⏳ Planned |
 | **L4 · Accessibility** | `vitest-axe` (axe-core); manual for contrast | Names/roles/ARIA (axe, WCAG A/AA); contrast + full keyboard manual | 🟡 Automated (names/roles) |
 | **L5 · UAT** | Scripted scenarios (Section 7) | Real architects/newcomers confirm usefulness & clarity | ⏳ Planned |
@@ -52,16 +52,19 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.1 Automated unit suite — `npm run test` (Vitest)
 
-**50 tests across 8 files**, all green:
+**62 tests across 11 files**, all green:
 
 | File | Cases | Covers |
 |---|---:|---|
 | [`src/lib/scoring.test.ts`](../../src/lib/scoring.test.ts) | 22 | Fixtures A–C, equal-weight fallback, **500 seeded random invariants**, requirement scenarios (AC-6/AC-7), contribution reconciliation (FR-REC-4), expert override & lock, **all 25 preset targets** (SRS Section 5.3), qaFit defaulting |
 | [`src/lib/antiPatternEngine.test.ts`](../../src/lib/antiPatternEngine.test.ts) | 8 | Distributed monolith, premature microservices, and the other rules (Model Data Sheet Section 5) |
 | [`src/lib/exports.test.ts`](../../src/lib/exports.test.ts) | 8 | `generateAdr` (MADR), `generateReport`, `buildC4`, scenario JSON round-trip, **share-URL round-trip (AC-14)** |
-| [`src/App.test.tsx`](../../src/App.test.tsx) | 3 | **Integration:** preset & single-factor reactivity (AC-2), language toggle (AC-13) |
+| [`src/App.test.tsx`](../../src/App.test.tsx) | 4 | **Integration:** preset & single-factor reactivity (AC-2), language toggle (AC-13), and weight-override redistribution end-to-end |
 | [`src/components/RadarPanel.test.tsx`](../../src/components/RadarPanel.test.tsx) | 3 | **Component:** D1 ranking + single top pick, option toggle, dimension switch (AC-12) |
 | [`src/components/SensitivityCard.test.tsx`](../../src/components/SensitivityCard.test.tsx) | 3 | **Component:** flip sentence + robust fallback, max-3 flips (AC-11) |
+| [`src/components/QaOverridePanel.test.tsx`](../../src/components/QaOverridePanel.test.tsx) | 4 | **Component:** edit → lock, clamp 0–100, unlock, clear-all |
+| [`src/components/CommandPalette.test.tsx`](../../src/components/CommandPalette.test.tsx) | 3 | **Component:** closed renders nothing; filter by query; run on click / Enter |
+| [`src/components/overlays.test.tsx`](../../src/components/overlays.test.tsx) | 4 | **Component:** ManualBook + ScenarioCompare (A/B) — hidden when closed, labelled dialog + close when open |
 | [`src/a11y.test.tsx`](../../src/a11y.test.tsx) | 2 | **Accessibility (AC-15):** axe-core WCAG A/AA on the composed app + Expert/override panel — caught & fixed an unlabeled file input |
 | [`src/i18n/dict.test.ts`](../../src/i18n/dict.test.ts) | 1 | Dictionary completeness — every key has EN **and** ID |
 
