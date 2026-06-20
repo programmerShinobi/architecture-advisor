@@ -21,7 +21,7 @@ Each phase lives in its own numbered folder, and each produces a concrete delive
 | 3 | Blueprint (Design) | [`03-blueprint/`](03-blueprint/) | [Design spec](03-blueprint/design-specification.md) + the model docs ([data sheet](03-blueprint/model-data-sheet.md), [scoring algorithm](03-blueprint/scoring-algorithm.md), [formulation](03-blueprint/model-formulation.md), [option content](03-blueprint/option-content-sheet.md)) + [UI prototype](03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | Development | [`04-development/`](04-development/) | Source code ([`src/`](../src/), scoring engine, components) | ✅ v1.0 implemented |
 | 5 | Testing / QA | [`05-testing-qa/`](05-testing-qa/) | [Test plan](05-testing-qa/test-plan.md) — 62 Vitest + Playwright E2E + 3 guards; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
-| 6 | Deployment / Release | [`06-deployment/`](06-deployment/) | CI/CD pipeline → staging → live URL | 🚧 Not started ([guide ready](06-deployment/deployment-github-pages.md)) |
+| 6 | Deployment / Release | [`06-deployment/`](06-deployment/) | [Live on GitHub Pages](https://programmershinobi.github.io/architecture-advisor/) via `deploy.yml` | ✅ Live |
 | 7 | Maintenance & Iteration | [`07-maintenance/`](07-maintenance/) | Monitoring, fixes, updates, changelog | 🚧 Not started (post-launch) |
 
 ## Cross-cutting references

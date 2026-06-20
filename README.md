@@ -2,6 +2,7 @@
 
 > A transparent, quality-attribute-driven decision-support tool for choosing software architecture — and always explaining *why*.
 
+[![Live demo](https://img.shields.io/badge/demo-live-brightgreen)](https://programmershinobi.github.io/architecture-advisor/)
 [![Status](https://img.shields.io/badge/status-v1.0%20MVP%20implemented-success)](#run-it-locally)
 [![CI](https://github.com/programmerShinobi/architecture-advisor/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
 [![Docs](https://img.shields.io/badge/docs-English-success)](docs/)
@@ -16,7 +17,9 @@ The **same project, two audiences.** *Guided* mode gives newcomers plain-languag
 ("Speed & quick response", a "what this means for you" narrative); *Expert* mode gives architects
 the technical attribute names, editable weights, per-attribute contribution bars, and a
 **Professional analysis** section (cost & ops, fitness functions, risk register, methodology, a C4
-stub, glossary). Both run from the same engine — toggle with one click. Run it with `npm run dev`.
+stub, glossary). Both run from the same engine — toggle with one click.
+
+▶ **Try it live: [programmershinobi.github.io/architecture-advisor](https://programmershinobi.github.io/architecture-advisor/)** — or run it with `npm run dev`.
 
 <table>
   <tr>
@@ -99,7 +102,7 @@ traceable:
 | 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [Model Data Sheet](docs/03-blueprint/model-data-sheet.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | [Development](docs/04-development/) | Source code (`src/`, scoring engine, components) | ✅ v1.0 implemented |
 | 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 62 Vitest + Playwright E2E + 3 guards; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
-| 6 | [Deployment / Release](docs/06-deployment/) | CI/CD → staging → live ([guide ready](docs/06-deployment/deployment-github-pages.md)) | 🚧 Not started |
+| 6 | [Deployment / Release](docs/06-deployment/) | [Live on GitHub Pages](https://programmershinobi.github.io/architecture-advisor/) via `deploy.yml` (CI/CD) | ✅ Live |
 | 7 | [Maintenance & Iteration](docs/07-maintenance/) | Monitoring, fixes, updates | 🚧 Not started |
 
 Cross-cutting references — the [Build Spec v3](docs/specs/build-spec-v3.md) and the

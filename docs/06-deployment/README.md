@@ -1,9 +1,13 @@
 # Phase 6 — Deployment / Release
 
-> 🚧 **Not started.** Phase 6 of 7. The deployment guide below is already written and ready to follow.
+> ✅ **Live.** Phase 6 of 7. Deployed to **GitHub Pages** via the `deploy.yml` GitHub Actions
+> pipeline (checkout → `npm ci` → `npm run test` → `npm run build` → upload → deploy).
+>
+> 🔗 **Live URL: <https://programmershinobi.github.io/architecture-advisor/>** — verified: HTTP 200,
+> the SPA mounts, and assets resolve at the `/architecture-advisor/` base path.
 
-Releasing to production through a **CI/CD pipeline**, ideally with a **staging** step before going
-live. For this project the target is free static hosting on **GitHub Pages** with **GitHub Actions**.
+Releasing to production through a **CI/CD pipeline**. For this project the target is free static
+hosting on **GitHub Pages** with **GitHub Actions** — the guide below is the exact path followed.
 
 ## Deliverable (prepared)
 
