@@ -137,14 +137,21 @@ nothing fully manual.** See the remaining L3–L4 backlog (Section 10).
 ## 5. How to run
 
 ```bash
-npm run test                       # Vitest unit suite (watch: npm run test:watch)
+npm run test                       # Vitest unit/component/a11y suite (watch: npm run test:watch)
 node scripts/verify-model.mjs      # model math + fixtures + 25 preset targets
 node scripts/cross-check-docs.mjs  # docs agree with each other + the prototype
 node scripts/check-app-config.mjs  # src/config mirrors the documented model
 npm run lint && npm run build      # types + lint + production build
+npm run size                       # bundle-size budget (after build) — L7
+npm run audit:prod                 # production-dependency audit (high/critical) — L6
+
+# E2E (real browser) — one-time browser download, then run:
+npx playwright install chromium
+npm run test:e2e                   # smoke, share deep-link, structural a11y, keyboard — L3
 ```
 
-CI runs the equivalent on every push/PR; a green checkmark is the merge gate.
+CI runs the equivalent on every push/PR (`ci.yml` + `e2e.yml` + `docs-integrity.yml`); a green
+checkmark is the merge gate, and `deploy.yml` re-runs the unit tests + build before publishing.
 
 ---
 

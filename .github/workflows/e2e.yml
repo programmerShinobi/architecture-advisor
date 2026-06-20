@@ -34,8 +34,21 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Install Playwright browser (chromium)
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - name: Install Playwright browser + OS deps (cache miss)
+        if: steps.pw-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+      - name: Install Playwright OS deps only (cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
       - name: Run E2E tests (smoke, share deep-link, structural a11y, keyboard)
         run: npm run test:e2e
       - name: Upload report on failure
