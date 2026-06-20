@@ -111,7 +111,7 @@ export function Toolbar({ run, status, setStatus, mode, onImport }: Props) {
             {t('action.importSetup')}
           </button>
         )}
-        <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
+        <input ref={fileRef} type="file" accept="application/json,.json" aria-label={t('action.importSetup')} className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
       </div>
 
       {status && (
