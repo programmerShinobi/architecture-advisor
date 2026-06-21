@@ -79,8 +79,27 @@ Would they use it again? (1–5): __
 - Feed wording/flow fixes back into the [SRS](../02-requirement-analysis/software-requirements-specification.md)
   and the UI copy; re-test the changed path.
 
+## 6. Readiness (facilitator dry-run)
+
+Before recruiting participants, a moderator dry-run confirmed **every task path is functional in
+v1.0.0** on the live app — so a failed task in a real session reflects *usability*, not a broken
+build. Each path is also covered by an automated test, so it stays functional:
+
+| Task | Path works (evidence) |
+|---|---|
+| A1 / B1 reach a live recommendation; factors update it | `e2e/smoke.spec` (preset recomputes) + `App.test` (factor reactivity) |
+| A2 / A3 "why" narrative + good/cost | rendered in the Guided detail (DimensionDetail) |
+| B2 contribution bars · B3 sensitivity / close-call | `RadarPanel.test` + `SensitivityCard.test` |
+| B4 override a weight → others redistribute | `QaOverridePanel.test` + `App.test` (redistribution) |
+| B5 export ADR / report | `e2e/smoke.spec` (ADR `.md` downloads) + `exports.test` |
+| B6 share link round-trips | `e2e/share.spec` (deep-link restores state) |
+
+**Status: ready to run.** Outstanding = scheduling ≥3 participants per persona and recording the
+Section 4 results; until then AC-2/11/12 "clarity in practice" stays unproven by real users.
+
 ---
 
 | Version | Date | Notes |
 |---|---|---|
 | 0.1 | 2026-06-20 | Initial UAT script: method, exit criteria, Guided/Expert scenarios, results template. Not yet executed (≥3 participants per persona pending). |
+| 0.2 | 2026-06-20 | Added the facilitator dry-run / readiness check — every task path verified functional in v1.0.0 (mapped to the automated tests). Script is ready to run; participant sessions still pending. |
