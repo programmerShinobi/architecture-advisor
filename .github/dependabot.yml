@@ -1,19 +1,23 @@
 # Keeps dependencies and GitHub Actions current (Phase 7 maintenance). Production deps are gated
-# in CI by `npm run audit:prod`; this opens the update PRs that keep that gate green over time and
-# clears dev-tool advisories (e.g. the vite/esbuild line) as upstream fixes land.
+# in CI by `npm run audit:prod`; this opens the update PRs that keep that gate green over time.
+#
+# Grouping policy: batch only minor/patch updates (safe, reviewable together). MAJOR updates come
+# as individual PRs so breaking bumps (e.g. Vite, Vitest, ESLint, Tailwind, TypeScript, React) are
+# evaluated and migrated one at a time — not merged as one blob.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: '/'
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 8
     groups:
-      # Batch the noisy dev tooling into one PR; keep runtime deps separate for careful review.
-      dev-dependencies:
+      dev-minor-patch:
         dependency-type: development
-      production-dependencies:
+        update-types: ['minor', 'patch']
+      prod-minor-patch:
         dependency-type: production
+        update-types: ['minor', 'patch']
     labels:
       - dependencies
 
@@ -21,6 +25,9 @@ updates:
     directory: '/'
     schedule:
       interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
     labels:
       - dependencies
       - ci
