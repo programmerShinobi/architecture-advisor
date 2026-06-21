@@ -9,11 +9,15 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Fixed
+
+- **WCAG AA color-contrast** across both themes — raised the tertiary-text tokens, the light-theme
+  success green, and the de-emphasised opacities (off-state radar chips, dimmed ranking rows). The
+  E2E a11y suite now gates **full** color-contrast in a real browser (no more `fixme`); the same
+  tokens are mirrored in the UI prototype and the README previews.
+
 ### Known / tracked
 
-- Full WCAG AA **color-contrast** for de-emphasised muted text (off-state radar chips, dimmed
-  ranking rows, faint hints) — tracked as a `test.fixme` in the E2E a11y suite
-  ([test plan](docs/05-testing-qa/test-plan.md)).
 - **UAT** scripted scenarios are authored but not yet executed with participants.
 
 ## [1.0.0] — 2026-06-20

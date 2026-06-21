@@ -187,7 +187,7 @@ export function RadarPanel({ weights, mode }: Props) {
                     borderRadius: 'var(--border-radius-md)',
                     padding: '10px 12px',
                     border: best ? '1.5px solid var(--color-border-info)' : undefined,
-                    opacity: isOn(o.id) ? 1 : 0.5,
+                    opacity: isOn(o.id) ? 1 : 0.85,
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>

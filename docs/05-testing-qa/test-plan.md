@@ -3,9 +3,9 @@
 > **Phase 5 of 7 · Status: 🔬 In progress.** **62 Vitest** unit/component/integration tests + an
 > **axe-core a11y** suite, three **model-integrity guards**, and a **Playwright** real-browser E2E
 > suite (smoke, share deep-link, structural a11y, keyboard) — all in CI, which now also gates a
-> **bundle-size budget** and a **production-dependency audit**. Open: the **UAT script** is written
-> but not yet run with participants, and **full color-contrast AA** (de-emphasised muted text) is a
-> tracked remediation. This document is the test strategy, the current inventory, the
+> **bundle-size budget** and a **production-dependency audit**. Real-browser a11y gates **full
+> WCAG A/AA including color-contrast** in both themes. Open: the **UAT script** is written but not
+> yet run with participants. This document is the test strategy, the current inventory, the
 > acceptance-criteria traceability matrix, and the honest gap list.
 
 Primary references: [Build Spec Section 14](../specs/build-spec-v3.md#14-acceptance-criteria-verify-before-finishing)
@@ -41,7 +41,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 | **L1 · Unit** | Vitest | Scoring math, anti-patterns, exporters, i18n | ✅ Done |
 | **L2 · Component/Integration** | Vitest + Testing Library | The 4-step flow, reactivity, override panel + redistribution, radar, command palette, manual & A/B compare overlays | ✅ Mostly done |
 | **L3 · System / E2E** | Playwright (chromium) | Full journeys in a real browser: smoke, share-URL deep-link, structural a11y, keyboard | ✅ Done |
-| **L4 · Accessibility** | `vitest-axe` + Playwright + `@axe-core/playwright` | Names/roles/ARIA (jsdom + real browser, WCAG A/AA) and keyboard automated; full color-contrast AA tracked | 🟡 Mostly automated |
+| **L4 · Accessibility** | `vitest-axe` + Playwright + `@axe-core/playwright` | Names/roles/ARIA (jsdom + real browser), keyboard, and **full color-contrast** (real browser, both themes) — all automated | ✅ Done |
 | **L5 · UAT** | Scripted scenarios — [uat-script.md](uat-script.md) | Real architects/newcomers confirm usefulness & clarity | ⏳ Script ready (not run) |
 | **L6 · Security** | `npm audit --omit=dev` in CI (Section 8) | Client-side injection, storage, dependencies | ✅ Gated in CI |
 | **L7 · Performance** | Bundle-size budget guard in CI (Section 9) | Bundle budget, first paint, instant recompute | ✅ Gated in CI |
@@ -83,14 +83,14 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.3 End-to-end — `npm run test:e2e` (Playwright, real chromium)
 
-Real-browser journeys against the dev server at the `/architecture-advisor/` sub-path. **6 pass,
-1 `fixme`** (the full color-contrast audit — see Section 10):
+Real-browser journeys against the dev server at the `/architecture-advisor/` sub-path. **6 pass**
+(all gating):
 
 | Spec | Covers |
 |---|---|
 | [`e2e/smoke.spec.ts`](../../e2e/smoke.spec.ts) | The 4-step flow loads; a preset recomputes the recommendation (AC-2); the primary export downloads a `.md` (MADR) |
 | [`e2e/share.spec.ts`](../../e2e/share.spec.ts) | **AC-14 end to end:** Share copies a `#s=…` deep link to the clipboard; opening it restores the exact recommendation |
-| [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | Structural WCAG A/AA (axe, real engine) in dark + Expert/light; keyboard operability. Full color-contrast AA is a tracked `test.fixme` |
+| [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | **Full** WCAG A/AA **incl. color-contrast** (axe, real engine) in Guided/dark + Expert/light + override panel; keyboard operability |
 
 ### 3.4 CI pipelines (`.github/workflows/`)
 
@@ -126,11 +126,11 @@ the build on regression; **Manual** = on the release checklist (Section 6) until
 | 12 | Radar overlays top options; compare 2–3 options | `RadarPanel.test` (toggle + dimension switch) | ✅ Automated |
 | 13 | Language toggle updates **all** strings; dark mode fully styled | `dict.test` (keys) + `App.test` (toggle); dark mode manual | 🟡 Partial |
 | 14 | Share link round-trips; Export ADR = valid MADR | `exports.test` + `e2e/share.spec` (deep-link) + `e2e/smoke.spec` (ADR download) | ✅ Automated |
-| 15 | Keyboard-operable; accessible names; AA contrast both themes | `a11y.test` + `e2e/a11y.spec` (structural axe + keyboard, real browser); full color-contrast AA tracked (`test.fixme`) | 🟡 Partial |
+| 15 | Keyboard-operable; accessible names; AA contrast both themes | `a11y.test` + `e2e/a11y.spec` (axe **incl. color-contrast** + keyboard, both themes, real browser) | ✅ Automated |
 | 16 | Every QA/factor/option/rule/template in config + documented | `check-app-config` + `cross-check-docs` | ✅ Automated |
 
-**Summary: 14/16 fully automated, 2 partial (AC-13 dark mode; AC-15 full color-contrast AA) —
-nothing fully manual.** See the remaining L3–L4 backlog (Section 10).
+**Summary: 15/16 fully automated, 1 partial (AC-13 — dark-mode *styling* completeness is still
+eyeballed; the dark theme is otherwise axe-clean).** Nothing fully manual.
 
 ---
 
@@ -171,11 +171,12 @@ Run before tagging a release, in both **light and dark** themes and at **360 px*
 
 ## 7. Accessibility (L4) & UAT (L5)
 
-**Accessibility — target WCAG 2.1 AA** (NFR + AC-15). Names/roles/ARIA are **automated** via
-`vitest-axe` (axe-core, WCAG A/AA) in [`src/a11y.test.tsx`](../../src/a11y.test.tsx) — it already
-caught and fixed an unlabeled file input. **Contrast** (jsdom has no layout engine to compute it)
-and full keyboard-navigation remain on the manual checklist; verify in a real browser, or add
-Playwright + `@axe-core/playwright` later.
+**Accessibility — WCAG 2.1 AA** (NFR + AC-15), **automated**: names/roles/ARIA via `vitest-axe`
+(axe-core) in [`src/a11y.test.tsx`](../../src/a11y.test.tsx) (jsdom), plus **full color-contrast +
+keyboard** in a real browser via Playwright + `@axe-core/playwright` in
+[`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts), across both themes. The axe run caught and fixed an
+unlabeled file input; the contrast pass drove the tertiary-token, light-success-green, and
+dimmed-opacity (off chips / hidden rows) adjustments to clear AA.
 
 - Keyboard: every interactive control operable, logical tab order, visible focus (already styled
   via `:focus-visible` in `index.css`), no traps; overlays (palette, manual) are escapable.
@@ -227,7 +228,6 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 
 | Gap | Impact | Plan |
 |---|---|---|
-| **Full color-contrast AA** (L4) | De-emphasised, `opacity`-dimmed muted text (off radar chips, dimmed rows, faint hints) is ~2.7–4.3:1 vs 4.5:1 | Rework the muted palette / dimming so toggled-off text still meets AA; then drop the `test.fixme` in `e2e/a11y.spec` |
 | **UAT not yet executed** (L5) | Real-user clarity unproven | Run [uat-script.md](uat-script.md) with ≥3 per persona before v1.1 |
 | Component/integration (L2) is broad but not exhaustive | A few minor affordances still ride the release checklist | Add cases opportunistically as components change |
 
@@ -248,3 +248,4 @@ affordance is covered by the release checklist (Section 6); and no acceptance cr
 | 0.3 | 2026-06-20 | L4 accessibility automated with `vitest-axe` (axe-core), WCAG A/AA, on the composed app + Expert/override panel (`src/a11y.test.tsx`, 2 cases) — caught & fixed an unlabeled file input (Toolbar). Inventory 48→50; AC-15 manual→partial (contrast/keyboard still manual). |
 | 0.4 | 2026-06-20 | Extended L2 to the override panel + redistribution, command palette, and the manual / A/B-compare overlays. Inventory 50→62. |
 | 0.5 | 2026-06-20 | **L3 E2E** (Playwright: smoke, share deep-link, structural a11y, keyboard) + real-browser keyboard for AC-15; **L6/L7 gated in CI** (`audit:prod`, bundle-size budget); **L5 UAT script** added ([uat-script.md](uat-script.md)). Full color-contrast AA tracked as a `test.fixme`. |
+| 0.6 | 2026-06-20 | **Full color-contrast AA remediated and gated** in the real browser (tertiary tokens, light success green, off-chip/hidden-row opacity) — `e2e/a11y.spec` now asserts color-contrast in both themes (no `fixme`); L4 ✅; AC-15 ✅ automated (15/16 AC automated). |

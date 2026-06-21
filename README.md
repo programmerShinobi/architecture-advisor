@@ -116,7 +116,7 @@ diagram, is in **[docs/README.md](docs/README.md)**.
 - React hooks only; state persisted to `localStorage` and encoded in the URL hash (shareable links)
 - Lightweight i18n (ID/EN), Vitest + Testing Library, ESLint + Prettier
 - **Pure client-side** — no backend, database, accounts, or AI calls
-- Responsive to 360px, keyboard-accessible (axe + Playwright verified); targets WCAG AA — de-emphasised muted-text contrast is under remediation ([test plan](docs/05-testing-qa/test-plan.md))
+- Responsive to 360px; **WCAG AA** in both themes — names/roles/ARIA, keyboard, and color-contrast verified by axe + Playwright ([test plan](docs/05-testing-qa/test-plan.md))
 
 ## Design principles
 

@@ -39,8 +39,6 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
 
 ## Open backlog (tracked)
 
-- **WCAG AA color-contrast** for de-emphasised muted text (off-state chips, dimmed rows, faint
-  hints) — `test.fixme` in the E2E a11y suite ([test plan](../05-testing-qa/test-plan.md)).
 - **UAT execution** — scripted scenarios authored ([UAT script](../05-testing-qa/uat-script.md));
   run with ≥3 participants per persona.
 - **Dev-tooling advisories** (vite/esbuild, dev-only) and the Actions Node-20 deprecation — cleared

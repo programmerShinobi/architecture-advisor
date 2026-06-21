@@ -13,7 +13,7 @@
   --color-background-tertiary: #343a41;
   --color-text-primary: #eceded;
   --color-text-secondary: #aeb4bc;
-  --color-text-tertiary: #7e858e;
+  --color-text-tertiary: #909aa3;
   --color-text-info: #6aa6ff;
   --color-text-success: #35c28d;
   --color-text-warning: #e0a93b;
@@ -39,9 +39,9 @@ html.light {
   --color-background-tertiary: #e7e9ec;
   --color-text-primary: #1b1d1f;
   --color-text-secondary: #4a4f57;
-  --color-text-tertiary: #80868f;
+  --color-text-tertiary: #6b7178;
   --color-text-info: #2563eb;
-  --color-text-success: #0f8a5f;
+  --color-text-success: #0a7048;
   --color-text-warning: #b5790e;
   --color-text-danger: #c4392e;
   --color-background-info: rgba(37, 99, 235, 0.08);
@@ -326,7 +326,7 @@ html.light {
     border-color: var(--color-border-info);
   }
   .r-chip.off {
-    opacity: 0.45;
+    opacity: 0.85;
   }
   .r-dot {
     width: 10px;
