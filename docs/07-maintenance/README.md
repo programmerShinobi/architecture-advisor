@@ -41,8 +41,11 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
 
 - **UAT execution** — scripted scenarios authored ([UAT script](../05-testing-qa/uat-script.md));
   run with ≥3 participants per persona.
-- **Dev-tooling advisories** (vite/esbuild, dev-only) and the Actions Node-20 deprecation — cleared
-  as Dependabot lands upstream updates.
+- **Major dev-tooling upgrades — deferred for stability.** ESLint 8→10 (flat config),
+  typescript-eslint 7→8, Vite 5→8, Vitest 2→4, TypeScript 5→6 are open Dependabot PRs, to be
+  migrated **one cluster at a time** with full testing (the Vite/esbuild bump also clears the
+  dev-only advisory). GitHub Actions are already current — the Node-20 runner deprecation is
+  resolved.
 - **Annual model review** against the latest standards, recorded as ADRs (charter 15.5).
 
 **References:** charter [Section 15](../01-discovery-and-planning/discovery-and-planning.md#15-versioning-policy--evolution-roadmap)
