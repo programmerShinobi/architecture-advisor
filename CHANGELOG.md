@@ -9,6 +9,15 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed
+
+- **React 18 → 19** (with matching `@types`). No source changes (the app already uses `createRoot`);
+  bundle grew ~115kB → ~129kB gzip, still within the CI budget.
+- **CI:** GitHub Actions bumped to current majors (checkout v7, cache v5, upload-artifact v7,
+  configure-pages v6, deploy-pages v5) — clears the Node-20 runner deprecation.
+- **Dependabot** now groups only minor/patch updates; each major opens its own PR (so breaking
+  bumps like Vite/Vitest/ESLint/Tailwind/TypeScript are reviewed one at a time).
+
 ### Fixed
 
 - **WCAG AA color-contrast** across both themes — raised the tertiary-text tokens, the light-theme

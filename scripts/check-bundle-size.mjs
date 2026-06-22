@@ -7,7 +7,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
-// Budgets in gzipped kB. Current ~96 (JS) / ~19 (CSS); headroom catches a real regression
+// Budgets in gzipped kB. Current ~110 (JS, incl. React 19) / ~19 (CSS); headroom catches a real regression
 // without flaking on small growth. Raise deliberately (with justification) if the app grows.
 const JS_BUDGET_KB = 120;
 const CSS_BUDGET_KB = 25;

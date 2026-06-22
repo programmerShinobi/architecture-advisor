@@ -215,7 +215,7 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 ## 9. Performance verification (L7)
 
 - [x] **Bundle budget:** **CI-gated** — `npm run size` ([`scripts/check-bundle-size.mjs`](../../scripts/check-bundle-size.mjs))
-      asserts gzip JS ≤120kB / CSS ≤25kB (currently ~96 / ~19). No chart/diagram library ships — all
+      asserts gzip JS ≤120kB / CSS ≤25kB (currently ~110 / ~19 with React 19). No chart/diagram library ships — all
       visuals are hand-built SVG (see [DECISIONS.md](../../DECISIONS.md)).
 - [ ] **Recompute:** changing a factor recomputes the full model **synchronously** (pure functions,
       no async) — perceptibly instant; verified by the 500-iteration invariant test running in ms.
