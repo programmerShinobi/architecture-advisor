@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Header, type Mode } from './components/Header';
 import { CommandPalette, type Command } from './components/CommandPalette';
 import { ShortcutsModal } from './components/ShortcutsModal';
-import { ManualBook } from './components/ManualBook';
 import { ScenarioCompare } from './components/ScenarioCompare';
 import { PrintReport } from './components/PrintReport';
 import { Collapsible } from './components/Collapsible';
@@ -38,6 +37,11 @@ import { detectAntiPatterns } from './lib/antiPatternEngine';
 import type { ExportInput } from './lib/snapshot';
 import type { ScenarioState } from './lib/scenarioIO';
 import type { DimensionId, Levels, RankedOption } from './types';
+
+// The Manual/Guide is lazy-loaded: it is an on-demand modal and now carries the detailed,
+// evidence-grounded architecture explanations (readerContent), so keeping it out of the initial
+// bundle preserves the first-load perf budget.
+const ManualBook = lazy(() => import('./components/ManualBook'));
 
 type Selections = Partial<Record<DimensionId, string>>;
 
@@ -269,7 +273,11 @@ export default function App() {
 
             <CommandPalette open={overlay === 'palette'} commands={commands} onClose={() => setOverlay(null)} />
             <ShortcutsModal open={overlay === 'shortcuts'} onClose={() => setOverlay(null)} />
-            <ManualBook open={overlay === 'manual'} onClose={() => setOverlay(null)} levels={levels} weights={weights} />
+            {overlay === 'manual' && (
+              <Suspense fallback={null}>
+                <ManualBook open onClose={() => setOverlay(null)} levels={levels} weights={weights} />
+              </Suspense>
+            )}
             <ScenarioCompare
               open={overlay === 'compare'}
               onClose={() => setOverlay(null)}

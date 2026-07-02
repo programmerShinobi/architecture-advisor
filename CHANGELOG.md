@@ -9,6 +9,20 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Added
+
+- **Detailed architecture explanations in the Manual/Guide** — the in-app Guide now includes a
+  plain-language, evidence-grounded explanation of **every architecture the Advisor evaluates** (all
+  five decisions, D1–D5) plus a bibliography, so the Guide is a genuine deep-dive rather than a
+  summary. Each option gets *What / When it fits / What it costs / Deeper* — written for newcomers
+  **and** experts, bilingual EN/ID, AA-clean in both themes. Grounded in recognised standards and the
+  software-architecture literature (Bass · Newman · Kleppmann · Fowler · Richards & Ford · SEI ·
+  peer-reviewed surveys) with real, linked citations — no fabricated sources. Canonical write-up:
+  [`docs/03-blueprint/architecture-reader.md`](docs/03-blueprint/architecture-reader.md); in-app
+  content in [`src/config/readerContent.ts`](src/config/readerContent.ts). The **Manual is now
+  lazy-loaded** (a separate on-demand chunk), so this depth adds **nothing** to first-load JS (initial
+  gzip actually dropped ~110kB → ~107kB); the bundle guard now budgets initial vs. total JS separately.
+
 ### Changed
 
 - **React 18 → 19** (with matching `@types`). No source changes (the app already uses `createRoot`);

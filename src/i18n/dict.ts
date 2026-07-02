@@ -330,6 +330,14 @@ export const DICT = {
   'action.followRec': { en: 'Follow recommendations', id: 'Ikuti rekomendasi' },
   'action.theme': { en: 'Toggle theme', id: 'Ganti tema' },
   'action.lang': { en: 'EN', id: 'ID' },
+
+  // Detailed architecture explanations folded into the Manual/Guide (Section 5) — see
+  // src/config/readerContent.ts / docs/03-blueprint/architecture-reader.md
+  'reader.what': { en: 'What', id: 'Apa' },
+  'reader.fits': { en: 'When it fits', id: 'Kapan cocok' },
+  'reader.cost': { en: 'What it costs', id: 'Apa biayanya' },
+  'reader.deeper': { en: 'Deeper', id: 'Lebih dalam' },
+  'reader.learnMore': { en: 'Read the full documented version', id: 'Baca versi lengkap yang terdokumentasi' },
 } satisfies Record<string, Bilingual>;
 
 export type DictKey = keyof typeof DICT;

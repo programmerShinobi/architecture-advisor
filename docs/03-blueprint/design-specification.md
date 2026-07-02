@@ -115,7 +115,7 @@ src/
 ├── lib/            scoring · sensitivity · antiPatternEngine · adr · report
 │                   c4 · urlState · customConfig
 ├── hooks/          usePersistedState · useUrlSyncedState
-└── components/     Header · Disclaimer · ModeToggle · PresetBar · FactorGroup …
+└── components/     Header · ManualBook (Guide + architecture explanations, lazy) · Disclaimer · ModeToggle · PresetBar · FactorGroup …
                     QaWeightChart · DimensionResults · RadarTradeoff · ContributionTable
                     ComparisonMode · SensitivityCard · RiskRegister · AntiPatternAlerts
                     FitnessFunctions · MigrationPath · MethodologyPanel · ReportPreview …
@@ -264,6 +264,7 @@ the prototype.
 | Pattern | Design | Requirement |
 |---|---|---|
 | **Guided vs Expert** | Plain-language labels & explanations vs technical terms, editable/lockable QA weights, data grid | FR-SHELL-1, FR-QA-3 |
+| **Guide as deep-dive** | The **lazy-loaded** Manual/Guide carries both the scoring walkthrough and a cited, plain-language + *Deeper* explanation of every architecture the tool evaluates ([architecture-reader.md](architecture-reader.md)) — no separate tab, keeping the shell simple | FR-SHELL-9, FR-SHELL-10, FR-READ-1..5 |
 | **4-step flow** | Factors → Priorities → Recommendation (5 dimensions) → Export, with a sticky step indicator | FR-FACT/QA/REC/OUT |
 | **Perceived performance** | Optimistic updates; **skeleton** (not spinner) on recompute; transitions 150–250 ms; no layout shift | FR-UI-2/6, NFR-PERF-1 |
 | **Command palette & keyboard** | `⌘/Ctrl-K` palette over all core actions; standard shortcuts (`⌘S`, `⌘Z`, `Esc`, `Enter`); full keyboard operation | FR-SHELL-8, NFR-A11Y-2 |

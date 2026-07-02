@@ -17,6 +17,8 @@
   --color-text-info: #6aa6ff;
   --color-text-success: #35c28d;
   --color-text-warning: #e0a93b;
+  /* "What it costs" label in the Reader — matches warning on dark, darkened on light for AA on cards. */
+  --color-text-cost: #e0a93b;
   --color-text-danger: #ec6a60;
   --color-background-info: rgba(106, 166, 255, 0.13);
   --color-background-success: rgba(53, 194, 141, 0.13);
@@ -43,6 +45,7 @@ html.light {
   --color-text-info: #2563eb;
   --color-text-success: #0a7048;
   --color-text-warning: #b5790e;
+  --color-text-cost: #8a5300; /* darker amber → ≥4.5:1 on the light card background */
   --color-text-danger: #c4392e;
   --color-background-info: rgba(37, 99, 235, 0.08);
   --color-background-success: rgba(15, 138, 95, 0.1);

@@ -211,6 +211,7 @@ v1.0:
 | FR-SHELL-7 | Provide a **glossary** of terms and contextual help/tooltips. | Must | Charter Section 5; UI/UX Playbook Task 9 | D |
 | FR-SHELL-8 | Provide a **command palette and keyboard shortcuts** covering all core actions. | Should | UI/UX Playbook Task 2 | T |
 | FR-SHELL-9 | Provide an in-app **Manual / Guide** that explains the tool end to end — including the full scoring calculation — with a **live worked example** computed from the user's current inputs. | Should | v1.1 enhancement | D |
+| FR-SHELL-10 | Extend the in-app **Manual / Guide** into a genuine deep-dive that, alongside the scoring walkthrough, **explains every architecture the Advisor evaluates** (see §3.9). The Manual is **lazy-loaded** on demand. | Should | v1.1 enhancement | T |
 
 ### 3.2 Step 1 — Project Factors
 
@@ -297,6 +298,21 @@ production. They are the most common source of "we never specified that" defects
 | FR-EDGE-5 | When a **shared URL or export carries an older model version**, detect the mismatch, render the result as-is for readability, and offer to **recompute with the current model** — never silently rescore. | Must | Charter Section 15.2 (R8); FR-STATE-3 | T |
 | FR-EDGE-6 | Guarantee scoring is **defined for every input combination**: clamp factor levels to 0–2, default unlisted `qaFit` to 3, and never divide by zero when all QA weights resolve to 0 (fall back to equal weights). | Must | Build Spec Section 5, Section 6 | T |
 | FR-EDGE-7 | Keep **export and share actions deterministic**: identical state always yields byte-identical ADR/report/CSV/JSON output, independent of locale or time zone (timestamps explicitly UTC). | Should | Build Spec Section 12; FR-OUT-* | T |
+
+### 3.9 Architecture explanations (within the Manual / Guide)
+
+The Manual / Guide includes an evidence-grounded explanation of the architectures the tool evaluates,
+so both newcomers and experts understand the choices, not just the scores. It is delivered as a
+detailed section of the Guide (not a separate tab). Its canonical, cited source is
+[`docs/03-blueprint/architecture-reader.md`](../03-blueprint/architecture-reader.md).
+
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-READ-1 | Explain **every option across all five decisions (D1–D5)** the Advisor evaluates, plus the method itself (ISO 25010 · ATAM · ADD · MAVT · fitness functions) — parity with the model is test-enforced. | Must | Charter Section 5; architecture-reader.md | T |
+| FR-READ-2 | Write for **two audiences at once**: a plain-language layer (What / When it fits / What it costs) and a *Deeper* layer with mechanism, evidence, and inline sources. | Must | FR-SHELL-1; architecture-reader.md | D |
+| FR-READ-3 | **Ground every claim in recognised sources** (standards, seminal books, peer-reviewed / widely-cited works) and render a **bibliography of real citations** with working links — no fabricated sources. | Must | Charter Section 21 (R2); references | D |
+| FR-READ-4 | Be **bilingual EN/ID** and meet **WCAG AA** (incl. color-contrast) in both themes, gated in a real browser. | Must | FR-SHELL-2, FR-SHELL-3; NFR a11y | T |
+| FR-READ-5 | Ride in the **lazy-loaded Manual chunk** so it does not increase first-load JS; the performance budget tracks initial vs. total JS separately. | Must | NFR performance budget; FR-SHELL-10 | T |
 
 ---
 

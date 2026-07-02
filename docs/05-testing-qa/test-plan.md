@@ -1,8 +1,9 @@
 # Test Plan & QA — Architecture Advisor
 
-> **Phase 5 of 7 · Status: 🔬 In progress.** **62 Vitest** unit/component/integration tests + an
-> **axe-core a11y** suite, three **model-integrity guards**, and a **Playwright** real-browser E2E
-> suite (smoke, share deep-link, structural a11y, keyboard) — all in CI, which now also gates a
+> **Phase 5 of 7 · Status: 🔬 In progress.** **64 Vitest** unit/component/integration tests + an
+> **axe-core a11y** suite (incl. the lazy-loaded Manual/Guide), three **model-integrity guards**, and
+> a **Playwright** real-browser E2E suite (smoke, share deep-link, structural a11y incl. the Manual,
+> keyboard) — all in CI, which now also gates a
 > **bundle-size budget** and a **production-dependency audit**. Real-browser a11y gates **full
 > WCAG A/AA including color-contrast** in both themes. Open: the **UAT script** is written but not
 > yet run with participants. This document is the test strategy, the current inventory, the
@@ -52,7 +53,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.1 Automated unit suite — `npm run test` (Vitest)
 
-**62 tests across 11 files**, all green:
+**64 tests across 11 files**, all green:
 
 | File | Cases | Covers |
 |---|---:|---|
@@ -64,8 +65,8 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 | [`src/components/SensitivityCard.test.tsx`](../../src/components/SensitivityCard.test.tsx) | 3 | **Component:** flip sentence + robust fallback, max-3 flips (AC-11) |
 | [`src/components/QaOverridePanel.test.tsx`](../../src/components/QaOverridePanel.test.tsx) | 4 | **Component:** edit → lock, clamp 0–100, unlock, clear-all |
 | [`src/components/CommandPalette.test.tsx`](../../src/components/CommandPalette.test.tsx) | 3 | **Component:** closed renders nothing; filter by query; run on click / Enter |
-| [`src/components/overlays.test.tsx`](../../src/components/overlays.test.tsx) | 4 | **Component:** ManualBook + ScenarioCompare (A/B) — hidden when closed, labelled dialog + close when open |
-| [`src/a11y.test.tsx`](../../src/a11y.test.tsx) | 2 | **Accessibility (AC-15):** axe-core WCAG A/AA on the composed app + Expert/override panel — caught & fixed an unlabeled file input |
+| [`src/components/overlays.test.tsx`](../../src/components/overlays.test.tsx) | 5 | **Component:** ManualBook + ScenarioCompare (A/B) — hidden when closed, labelled dialog + close; plus the Manual's **architecture explanations (FR-READ-*)**: parity with the model (every D1–D5 option) + a bibliography of real, linked citations |
+| [`src/a11y.test.tsx`](../../src/a11y.test.tsx) | 3 | **Accessibility (AC-15):** axe-core WCAG A/AA on the composed app, Expert/override panel, and the lazy-loaded Manual/Guide — caught & fixed an unlabeled file input |
 | [`src/i18n/dict.test.ts`](../../src/i18n/dict.test.ts) | 1 | Dictionary completeness — every key has EN **and** ID |
 
 > Component/integration tests render via a small [`src/test/render.tsx`](../../src/test/render.tsx)
@@ -90,7 +91,7 @@ Real-browser journeys against the dev server at the `/architecture-advisor/` sub
 |---|---|
 | [`e2e/smoke.spec.ts`](../../e2e/smoke.spec.ts) | The 4-step flow loads; a preset recomputes the recommendation (AC-2); the primary export downloads a `.md` (MADR) |
 | [`e2e/share.spec.ts`](../../e2e/share.spec.ts) | **AC-14 end to end:** Share copies a `#s=…` deep link to the clipboard; opening it restores the exact recommendation |
-| [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | **Full** WCAG A/AA **incl. color-contrast** (axe, real engine) in Guided/dark + Expert/light + override panel; keyboard operability |
+| [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | **Full** WCAG A/AA **incl. color-contrast** (axe, real engine) in Guided/dark + Expert/light + override panel + **the Manual/Guide (both themes)**; keyboard operability |
 
 ### 3.4 CI pipelines (`.github/workflows/`)
 
@@ -215,8 +216,10 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 ## 9. Performance verification (L7)
 
 - [x] **Bundle budget:** **CI-gated** — `npm run size` ([`scripts/check-bundle-size.mjs`](../../scripts/check-bundle-size.mjs))
-      asserts gzip JS ≤120kB / CSS ≤25kB (currently ~110 / ~19 with React 19). No chart/diagram library ships — all
-      visuals are hand-built SVG (see [DECISIONS.md](../../DECISIONS.md)).
+      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤160kB** / CSS ≤25kB (currently ~107 initial /
+      ~122 total / ~19 CSS with React 19). The **Manual/Guide is lazy-loaded** into a separate on-demand chunk (which
+      carries the detailed architecture explanations), so it does not count against the initial budget. No
+      chart/diagram library ships — all visuals are hand-built SVG (see [DECISIONS.md](../../DECISIONS.md)).
 - [ ] **Recompute:** changing a factor recomputes the full model **synchronously** (pure functions,
       no async) — perceptibly instant; verified by the 500-iteration invariant test running in ms.
 - [ ] **First paint:** dark theme applied pre-paint (inline script); fonts `font-display: swap`.
