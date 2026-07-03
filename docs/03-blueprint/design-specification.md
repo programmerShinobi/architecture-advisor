@@ -112,21 +112,27 @@ src/
 ├── i18n/           dict.ts  (the { en, id } dictionary + t() helper)
 ├── config/         qualityAttributes · factors · factorQaMatrix · dimensions
 │                   antiPatterns · fitnessFunctions · presets · migrationPaths
+│                   contentSchema · sections · site · readerAngles   (the "Insights" content layer)
 ├── lib/            scoring · sensitivity · antiPatternEngine · adr · report
-│                   c4 · urlState · customConfig
+│                   c4 · urlState · customConfig · content · frontmatter · markdown
 ├── hooks/          usePersistedState · useUrlSyncedState
-└── components/     Header · Disclaimer · ModeToggle · PresetBar · FactorGroup …
+└── components/     Header · ManualBook (Guide + architecture explanations, lazy) · Disclaimer · ModeToggle · PresetBar · FactorGroup …
                     QaWeightChart · DimensionResults · RadarTradeoff · ContributionTable
                     ComparisonMode · SensitivityCard · RiskRegister · AntiPatternAlerts
                     FitnessFunctions · MigrationPath · MethodologyPanel · ReportPreview …
+                    LearnView (lazy) · CredibilityBlock
+
+content/            playbook/ · review/   (Markdown + frontmatter articles; git-as-CMS)
+                    (Catalog needs no files — it is data-driven from src/config/readerContent.ts)
 ```
 
 | Layer | Responsibility | Depends on | Must NOT depend on |
 |---|---|---|---|
 | `config/`, `i18n/` | The model as data (auditable, extensible) | — | anything |
-| `lib/` | Pure scoring, sensitivity, anti-pattern engine, ADR/report/URL/C4 generation | `config/` types | React, DOM, IO |
+| `lib/` | Pure scoring, sensitivity, anti-pattern engine, ADR/report/URL/C4 generation; content index + safe Markdown/frontmatter parsing | `config/` types | React, DOM, IO |
 | `context/`, `hooks/` | App state, persistence, URL sync, theme, language | `lib/`, `config/` | individual components |
-| `components/` | Presentation for Guided & Expert modes | `context/`, `lib/` | — |
+| `components/` | Presentation for Guided & Expert modes + the lazy Insights area | `context/`, `lib/` | — |
+| `content/` | Articles (Markdown + frontmatter), validated against the frozen model by `check-content.mjs` | `config/` ids (via `related_advisor`) | code |
 
 This dependency direction (data → pure core → state → UI) is the architectural fitness function
 for the codebase: a build-time check **should** forbid `lib/` from importing React or components.
@@ -264,6 +270,8 @@ the prototype.
 | Pattern | Design | Requirement |
 |---|---|---|
 | **Guided vs Expert** | Plain-language labels & explanations vs technical terms, editable/lockable QA weights, data grid | FR-SHELL-1, FR-QA-3 |
+| **Guide as deep-dive** | The **lazy-loaded** Manual/Guide carries both the scoring walkthrough and a cited, plain-language + *Deeper* explanation of every architecture the tool evaluates ([architecture-reader.md](architecture-reader.md)) — no separate tab, keeping the shell simple | FR-SHELL-9, FR-SHELL-10, FR-READ-1..5 |
+| **Insights content layer** | A **lazy-loaded** Insights area (top nav: Advisor · Insights; component `LearnView`). **Catalog, Playbook, and Review are all data-driven from the model** → every architecture (all D1–D5 options) appears in each as three lenses (explain / how-to-adopt / what-to-review — `readerAngles.ts`), each with several cited references. **No duplication:** only Catalog carries the explanation; Playbook/Review show their lens plus a cross-link back to the Catalog. Playbook/Review also list safe hand-built Markdown guides (no HTML injection, no heavy deps). **Guided/Expert reading mode** reuses the app mode (a single header control) + `:::guided`/`:::expert` blocks. Every entry bound to the frozen model via the `related_advisor` gate | FR-LEARN-1..7 |
 | **4-step flow** | Factors → Priorities → Recommendation (5 dimensions) → Export, with a sticky step indicator | FR-FACT/QA/REC/OUT |
 | **Perceived performance** | Optimistic updates; **skeleton** (not spinner) on recompute; transitions 150–250 ms; no layout shift | FR-UI-2/6, NFR-PERF-1 |
 | **Command palette & keyboard** | `⌘/Ctrl-K` palette over all core actions; standard shortcuts (`⌘S`, `⌘Z`, `Esc`, `Enter`); full keyboard operation | FR-SHELL-8, NFR-A11Y-2 |

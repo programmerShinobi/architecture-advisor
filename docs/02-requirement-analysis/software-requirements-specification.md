@@ -5,8 +5,8 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 1.1 |
-| **Date** | 2026-06-16 |
+| **Version** | 1.2 |
+| **Date** | 2026-07-03 |
 | **Status** | Baseline — v1.0 implemented |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, analysts, reviewers |
@@ -28,6 +28,7 @@
 | 0.9 | 2026-06-13 | Performance-budget targets ratified (NFR-PERF-3, design ADR-008): numbers committed with mandatory lazy-loading of mermaid/recharts; OI-5 target-setting closed, real-bundle measurement remains a Phase 4/5 verification step |
 | 1.0 | 2026-06-16 | v1.0 implemented. Added the v1.1 enhancement requirements realized in the app — FR-SHELL-9 (in-app Manual with a live worked calculation), FR-REC-14 (runner-up explainer), FR-REC-15 (A/B scenario comparison), FR-OUT-7 (Print/PDF). Reconciled the chart technology to hand-built SVG (`recharts` dropped — NFR-PERF-3, AC-12, Section 2.4; see [DECISIONS.md](../../DECISIONS.md)). Charter pointer → v1.8 |
 | 1.1 | 2026-06-16 | UI/UX polish: the **C4 stub is now hand-built SVG** (`mermaid` dropped — it failed to render; FR-OUT-5, NFR-PERF-3, AC-12, Section 2.4); project factors and the expert analysis panels use **collapsible dropdowns**; the expert QA-weight override panel UI fixed; exports gained a **plain-language executive summary** (report/ADR/print). No requirements removed |
+| 1.2 | 2026-07-03 | v1.1 enhancements: added **architecture explanations in the Manual/Guide** (Section 3.9, FR-READ-1..5) and the **Insights content area** (Section 3.10, FR-LEARN-1..7 + FR-SHELL-10) — Catalog/Playbook/Review cover every architecture, data-driven from the frozen model, dual-audience (Guided/Expert), client-rendered & lazy-loaded (SSG deferred). See the [content rollout plan](../03-blueprint/content-rollout-plan.md) and [DECISIONS.md](../../DECISIONS.md). No requirements removed |
 
 ---
 
@@ -211,6 +212,7 @@ v1.0:
 | FR-SHELL-7 | Provide a **glossary** of terms and contextual help/tooltips. | Must | Charter Section 5; UI/UX Playbook Task 9 | D |
 | FR-SHELL-8 | Provide a **command palette and keyboard shortcuts** covering all core actions. | Should | UI/UX Playbook Task 2 | T |
 | FR-SHELL-9 | Provide an in-app **Manual / Guide** that explains the tool end to end — including the full scoring calculation — with a **live worked example** computed from the user's current inputs. | Should | v1.1 enhancement | D |
+| FR-SHELL-10 | Extend the in-app **Manual / Guide** into a genuine deep-dive that, alongside the scoring walkthrough, **explains every architecture the Advisor evaluates** (see §3.9). The Manual is **lazy-loaded** on demand. | Should | v1.1 enhancement | T |
 
 ### 3.2 Step 1 — Project Factors
 
@@ -297,6 +299,40 @@ production. They are the most common source of "we never specified that" defects
 | FR-EDGE-5 | When a **shared URL or export carries an older model version**, detect the mismatch, render the result as-is for readability, and offer to **recompute with the current model** — never silently rescore. | Must | Charter Section 15.2 (R8); FR-STATE-3 | T |
 | FR-EDGE-6 | Guarantee scoring is **defined for every input combination**: clamp factor levels to 0–2, default unlisted `qaFit` to 3, and never divide by zero when all QA weights resolve to 0 (fall back to equal weights). | Must | Build Spec Section 5, Section 6 | T |
 | FR-EDGE-7 | Keep **export and share actions deterministic**: identical state always yields byte-identical ADR/report/CSV/JSON output, independent of locale or time zone (timestamps explicitly UTC). | Should | Build Spec Section 12; FR-OUT-* | T |
+
+### 3.9 Architecture explanations (within the Manual / Guide)
+
+The Manual / Guide includes an evidence-grounded explanation of the architectures the tool evaluates,
+so both newcomers and experts understand the choices, not just the scores. It is delivered as a
+detailed section of the Guide (not a separate tab). Its canonical, cited source is
+[`docs/03-blueprint/architecture-reader.md`](../03-blueprint/architecture-reader.md).
+
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-READ-1 | Explain **every option across all five decisions (D1–D5)** the Advisor evaluates, plus the method itself (ISO 25010 · ATAM · ADD · MAVT · fitness functions) — parity with the model is test-enforced. | Must | Charter Section 5; architecture-reader.md | T |
+| FR-READ-2 | Write for **two audiences at once**: a plain-language layer (What / When it fits / What it costs) and a *Deeper* layer with mechanism, evidence, and inline sources. | Must | FR-SHELL-1; architecture-reader.md | D |
+| FR-READ-3 | **Ground every claim in recognised sources** (standards, seminal books, peer-reviewed / widely-cited works) and render a **bibliography of real citations** with working links — no fabricated sources. | Must | Charter Section 21 (R2); references | D |
+| FR-READ-4 | Be **bilingual EN/ID** and meet **WCAG AA** (incl. color-contrast) in both themes, gated in a real browser. | Must | FR-SHELL-2, FR-SHELL-3; NFR a11y | T |
+| FR-READ-5 | Ride in the **lazy-loaded Manual chunk** so it does not increase first-load JS; the performance budget tracks initial vs. total JS separately. | Must | NFR performance budget; FR-SHELL-10 | T |
+
+### 3.10 Insights — content layer
+
+A **Insights** area (reached from a two-item top nav: *Advisor · Insights*) holds cited, dual-audience
+content about the architectures the tool evaluates. **Catalog, Playbook, and Review** each render
+**every architecture** data-driven from the frozen model — three lenses on the same options (explain
+/ how-to-adopt / what-to-review) — and Playbook & Review additionally list Markdown + frontmatter
+guides & methods under `content/` (git-as-CMS). Rollout is **client-rendered first, Wave A +
+pipeline** (SSG deferred) — see [content rollout plan](../03-blueprint/content-rollout-plan.md).
+
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-LEARN-1 | Provide a **Insights** area, reachable from a top nav, that lists content **sections** and their entries; the **Advisor stays the default view** and is not regressed. | Should | v1.1 enhancement | T |
+| FR-LEARN-2 | Author Markdown articles validated by a **"Minimum Viable Article" gate** (`content:validate`): schema, ≥1 primary source with a well-formed URL, honest `evidence_strength`, `last_reviewed` + `review_due = +12 months`, at least the `id` version, unique slug/meta. | Must | Charter Section 21 (R2) | T |
+| FR-LEARN-3 | **Bind content to the frozen model:** every `related_advisor` dimension/option must resolve to a canonical id in `src/config` — enforced by the gate so content can never reference a non-existent style/QA or drift from the engine. | Must | ADR-0001; model guards | T |
+| FR-LEARN-4 | Render each entry as a **layered template** (TL;DR → what/when-fits/what-costs → deeper → Advisor link → credibility block with **multiple** sources, evidence, and "last reviewed"); flag **"needs review"** once `review_due` passes. | Should | v1.1 enhancement | D |
+| FR-LEARN-5 | Render Markdown **safely** (no raw-HTML/script injection) and be **bilingual EN/ID**, **WCAG AA** in both themes, keyboard-navigable — with the whole Insights area **lazy-loaded** so it does not grow first-load JS. | Must | FR-SHELL-2/3; NFR a11y; NFR performance | T |
+| FR-LEARN-6 | Make **Catalog, Playbook, and Review each comprehensive**: render an entry for **every architecture the Advisor evaluates** (all D1–D5 options), data-driven from the model so coverage can never be partial — each section a different lens (Catalog = explain, Playbook = how to adopt, Review = what to check) with several cited references. **No content duplication across lenses:** only the Catalog carries the explanation; Playbook/Review show their lens plus a cross-link to the Catalog. | Should | Charter Section 5; FR-READ-1 | T |
+| FR-LEARN-7 | Offer a **Guided / Expert reading mode** in Insights (shared with the Advisor's mode, via a single header control — no duplicate toggle): Guided shows plain layers; Expert adds mechanism, evidence, and cited sources. | Should | FR-SHELL-1 | T |
 
 ---
 

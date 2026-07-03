@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Header, type Mode } from './components/Header';
 import { CommandPalette, type Command } from './components/CommandPalette';
 import { ShortcutsModal } from './components/ShortcutsModal';
-import { ManualBook } from './components/ManualBook';
 import { ScenarioCompare } from './components/ScenarioCompare';
 import { PrintReport } from './components/PrintReport';
 import { Collapsible } from './components/Collapsible';
@@ -39,10 +38,20 @@ import type { ExportInput } from './lib/snapshot';
 import type { ScenarioState } from './lib/scenarioIO';
 import type { DimensionId, Levels, RankedOption } from './types';
 
+// The Manual/Guide is lazy-loaded: it is an on-demand modal and now carries the detailed,
+// evidence-grounded architecture explanations (readerContent), so keeping it out of the initial
+// bundle preserves the first-load perf budget.
+const ManualBook = lazy(() => import('./components/ManualBook'));
+
+// The "Learn" content area is a lazy-loaded island: its articles + markdown renderer stay out of
+// the Advisor's initial bundle. The Advisor remains the default view.
+const LearnView = lazy(() => import('./components/LearnView'));
+
 type Selections = Partial<Record<DimensionId, string>>;
 
 export default function App() {
   const { t, lang, setLang } = useI18n();
+  const [mainView, setMainView] = usePersistedState<'advisor' | 'learn'>('aa.main', 'advisor');
   const [mode, setMode] = usePersistedState<Mode>('aa.mode', 'guided');
   const [levels, setLevels] = usePersistedState<Levels>('aa.levels', DEFAULT_LEVELS);
   const [selections, setSelections] = usePersistedState<Selections>('aa.selections', {});
@@ -179,6 +188,41 @@ export default function App() {
               onManual={() => setOverlay('manual')}
               saveSig={saveSig}
             />
+
+            <nav aria-label={t('learn.title')} className="screen-only" style={{ display: 'flex', gap: '4px', padding: '10px 20px 0', borderBottom: '0.5px solid var(--color-border-tertiary)' }}>
+              {(['advisor', 'learn'] as const).map((v) => {
+                const active = mainView === v;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    aria-current={active ? 'page' : undefined}
+                    onClick={() => setMainView(v)}
+                    style={{
+                      appearance: 'none',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: `2px solid ${active ? 'var(--color-text-info)' : 'transparent'}`,
+                      color: active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                      fontSize: '14px',
+                      fontWeight: active ? 600 : 500,
+                      padding: '8px 14px',
+                      marginBottom: '-0.5px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {t(v === 'advisor' ? 'nav.advisor' : 'nav.learn')}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {mainView === 'learn' ? (
+              <Suspense fallback={<div style={{ padding: '18px 20px', color: 'var(--color-text-tertiary)' }}>{t('save.saving')}</div>}>
+                <LearnView onOpenAdvisor={() => setMainView('advisor')} />
+              </Suspense>
+            ) : (
+            <>
             <GuidedBanner />
             <StepTracker />
 
@@ -266,10 +310,16 @@ export default function App() {
                 {t('disclaimer')}
               </p>
             </div>
+            </>
+            )}
 
             <CommandPalette open={overlay === 'palette'} commands={commands} onClose={() => setOverlay(null)} />
             <ShortcutsModal open={overlay === 'shortcuts'} onClose={() => setOverlay(null)} />
-            <ManualBook open={overlay === 'manual'} onClose={() => setOverlay(null)} levels={levels} weights={weights} />
+            {overlay === 'manual' && (
+              <Suspense fallback={null}>
+                <ManualBook open onClose={() => setOverlay(null)} levels={levels} weights={weights} />
+              </Suspense>
+            )}
             <ScenarioCompare
               open={overlay === 'compare'}
               onClose={() => setOverlay(null)}

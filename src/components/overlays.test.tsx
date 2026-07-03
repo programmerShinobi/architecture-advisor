@@ -4,6 +4,8 @@ import { ManualBook } from './ManualBook';
 import { ScenarioCompare } from './ScenarioCompare';
 import { effectiveWeights } from '../lib/scoring';
 import { DEFAULT_LEVELS } from '../config/defaults';
+import { READER_SECTIONS, READER_CITATIONS } from '../config/readerContent';
+import { DIMENSIONS } from '../config/dimensions';
 import type { ScenarioState } from '../lib/scenarioIO';
 import type { Levels } from '../types';
 import { renderWithI18n } from '../test/render';
@@ -27,6 +29,23 @@ describe('ManualBook overlay', () => {
     expect(screen.getByRole('dialog', { name: /Manual/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('details every architecture option (parity with the model) with a cited bibliography', () => {
+    renderWithI18n(<ManualBook open onClose={vi.fn()} levels={DEFAULT_LEVELS} weights={weights} />);
+    // Every dimension option the Advisor scores has a Reader entry explained in the Manual.
+    for (const section of READER_SECTIONS) {
+      expect(section.entries.length).toBe(DIMENSIONS[section.dim].options.length);
+      for (const option of DIMENSIONS[section.dim].options) {
+        expect(section.entries.some((e) => e.optionId === option.id), `${section.dim}:${option.id}`).toBe(true);
+      }
+    }
+    // A representative option and a real cited source are rendered.
+    expect(screen.getAllByText('Microservices').length).toBeGreaterThan(0);
+    const hrefs = new Set(screen.getAllByRole('link').map((a) => a.getAttribute('href')));
+    for (const c of Object.values(READER_CITATIONS)) {
+      if (c.url) expect(hrefs.has(c.url), `no link for ${c.key}`).toBe(true);
+    }
   });
 });
 

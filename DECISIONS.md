@@ -58,3 +58,51 @@ few notable interpretations. The model values themselves are canonical — see t
 - **Canonical bilingual content** (factor labels/levels/help, option names, anti-pattern messages,
   fitness templates, risks) is reproduced verbatim from the Model Data Sheet and Option Content
   Sheet — see [EXTENDING.md](EXTENDING.md) for where each lives.
+
+## Content & features rollout (the "Insights" layer)
+
+Adapting the generic content-rollout plan to this repo (full rationale in
+[content rollout plan](docs/03-blueprint/content-rollout-plan.md),
+Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave A + pipeline only.**
+
+- **SSG / `react-router` deferred — not adopted now.** The app is a hash-state SPA on GitHub Pages
+  (no custom domain → limited SEO upside). SSG (`vite-react-ssg`) + a path router would risk
+  hydration clashes with the Advisor's `#s=` share-state and threaten the tight 120 kB initial-JS
+  budget. Content is delivered as a **lazy-loaded client-rendered island** (`LearnView`); the
+  Advisor is untouched and remains the default view. SSG becomes its own proposal *if* search
+  discoverability is ever an explicit goal.
+- **No Mermaid / react-markdown / micromark stack.** Consistent with the existing "hand-built, no
+  heavy deps" decision above (Mermaid was already removed), the content pipeline is **dependency-free**:
+  a small safe Markdown-subset renderer (`src/lib/markdown.tsx`, React elements only — no
+  `dangerouslySetInnerHTML`, so raw HTML can't inject markup: the safety `rehype-sanitize` would
+  give, at ~0 KB) and a hand-written frontmatter parser (`src/lib/frontmatter.ts`) instead of
+  `gray-matter` + `js-yaml`. The whole Insights view (component `LearnView`) stays a small lazy chunk.
+- **No `zod`.** Frontmatter is validated by a **dependency-free guard** (`scripts/check-content.mjs`)
+  in the same style as the existing model guards (independent recompute + cross-check), rather than
+  adding a runtime schema library. The guard asserts every `related_advisor` id resolves to a
+  **canonical id in the frozen model** (`src/config/dimensions.ts`) — the anti-drift contract that
+  binds content to the engine.
+- **Navigation stays light:** a two-item top nav (Advisor · Insights) and in-view section/article
+  state — **no** hash/path routes for sections (the Advisor keeps sole ownership of the URL hash).
+- **`site.ts` centralizes `SITE_URL`/base** so future canonical/sitemap work never hardcodes the
+  domain (custom-domain safe).
+- **Review cadence + link liveness are non-blocking** by design (WARN / scheduled), never on the
+  build path, so CI cannot turn red months later with no code change.
+- **Catalog, Playbook, and Review are all data-driven, not hand-authored per architecture.** Each
+  renders every architecture (all 21 D1–D5 options) from the model — `readerContent.ts` for the
+  explanation, and `readerAngles.ts` for the Playbook ("how to adopt") and Review ("what to check")
+  lenses — so **coverage can never be partial or drift**. Hand-authored Markdown is reserved for
+  *cross-cutting* guides & methods (decision guides, review checklists) listed under each section.
+  Each architecture cites **multiple** references (books + peer-reviewed journals/surveys), all real.
+- **No content is duplicated across lenses.** Only the Catalog carries the explanation (what / when
+  it fits / what it costs / deeper); a Playbook or Review page shows **only its own angle** plus a
+  **"Full explanation in the Catalog →" cross-link** — so the same text is never repeated three times.
+- **The reading-mode toggle lives in one place** (the header's Guided/Expert); the Insights area shows
+  a one-line hint, not a second toggle — removing an earlier redundant control.
+- **Guided / Expert in Insights reuses the Advisor's `mode`** and the existing `.guided-only` /
+  `.expert-only` CSS — no separate state to keep in sync. Markdown articles get the same behaviour via
+  a tiny `:::guided` / `:::expert` block directive in the safe renderer.
+- **The bundle-size guard reads the real initial set from `dist/index.html`** (entry script +
+  modulepreloads) instead of guessing by filename. When `readerContent` became a chunk shared by two
+  lazy views, the old name-prefix heuristic mis-counted it as initial; reading index.html is correct
+  and future-proof (any new lazy or shared async chunk is excluded automatically).

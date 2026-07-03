@@ -24,6 +24,44 @@ test('no WCAG A/AA violations incl. color-contrast (Expert mode + light theme)',
   expect((await scan(page)).violations).toEqual([]);
 });
 
+test('no WCAG A/AA violations incl. color-contrast (Manual/Guide, dark theme)', async ({ page }) => {
+  await page.goto(APP);
+  // Default language is Indonesian, so the Manual button is labelled "Panduan".
+  await page.getByRole('button', { name: /Guide|Panduan/ }).click();
+  await expect(page.getByRole('dialog', { name: /Manual/ })).toBeVisible(); // lazy Manual chunk loaded
+  expect((await scan(page)).violations).toEqual([]);
+});
+
+test('no WCAG A/AA violations incl. color-contrast (Manual/Guide, light theme)', async ({ page }) => {
+  await page.goto(APP);
+  await page.getByRole('button', { name: /Toggle theme|Ganti tema/ }).click(); // → light
+  await page.getByRole('button', { name: /Guide|Panduan/ }).click();
+  await expect(page.getByRole('dialog', { name: /Manual/ })).toBeVisible();
+  expect((await scan(page)).violations).toEqual([]);
+});
+
+async function openSeedArticle(page: Page) {
+  // Default language is Indonesian → the nav item is "Wawasan", the section "Katalog".
+  await page.getByRole('button', { name: /Insights|Wawasan/ }).click();
+  await page.getByRole('button', { name: /Catalog|Katalog/ }).click();
+  await page.getByRole('button', { name: 'Microservices' }).first().click();
+  // The architecture page rendered (option name is language-neutral, so this is i18n-agnostic).
+  await expect(page.getByRole('heading', { name: 'Microservices' })).toBeVisible();
+}
+
+test('no WCAG A/AA violations incl. color-contrast (Learn article, dark theme)', async ({ page }) => {
+  await page.goto(APP);
+  await openSeedArticle(page);
+  expect((await scan(page)).violations).toEqual([]);
+});
+
+test('no WCAG A/AA violations incl. color-contrast (Learn article, light theme)', async ({ page }) => {
+  await page.goto(APP);
+  await page.getByRole('button', { name: /Toggle theme|Ganti tema/ }).click(); // → light before navigating
+  await openSeedArticle(page);
+  expect((await scan(page)).violations).toEqual([]);
+});
+
 test('controls are keyboard-operable', async ({ page }) => {
   await page.goto(APP);
   // Tab from the top lands on an interactive control (not stuck on <body>)

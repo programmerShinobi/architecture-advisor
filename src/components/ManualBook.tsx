@@ -5,8 +5,12 @@ import { FACTOR_ORDER, FACTORS } from '../config/factors';
 import { INFLUENCE } from '../config/factorQaMatrix';
 import { DIMENSIONS } from '../config/dimensions';
 import { METHOD_REFERENCES } from '../config/references';
+import { READER_SECTIONS, READER_CITATIONS } from '../config/readerContent';
 import { composite, contributions, displayScore, rankWith, roundWeights } from '../lib/scoring';
 import type { Levels, QaId, Weights } from '../types';
+
+const READER_DOC_URL =
+  'https://github.com/programmerShinobi/architecture-advisor/blob/main/docs/03-blueprint/architecture-reader.md';
 
 interface Props {
   open: boolean;
@@ -193,19 +197,68 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
             </div>
           </div>
 
-          {/* 5. Dimensions */}
-          {h(L('5 · The five dimensions', '5 · Lima dimensi'))}
+          {/* 5. Dimensions — every option explained, plain-language + deeper, evidence-grounded */}
+          {h(L('5 · The five dimensions — every option explained', '5 · Lima dimensi — tiap opsi dijelaskan'))}
           {p(
-            'A coherent architecture is more than one label. The tool decides across five orthogonal dimensions, each scored independently with the same model:',
-            'Arsitektur yang koheren lebih dari satu label. Alat memutuskan pada lima dimensi ortogonal, masing-masing dinilai independen dengan model yang sama:',
+            'A coherent architecture is more than one label. The tool decides across five orthogonal dimensions, each scored independently with the same model. Below, every option is explained for newcomers and experts alike — what it is, when it fits, what it costs, and a deeper note with the evidence. These are defensible, well-supported explanations grounded in recognised standards and the software-architecture literature (see the sources under each note and the bibliography in Section 9) — not universal laws; context decides.',
+            'Arsitektur yang koheren lebih dari satu label. Alat memutuskan pada lima dimensi ortogonal, masing-masing dinilai independen dengan model yang sama. Di bawah ini tiap opsi dijelaskan untuk pemula maupun ahli — apa itu, kapan cocok, apa biayanya, dan catatan lebih dalam beserta buktinya. Ini penjelasan yang dapat dipertanggungjawabkan dan berbasis standar yang diakui serta literatur arsitektur perangkat lunak (lihat sumber di tiap catatan dan daftar pustaka pada Bagian 9) — bukan hukum mutlak; konteks yang menentukan.',
           )}
-          <ul style={{ fontSize: '13px', lineHeight: 1.7, color: 'var(--color-text-secondary)', paddingLeft: '18px' }}>
-            {(['D1', 'D2', 'D3', 'D4', 'D5'] as const).map((d) => (
-              <li key={d}>
-                <span style={{ color: 'var(--color-text-primary)', fontWeight: 500 }}>{tr(DIMENSIONS[d].name)}</span> — {tr(DIMENSIONS[d].guidedLabel)}
-              </li>
-            ))}
-          </ul>
+          <p style={{ fontSize: '12.5px', margin: '6px 0' }}>
+            <a href={READER_DOC_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--color-text-info)' }}>
+              {t('reader.learnMore')} ↗
+            </a>
+          </p>
+          {READER_SECTIONS.map((section) => (
+            <div key={section.dim} style={{ margin: '14px 0' }}>
+              <h4 style={{ fontSize: '13.5px', fontWeight: 600, margin: '14px 0 4px' }}>
+                {section.dim} · {tr(DIMENSIONS[section.dim].name)}{' '}
+                <span style={{ color: 'var(--color-text-tertiary)', fontWeight: 400 }}>— {tr(DIMENSIONS[section.dim].guidedLabel)}</span>
+              </h4>
+              <p style={{ fontSize: '12.5px', lineHeight: 1.6, color: 'var(--color-text-secondary)', margin: '4px 0 8px' }}>{tr(section.intro)}</p>
+              {section.entries.map((e) => (
+                <div key={e.optionId} style={card}>
+                  <div style={{ fontSize: '13px', fontWeight: 600, marginBottom: '5px' }}>{e.name}</div>
+                  <dl style={{ display: 'grid', gap: '4px', margin: 0, fontSize: '12.5px', lineHeight: 1.5 }}>
+                    <div>
+                      <dt style={{ display: 'inline', fontWeight: 600 }}>{t('reader.what')}: </dt>
+                      <dd style={{ display: 'inline', margin: 0, color: 'var(--color-text-secondary)' }}>{tr(e.what)}</dd>
+                    </div>
+                    <div>
+                      <dt style={{ display: 'inline', fontWeight: 600, color: 'var(--color-text-success)' }}>{t('reader.fits')}: </dt>
+                      <dd style={{ display: 'inline', margin: 0, color: 'var(--color-text-secondary)' }}>{tr(e.fits)}</dd>
+                    </div>
+                    <div>
+                      <dt style={{ display: 'inline', fontWeight: 600, color: 'var(--color-text-cost)' }}>{t('reader.cost')}: </dt>
+                      <dd style={{ display: 'inline', margin: 0, color: 'var(--color-text-secondary)' }}>{tr(e.cost)}</dd>
+                    </div>
+                    <div>
+                      <dt style={{ display: 'inline', fontWeight: 600, color: 'var(--color-text-info)' }}>{t('reader.deeper')}: </dt>
+                      <dd style={{ display: 'inline', margin: 0, color: 'var(--color-text-secondary)' }}>{tr(e.deeper)}</dd>
+                    </div>
+                  </dl>
+                  {e.cites.length > 0 && (
+                    <div style={{ fontSize: '11px', color: 'var(--color-text-tertiary)', marginTop: '5px' }}>
+                      {L('Sources', 'Sumber')}:{' '}
+                      {e.cites.map((k, i) => {
+                        const c = READER_CITATIONS[k];
+                        if (!c) return null;
+                        return (
+                          <span key={k}>
+                            {i > 0 && ' · '}
+                            {c.url ? (
+                              <a href={c.url} target="_blank" rel="noreferrer" style={{ color: 'var(--color-text-info)' }}>{c.label}</a>
+                            ) : (
+                              c.label
+                            )}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
 
           {/* 6. Analysis */}
           {h(L('6 · Analysis & safeguards', '6 · Analisis & pengaman'))}
@@ -230,6 +283,10 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
 
           {/* 9. Methodology */}
           {h(L('9 · Methodology & sources', '9 · Metodologi & sumber'))}
+          {p(
+            'The method the tool operationalizes:',
+            'Metode yang dioperasionalkan alat ini:',
+          )}
           <ul style={{ fontSize: '13px', lineHeight: 1.7, paddingLeft: '18px' }}>
             {METHOD_REFERENCES.map((r) => (
               <li key={r.label}>
@@ -238,8 +295,30 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
               </li>
             ))}
           </ul>
+          {p(
+            'Bibliography — the architecture literature the Section 5 explanations draw on (recognised standards, seminal books, and peer-reviewed / widely-cited works; the method sources above are not repeated):',
+            'Daftar pustaka — literatur arsitektur yang menjadi dasar penjelasan Bagian 5 (standar yang diakui, buku mani, dan karya peer-review / banyak dikutip; sumber metode di atas tidak diulang):',
+          )}
+          <ul style={{ fontSize: '13px', lineHeight: 1.7, paddingLeft: '18px' }}>
+            {Object.values(READER_CITATIONS)
+              .filter((c) => !['iso25010', 'atam', 'add', 'mavt', 'evoarch'].includes(c.key))
+              .map((c) => (
+                <li key={c.key}>
+                  {c.url ? (
+                    <a href={c.url} target="_blank" rel="noreferrer" style={{ color: 'var(--color-text-info)' }}>{c.label}</a>
+                  ) : (
+                    <span style={{ color: 'var(--color-text-primary)' }}>{c.label}</span>
+                  )}
+                  <span style={{ color: 'var(--color-text-secondary)' }}> — {tr(c.note)}</span>
+                </li>
+              ))}
+          </ul>
         </div>
       </div>
     </div>
   );
 }
+
+// Default export so the Manual can be React.lazy-loaded (it carries the detailed architecture
+// explanations, kept out of the initial bundle). The named export stays for direct test imports.
+export default ManualBook;

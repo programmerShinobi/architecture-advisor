@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'src/**'
+      - 'content/**'
       - 'scripts/**'
       - 'index.html'
       - 'package.json'
@@ -18,6 +19,7 @@ on:
   pull_request:
     paths:
       - 'src/**'
+      - 'content/**'
       - 'scripts/**'
       - 'index.html'
       - 'package.json'
@@ -42,6 +44,8 @@ jobs:
         run: npm ci
       - name: Check the app config mirrors the model (no drift from the docs)
         run: node scripts/check-app-config.mjs
+      - name: Validate content (schema + primary sources + related_advisor ↔ frozen model)
+        run: npm run content:validate
       - name: Lint
         run: npm run lint
       - name: Unit tests (scoring engine + exporters)

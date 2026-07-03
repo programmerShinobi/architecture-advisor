@@ -44,6 +44,40 @@ The toolbar (and command palette) export the current setup as JSON (`scenario` =
 selections + overrides + mode + language) and re-import it; the full state is also encoded in the
 share-URL hash. See `src/lib/scenarioIO.ts` and `src/lib/urlState.ts`.
 
+## Adding a content article (the "Insights" layer)
+
+Articles are Markdown files under **`content/<section>/<slug>.md`** (git-as-CMS; PR-reviewed). They
+are the teaching layer around the Advisor — plain-language for newcomers, deeper for experts — and
+every article is **bound to the frozen model**.
+
+1. Create `content/<section>/<slug>.md` (`<section>` ∈ catalog · playbook · review; more sections
+   are defined in `src/config/sections.ts` but gated `available: false` until built).
+2. Fill the **frontmatter** — the contract is `src/config/contentSchema.ts`:
+   `title_id/_en`, `slug` (must equal the filename), `section`, `audience` (`awam`/`expert`),
+   `summary_tldr_id/_en`, `evidence_strength` (`strong`/`moderate`/`emerging`), `last_reviewed`
+   and `review_due = last_reviewed + 12 months`, `translation_status` (must include `id`),
+   `related_advisor` ({dimensions, options} — **every id must exist in `src/config/dimensions.ts`**),
+   `sources` (≥1 with a well-formed URL/DOI), `status`, `author`.
+3. Write the body: TL;DR → explanation → deep dive → "Try in the Advisor" → the credibility block
+   renders sources + evidence badge + review date automatically. Diagrams: **hand-built SVG or
+   static images only — no Mermaid** (see DECISIONS.md).
+4. Validate: `npm run content:validate` (the "Minimum Viable Article" gate — schema, primary
+   source, review dates, unique slug, and the `related_advisor` ↔ model check). It runs in CI.
+
+**Guided / Expert layers.** Wrap depth in `:::expert` … `:::` (and plain intros in `:::guided` …
+`:::`) — the safe renderer maps these to the app's `.expert-only` / `.guided-only` classes, so the
+Insights header's Guided/Expert toggle tailors the reading for newcomers vs experts.
+
+**The Catalog is different — it is data-driven, not Markdown.** It renders from
+`src/config/readerContent.ts` so it always covers **every** architecture the Advisor evaluates
+(all D1–D5 options). To add/extend an architecture's explanation or its cited references, edit the
+option's entry (or `READER_CITATIONS`) there — do **not** add a Catalog Markdown file. Hand-authored
+Markdown is for Playbook / Review / other sections.
+
+Article content is bilingual (ID default); it never re-copies model data — reference `src/config`
+so it can't drift from the engine. Link liveness (`links:check`) and review cadence
+(`content:review`) are separate **non-blocking** checks, not build gates (deferred to a later wave).
+
 ## Guards — run after any model change
 
 ```bash

@@ -7,9 +7,17 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
-// Budgets in gzipped kB. Current ~110 (JS, incl. React 19) / ~19 (CSS); headroom catches a real regression
-// without flaking on small growth. Raise deliberately (with justification) if the app grows.
-const JS_BUDGET_KB = 120;
+// Two budgets in gzipped kB:
+//  - INITIAL JS = what actually loads on first paint: the entry module referenced by dist/index.html
+//    plus every chunk Vite marks for eager loading there (<script type=module> + <link modulepreload>).
+//    Lazy views (Manual/Guide, Learn) AND their shared async chunks (e.g. readerContent) are pulled in
+//    by dynamic import() only when opened, so they are NOT part of the first load. Current initial ~108.
+//  - TOTAL JS = every .js chunk together, an upper bound well under the ≤300kB NFR.
+// This reads the real initial set from index.html rather than guessing by filename, so a new lazy or
+// shared async chunk can't silently be mis-counted. Headroom catches a real regression; raise the
+// budgets deliberately (with a note) if the app grows.
+const JS_INITIAL_BUDGET_KB = 120;
+const JS_TOTAL_BUDGET_KB = 160;
 const CSS_BUDGET_KB = 25;
 
 const dir = 'dist/assets';
@@ -18,17 +26,34 @@ if (!existsSync(dir)) {
   process.exit(1);
 }
 
-let js = 0;
+// Parse dist/index.html for the eagerly-loaded JS: the entry <script type="module" src> and any
+// <link rel="modulepreload" href> (Vite emits these for the entry's static import graph).
+const html = existsSync('dist/index.html') ? readFileSync('dist/index.html', 'utf8') : '';
+const initialFiles = new Set();
+for (const m of html.matchAll(/(?:src|href)="[^"]*\/assets\/([^"]+\.js)"/g)) initialFiles.add(m[1]);
+
+let jsInitial = 0;
+let jsTotal = 0;
 let css = 0;
 for (const f of readdirSync(dir)) {
-  if (f.endsWith('.js')) js += gzipSync(readFileSync(join(dir, f))).length;
-  else if (f.endsWith('.css')) css += gzipSync(readFileSync(join(dir, f))).length;
+  if (f.endsWith('.js')) {
+    const size = gzipSync(readFileSync(join(dir, f))).length;
+    jsTotal += size;
+    if (initialFiles.has(f)) jsInitial += size;
+  } else if (f.endsWith('.css')) {
+    css += gzipSync(readFileSync(join(dir, f))).length;
+  }
+}
+if (initialFiles.size === 0) {
+  console.error('✗ Could not find the entry script in dist/index.html — did the build change?');
+  process.exit(1);
 }
 const kb = (n) => n / 1024;
 const fmt = (n) => `${kb(n).toFixed(1)}kB`;
 
 const checks = [
-  ['JS', js, JS_BUDGET_KB],
+  ['JS (initial)', jsInitial, JS_INITIAL_BUDGET_KB],
+  ['JS (total)', jsTotal, JS_TOTAL_BUDGET_KB],
   ['CSS', css, CSS_BUDGET_KB],
 ];
 let failed = false;
@@ -42,4 +67,4 @@ if (failed) {
   console.error('\n✗ Bundle exceeds its gzip budget. Trim the change, or raise the budget in scripts/check-bundle-size.mjs with a note.');
   process.exit(1);
 }
-console.log(`\n✓ Bundle within budget (JS+CSS gzip ${fmt(js + css)}).`);
+console.log(`\n✓ Bundle within budget (initial JS+CSS gzip ${fmt(jsInitial + css)}; total JS ${fmt(jsTotal)}).`);
