@@ -32,7 +32,8 @@ the Guide uses, toggled by the app's **Guided / Expert** mode.
   [Model Data Sheet](model-data-sheet.md) — the single source of truth for dimensions, options, qaFit.
 
 **Anti-duplication rule:** anything about D1–D5 / qaFit / QAs **derives from the model**, never
-re-copied. The **Catalog** is therefore *data-driven* (see §3), not hand-authored.
+re-copied. **Catalog, Playbook, and Review** are therefore all *data-driven* (see §3), not
+hand-authored per architecture — and no explanation is repeated across them.
 
 ## 3. Key decisions (rationale also in [`DECISIONS.md`](../../DECISIONS.md))
 
@@ -40,8 +41,8 @@ re-copied. The **Catalog** is therefore *data-driven* (see §3), not hand-author
 |---|---|---|
 | **Discoverability / SSG** | **Deferred.** Client-rendered inside the existing SPA; SSG is a separate future proposal only if search discoverability becomes a stated goal. | Hash-state SPA on GitHub Pages (no custom domain → limited SEO upside); SSG + router would risk hydration clashes with the Advisor's `#s=` share-state and the 120 kB initial-JS budget. |
 | **Routing** | **Light**: a two-item top nav (Advisor · Insights) + in-view section/article state, lazy-loaded. **No `react-router`.** | Avoids a second navigation paradigm; the Advisor keeps sole ownership of the URL hash / share links. |
-| **Catalog shape** | **Data-driven from `readerContent.ts`** → every architecture (all 21 D1–D5 options), grouped by decision. | Comprehensive by construction; cannot go partial or drift from the model. Hand-authored Markdown is reserved for Playbook / Review / … |
-| **Content format** | **Markdown + YAML frontmatter** for the authored sections; rendered by a small **dependency-free, XSS-safe** renderer with `:::guided` / `:::expert` blocks. | Matches the repo's hand-built ethos (no `gray-matter` / `react-markdown` / micromark); keeps the Insights chunk small. |
+| **Section shape** | **All three sections are data-driven** from the model (`readerContent.ts` + `readerAngles.ts`) → every architecture (all 21 D1–D5 options), grouped by decision, through three lenses (Catalog = explain, Playbook = how-to-adopt, Review = what-to-check). Hand-authored Markdown is reserved for **cross-cutting** guides/methods listed under Playbook & Review. | Comprehensive by construction; cannot go partial or drift from the model. **No explanation is duplicated** — Playbook/Review cross-link to the Catalog. |
+| **Content format** | **Markdown + YAML frontmatter** for the cross-cutting guides; rendered by a small **dependency-free, XSS-safe** renderer with `:::guided` / `:::expert` blocks. | Matches the repo's hand-built ethos (no `gray-matter` / `react-markdown` / micromark); keeps the Insights chunk small. |
 | **Diagrams** | **Hand-built SVG or static images only. No Mermaid.** | DECISIONS.md already **rejected Mermaid** (unreliable + heavy). |
 | **Frontmatter validation** | **Dependency-free guard** ([`scripts/check-content.mjs`](../../scripts/check-content.mjs)) in the style of the model guards — **not** `zod`. | The repo's guards are proudly dependency-free; it also cross-checks `related_advisor` against the frozen model. |
 | **Content index** | Build-time via `import.meta.glob` in [`src/lib/content.ts`](../../src/lib/content.ts). | Statically analyzable, offline-capable, testable; no backend. |
@@ -155,4 +156,4 @@ The generic prompt assumed things that do **not** hold here; the plan corrects t
 
 | Version | Date | Notes |
 |---|---|---|
-| 1.0 | 2026-07-03 | Relocated into the SDLC docs from the repo root; Wave A delivered (data-driven Catalog of all 21 architectures, Guided/Expert reading mode, 7 Playbook + 6 Review articles, dependency-free pipeline). |
+| 1.0 | 2026-07-03 | Relocated into the SDLC docs from the repo root; Wave A delivered (data-driven Catalog of all 21 architectures, Guided/Expert reading mode, 7 Playbook + 6 Review Markdown guides, dependency-free pipeline). |

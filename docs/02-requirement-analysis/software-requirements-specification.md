@@ -5,8 +5,8 @@
 | Field | Detail |
 |---|---|
 | **Document type** | Software Requirements Specification (SRS) |
-| **Version** | 1.1 |
-| **Date** | 2026-06-16 |
+| **Version** | 1.2 |
+| **Date** | 2026-07-03 |
 | **Status** | Baseline — v1.0 implemented |
 | **Author / Owner** | Faqih Pratama Muhti, B.Sc. Computer Science |
 | **Audience** | Engineers, architects, analysts, reviewers |
@@ -28,6 +28,7 @@
 | 0.9 | 2026-06-13 | Performance-budget targets ratified (NFR-PERF-3, design ADR-008): numbers committed with mandatory lazy-loading of mermaid/recharts; OI-5 target-setting closed, real-bundle measurement remains a Phase 4/5 verification step |
 | 1.0 | 2026-06-16 | v1.0 implemented. Added the v1.1 enhancement requirements realized in the app — FR-SHELL-9 (in-app Manual with a live worked calculation), FR-REC-14 (runner-up explainer), FR-REC-15 (A/B scenario comparison), FR-OUT-7 (Print/PDF). Reconciled the chart technology to hand-built SVG (`recharts` dropped — NFR-PERF-3, AC-12, Section 2.4; see [DECISIONS.md](../../DECISIONS.md)). Charter pointer → v1.8 |
 | 1.1 | 2026-06-16 | UI/UX polish: the **C4 stub is now hand-built SVG** (`mermaid` dropped — it failed to render; FR-OUT-5, NFR-PERF-3, AC-12, Section 2.4); project factors and the expert analysis panels use **collapsible dropdowns**; the expert QA-weight override panel UI fixed; exports gained a **plain-language executive summary** (report/ADR/print). No requirements removed |
+| 1.2 | 2026-07-03 | v1.1 enhancements: added **architecture explanations in the Manual/Guide** (Section 3.9, FR-READ-1..5) and the **Insights content area** (Section 3.10, FR-LEARN-1..7 + FR-SHELL-10) — Catalog/Playbook/Review cover every architecture, data-driven from the frozen model, dual-audience (Guided/Expert), client-rendered & lazy-loaded (SSG deferred). See the [content rollout plan](../03-blueprint/content-rollout-plan.md) and [DECISIONS.md](../../DECISIONS.md). No requirements removed |
 
 ---
 
