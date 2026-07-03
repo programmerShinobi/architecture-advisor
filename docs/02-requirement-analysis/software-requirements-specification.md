@@ -314,6 +314,25 @@ detailed section of the Guide (not a separate tab). Its canonical, cited source 
 | FR-READ-4 | Be **bilingual EN/ID** and meet **WCAG AA** (incl. color-contrast) in both themes, gated in a real browser. | Must | FR-SHELL-2, FR-SHELL-3; NFR a11y | T |
 | FR-READ-5 | Ride in the **lazy-loaded Manual chunk** so it does not increase first-load JS; the performance budget tracks initial vs. total JS separately. | Must | NFR performance budget; FR-SHELL-10 | T |
 
+### 3.10 Insights — content layer
+
+A **Insights** area (reached from a two-item top nav: *Advisor · Insights*) holds cited, dual-audience
+content about the architectures the tool evaluates. **Catalog, Playbook, and Review** each render
+**every architecture** data-driven from the frozen model — three lenses on the same options (explain
+/ how-to-adopt / what-to-review) — and Playbook & Review additionally list Markdown + frontmatter
+guides & methods under `content/` (git-as-CMS). Rollout is **client-rendered first, Wave A +
+pipeline** (SSG deferred) — see [content rollout plan](../03-blueprint/content-rollout-plan.md).
+
+| ID | The system shall… | Priority | Trace | Verify |
+|---|---|---|---|---|
+| FR-LEARN-1 | Provide a **Insights** area, reachable from a top nav, that lists content **sections** and their entries; the **Advisor stays the default view** and is not regressed. | Should | v1.1 enhancement | T |
+| FR-LEARN-2 | Author Markdown articles validated by a **"Minimum Viable Article" gate** (`content:validate`): schema, ≥1 primary source with a well-formed URL, honest `evidence_strength`, `last_reviewed` + `review_due = +12 months`, at least the `id` version, unique slug/meta. | Must | Charter Section 21 (R2) | T |
+| FR-LEARN-3 | **Bind content to the frozen model:** every `related_advisor` dimension/option must resolve to a canonical id in `src/config` — enforced by the gate so content can never reference a non-existent style/QA or drift from the engine. | Must | ADR-0001; model guards | T |
+| FR-LEARN-4 | Render each entry as a **layered template** (TL;DR → what/when-fits/what-costs → deeper → Advisor link → credibility block with **multiple** sources, evidence, and "last reviewed"); flag **"needs review"** once `review_due` passes. | Should | v1.1 enhancement | D |
+| FR-LEARN-5 | Render Markdown **safely** (no raw-HTML/script injection) and be **bilingual EN/ID**, **WCAG AA** in both themes, keyboard-navigable — with the whole Insights area **lazy-loaded** so it does not grow first-load JS. | Must | FR-SHELL-2/3; NFR a11y; NFR performance | T |
+| FR-LEARN-6 | Make **Catalog, Playbook, and Review each comprehensive**: render an entry for **every architecture the Advisor evaluates** (all D1–D5 options), data-driven from the model so coverage can never be partial — each section a different lens (Catalog = explain, Playbook = how to adopt, Review = what to check) with several cited references. **No content duplication across lenses:** only the Catalog carries the explanation; Playbook/Review show their lens plus a cross-link to the Catalog. | Should | Charter Section 5; FR-READ-1 | T |
+| FR-LEARN-7 | Offer a **Guided / Expert reading mode** in Insights (shared with the Advisor's mode, via a single header control — no duplicate toggle): Guided shows plain layers; Expert adds mechanism, evidence, and cited sources. | Should | FR-SHELL-1 | T |
+
 ---
 
 ## 4. Non-Functional Requirements

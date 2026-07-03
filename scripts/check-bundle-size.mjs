@@ -8,11 +8,14 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 // Two budgets in gzipped kB:
-//  - INITIAL JS = what loads on first paint (the entry chunk + its static imports). The Manual/Guide
-//    is lazy-loaded (React.lazy) and carries the detailed architecture explanations, so that content
-//    sits in a SEPARATE on-demand chunk that is NOT counted here. Current initial ~110 (incl. React 19).
-//  - TOTAL JS = every .js chunk together (entry + lazy Manual), an upper bound well under the ≤300kB NFR.
-// Headroom catches a real regression without flaking on small growth. Raise deliberately (with a note).
+//  - INITIAL JS = what actually loads on first paint: the entry module referenced by dist/index.html
+//    plus every chunk Vite marks for eager loading there (<script type=module> + <link modulepreload>).
+//    Lazy views (Manual/Guide, Learn) AND their shared async chunks (e.g. readerContent) are pulled in
+//    by dynamic import() only when opened, so they are NOT part of the first load. Current initial ~108.
+//  - TOTAL JS = every .js chunk together, an upper bound well under the ≤300kB NFR.
+// This reads the real initial set from index.html rather than guessing by filename, so a new lazy or
+// shared async chunk can't silently be mis-counted. Headroom catches a real regression; raise the
+// budgets deliberately (with a note) if the app grows.
 const JS_INITIAL_BUDGET_KB = 120;
 const JS_TOTAL_BUDGET_KB = 160;
 const CSS_BUDGET_KB = 25;
@@ -23,12 +26,11 @@ if (!existsSync(dir)) {
   process.exit(1);
 }
 
-// The initial JS is the entry module referenced by index.html plus everything it statically imports.
-// Lazy chunks (e.g. Reader) are pulled in by dynamic import() at runtime, so Vite names them after
-// the module (e.g. `Reader-*.js`) and they are excluded from the first load. We approximate the
-// initial set as "all JS except chunks whose base name matches a lazily-imported component".
-const LAZY_CHUNK_PREFIXES = ['ManualBook']; // keep in sync with lazy(() => import(...)) calls in src/App.tsx
-const isLazyChunk = (f) => LAZY_CHUNK_PREFIXES.some((p) => f.startsWith(p));
+// Parse dist/index.html for the eagerly-loaded JS: the entry <script type="module" src> and any
+// <link rel="modulepreload" href> (Vite emits these for the entry's static import graph).
+const html = existsSync('dist/index.html') ? readFileSync('dist/index.html', 'utf8') : '';
+const initialFiles = new Set();
+for (const m of html.matchAll(/(?:src|href)="[^"]*\/assets\/([^"]+\.js)"/g)) initialFiles.add(m[1]);
 
 let jsInitial = 0;
 let jsTotal = 0;
@@ -37,10 +39,14 @@ for (const f of readdirSync(dir)) {
   if (f.endsWith('.js')) {
     const size = gzipSync(readFileSync(join(dir, f))).length;
     jsTotal += size;
-    if (!isLazyChunk(f)) jsInitial += size;
+    if (initialFiles.has(f)) jsInitial += size;
   } else if (f.endsWith('.css')) {
     css += gzipSync(readFileSync(join(dir, f))).length;
   }
+}
+if (initialFiles.size === 0) {
+  console.error('✗ Could not find the entry script in dist/index.html — did the build change?');
+  process.exit(1);
 }
 const kb = (n) => n / 1024;
 const fmt = (n) => `${kb(n).toFixed(1)}kB`;

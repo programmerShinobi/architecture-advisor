@@ -6,10 +6,11 @@
 Layered testing to separate a prototype from a product: **unit**, **integration**, and **system**
 tests, then **UAT** (user-acceptance testing), plus **security** and **performance** checks.
 
-The scoring engine, exporters, and UI are covered by **64 Vitest cases** (unit + component +
-integration + axe a11y), **three model-integrity guards**, and a **Playwright real-browser E2E**
-suite — all in CI, which now also gates a **bundle-size budget** and a **production-dependency
-audit**. **Full color-contrast AA** (both themes, incl. the Manual/Guide) is now gated in a real
+The scoring engine, exporters, and UI are covered by **85 Vitest cases** (unit + component +
+integration + axe a11y), **three model-integrity guards** + a **content-validation guard**, and a
+**Playwright real-browser E2E** suite — all in CI, which now also gates a **bundle-size budget** and
+a **production-dependency audit**. **Full color-contrast AA** (both themes, incl. the Manual/Guide
+and the Insights content area) is now gated in a real
 browser. Open: the **UAT script** is written but not yet run. Full strategy, inventory, AC
 traceability, and the honest gap list live in **[test-plan.md](test-plan.md)**.
 

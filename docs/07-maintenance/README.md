@@ -23,8 +23,13 @@ Monitoring, bug fixes, dependency upkeep, and new features driven by feedback �
 This is a **static, client-side** app with **no backend and no telemetry** (privacy by design), so
 "monitoring" is the automated gate set plus GitHub-managed Pages uptime — not server dashboards:
 
-- **CI on every PR/push:** `ci.yml` (lint · test · build · bundle-size budget · prod-dep audit),
-  `e2e.yml` (Playwright), `docs-integrity.yml` (the three model guards).
+- **CI on every PR/push:** `ci.yml` (app-config · **content-validate** · lint · test · build ·
+  bundle-size budget · prod-dep audit), `e2e.yml` (Playwright), `docs-integrity.yml` (the three model
+  guards). `content:validate` enforces the "Minimum Viable Article" gate and keeps every article's
+  `related_advisor` bound to the frozen model.
+- **Content review cadence & link liveness are deliberately non-blocking** (WARN / scheduled), so
+  CI never turns red on its own months later with no code change (see
+  [DECISIONS.md](../../DECISIONS.md)).
 - **Deploy gate:** `deploy.yml` re-runs tests + build before publishing.
 - **Dependencies:** [Dependabot](../../.github/dependabot.yml) opens weekly npm + Actions update
   PRs; `npm run audit:prod` fails CI on a high/critical production-dependency advisory.
@@ -46,6 +51,10 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
   migrated **one cluster at a time** with full testing (the Vite/esbuild bump also clears the
   dev-only advisory). GitHub Actions are already current — the Node-20 runner deprecation is
   resolved.
+- **Content rollout — later waves (deferred).** Wave B (Library trend articles), Wave C (Roadmap,
+  Academy, Lab), and the **SSG/SEO** layer (sitemap/robots/hreflang/JSON-LD) are each their own
+  reviewed proposal once Wave A proves its value; link-liveness + review-cadence become scheduled,
+  non-blocking jobs. See [content rollout plan](../03-blueprint/content-rollout-plan.md).
 - **Annual model review** against the latest standards, recorded as ADRs (charter 15.5).
 
 **References:** charter [Section 15](../01-discovery-and-planning/discovery-and-planning.md#15-versioning-policy--evolution-roadmap)

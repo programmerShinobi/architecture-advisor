@@ -1,11 +1,11 @@
 # Test Plan & QA — Architecture Advisor
 
-> **Phase 5 of 7 · Status: 🔬 In progress.** **64 Vitest** unit/component/integration tests + an
-> **axe-core a11y** suite (incl. the lazy-loaded Manual/Guide), three **model-integrity guards**, and
-> a **Playwright** real-browser E2E suite (smoke, share deep-link, structural a11y incl. the Manual,
-> keyboard) — all in CI, which now also gates a
-> **bundle-size budget** and a **production-dependency audit**. Real-browser a11y gates **full
-> WCAG A/AA including color-contrast** in both themes. Open: the **UAT script** is written but not
+> **Phase 5 of 7 · Status: 🔬 In progress.** **85 Vitest** unit/component/integration tests + an
+> **axe-core a11y** suite (incl. the lazy Manual/Guide and Insights article), three **model-integrity
+> guards** + a **content-validation guard**, and a **Playwright** real-browser E2E suite (smoke,
+> share deep-link, structural a11y incl. the Manual and Insights, keyboard) — all in CI, which now also
+> gates a **bundle-size budget** and a **production-dependency audit**. Real-browser a11y gates
+> **full WCAG A/AA including color-contrast** in both themes. Open: the **UAT script** is written but not
 > yet run with participants. This document is the test strategy, the current inventory, the
 > acceptance-criteria traceability matrix, and the honest gap list.
 
@@ -53,7 +53,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.1 Automated unit suite — `npm run test` (Vitest)
 
-**64 tests across 11 files**, all green:
+**85 tests across 15 files**, all green:
 
 | File | Cases | Covers |
 |---|---:|---|
@@ -66,8 +66,12 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 | [`src/components/QaOverridePanel.test.tsx`](../../src/components/QaOverridePanel.test.tsx) | 4 | **Component:** edit → lock, clamp 0–100, unlock, clear-all |
 | [`src/components/CommandPalette.test.tsx`](../../src/components/CommandPalette.test.tsx) | 3 | **Component:** closed renders nothing; filter by query; run on click / Enter |
 | [`src/components/overlays.test.tsx`](../../src/components/overlays.test.tsx) | 5 | **Component:** ManualBook + ScenarioCompare (A/B) — hidden when closed, labelled dialog + close; plus the Manual's **architecture explanations (FR-READ-*)**: parity with the model (every D1–D5 option) + a bibliography of real, linked citations |
-| [`src/a11y.test.tsx`](../../src/a11y.test.tsx) | 3 | **Accessibility (AC-15):** axe-core WCAG A/AA on the composed app, Expert/override panel, and the lazy-loaded Manual/Guide — caught & fixed an unlabeled file input |
-| [`src/i18n/dict.test.ts`](../../src/i18n/dict.test.ts) | 1 | Dictionary completeness — every key has EN **and** ID |
+| [`src/lib/frontmatter.test.ts`](../../src/lib/frontmatter.test.ts) | 6 | **Content pipeline:** the dependency-free frontmatter parser — scalars, inline arrays, nested map, list of flow maps, body split, no-frontmatter fallback |
+| [`src/lib/markdown.test.tsx`](../../src/lib/markdown.test.tsx) | 6 | **Content pipeline:** the safe Markdown-subset renderer — headings/lists/inline, safe links, `:::guided`/`:::expert` mode blocks, and **no raw-HTML/`javascript:` injection** (XSS-safe by construction) |
+| [`src/lib/content.test.ts`](../../src/lib/content.test.ts) | 5 | **Content index (FR-LEARN-2/3):** every article well-formed and **every `related_advisor` id resolves to the frozen model**; section/slug filters; review-due flag |
+| [`src/components/LearnView.test.tsx`](../../src/components/LearnView.test.tsx) | 3 | **Component (FR-LEARN-1/4/6):** **every architecture has a Catalog, Playbook, and Review angle** (parity with the model); Playbook opens "How to adopt" + cited sources; Review opens "What to check" + "Try in the Advisor" returns to the Advisor |
+| [`src/a11y.test.tsx`](../../src/a11y.test.tsx) | 4 | **Accessibility (AC-15):** axe-core WCAG A/AA on the composed app, Expert/override panel, the lazy Manual/Guide, and the lazy **Insights article** — caught & fixed an unlabeled file input |
+| [`src/i18n/dict.test.ts`](../../src/i18n/dict.test.ts) | 1 | Dictionary completeness — every key has EN **and** ID (covers the new Insights/section keys) |
 
 > Component/integration tests render via a small [`src/test/render.tsx`](../../src/test/render.tsx)
 > helper that wraps the unit under test in the i18n provider with the language pinned. (Vitest runs
@@ -81,22 +85,24 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 | [`scripts/verify-model.mjs`](../../scripts/verify-model.mjs) | The reference model reproduces the math, the fixtures, and **all 25 preset targets** |
 | [`scripts/cross-check-docs.mjs`](../../scripts/cross-check-docs.mjs) | The docs agree with each other and with the prototype (qaFit vectors, influence matrix, presets, option names, EN/ID parity) — 12 checks |
 | [`scripts/check-app-config.mjs`](../../scripts/check-app-config.mjs) | `src/config/*` mirrors the documented model (no app↔doc drift) |
+| [`scripts/check-content.mjs`](../../scripts/check-content.mjs) | **Content gate (`content:validate`):** every article's frontmatter is valid, has a primary source + review dates, and **every `related_advisor` id resolves to the frozen model** (no content↔engine drift) |
 
 ### 3.3 End-to-end — `npm run test:e2e` (Playwright, real chromium)
 
-Real-browser journeys against the dev server at the `/architecture-advisor/` sub-path. **6 pass**
+Real-browser journeys against the dev server at the `/architecture-advisor/` sub-path. **10 pass**
 (all gating):
 
 | Spec | Covers |
 |---|---|
 | [`e2e/smoke.spec.ts`](../../e2e/smoke.spec.ts) | The 4-step flow loads; a preset recomputes the recommendation (AC-2); the primary export downloads a `.md` (MADR) |
 | [`e2e/share.spec.ts`](../../e2e/share.spec.ts) | **AC-14 end to end:** Share copies a `#s=…` deep link to the clipboard; opening it restores the exact recommendation |
-| [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | **Full** WCAG A/AA **incl. color-contrast** (axe, real engine) in Guided/dark + Expert/light + override panel + **the Manual/Guide (both themes)**; keyboard operability |
+| [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | **Full** WCAG A/AA **incl. color-contrast** (axe, real engine) in Guided/dark + Expert/light + override panel + **the Manual/Guide** + **an Insights article** (both themes); keyboard operability |
 
 ### 3.4 CI pipelines (`.github/workflows/`)
 
-- **`ci.yml`** — on push/PR: `check-app-config` → `lint` → `test` → `build` → **`size`** (bundle
-  budget, L7) → **`audit:prod`** (production-dependency audit, L6).
+- **`ci.yml`** — on push/PR: `check-app-config` → **`content:validate`** (content ↔ model gate) →
+  `lint` → `test` → `build` → **`size`** (bundle budget, L7) → **`audit:prod`** (production-dependency
+  audit, L6).
 - **`e2e.yml`** — installs the chromium browser and runs `test:e2e` (L3).
 - **`docs-integrity.yml`** — runs `verify-model` + `cross-check-docs` on doc/model changes.
 - **`deploy.yml`** — build + publish to GitHub Pages on `main`.
@@ -216,10 +222,12 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 ## 9. Performance verification (L7)
 
 - [x] **Bundle budget:** **CI-gated** — `npm run size` ([`scripts/check-bundle-size.mjs`](../../scripts/check-bundle-size.mjs))
-      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤160kB** / CSS ≤25kB (currently ~107 initial /
-      ~122 total / ~19 CSS with React 19). The **Manual/Guide is lazy-loaded** into a separate on-demand chunk (which
-      carries the detailed architecture explanations), so it does not count against the initial budget. No
-      chart/diagram library ships — all visuals are hand-built SVG (see [DECISIONS.md](../../DECISIONS.md)).
+      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤160kB** / CSS ≤25kB (currently ~108 initial /
+      ~150 total / ~19 CSS with React 19). The guard reads the **real initial set from `dist/index.html`** (entry
+      script + modulepreloads), so lazy views (Manual/Guide, Insights) **and their shared async chunks** (e.g.
+      `readerContent`, which powers the data-driven Catalog) are correctly excluded from the first load — none can be
+      silently mis-counted. No chart/diagram/markdown library ships — all visuals are hand-built SVG and Markdown is
+      rendered by a small safe renderer (see [DECISIONS.md](../../DECISIONS.md)).
 - [ ] **Recompute:** changing a factor recomputes the full model **synchronously** (pure functions,
       no async) — perceptibly instant; verified by the 500-iteration invariant test running in ms.
 - [ ] **First paint:** dark theme applied pre-paint (inline script); fonts `font-display: swap`.

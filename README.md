@@ -71,6 +71,16 @@ Deeper* per option — backed by a cited bibliography (Bass, Newman, Kleppmann, 
 Ford, SEI, and peer-reviewed surveys). Canonical source:
 [`docs/03-blueprint/architecture-reader.md`](docs/03-blueprint/architecture-reader.md).
 
+An **Insights** area (top nav: *Advisor · Insights*) covers **every architecture the Advisor
+evaluates** through three lenses — **Catalog** (what it is), **Playbook** (how to adopt it), and
+**Review** (what to check) — data-driven from the frozen model, so coverage can never be partial or
+drift. Each architecture carries several cited, trusted references (books + peer-reviewed journals);
+no explanation is duplicated across lenses. Playbook & Review also add hand-authored Markdown guides
+under [`content/`](content/), each bound to the model and gated by `content:validate`. The area is
+**client-rendered, lazy-loaded, and dependency-free** (a small XSS-safe Markdown renderer); the
+rollout plan and the deferred SSG/SEO decision are in the
+[content rollout plan](docs/03-blueprint/content-rollout-plan.md).
+
 ## Project status
 
 > **v1.0 MVP implemented.** The repository holds both the full specification/design set **and** the
@@ -106,9 +116,9 @@ traceable:
 |---|-------|--------|--------|
 | 1 | [Discovery & Planning](docs/01-discovery-and-planning/discovery-and-planning.md) | Project charter / product vision | ✅ Complete |
 | 2 | [Requirement Analysis](docs/02-requirement-analysis/) | [SRS](docs/02-requirement-analysis/software-requirements-specification.md) | 🔬 In progress |
-| 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [Model Data Sheet](docs/03-blueprint/model-data-sheet.md) + [Architecture Reader](docs/03-blueprint/architecture-reader.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
+| 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [Model Data Sheet](docs/03-blueprint/model-data-sheet.md) + [Architecture Reader](docs/03-blueprint/architecture-reader.md) + [Content Rollout Plan](docs/03-blueprint/content-rollout-plan.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | [Development](docs/04-development/) | Source code (`src/`, scoring engine, components) | ✅ v1.0 implemented |
-| 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 64 Vitest + Playwright E2E + 3 guards; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
+| 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 85 Vitest + Playwright E2E + 3 model guards + content guard; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
 | 6 | [Deployment / Release](docs/06-deployment/) | [Live on GitHub Pages](https://programmershinobi.github.io/architecture-advisor/) via `deploy.yml` (CI/CD) | ✅ Live |
 | 7 | [Maintenance & Iteration](docs/07-maintenance/) | [Changelog](CHANGELOG.md), Dependabot, issue/PR templates, [security policy](SECURITY.md) | 🔄 Ongoing |
 

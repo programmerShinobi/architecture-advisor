@@ -57,4 +57,18 @@ describe('Accessibility (AC-15) — axe-core, WCAG A/AA', () => {
     },
     A11Y_TIMEOUT,
   );
+
+  it(
+    'no violations in the Learn content area, including an open article (lazy-loaded)',
+    async () => {
+      const { container } = renderWithI18n(<App />, 'en');
+      fireEvent.click(screen.getByRole('button', { name: 'Insights' }));
+      // Drill into the Catalog (data-driven, all architectures) and open one architecture page.
+      fireEvent.click(await screen.findByRole('button', { name: /Catalog/ }));
+      fireEvent.click(await screen.findByRole('button', { name: /Microservices/ }));
+      await screen.findByText('TL;DR');
+      expect(await violations(container)).toEqual([]);
+    },
+    A11Y_TIMEOUT,
+  );
 });

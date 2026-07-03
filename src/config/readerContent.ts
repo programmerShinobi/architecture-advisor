@@ -102,7 +102,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Small teams, well-understood domains, and a fast start — the "boring" default that is often right.', id: 'Tim kecil, domain yang sudah dipahami, dan mulai cepat — pilihan "membosankan" yang sering kali tepat.' },
         cost: { en: 'As the domain grows, layers can erode into a tangle because they enforce roles, not domain boundaries.', id: 'Saat domain tumbuh, lapisan bisa berubah menjadi kusut karena menegakkan peran, bukan batas domain.' },
         deeper: { en: 'Layering is a technical partitioning, so one feature change often touches every layer — poor change locality.', id: 'Pelapisan adalah partisi teknis, sehingga satu perubahan fitur kerap menyentuh semua lapisan — lokalitas perubahan buruk.' },
-        cites: ['fundamentals', 'peaa'],
+        cites: ['fundamentals', 'peaa', 'bass'],
       },
       {
         optionId: 'monolith',
@@ -111,7 +111,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Early products and small teams — deployment, testing, and refactoring are simplest, and strong consistency is trivial.', id: 'Produk awal dan tim kecil — deploy, pengujian, dan refactor paling sederhana, dan konsistensi kuat itu mudah.' },
         cost: { en: 'One shared failure domain and one release cadence; scaling means scaling the whole app.', id: 'Satu domain kegagalan bersama dan satu irama rilis; menskalakan berarti menskalakan seluruh aplikasi.' },
         deeper: { en: '"Monolith First": most systems should start monolithic and extract services only once boundaries are proven — premature distribution is a costly, common mistake.', id: '"Monolith First": kebanyakan sistem sebaiknya mulai monolitik dan mengekstrak layanan hanya setelah batas terbukti — distribusi dini adalah kesalahan umum yang mahal.' },
-        cites: ['fowlerMonolithFirst', 'newman'],
+        cites: ['fowlerMonolithFirst', 'newman', 'fritzschMigration'],
       },
       {
         optionId: 'modular-monolith',
@@ -120,7 +120,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'You want clean boundaries and independent team workstreams without distributed-systems overhead — often the pragmatic sweet spot.', id: 'Anda ingin batas rapi dan alur kerja tim independen tanpa beban sistem terdistribusi — kerap titik ideal yang pragmatis.' },
         cost: { en: 'Boundaries can still erode without discipline (enforce them in CI); still one deploy and one failure domain.', id: 'Batas tetap bisa terkikis tanpa disiplin (tegakkan di CI); tetap satu deploy dan satu domain kegagalan.' },
         deeper: { en: 'Modules aligned to bounded contexts give most of microservices’ modularity and a clean Strangler-Fig path to extraction later — split out a service only when it truly needs independent scale or deploy.', id: 'Modul yang selaras dengan bounded context memberi sebagian besar modularitas microservices dan jalur Strangler-Fig yang rapi untuk ekstraksi kelak — pisahkan layanan hanya saat benar-benar butuh skala atau deploy mandiri.' },
-        cites: ['hardparts', 'ddd', 'strangler', 'newman'],
+        cites: ['hardparts', 'ddd', 'strangler', 'newman', 'conwayTeams'],
       },
       {
         optionId: 'microservices',
@@ -129,7 +129,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Large, distributed organisations and parts with genuinely different scaling needs, backed by mature DevOps.', id: 'Organisasi besar dan terdistribusi serta bagian dengan kebutuhan penskalaan yang benar-benar berbeda, didukung DevOps matang.' },
         cost: { en: 'Distributed-systems complexity: network failure, eventual consistency, tracing, and heavy operational overhead — repeatedly the top reported pain.', id: 'Kompleksitas sistem terdistribusi: kegagalan jaringan, konsistensi eventual, penelusuran, dan beban operasional berat — berulang kali jadi keluhan teratas.' },
         deeper: { en: 'Benefits are real but conditional on organisational maturity. The classic failure is the "distributed monolith" — services that must deploy together, paying distribution’s cost for none of its benefit.', id: 'Manfaatnya nyata tetapi bergantung pada kematangan organisasi. Kegagalan klasiknya adalah "monolit terdistribusi" — layanan yang harus dideploy bersama, membayar biaya distribusi tanpa manfaatnya.' },
-        cites: ['fowlerMicro', 'newman', 'dragoni', 'soldani', 'taibi'],
+        cites: ['fowlerMicro', 'newman', 'dragoni', 'soldani', 'taibi', 'bognerQuality', 'taibiSmells'],
       },
       {
         optionId: 'serverless',
@@ -138,7 +138,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Spiky or unpredictable load, event-driven glue, and small teams that would rather not run servers.', id: 'Beban bergelombang atau tak terduga, perekat berbasis peristiwa, dan tim kecil yang enggan mengelola server.' },
         cost: { en: 'Cold-start latency, execution limits, harder local testing/observability, and vendor lock-in; cost can invert at sustained high volume.', id: 'Latensi cold-start, batas eksekusi, pengujian/observabilitas lokal lebih sulit, dan keterikatan vendor; biaya bisa berbalik pada volume tinggi berkelanjutan.' },
         deeper: { en: 'Excellent for bursty, stateless work; a poor fit for long-running, latency-critical, or stateful workloads — state, latency, and portability are the open problems.', id: 'Sangat baik untuk kerja meledak-ledak tanpa keadaan; buruk untuk beban berjalan-lama, kritis-latensi, atau berkeadaan — keadaan, latensi, dan portabilitas adalah masalah terbukanya.' },
-        cites: ['berkeleyServerless', 'baldini'],
+        cites: ['berkeleyServerless', 'baldini', 'castroServerless'],
       },
     ],
   },
@@ -156,7 +156,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'When you truly need an immediate answer; simplest to reason about.', id: 'Saat Anda benar-benar butuh jawaban seketika; paling mudah dipahami.' },
         cost: { en: 'Strong temporal coupling — the caller shares the callee’s fate and latency.', id: 'Kopling waktu kuat — pemanggil ikut menanggung nasib dan latensi yang dipanggil.' },
         deeper: { en: 'Cascading failures and latency add up across a synchronous call chain; add timeouts, retries, and circuit breakers.', id: 'Kegagalan berantai dan latensi menumpuk sepanjang rantai panggilan sinkron; tambahkan timeout, coba-ulang, dan circuit breaker.' },
-        cites: ['fundamentals'],
+        cites: ['fundamentals', 'newman', 'eip'],
       },
       {
         optionId: 'async-messaging',
@@ -165,7 +165,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Decoupling work in time, buffering load spikes, and improving resilience.', id: 'Melepas kopling kerja dalam waktu, menyangga lonjakan beban, dan meningkatkan ketahanan.' },
         cost: { en: 'Harder end-to-end reasoning and delivery semantics (at-least-once, idempotency).', id: 'Penalaran ujung-ke-ujung dan semantik pengiriman lebih sulit (setidaknya-sekali, idempotensi).' },
         deeper: { en: 'Enterprise Integration Patterns is the canonical catalogue for the routing, transformation, and guarantee patterns here.', id: 'Enterprise Integration Patterns adalah katalog kanonik untuk pola perutean, transformasi, dan jaminan di sini.' },
-        cites: ['eip'],
+        cites: ['eip', 'ddia', 'richardson'],
       },
       {
         optionId: 'event-driven',
@@ -174,7 +174,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'High decoupling and extensibility — add a new reactor without touching producers.', id: 'Kopling rendah dan mudah diperluas — tambah reaktor baru tanpa menyentuh produsen.' },
         cost: { en: 'Weaker global ordering and consistency — you design for eventual consistency.', id: 'Pengurutan dan konsistensi global lebih lemah — Anda merancang untuk konsistensi eventual.' },
         deeper: { en: 'Great for extensibility, but debugging emergent flows across many reactors is hard; invest in tracing and event schemas.', id: 'Bagus untuk perluasan, tetapi men-debug alur yang muncul di banyak reaktor itu sulit; investasikan pada penelusuran dan skema peristiwa.' },
-        cites: ['ddia', 'hardparts'],
+        cites: ['ddia', 'hardparts', 'eip'],
       },
       {
         optionId: 'streaming',
@@ -183,7 +183,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'High-throughput, real-time processing and replayable history.', id: 'Pemrosesan waktu-nyata bervolume tinggi dan riwayat yang dapat diputar ulang.' },
         cost: { en: 'Real operational weight: partitioning, backpressure, and reprocessing.', id: 'Beban operasional nyata: partisi, tekanan-balik, dan pemrosesan-ulang.' },
         deeper: { en: 'A log-centric backbone unifies messaging and stored history, but demands careful partitioning and consumer-offset management.', id: 'Tulang punggung berpusat-log menyatukan pesan dan riwayat tersimpan, tetapi menuntut partisi dan manajemen offset konsumen yang cermat.' },
-        cites: ['ddia'],
+        cites: ['ddia', 'akidauDataflow', 'eip'],
       },
     ],
   },
@@ -201,7 +201,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Simplest operations and strong consistency via transactions.', id: 'Operasi paling sederhana dan konsistensi kuat lewat transaksi.' },
         cost: { en: 'Couples every writer and blocks independent scaling — an anti-pattern under microservices.', id: 'Mengopling semua penulis dan menghambat penskalaan independen — anti-pola di bawah microservices.' },
         deeper: { en: 'A shared database is the usual hidden cause of a "distributed monolith": it silently re-couples services you meant to separate.', id: 'Basis data bersama adalah penyebab tersembunyi lazim dari "monolit terdistribusi": diam-diam mengopling ulang layanan yang ingin Anda pisahkan.' },
-        cites: ['newman', 'taibi'],
+        cites: ['newman', 'taibi', 'taibiSmells'],
       },
       {
         optionId: 'db-per-service',
@@ -210,7 +210,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Independent deploy and scale, and true encapsulation of each service’s data.', id: 'Deploy dan skala independen, serta enkapsulasi sejati atas data tiap layanan.' },
         cost: { en: 'Cross-service consistency becomes an application concern (sagas, outbox), not a transaction.', id: 'Konsistensi lintas-layanan jadi urusan aplikasi (saga, outbox), bukan transaksi.' },
         deeper: { en: 'Replace distributed transactions with sagas and the transactional-outbox pattern; embrace eventual consistency deliberately.', id: 'Ganti transaksi terdistribusi dengan saga dan pola transactional-outbox; rangkul konsistensi eventual secara sengaja.' },
-        cites: ['newman', 'ddia'],
+        cites: ['newman', 'ddia', 'richardson', 'laignerData', 'richardsonSaga'],
       },
       {
         optionId: 'cqrs',
@@ -219,7 +219,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Read and write loads that differ sharply and need to scale or evolve independently.', id: 'Beban baca dan tulis yang berbeda tajam dan perlu diskalakan atau berkembang mandiri.' },
         cost: { en: 'More moving parts and (often) eventual consistency between the two models — use it selectively.', id: 'Lebih banyak bagian bergerak dan (kerap) konsistensi eventual antar kedua model — pakai secukupnya.' },
         deeper: { en: 'CQRS is frequently over-applied; add it to the specific slice that needs it, not the whole system.', id: 'CQRS kerap diterapkan berlebihan; tambahkan pada irisan spesifik yang membutuhkannya, bukan seluruh sistem.' },
-        cites: ['cqrs', 'hardparts'],
+        cites: ['cqrs', 'hardparts', 'richardson'],
       },
       {
         optionId: 'event-sourcing',
@@ -228,7 +228,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'A full audit trail, temporal queries, and rebuilding state at any past point.', id: 'Jejak audit lengkap, kueri temporal, dan membangun ulang keadaan pada titik masa lalu mana pun.' },
         cost: { en: 'Complexity: event versioning, replay, and snapshotting; easy to over-apply.', id: 'Kompleksitas: versi peristiwa, pemutaran-ulang, dan snapshot; mudah diterapkan berlebihan.' },
         deeper: { en: 'Powerful where history is the domain (finance, audit); the schema-evolution and replay costs are underestimated far too often.', id: 'Ampuh di mana riwayat adalah domainnya (keuangan, audit); biaya evolusi skema dan pemutaran-ulang terlalu sering diremehkan.' },
-        cites: ['eventsourcing', 'ddia'],
+        cites: ['eventsourcing', 'ddia', 'overeemES'],
       },
       {
         optionId: 'polyglot',
@@ -237,7 +237,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Workloads with genuinely different access patterns under one system.', id: 'Beban kerja dengan pola akses yang benar-benar berbeda dalam satu sistem.' },
         cost: { en: 'More operational surfaces to run, secure, and understand.', id: 'Lebih banyak permukaan operasional untuk dijalankan, diamankan, dan dipahami.' },
         deeper: { en: 'Each data model has a sweet spot; the tax is the operational and cognitive load of running several stores well.', id: 'Tiap model data punya titik idealnya; pajaknya adalah beban operasional dan kognitif menjalankan beberapa penyimpanan dengan baik.' },
-        cites: ['ddia'],
+        cites: ['ddia', 'newman', 'laignerData'],
       },
     ],
   },
@@ -255,7 +255,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'A highly testable, framework-agnostic core you can drive from tests or any UI.', id: 'Inti yang sangat teruji dan bebas-framework yang bisa dijalankan dari tes atau UI apa pun.' },
         cost: { en: 'More indirection and boilerplate up front.', id: 'Lebih banyak tak-langsung dan boilerplate di awal.' },
         deeper: { en: 'Business rules never depend on IO or frameworks, which is exactly what keeps the core durable and unit-testable.', id: 'Aturan bisnis tak pernah bergantung pada IO atau framework, yang justru menjaga inti tetap awet dan dapat diuji-unit.' },
-        cites: ['hexagonal'],
+        cites: ['hexagonal', 'clean', 'ddd'],
       },
       {
         optionId: 'clean',
@@ -264,7 +264,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Long-lived systems that must stay independent of frameworks and delivery mechanisms.', id: 'Sistem berumur panjang yang harus tetap independen dari framework dan mekanisme pengiriman.' },
         cost: { en: 'The most prescriptive of the structures — ceremony can outweigh benefit on small apps.', id: 'Struktur paling preskriptif — seremoninya bisa melebihi manfaat pada aplikasi kecil.' },
         deeper: { en: 'Same intent as hexagonal, more prescriptive; DDD supplies the bounded contexts these inner layers protect.', id: 'Niat sama dengan hexagonal, lebih preskriptif; DDD menyediakan bounded context yang dilindungi lapisan-dalam ini.' },
-        cites: ['clean', 'ddd', 'implddd'],
+        cites: ['clean', 'ddd', 'implddd', 'hexagonal'],
       },
       {
         optionId: 'vertical-slice',
@@ -273,7 +273,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'High change locality — a feature lives in one place, cutting cross-layer coupling.', id: 'Lokalitas perubahan tinggi — satu fitur di satu tempat, memangkas kopling lintas-lapisan.' },
         cost: { en: 'Less shared structure; needs conventions to avoid duplication drifting apart.', id: 'Struktur bersama lebih sedikit; butuh konvensi agar duplikasi tak menyimpang.' },
         deeper: { en: 'Optimises for the way software actually changes (by feature), the mirror image of layered’s weakness.', id: 'Mengoptimalkan cara perangkat lunak benar-benar berubah (per fitur), kebalikan dari kelemahan berlapis.' },
-        cites: ['fundamentals'],
+        cites: ['fundamentals', 'bogardVSlice', 'hardparts'],
       },
       {
         optionId: 'layered',
@@ -282,7 +282,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Quick, familiar, and fine for smaller or stable domains.', id: 'Cepat, akrab, dan memadai untuk domain kecil atau stabil.' },
         cost: { en: 'Can tangle as the domain grows (see Deployment · Layered).', id: 'Bisa kusut saat domain tumbuh (lihat Deploy · Berlapis).' },
         deeper: { en: 'Familiar and low-friction, but a feature change tends to ripple across every layer.', id: 'Akrab dan minim-friksi, tetapi perubahan fitur cenderung merambat ke semua lapisan.' },
-        cites: ['peaa'],
+        cites: ['peaa', 'fundamentals', 'bass'],
       },
     ],
   },
@@ -300,7 +300,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Large organisations that need UI team autonomy across one product.', id: 'Organisasi besar yang butuh otonomi tim UI di satu produk.' },
         cost: { en: 'Browser weight and real effort to keep look, feel, and shared state consistent.', id: 'Bobot peramban dan usaha nyata menjaga tampilan, rasa, dan keadaan bersama tetap konsisten.' },
         deeper: { en: 'Buys team independence you only need past a certain organisational size; below it, the overhead dominates.', id: 'Membeli independensi tim yang baru Anda butuhkan di atas ukuran organisasi tertentu; di bawahnya, bebannya mendominasi.' },
-        cites: ['microfrontends', 'fundamentals'],
+        cites: ['microfrontends', 'fundamentals', 'conwayTeams'],
       },
       {
         optionId: 'spa',
@@ -309,7 +309,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Highly interactive experiences shipped as one deployable.', id: 'Pengalaman sangat interaktif yang dikirim sebagai satu unit deploy.' },
         cost: { en: 'Weaker first paint and SEO unless mitigated (this very app is an SPA).', id: 'Render-pertama dan SEO lebih lemah kecuali dimitigasi (aplikasi ini sendiri adalah SPA).' },
         deeper: { en: 'Wins on rich interactivity; pair with code-splitting and prefetch to soften the first-load cost.', id: 'Unggul pada interaktivitas kaya; pasangkan dengan pemecahan-kode dan prefetch untuk melunakkan biaya muat-pertama.' },
-        cites: ['webvitals'],
+        cites: ['webvitals', 'renderingWeb', 'mikowskiSPA'],
       },
       {
         optionId: 'ssr',
@@ -318,7 +318,7 @@ export const READER_SECTIONS: ReaderSection[] = [
         fits: { en: 'Fast first paint and strong SEO — content and marketing sites especially.', id: 'Render-pertama cepat dan SEO kuat — terutama situs konten dan pemasaran.' },
         cost: { en: 'SSR adds runtime cost and complexity; prefer static/incremental rendering where you can.', id: 'SSR menambah biaya dan kompleksitas runtime; utamakan render statis/inkremental bila bisa.' },
         deeper: { en: 'The trade-off tracks Core Web Vitals: SSR/SSG win first-contentful-paint and SEO; SPAs win rich interactivity.', id: 'Trade-off-nya mengikuti Core Web Vitals: SSR/SSG menang di first-contentful-paint dan SEO; SPA menang di interaktivitas kaya.' },
-        cites: ['webvitals', 'fundamentals'],
+        cites: ['webvitals', 'fundamentals', 'renderingWeb'],
       },
     ],
   },
@@ -354,4 +354,19 @@ export const READER_CITATIONS: Record<string, ReaderCitation> = {
   baldini: { key: 'baldini', label: 'Baldini et al. — "Serverless Computing: Current Trends and Open Problems" (Springer, 2017)', note: { en: 'Foundational serverless survey.', id: 'Survei serverless fondasional.' }, url: 'https://doi.org/10.1007/978-981-10-5026-8_1' },
   microfrontends: { key: 'microfrontends', label: 'Geers — Micro Frontends in Action (2020); Jackson — "Micro Frontends" (2019)', note: { en: 'The reference on UI composition by team.', id: 'Rujukan komposisi UI per tim.' }, url: 'https://martinfowler.com/articles/micro-frontends.html' },
   webvitals: { key: 'webvitals', label: 'Google — Web Vitals (web.dev)', note: { en: 'User-centric performance metrics.', id: 'Metrik performa berpusat-pengguna.' }, url: 'https://web.dev/articles/vitals' },
+
+  // Additional peer-reviewed / practitioner references, so each architecture carries several branches.
+  richardson: { key: 'richardson', label: 'Richardson — Microservices Patterns (Manning, 2018)', note: { en: 'Saga, database-per-service, API composition, CQRS in practice.', id: 'Saga, database-per-service, komposisi API, CQRS dalam praktik.' }, url: 'https://www.manning.com/books/microservices-patterns' },
+  fritzschMigration: { key: 'fritzschMigration', label: 'Fritzsch et al. — "From Monolith to Microservices: A Classification of Refactoring Approaches" (2019)', note: { en: 'Evidence-based migration strategies.', id: 'Strategi migrasi berbasis bukti.' }, url: 'https://doi.org/10.1007/978-3-030-06019-0_10' },
+  bognerQuality: { key: 'bognerQuality', label: 'Bogner et al. — "Microservices in Industry: Insights into Technologies, Characteristics, and Software Quality" (IEEE ICSA-C, 2019)', note: { en: 'How microservices affect maintainability in practice.', id: 'Dampak microservices pada maintainability di praktik.' }, url: 'https://doi.org/10.1109/ICSA-C.2019.00041' },
+  taibiSmells: { key: 'taibiSmells', label: 'Taibi & Lenarduzzi — "On the Definition of Microservice Bad Smells" (IEEE Software, 2018)', note: { en: 'Named anti-patterns incl. the distributed monolith.', id: 'Anti-pola bernama termasuk distributed monolith.' }, url: 'https://doi.org/10.1109/MS.2018.2141031' },
+  richardsonSaga: { key: 'richardsonSaga', label: 'Richardson — "Pattern: Saga" (microservices.io)', note: { en: 'Cross-service consistency without distributed transactions.', id: 'Konsistensi lintas-layanan tanpa transaksi terdistribusi.' }, url: 'https://microservices.io/patterns/data/saga.html' },
+  laignerData: { key: 'laignerData', label: 'Laigner et al. — "Data Management in Microservices: State of the Practice, Challenges, and Research Directions" (VLDB, 2021)', note: { en: 'Empirical study of per-service data.', id: 'Studi empiris data per-layanan.' }, url: 'https://doi.org/10.14778/3484224.3484232' },
+  overeemES: { key: 'overeemES', label: 'Overeem, Spoor & Jansen — "The dark side of event sourcing: Managing data conversion" (IEEE SANER, 2017)', note: { en: 'The real costs of event schema evolution.', id: 'Biaya nyata evolusi skema peristiwa.' }, url: 'https://doi.org/10.1109/SANER.2017.7884621' },
+  akidauDataflow: { key: 'akidauDataflow', label: 'Akidau et al. — "The Dataflow Model" (Proc. VLDB, 2015)', note: { en: 'Foundations of unbounded, out-of-order stream processing.', id: 'Fondasi pemrosesan aliran tak-terbatas dan tak-berurutan.' }, url: 'https://doi.org/10.14778/2824032.2824076' },
+  castroServerless: { key: 'castroServerless', label: 'Castro et al. — "The rise of serverless computing" (Communications of the ACM, 2019)', note: { en: 'A balanced survey of serverless.', id: 'Survei serverless yang seimbang.' }, url: 'https://doi.org/10.1145/3368454' },
+  bogardVSlice: { key: 'bogardVSlice', label: 'Bogard — "Vertical Slice Architecture" (2018)', note: { en: 'Organise by feature, not layer.', id: 'Tata per fitur, bukan lapisan.' }, url: 'https://www.jimmybogard.com/vertical-slice-architecture/' },
+  renderingWeb: { key: 'renderingWeb', label: 'Miller & Osmani — "Rendering on the Web" (web.dev, Google)', note: { en: 'CSR vs SSR vs SSG trade-offs.', id: 'Trade-off CSR vs SSR vs SSG.' }, url: 'https://web.dev/articles/rendering-on-the-web' },
+  mikowskiSPA: { key: 'mikowskiSPA', label: 'Mikowski & Powell — Single Page Web Applications (Manning, 2013)', note: { en: 'The SPA model end to end.', id: 'Model SPA dari hulu ke hilir.' }, url: 'https://www.manning.com/books/single-page-web-applications' },
+  conwayTeams: { key: 'conwayTeams', label: 'Skelton & Pais — Team Topologies (2019)', note: { en: 'Conway’s Law: boundaries follow teams.', id: 'Hukum Conway: batas mengikuti tim.' }, url: 'https://teamtopologies.com/book' },
 };

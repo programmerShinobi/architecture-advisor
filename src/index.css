@@ -459,6 +459,76 @@ button:focus-visible {
   }
 }
 
+/* Learn — interactive content cards (inviting hover cue for both newcomers and experts). */
+.learn-card {
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.learn-card:hover {
+  border-color: var(--color-text-info);
+  transform: translateY(-2px);
+  background: var(--color-background-tertiary);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+}
+.learn-card:focus-visible {
+  outline: 2px solid var(--color-text-info);
+  outline-offset: 2px;
+}
+/* A coloured icon chip for section cards. */
+.learn-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--color-background-info);
+  color: var(--color-text-info);
+  flex-shrink: 0;
+}
+/* Article body spacing so long reads are comfortable. */
+.learn-prose h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  color: var(--color-text-primary);
+}
+.learn-prose h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px;
+  color: var(--color-text-primary);
+}
+.learn-prose p {
+  margin: 8px 0;
+}
+.learn-prose ul,
+.learn-prose ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+.learn-prose li {
+  margin: 4px 0;
+}
+.learn-prose blockquote {
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--color-border-info);
+  background: var(--color-background-info);
+  border-radius: 6px;
+  color: var(--color-text-secondary);
+}
+.learn-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-background-tertiary);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
 /* Print / PDF: hide the app chrome and render the clean report (white, black text). */
 .print-only {
   display: none;

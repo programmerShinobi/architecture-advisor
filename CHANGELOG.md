@@ -11,6 +11,32 @@ The decision **model** carries its own version, recorded in the
 
 ### Added
 
+- **Insights content area (Wave A + pipeline)** — a new **Insights** tab (top nav: Advisor · Insights) with
+  cited, dual-audience content about the architectures the tool evaluates. Ships **client-rendered and
+  lazy-loaded** (SSG deferred by decision).
+  - **Every architecture appears in all three sections — Catalog, Playbook, and Review.** All are
+    **data-driven from the frozen model** — the full **21 options across D1–D5**, grouped by decision
+    — so coverage can never be partial or drift from the engine. Each section is a different lens on
+    the same architecture: **Catalog** = what it is / when it fits / what it costs; **Playbook** = how
+    to adopt it; **Review** = what to check when evaluating it (`src/config/readerAngles.ts`). **No
+    content is duplicated across lenses** — only the Catalog carries the explanation; Playbook/Review
+    show their angle plus a "Full explanation in the Catalog →" cross-link. Each architecture cites
+    **multiple trusted references** (standards, seminal books, and peer-reviewed journals/surveys —
+    Newman, Kleppmann, Fowler, Richardson, plus IEEE/JSS/VLDB/CACM papers). No fabricated sources.
+  - **Guided / Expert reading mode in Insights** — reuses the Advisor's mode (a single control in the
+    header, no duplicate toggle); newcomers read the plain layers, experts additionally get the
+    *Deeper* notes, mechanism, and cited journals. Markdown articles support `:::guided` / `:::expert`
+    blocks. Engaging card UI (hover cue, icon chips, ref counts) for both audiences.
+  - **Cross-cutting guides & methods (Markdown)** — Playbook adds 7 decision guides (writing good
+    ADRs · Strangler-Fig migration · choosing communication / data / code-structure / frontend · when
+    to use microservices); Review adds 6 methods (ATAM checklist · detecting a distributed monolith ·
+    fitness functions · data-consistency review · serverless readiness · avoiding premature
+    microservices). Each with several trusted sources, validated by the **content gate**
+    (`npm run content:validate`, wired into CI) — schema, primary sources, review dates, and that
+    **every `related_advisor` id resolves to the frozen model**.
+  - Pipeline is **dependency-free** (hand-built safe Markdown renderer + frontmatter parser). Rollout
+    plan + rationale: [content rollout plan](docs/03-blueprint/content-rollout-plan.md);
+    see [DECISIONS.md](DECISIONS.md) for the SSG-deferred / no-router / dependency-free / data-driven-Catalog choices.
 - **Detailed architecture explanations in the Manual/Guide** — the in-app Guide now includes a
   plain-language, evidence-grounded explanation of **every architecture the Advisor evaluates** (all
   five decisions, D1–D5) plus a bibliography, so the Guide is a genuine deep-dive rather than a
