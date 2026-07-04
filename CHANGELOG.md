@@ -27,7 +27,8 @@ The decision **model** carries its own version, recorded in the
   tighter dividers, phone-friendly overlay padding; overflow safety (`img/svg max-width`, prose
   `pre` scrolls, long words wrap); 44 px touch targets extended to chips + mode toggle on coarse
   pointers. New `e2e/responsive.spec.ts` gates **no horizontal scroll at 360/768/1440 px** on the
-  Advisor and an Insights article (E2E suite: 10 → **14**).
+  Advisor and an Insights article (E2E suite: 10 → **14**). Lighthouse mobile
+  (production build, measured): **Performance 93 · Accessibility 100 · Best-practices 96 · SEO 100**, CLS 0.
 
 ### Added
 

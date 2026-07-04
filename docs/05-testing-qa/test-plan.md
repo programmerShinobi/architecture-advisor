@@ -229,6 +229,11 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
       `readerContent`, which powers the data-driven Catalog) are correctly excluded from the first load — none can be
       silently mis-counted. No chart/diagram/markdown library ships — all visuals are hand-built SVG and Markdown is
       rendered by a small safe renderer (see [DECISIONS.md](../../DECISIONS.md)).
+- [x] **Lighthouse (mobile, measured 2026-07-04** on the production build via `npm run preview`,
+      Chrome headless, after the responsive redesign): **Performance 93 · Accessibility 100 ·
+      Best-practices 96 · SEO 100**; CLS **0**, TBT 40 ms (FCP/LCP 2.6 s under simulated slow-4G
+      throttling). Manual, not CI-gated — re-run with
+      `npx lighthouse http://localhost:4173/architecture-advisor/ --form-factor=mobile`.
 - [ ] **Recompute:** changing a factor recomputes the full model **synchronously** (pure functions,
       no async) — perceptibly instant; verified by the 500-iteration invariant test running in ms.
 - [ ] **First paint:** dark theme applied pre-paint (inline script); fonts `font-display: swap`.
