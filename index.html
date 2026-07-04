@@ -19,6 +19,48 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- FR-EDGE-4: readable message instead of a blank page for unsupported browsers.
+         `nomodule` runs ONLY on browsers without ES-module support (a proxy for pre-ES2020);
+         modern browsers ignore it. `<noscript>` covers JavaScript being disabled. -->
+    <style>
+      .aa-unsupported {
+        max-width: 34rem;
+        margin: 12vh auto;
+        padding: 24px;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        color: #1b1d1f;
+        text-align: center;
+      }
+      .aa-unsupported h1 {
+        font-size: 1.25rem;
+        margin: 0 0 8px;
+      }
+      .aa-unsupported p {
+        margin: 6px 0;
+        color: #4a4f57;
+      }
+    </style>
+    <script nomodule>
+      document.getElementById('root').innerHTML =
+        '<div class="aa-unsupported" role="alert">' +
+        '<h1>Browser tidak didukung / Unsupported browser</h1>' +
+        '<p>Architecture Advisor memerlukan browser modern. Gunakan versi terbaru <strong>Chrome, Edge, Firefox, atau Safari</strong> (desktop atau mobile).</p>' +
+        '<p>Architecture Advisor needs a modern browser. Please use the latest <strong>Chrome, Edge, Firefox, or Safari</strong> (desktop or mobile).</p>' +
+        '</div>';
+    </script>
+    <noscript>
+      <div class="aa-unsupported" role="alert">
+        <h1>JavaScript diperlukan / JavaScript required</h1>
+        <p>
+          Aktifkan JavaScript, dan gunakan versi terbaru <strong>Chrome, Edge, Firefox, atau
+          Safari</strong>. — Please enable JavaScript and use the latest <strong>Chrome, Edge,
+          Firefox, or Safari</strong>.
+        </p>
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

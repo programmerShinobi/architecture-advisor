@@ -330,6 +330,10 @@ export const DICT = {
   'action.followRec': { en: 'Follow recommendations', id: 'Ikuti rekomendasi' },
   'action.theme': { en: 'Toggle theme', id: 'Ganti tema' },
   'action.lang': { en: 'EN', id: 'ID' },
+  'footer.browsers': {
+    en: 'Best viewed in the latest Chrome, Edge, Firefox, or Safari (desktop or mobile).',
+    id: 'Ditampilkan terbaik di Chrome, Edge, Firefox, atau Safari versi terbaru (desktop atau mobile).',
+  },
 
   // Detailed architecture explanations folded into the Manual/Guide (Section 5) — see
   // src/config/readerContent.ts / docs/03-blueprint/architecture-reader.md

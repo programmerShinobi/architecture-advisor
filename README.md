@@ -126,6 +126,21 @@ Cross-cutting references — the [Build Spec v3](docs/specs/build-spec-v3.md) an
 [execution playbooks](docs/guides/) — support multiple phases. The full map, with an SDLC flow
 diagram, is in **[docs/README.md](docs/README.md)**.
 
+## Browser support
+
+**Recommended:** the latest two stable versions of **Chrome, Edge, Firefox, or Safari** — desktop
+**and** mobile. The app is responsive down to a **360 px** viewport and is verified for WCAG AA in
+both light and dark themes.
+
+- **Baseline** (the "evergreen" verification target): ES2020 + `localStorage`. **Internet Explorer
+  is not supported.**
+- Older or non-conforming browsers (or with JavaScript disabled) get a **readable message
+  recommending a modern browser**, not a blank page (SRS `FR-EDGE-4`).
+- Automated E2E runs on Chromium (Playwright); Safari iOS / Firefox are covered by the shared
+  evergreen standards — a quick manual look is advised before a release.
+
+The canonical statement is [SRS §2.3 — Operating Environment](docs/02-requirement-analysis/software-requirements-specification.md#23-operating-environment).
+
 ## Tech stack
 
 - **Vite + React + TypeScript** (strict), Tailwind CSS — **dark by default**, Inter + JetBrains Mono, Tabler icons

@@ -337,6 +337,20 @@ export default function App() {
                 setSnapB(a);
               }}
             />
+
+            {/* Global footer — always visible (both Advisor & Insights); browser guidance (FR-EDGE-4 / SRS §2.3). */}
+            <footer
+              className="screen-only"
+              style={{
+                padding: 'var(--aa-space-3) var(--aa-panel-pad)',
+                borderTop: '0.5px solid var(--color-border-tertiary)',
+                fontSize: 'var(--aa-fs-2xs)',
+                color: 'var(--color-text-tertiary)',
+                textAlign: 'center',
+              }}
+            >
+              {t('footer.browsers')}
+            </footer>
           </div>
         </div>
       </div>

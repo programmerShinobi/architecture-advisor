@@ -9,6 +9,15 @@
 Releasing to production through a **CI/CD pipeline**. For this project the target is free static
 hosting on **GitHub Pages** with **GitHub Actions** — the guide below is the exact path followed.
 
+## Browser support (for users of the live site)
+
+**Recommended:** the latest two stable versions of **Chrome, Edge, Firefox, or Safari** (desktop or
+mobile) — the "evergreen" baseline (ES2020 + `localStorage`; **not** Internet Explorer). Responsive
+to 360 px, WCAG AA in both themes. Unsupported browsers, or JavaScript disabled, show a **readable
+"use a modern browser" message** (`index.html` `nomodule` + `<noscript>`) rather than a blank page —
+satisfying [`FR-EDGE-4`](../02-requirement-analysis/software-requirements-specification.md#38-edge-cases-resilience--input-validation).
+Canonical baseline: [SRS §2.3](../02-requirement-analysis/software-requirements-specification.md#23-operating-environment).
+
 ## Deliverable (prepared)
 
 ➡️ **[Deployment Guide — GitHub Pages](deployment-github-pages.md)** — step-by-step free
