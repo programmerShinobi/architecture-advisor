@@ -17,6 +17,7 @@ The decision **model** carries its own version, recorded in the
   the "prototype-exact look" decision is superseded (*look only* — copy, features, and the model are
   unchanged; see DECISIONS.md). Canonical breakpoints: ≤640 / 641–1024 / ≥1025 px.
 
+- **Stage 2 — Advisor restyle.** App shell moves to the fluid aa- classes (aa-page/frame/surface/panel); Header, nav, and StepTracker paddings tokenized; keyboard-only chrome (⌘K, ?, save status) marked aa-hide-phone for the phone tier; dimension cards get soft elevation + token padding. View-only.
 ### Added
 
 - **Insights content area (Wave A + pipeline)** — a new **Insights** tab (top nav: Advisor · Insights) with

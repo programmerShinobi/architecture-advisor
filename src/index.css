@@ -214,15 +214,18 @@ html.light {
   .f-dim {
     border: 0.5px solid var(--color-border-tertiary);
     border-radius: var(--border-radius-md);
-    padding: 11px 12px;
+    padding: var(--aa-space-3);
     cursor: pointer;
+    box-shadow: var(--aa-shadow-sm);
     transition:
       border-color 0.15s,
+      box-shadow 0.15s,
       transform 0.15s;
   }
   .f-dim:hover {
     border-color: var(--color-border-info);
     transform: translateY(-1px);
+    box-shadow: var(--aa-shadow-md);
   }
   .f-dim.on {
     border: 1.5px solid var(--color-border-info);

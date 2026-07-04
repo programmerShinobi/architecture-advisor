@@ -37,7 +37,7 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '16px 20px',
+        padding: 'var(--aa-space-4) var(--aa-panel-pad)',
         borderBottom: '0.5px solid var(--color-border-tertiary)',
         flexWrap: 'wrap',
         gap: '10px',
@@ -64,7 +64,7 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: 'var(--color-text-tertiary)' }}>
+        <span className="aa-hide-phone" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: 'var(--aa-fs-2xs)', color: 'var(--color-text-tertiary)' }}>
           {saving ? (
             <>
               <span className="spin" />
@@ -82,11 +82,11 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }
           <IconBook2 size={13} aria-hidden />
           {t('manual.open')}
         </button>
-        <button type="button" className="f-btn" onClick={onCmdK} aria-label={t('cmd.open')}>
+        <button type="button" className="f-btn aa-hide-phone" onClick={onCmdK} aria-label={t('cmd.open')}>
           <IconCommand size={13} aria-hidden />
           <span className="kbd">⌘K</span>
         </button>
-        <button type="button" className="f-btn" onClick={onHelp} title={t('shortcuts.title')}>
+        <button type="button" className="f-btn aa-hide-phone" onClick={onHelp} title={t('shortcuts.title')}>
           ?
         </button>
 
