@@ -37,8 +37,10 @@ for (const vp of VIEWPORTS) {
 test('phone tier hides keyboard-centric chrome but keeps core actions reachable', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 });
   await page.goto(APP);
-  // ⌘K + "?" are hidden on phones (aa-hide-phone) …
+  // ⌘K + "?" + the save indicator are hidden on phones (aa-hide-phone). The save indicator is the
+  // regression trap: an inline `display` on its span once defeated the class (caught visually).
   await expect(page.getByRole('button', { name: /Command palette|palet/i })).toBeHidden();
+  await expect(page.getByText(/All changes saved|Semua perubahan tersimpan/)).toBeHidden();
   // … while the Guide, mode toggle, language, and theme stay usable.
   await expect(page.getByRole('button', { name: /Guide|Panduan/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /Toggle theme|Ganti tema/ })).toBeVisible();

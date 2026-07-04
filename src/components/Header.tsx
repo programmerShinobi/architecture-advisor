@@ -64,7 +64,9 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-        <span className="aa-hide-phone" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: 'var(--aa-fs-2xs)', color: 'var(--color-text-tertiary)' }}>
+        {/* Layout via .aa-wrap (class), NOT an inline display — an inline `display:flex` would
+            defeat .aa-hide-phone's display:none on the phone tier (no !important allowed). */}
+        <span className="aa-hide-phone aa-wrap" style={{ fontSize: 'var(--aa-fs-2xs)', color: 'var(--color-text-tertiary)' }}>
           {saving ? (
             <>
               <span className="spin" />

@@ -97,7 +97,17 @@ Real-browser journeys against the dev server at the `/architecture-advisor/` sub
 | [`e2e/smoke.spec.ts`](../../e2e/smoke.spec.ts) | The 4-step flow loads; a preset recomputes the recommendation (AC-2); the primary export downloads a `.md` (MADR) |
 | [`e2e/share.spec.ts`](../../e2e/share.spec.ts) | **AC-14 end to end:** Share copies a `#s=…` deep link to the clipboard; opening it restores the exact recommendation |
 | [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | **Full** WCAG A/AA **incl. color-contrast** (axe, real engine) in Guided/dark + Expert/light + override panel + **the Manual/Guide** + **an Insights article** (both themes); keyboard operability |
-| [`e2e/responsive.spec.ts`](../../e2e/responsive.spec.ts) | **Responsive redesign (design-spec §6.1):** no horizontal scroll on the Advisor **and** an Insights article at **360 / 768 / 1440 px**; the phone tier hides keyboard-centric chrome (⌘K, ?) while Guide/mode/language/theme stay reachable |
+| [`e2e/responsive.spec.ts`](../../e2e/responsive.spec.ts) | **Responsive redesign (design-spec §6.1):** no horizontal scroll on the Advisor **and** an Insights article at **360 / 768 / 1440 px**; the phone tier hides keyboard-centric chrome (⌘K, ?, save indicator) while Guide/mode/language/theme stay reachable |
+
+**Cross-engine (optional, local — not CI-gated).** [`pw-cross.config.ts`](../../pw-cross.config.ts)
+re-runs the same specs on **Firefox (Gecko)** and **Safari (WebKit)** engines, incl. an **iPhone 13
+emulation** — the practical proxy for the SRS §2.3 evergreen baseline (setup + run commands are in
+the config header). Verified 2026-07-05 on Firefox: responsive 4/4, smoke 2/2, a11y 6/7 — the one
+failure (Expert+light color-contrast) was proven a **theme-transition timing artifact**, not a real
+defect (applying the theme pre-paint yields **0 violations**; note in the config). The visual pass
+also caught a real phone-tier bug (the save indicator's inline `display` defeating `aa-hide-phone`)
+— fixed, and now asserted by `responsive.spec.ts`. WebKit/iOS engines are downloaded but need host
+libraries (`sudo npx playwright install-deps`) on a fresh machine.
 
 ### 3.4 CI pipelines (`.github/workflows/`)
 
