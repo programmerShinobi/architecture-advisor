@@ -23,6 +23,11 @@ The decision **model** carries its own version, recorded in the
 - **Stage 3 — Insights restyle.** LearnView wrappers move to `.aa-panel` (fluid padding); card and
   landing-card paddings + headings tokenized (`--aa-card-pad`/`--aa-fs-xl/2xl` fluid type); the
   card hover shadow now uses the theme-aware `--aa-shadow-md` token instead of a hardcoded rgba.
+- **Stage 4 — responsiveness, a11y & tests.** Phone tier (≤640 px): `aa-hide-phone` chrome hidden,
+  tighter dividers, phone-friendly overlay padding; overflow safety (`img/svg max-width`, prose
+  `pre` scrolls, long words wrap); 44 px touch targets extended to chips + mode toggle on coarse
+  pointers. New `e2e/responsive.spec.ts` gates **no horizontal scroll at 360/768/1440 px** on the
+  Advisor and an Insights article (E2E suite: 10 → **14**).
 
 ### Added
 

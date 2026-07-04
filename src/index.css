@@ -548,8 +548,39 @@ button:focus-visible {
 @media (pointer: coarse) {
   .aa-touch,
   .f-btn,
+  .f-chip,
+  .f-mode,
   .learn-card {
     min-height: var(--aa-touch);
+  }
+}
+
+/* Overflow safety: nothing may force a horizontal page scroll. */
+img,
+svg {
+  max-width: 100%;
+}
+.learn-prose pre {
+  overflow-x: auto;
+}
+.learn-article,
+.aa-panel {
+  overflow-wrap: break-word;
+}
+
+/* ---- Phone tier (≤640px — canonical breakpoint, design-spec §6.1) ---- */
+@media (max-width: 640px) {
+  /* Keyboard-centric chrome adds noise on touch phones. */
+  .aa-hide-phone {
+    display: none;
+  }
+  /* Tighter vertical rhythm on small screens. */
+  .f-div {
+    margin: var(--aa-space-4) 0;
+  }
+  /* Overlays start closer to the top so dialogs get usable height. */
+  .f-ov {
+    padding: var(--aa-space-5) var(--aa-space-2);
   }
 }
 
