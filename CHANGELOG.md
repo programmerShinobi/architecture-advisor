@@ -30,6 +30,16 @@ The decision **model** carries its own version, recorded in the
   Advisor and an Insights article (E2E suite: 10 → **14**). Lighthouse mobile
   (production build, measured): **Performance 93 · Accessibility 100 · Best-practices 96 · SEO 100**, CLS 0.
 
+### Fixed (redesign follow-up)
+
+- **Phone tier: the save indicator now actually hides.** Its inline `display: flex` was defeating
+  `.aa-hide-phone`'s `display: none` (inline styles beat classes; `!important` is banned) — caught
+  by a **visual cross-engine pass on Firefox**, not by the assertions. Layout moved to the `.aa-wrap`
+  class; `e2e/responsive.spec.ts` now asserts the indicator is hidden at 360 px so it can't regress.
+- **Cross-engine E2E config** ([`pw-cross.config.ts`](pw-cross.config.ts), optional/local): re-runs
+  the E2E suite on Firefox (Gecko) + Safari (WebKit, incl. iPhone emulation) for pre-release checks
+  of the evergreen baseline. Verified 2026-07-05: Firefox 12/13 (1 = documented theme-transition artifact), **WebKit + Safari-iOS 26/26**; results + the quirk recorded in the test plan.
+
 ### Added
 
 - **Browser-support guidance + unsupported-browser fallback.** Documented the recommended browsers
