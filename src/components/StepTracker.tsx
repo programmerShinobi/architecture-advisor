@@ -18,7 +18,7 @@ export function StepTracker() {
         display: 'flex',
         alignItems: 'center',
         gap: '12px',
-        padding: '12px 20px',
+        padding: 'var(--aa-space-3) var(--aa-panel-pad)',
         borderBottom: '0.5px solid var(--color-border-tertiary)',
         flexWrap: 'wrap',
       }}

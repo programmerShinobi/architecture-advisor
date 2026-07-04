@@ -166,12 +166,12 @@ export default function App() {
 
   return (
     <>
-    <div className="screen-only" style={{ padding: '24px' }}>
-      <div className="page" style={{ maxWidth: '1180px', margin: '0 auto' }}>
-        <div style={{ background: 'var(--color-background-secondary)', borderRadius: 'var(--border-radius-xl)', padding: '16px' }}>
+    <div className="screen-only aa-page">
+      <div className="page aa-frame">
+        <div style={{ background: 'var(--color-background-secondary)', borderRadius: 'var(--border-radius-xl)', padding: 'var(--aa-space-3)' }}>
           <div
             id="f-app"
-            className={mode}
+            className={mode + ' aa-surface'}
             style={{
               position: 'relative',
               background: 'var(--color-background-primary)',
@@ -189,7 +189,7 @@ export default function App() {
               saveSig={saveSig}
             />
 
-            <nav aria-label={t('learn.title')} className="screen-only" style={{ display: 'flex', gap: '4px', padding: '10px 20px 0', borderBottom: '0.5px solid var(--color-border-tertiary)' }}>
+            <nav aria-label={t('learn.title')} className="screen-only" style={{ display: 'flex', gap: '4px', padding: 'var(--aa-space-3) var(--aa-panel-pad) 0', borderBottom: '0.5px solid var(--color-border-tertiary)' }}>
               {(['advisor', 'learn'] as const).map((v) => {
                 const active = mainView === v;
                 return (
@@ -218,7 +218,7 @@ export default function App() {
             </nav>
 
             {mainView === 'learn' ? (
-              <Suspense fallback={<div style={{ padding: '18px 20px', color: 'var(--color-text-tertiary)' }}>{t('save.saving')}</div>}>
+              <Suspense fallback={<div style={{ padding: 'var(--aa-panel-pad)', color: 'var(--color-text-tertiary)' }}>{t('save.saving')}</div>}>
                 <LearnView onOpenAdvisor={() => setMainView('advisor')} />
               </Suspense>
             ) : (
@@ -226,7 +226,7 @@ export default function App() {
             <GuidedBanner />
             <StepTracker />
 
-            <div style={{ padding: '18px 20px' }} className="space-y-6">
+            <div className="aa-panel space-y-6">
         <PresetBar activeId={activePresetId} onApply={applyPreset} onReset={resetAll} onUndo={undoReset} />
 
         <div className="f-div" />

@@ -9,6 +9,27 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed (UI redesign — in progress on `redesign/ui-ux`)
+
+- **Stage 1 — design tokens.** New `--aa-*` token layer (fluid spacing/type via `clamp()`, soft
+  elevation, 44 px touch targets, global `:focus-visible` ring) + base classes (`aa-page/frame/
+  surface/panel/card/wrap/touch`), mirrored into Tailwind utilities. Documented in design-spec §6.1;
+  the "prototype-exact look" decision is superseded (*look only* — copy, features, and the model are
+  unchanged; see DECISIONS.md). Canonical breakpoints: ≤640 / 641–1024 / ≥1025 px.
+
+- **Stage 2 — Advisor restyle.** App shell moves to the fluid aa- classes (aa-page/frame/surface/
+  panel); Header, nav, and StepTracker paddings tokenized; keyboard-only chrome (⌘K, ?, save status)
+  marked `aa-hide-phone` for the phone tier; dimension cards get soft elevation + token padding.
+- **Stage 3 — Insights restyle.** LearnView wrappers move to `.aa-panel` (fluid padding); card and
+  landing-card paddings + headings tokenized (`--aa-card-pad`/`--aa-fs-xl/2xl` fluid type); the
+  card hover shadow now uses the theme-aware `--aa-shadow-md` token instead of a hardcoded rgba.
+- **Stage 4 — responsiveness, a11y & tests.** Phone tier (≤640 px): `aa-hide-phone` chrome hidden,
+  tighter dividers, phone-friendly overlay padding; overflow safety (`img/svg max-width`, prose
+  `pre` scrolls, long words wrap); 44 px touch targets extended to chips + mode toggle on coarse
+  pointers. New `e2e/responsive.spec.ts` gates **no horizontal scroll at 360/768/1440 px** on the
+  Advisor and an Insights article (E2E suite: 10 → **14**). Lighthouse mobile
+  (production build, measured): **Performance 93 · Accessibility 100 · Best-practices 96 · SEO 100**, CLS 0.
+
 ### Added
 
 - **Insights content area (Wave A + pipeline)** — a new **Insights** tab (top nav: Advisor · Insights) with

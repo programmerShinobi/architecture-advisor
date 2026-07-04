@@ -89,7 +89,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.3 End-to-end — `npm run test:e2e` (Playwright, real chromium)
 
-Real-browser journeys against the dev server at the `/architecture-advisor/` sub-path. **10 pass**
+Real-browser journeys against the dev server at the `/architecture-advisor/` sub-path. **14 pass**
 (all gating):
 
 | Spec | Covers |
@@ -97,6 +97,7 @@ Real-browser journeys against the dev server at the `/architecture-advisor/` sub
 | [`e2e/smoke.spec.ts`](../../e2e/smoke.spec.ts) | The 4-step flow loads; a preset recomputes the recommendation (AC-2); the primary export downloads a `.md` (MADR) |
 | [`e2e/share.spec.ts`](../../e2e/share.spec.ts) | **AC-14 end to end:** Share copies a `#s=…` deep link to the clipboard; opening it restores the exact recommendation |
 | [`e2e/a11y.spec.ts`](../../e2e/a11y.spec.ts) | **Full** WCAG A/AA **incl. color-contrast** (axe, real engine) in Guided/dark + Expert/light + override panel + **the Manual/Guide** + **an Insights article** (both themes); keyboard operability |
+| [`e2e/responsive.spec.ts`](../../e2e/responsive.spec.ts) | **Responsive redesign (design-spec §6.1):** no horizontal scroll on the Advisor **and** an Insights article at **360 / 768 / 1440 px**; the phone tier hides keyboard-centric chrome (⌘K, ?) while Guide/mode/language/theme stay reachable |
 
 ### 3.4 CI pipelines (`.github/workflows/`)
 
@@ -228,6 +229,11 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
       `readerContent`, which powers the data-driven Catalog) are correctly excluded from the first load — none can be
       silently mis-counted. No chart/diagram/markdown library ships — all visuals are hand-built SVG and Markdown is
       rendered by a small safe renderer (see [DECISIONS.md](../../DECISIONS.md)).
+- [x] **Lighthouse (mobile, measured 2026-07-04** on the production build via `npm run preview`,
+      Chrome headless, after the responsive redesign): **Performance 93 · Accessibility 100 ·
+      Best-practices 96 · SEO 100**; CLS **0**, TBT 40 ms (FCP/LCP 2.6 s under simulated slow-4G
+      throttling). Manual, not CI-gated — re-run with
+      `npx lighthouse http://localhost:4173/architecture-advisor/ --form-factor=mobile`.
 - [ ] **Recompute:** changing a factor recomputes the full model **synchronously** (pure functions,
       no async) — perceptibly instant; verified by the 500-iteration invariant test running in ms.
 - [ ] **First paint:** dark theme applied pre-paint (inline script); fonts `font-display: swap`.

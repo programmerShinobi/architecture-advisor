@@ -34,6 +34,41 @@
   --border-radius-xl: 16px;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- aa- redesign tokens (design-spec §6.1) ----------------------------
+     Sizing/spacing/elevation for the responsive redesign. View code must
+     reference these instead of hardcoding px (DECISIONS.md — redesign).
+     Breakpoints (cannot be var() in @media — canonical values, keep in sync
+     with design-spec §6.1): phone ≤640px · tablet 641–1024px · laptop ≥1025px. */
+  --aa-space-1: 4px;
+  --aa-space-2: 8px;
+  --aa-space-3: 12px;
+  --aa-space-4: 16px;
+  --aa-space-5: 20px;
+  --aa-space-6: 24px;
+  --aa-space-7: 32px;
+  /* Fluid paddings: tight on phones, roomy on laptops. */
+  --aa-page-pad: clamp(10px, 2.5vw, 24px);
+  --aa-panel-pad: clamp(12px, 2.5vw, 20px);
+  --aa-card-pad: clamp(12px, 2vw, 16px);
+  /* Type scale (fluid where it matters). */
+  --aa-fs-2xs: 11px;
+  --aa-fs-xs: 12px;
+  --aa-fs-sm: 12.5px;
+  --aa-fs-base: 13.5px;
+  --aa-fs-md: 15px;
+  --aa-fs-lg: clamp(15px, 1.6vw, 18px);
+  --aa-fs-xl: clamp(17px, 2vw, 20px);
+  --aa-fs-2xl: clamp(19px, 2.4vw, 22px);
+  --aa-lh: 1.6;
+  /* Soft elevation (theme-aware via the overridable shadow color). */
+  --aa-shadow-color: rgba(0, 0, 0, 0.28);
+  --aa-shadow-sm: 0 1px 2px var(--aa-shadow-color);
+  --aa-shadow-md: 0 3px 10px var(--aa-shadow-color);
+  --aa-shadow-lg: 0 8px 24px var(--aa-shadow-color);
+  /* Minimum touch target (WCAG 2.5.8 / mobile ergonomics). */
+  --aa-touch: 44px;
+  --aa-focus-ring: 2px solid var(--color-text-info);
 }
 html.light {
   --color-background-primary: #ffffff;
@@ -56,6 +91,7 @@ html.light {
   --color-border-info: rgba(37, 99, 235, 0.45);
   --color-border-warning: rgba(181, 121, 14, 0.45);
   --color-border-danger: rgba(196, 57, 46, 0.45);
+  --aa-shadow-color: rgba(16, 24, 40, 0.1);
 }
 
 @layer base {
@@ -178,15 +214,18 @@ html.light {
   .f-dim {
     border: 0.5px solid var(--color-border-tertiary);
     border-radius: var(--border-radius-md);
-    padding: 11px 12px;
+    padding: var(--aa-space-3);
     cursor: pointer;
+    box-shadow: var(--aa-shadow-sm);
     transition:
       border-color 0.15s,
+      box-shadow 0.15s,
       transform 0.15s;
   }
   .f-dim:hover {
     border-color: var(--color-border-info);
     transform: translateY(-1px);
+    box-shadow: var(--aa-shadow-md);
   }
   .f-dim.on {
     border: 1.5px solid var(--color-border-info);
@@ -459,6 +498,92 @@ button:focus-visible {
   }
 }
 
+/* ============================================================
+   aa- redesign layer — responsive shell, cards, focus, touch.
+   Only aa- classes + tokens here; no hardcoded colors/sizes.
+   ============================================================ */
+
+/* Visible, consistent keyboard focus everywhere (WCAG 2.4.7). */
+:focus-visible {
+  outline: var(--aa-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-md);
+}
+
+/* Page shell: fluid outer gutter, centered column. */
+.aa-page {
+  padding: var(--aa-page-pad);
+}
+.aa-frame {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+/* The app surface gets a soft elevation so it reads as one clean card. */
+.aa-surface {
+  box-shadow: var(--aa-shadow-lg);
+}
+/* Standard content padding for panels/sections (replaces fixed 18px 20px). */
+.aa-panel {
+  padding: var(--aa-panel-pad);
+}
+
+/* Generic card: rounded, bordered, softly elevated, token-padded. */
+.aa-card {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: var(--aa-card-pad);
+  box-shadow: var(--aa-shadow-sm);
+}
+
+/* Action rows wrap instead of overflowing on narrow screens. */
+.aa-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--aa-space-2);
+}
+
+/* Comfortable touch targets on touch devices without inflating desktop chrome. */
+@media (pointer: coarse) {
+  .aa-touch,
+  .f-btn,
+  .f-chip,
+  .f-mode,
+  .learn-card {
+    min-height: var(--aa-touch);
+  }
+}
+
+/* Overflow safety: nothing may force a horizontal page scroll. */
+img,
+svg {
+  max-width: 100%;
+}
+.learn-prose pre {
+  overflow-x: auto;
+}
+.learn-article,
+.aa-panel {
+  overflow-wrap: break-word;
+}
+
+/* ---- Phone tier (≤640px — canonical breakpoint, design-spec §6.1) ---- */
+@media (max-width: 640px) {
+  /* Keyboard-centric chrome adds noise on touch phones. */
+  .aa-hide-phone {
+    display: none;
+  }
+  /* Tighter vertical rhythm on small screens. */
+  .f-div {
+    margin: var(--aa-space-4) 0;
+  }
+  /* Overlays start closer to the top so dialogs get usable height. */
+  .f-ov {
+    padding: var(--aa-space-5) var(--aa-space-2);
+  }
+}
+
 /* Learn — interactive content cards (inviting hover cue for both newcomers and experts). */
 .learn-card {
   transition:
@@ -471,7 +596,7 @@ button:focus-visible {
   border-color: var(--color-text-info);
   transform: translateY(-2px);
   background: var(--color-background-tertiary);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--aa-shadow-md);
 }
 .learn-card:focus-visible {
   outline: 2px solid var(--color-text-info);
