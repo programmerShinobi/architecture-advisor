@@ -22,7 +22,8 @@ few notable interpretations. The model values themselves are canonical — see t
 
 ## Scores & presets vs the prototype
 
-- The UI matches [the prototype](docs/03-blueprint/prototype/index.html) **exactly** in look, copy,
+- **(Superseded for *look*, 2026-07 — see "Responsive UI redesign" below.)** The UI originally
+  matched [the prototype](docs/03-blueprint/prototype/index.html) **exactly** in look, copy,
   and features, with two deliberate exceptions (the prototype's are illustrative):
   - **Scores are computed live** from the engine, not the mockup's fixed numbers (e.g. 84%).
   - **All 5 presets** are shipped (the mockup chip bar showed 4; `internal-tool` was absent).
@@ -106,3 +107,18 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   modulepreloads) instead of guessing by filename. When `readerContent` became a chunk shared by two
   lazy views, the old name-prefix heuristic mis-counted it as initial; reading index.html is correct
   and future-proof (any new lazy or shared async chunk is excluded automatically).
+
+## Responsive UI redesign (2026-07)
+
+- **Supersedes the "matches the prototype exactly in look" rule above** — *look only*: copy,
+  features, the scoring model, and all business logic are unchanged (guards + tests still enforce
+  copy/model fidelity). Rationale: the prototype was desktop-only (fixed 1180 px shell, no media
+  queries); the live audience includes phones/tablets, and the charter's audience is newcomers, so
+  the UI moves to a modern, responsive, card-based look.
+- **Token-first rule for the view layer:** new/edited view code must not hardcode sizes/colors —
+  sizes come from the `--aa-*` tokens (design-spec §6.1), colors from the existing `--color-*`
+  tokens. New classes are namespaced **`aa-`**; **no `!important`**. Legacy inline styles are
+  migrated opportunistically as components are touched (hybrid strategy agreed with the maintainer),
+  not big-banged.
+- **Breakpoints** are canonical values documented in design-spec §6.1 (≤640 / 641–1024 / ≥1025) —
+  CSS `@media` cannot read custom properties, so they are kept in sync by documentation + review.

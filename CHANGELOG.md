@@ -9,6 +9,14 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed (UI redesign — in progress on `redesign/ui-ux`)
+
+- **Stage 1 — design tokens.** New `--aa-*` token layer (fluid spacing/type via `clamp()`, soft
+  elevation, 44 px touch targets, global `:focus-visible` ring) + base classes (`aa-page/frame/
+  surface/panel/card/wrap/touch`), mirrored into Tailwind utilities. Documented in design-spec §6.1;
+  the "prototype-exact look" decision is superseded (*look only* — copy, features, and the model are
+  unchanged; see DECISIONS.md). Canonical breakpoints: ≤640 / 641–1024 / ≥1025 px.
+
 ### Added
 
 - **Insights content area (Wave A + pipeline)** — a new **Insights** tab (top nav: Advisor · Insights) with

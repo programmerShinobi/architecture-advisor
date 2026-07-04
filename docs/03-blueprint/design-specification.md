@@ -25,6 +25,7 @@
 | 0.6 | 2026-06-13 | Resolved DI-5 / SRS OI-3: a basic C4 Mermaid stub is in v1.0 (richer auto-generated C4 deferred to v2.x); Definition-of-Ready C4 item checked |
 | 0.7 | 2026-06-13 | Ratified the performance budgets as v1.0 targets (ADR-008, closes DI-4 / SRS OI-5), with mandatory lazy-loading of mermaid/recharts; real-bundle measurement remains a Phase 4/5 verification step |
 | 0.8 | 2026-06-16 | Implementation reconciliation: ADR-005 superseded — all charts **and** the C4 stub are hand-built SVG; `recharts` and `mermaid` removed (ADR-008 note, design-system + Definition-of-Ready updated). See [DECISIONS.md](../../DECISIONS.md). No design intent changed otherwise |
+| 0.9 | 2026-07-04 | **Responsive UI redesign**: added the `--aa-*` token layer + base classes (§6.1 — fluid spacing/type, soft elevation, 44 px touch targets, global focus ring, canonical breakpoints ≤640/641–1024/≥1025). Supersedes prototype-exact *look* (copy/features/model unchanged — see DECISIONS.md); Advisor & Insights views restyled responsive/card-based. No logic or data changes |
 
 ---
 
@@ -253,6 +254,22 @@ mode); the prototype's `:root` / `html.light` blocks are the source of truth.
 | **Accent (dark)** | info `#6AA6FF` · success `#35C28D` · warning `#E0A93B` · danger `#EC6A60` |
 | **Neutrals (dark)** | bg `#1f2226` / `#282c31` / `#343a41`; text `#ECEDEE` / `#AEB4BC` / `#7E858E` |
 | **Light theme** | same token names, light values (see prototype `html.light`) |
+
+### 6.1 Responsive redesign tokens (`--aa-*`, 2026-07)
+
+The responsive redesign adds an **`aa-` token layer** in `src/index.css` (mirrored into Tailwind
+utilities via `tailwind.config.js`); view code references these instead of hardcoding sizes:
+
+| Token group | Values |
+|---|---|
+| **Spacing** | `--aa-space-1..7` = 4/8/12/16/20/24/32 px; fluid pads `--aa-page-pad` clamp(10px–24px), `--aa-panel-pad` clamp(12px–20px), `--aa-card-pad` clamp(12px–16px) |
+| **Type** | `--aa-fs-2xs..2xl` = 11/12/12.5/13.5/15 px + fluid lg/xl/2xl via `clamp()`; `--aa-lh` 1.6 |
+| **Elevation** | `--aa-shadow-sm/md/lg` over a theme-aware `--aa-shadow-color` |
+| **Touch & focus** | `--aa-touch` 44 px (coarse pointers); `--aa-focus-ring` 2 px info, global `:focus-visible` |
+| **Breakpoints** | canonical (cannot be `var()` in `@media`): **phone ≤ 640 px · tablet 641–1024 px · laptop ≥ 1025 px** |
+
+Base classes: `.aa-page` / `.aa-frame` / `.aa-surface` / `.aa-panel` / `.aa-card` / `.aa-wrap` /
+`.aa-touch`. New classes are namespaced `aa-`; no `!important`.
 
 **Component inventory:** Button · Chip · Segmented control · Badge · Card · Data grid (sortable,
 sticky header, tabular numbers) · Modal / Command palette · Toast · Skeleton · Progress bar ·
