@@ -102,12 +102,18 @@ Real-browser journeys against the dev server at the `/architecture-advisor/` sub
 **Cross-engine (optional, local — not CI-gated).** [`pw-cross.config.ts`](../../pw-cross.config.ts)
 re-runs the same specs on **Firefox (Gecko)** and **Safari (WebKit)** engines, incl. an **iPhone 13
 emulation** — the practical proxy for the SRS §2.3 evergreen baseline (setup + run commands are in
-the config header). Verified 2026-07-05 on Firefox: responsive 4/4, smoke 2/2, a11y 6/7 — the one
-failure (Expert+light color-contrast) was proven a **theme-transition timing artifact**, not a real
-defect (applying the theme pre-paint yields **0 violations**; note in the config). The visual pass
-also caught a real phone-tier bug (the save indicator's inline `display` defeating `aa-hide-phone`)
-— fixed, and now asserted by `responsive.spec.ts`. WebKit/iOS engines are downloaded but need host
-libraries (`sudo npx playwright install-deps`) on a fresh machine.
+the config header; use `--workers=2` — parallel WebKit workers starve each other and time out).
+Verified 2026-07-05:
+
+- **Firefox:** responsive 4/4 · smoke 2/2 · a11y 6/7 — the one failure (Expert+light
+  color-contrast) was proven a **theme-transition timing artifact**, not a real defect (applying
+  the theme pre-paint yields **0 violations**; note in the config).
+- **Safari (WebKit) + Safari-iOS (iPhone 13): 26/26** — responsive, smoke, and full a11y
+  (incl. color-contrast, both themes) all pass; visual screenshots (dark/light, Advisor +
+  Insights) reviewed clean.
+- The visual pass also caught a real phone-tier bug (the save indicator's inline `display`
+  defeating `aa-hide-phone`) — fixed, and now asserted by `responsive.spec.ts`.
+- One-time host setup for WebKit on a fresh Linux machine: `sudo npx playwright install-deps`.
 
 ### 3.4 CI pipelines (`.github/workflows/`)
 

@@ -38,7 +38,7 @@ The decision **model** carries its own version, recorded in the
   class; `e2e/responsive.spec.ts` now asserts the indicator is hidden at 360 px so it can't regress.
 - **Cross-engine E2E config** ([`pw-cross.config.ts`](pw-cross.config.ts), optional/local): re-runs
   the E2E suite on Firefox (Gecko) + Safari (WebKit, incl. iPhone emulation) for pre-release checks
-  of the evergreen baseline; results + the known theme-transition axe quirk recorded in the test plan.
+  of the evergreen baseline. Verified 2026-07-05: Firefox 12/13 (1 = documented theme-transition artifact), **WebKit + Safari-iOS 26/26**; results + the quirk recorded in the test plan.
 
 ### Added
 

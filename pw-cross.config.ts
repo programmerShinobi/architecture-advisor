@@ -7,8 +7,9 @@ import { defineConfig, devices } from '@playwright/test';
 //
 // One-time setup:  npx playwright install webkit firefox
 //                  sudo npx playwright install-deps   # WebKit needs a few host libraries
-// Run:             npx playwright test --config=pw-cross.config.ts
-// Or one engine:   npx playwright test --config=pw-cross.config.ts --project=webkit
+// Run:             npx playwright test --config=pw-cross.config.ts --workers=2
+// Or one engine:   npx playwright test --config=pw-cross.config.ts --project=webkit --workers=2
+// (keep --workers low: parallel WebKit workers starve each other and time out on toBeVisible)
 //
 // Known quirk: a11y "Expert + light theme" can flake on non-Chromium engines — axe may scan
 // mid theme-transition (0.15s) and report blended colors (e.g. #366fed). Verified not a real
