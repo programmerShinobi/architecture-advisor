@@ -39,7 +39,7 @@ const angleKey = (dim: DimensionId, optId: string) => `${dim}:${optId}`;
 const cardBase: React.CSSProperties = {
   border: '0.5px solid var(--color-border-tertiary)',
   borderRadius: 'var(--border-radius-md)',
-  padding: '15px 16px',
+  padding: 'var(--aa-card-pad)',
   background: 'var(--color-background-secondary)',
   textAlign: 'left',
   cursor: 'pointer',
@@ -117,7 +117,7 @@ function ArchitectureArticle({
       <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', marginBottom: '4px' }}>
         {dim} · <span className="guided-only">{tr(DIMENSIONS[dim].guidedLabel)}</span><span className="expert-only">{tr(DIMENSIONS[dim].name)}</span>
       </div>
-      <h2 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '14px' }}>{entry.name}</h2>
+      <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '14px' }}>{entry.name}</h2>
     </>
   );
 
@@ -182,7 +182,7 @@ function MarkdownArticle({ doc, onOpenAdvisor }: { doc: ContentDoc; onOpenAdviso
   const { t, lang } = useI18n();
   return (
     <article className="learn-article">
-      <h2 style={{ fontSize: '21px', fontWeight: 600, marginBottom: '8px' }}>{docTitle(doc, lang)}</h2>
+      <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '8px' }}>{docTitle(doc, lang)}</h2>
       <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginBottom: '16px' }}>
         <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-info)', marginBottom: '4px', letterSpacing: '.04em' }}>{t('learn.tldr')}</div>
         <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{docTldr(doc, lang)}</p>
@@ -254,7 +254,7 @@ export default function LearnView({ onOpenAdvisor }: Props) {
   // ---- Architecture page (any lens) ----
   if (arch) {
     return (
-      <div style={{ padding: '18px 20px' }}>
+      <div className="aa-panel">
         {backLink(t('learn.back'), () => setArch(null))}
         <ArchitectureArticle
           dim={arch.dim}
@@ -271,7 +271,7 @@ export default function LearnView({ onOpenAdvisor }: Props) {
   if (slug) {
     const doc = contentBySlug(slug);
     return (
-      <div style={{ padding: '18px 20px' }}>
+      <div className="aa-panel">
         {backLink(t('learn.backToList'), () => setSlug(null))}
         {doc ? <MarkdownArticle doc={doc} onOpenAdvisor={onOpenAdvisor} /> : <p>{t('learn.empty')}</p>}
       </div>
@@ -286,9 +286,9 @@ export default function LearnView({ onOpenAdvisor }: Props) {
     const guides = section === 'catalog' ? [] : contentBySection(section);
 
     return (
-      <div style={{ padding: '18px 20px' }}>
+      <div className="aa-panel">
         {backLink(t('learn.back'), () => setSection(null))}
-        <h1 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '4px' }}>{meta ? t(meta.label) : section}</h1>
+        <h1 style={{ fontSize: 'var(--aa-fs-xl)', fontWeight: 600, marginBottom: '4px' }}>{meta ? t(meta.label) : section}</h1>
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '18px', maxWidth: '72ch' }}>
           {totalArchitectures} {t('learn.architectures')} · {intro}
         </p>
@@ -324,8 +324,8 @@ export default function LearnView({ onOpenAdvisor }: Props) {
 
   // ---- Sections landing ----
   return (
-    <div style={{ padding: '18px 20px' }}>
-      <h1 style={{ fontSize: '19px', fontWeight: 600, marginBottom: '6px' }}>{t('learn.title')}</h1>
+    <div className="aa-panel">
+      <h1 style={{ fontSize: 'var(--aa-fs-xl)', fontWeight: 600, marginBottom: '6px' }}>{t('learn.title')}</h1>
       <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '6px', maxWidth: '72ch' }}>{t('learn.intro')}</p>
       <p style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', marginBottom: '18px' }}>{t('learn.readingHint')}</p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '14px' }}>
@@ -333,7 +333,7 @@ export default function LearnView({ onOpenAdvisor }: Props) {
           const Icon = s.icon;
           const guides = s.id === 'catalog' ? 0 : contentBySection(s.id).length;
           return (
-            <button key={s.id} type="button" className="learn-card" style={{ ...cardBase, padding: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
+            <button key={s.id} type="button" className="learn-card" style={{ ...cardBase, padding: 'var(--aa-panel-pad)', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
               <span className="learn-chip">
                 <Icon size={19} aria-hidden />
               </span>

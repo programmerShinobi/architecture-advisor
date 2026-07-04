@@ -565,7 +565,7 @@ button:focus-visible {
   border-color: var(--color-text-info);
   transform: translateY(-2px);
   background: var(--color-background-tertiary);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--aa-shadow-md);
 }
 .learn-card:focus-visible {
   outline: 2px solid var(--color-text-info);

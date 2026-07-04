@@ -17,7 +17,13 @@ The decision **model** carries its own version, recorded in the
   the "prototype-exact look" decision is superseded (*look only* — copy, features, and the model are
   unchanged; see DECISIONS.md). Canonical breakpoints: ≤640 / 641–1024 / ≥1025 px.
 
-- **Stage 2 — Advisor restyle.** App shell moves to the fluid aa- classes (aa-page/frame/surface/panel); Header, nav, and StepTracker paddings tokenized; keyboard-only chrome (⌘K, ?, save status) marked aa-hide-phone for the phone tier; dimension cards get soft elevation + token padding. View-only.
+- **Stage 2 — Advisor restyle.** App shell moves to the fluid aa- classes (aa-page/frame/surface/
+  panel); Header, nav, and StepTracker paddings tokenized; keyboard-only chrome (⌘K, ?, save status)
+  marked `aa-hide-phone` for the phone tier; dimension cards get soft elevation + token padding.
+- **Stage 3 — Insights restyle.** LearnView wrappers move to `.aa-panel` (fluid padding); card and
+  landing-card paddings + headings tokenized (`--aa-card-pad`/`--aa-fs-xl/2xl` fluid type); the
+  card hover shadow now uses the theme-aware `--aa-shadow-md` token instead of a hardcoded rgba.
+
 ### Added
 
 - **Insights content area (Wave A + pipeline)** — a new **Insights** tab (top nav: Advisor · Insights) with
