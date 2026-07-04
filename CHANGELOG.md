@@ -37,7 +37,7 @@ The decision **model** carries its own version, recorded in the
   deployment docs, pointing at the canonical [SRS §2.3](docs/02-requirement-analysis/software-requirements-specification.md#23-operating-environment).
   `index.html` now ships a `nomodule` script + `<noscript>` block that render a readable, bilingual
   "use a modern browser" message instead of a blank page — implementing `FR-EDGE-4` (previously a
-  documented "Should" without an implementation).
+  $1  A subtle always-visible footer ("Best viewed in the latest Chrome/Edge/Firefox/Safari") appears on both the Advisor and Insights tabs.
 
 - **Insights content area (Wave A + pipeline)** — a new **Insights** tab (top nav: Advisor · Insights) with
   cited, dual-audience content about the architectures the tool evaluates. Ships **client-rendered and
