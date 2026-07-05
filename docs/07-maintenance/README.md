@@ -46,14 +46,17 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
 
 - **UAT execution** — scripted scenarios authored ([UAT script](../05-testing-qa/uat-script.md));
   run with ≥3 participants per persona.
-- **Major dev-tooling upgrades — deferred for stability.** ESLint 8→10 (flat config),
-  typescript-eslint 7→8, Vite 5→8, Vitest 2→4, TypeScript 5→6 are open Dependabot PRs, to be
-  migrated **one cluster at a time** with full testing (the Vite/esbuild bump also clears the
-  dev-only advisory). GitHub Actions are already current — the Node-20 runner deprecation is
-  resolved. **Prerequisite done (2026-07-05): the Node baseline is aligned to 24 (LTS)** — pinned in
-  [`.nvmrc`](../../.nvmrc) and read by every workflow via `node-version-file`, `engines.node >=24`
-  in `package.json`; all gates verified green under 24 — so the tooling majors start from a current
-  runtime that satisfies their Node requirements.
+- **Major dev-tooling upgrades — one cluster at a time.**
+  - ✅ **Prerequisite (2026-07-05): Node baseline aligned to 24 (LTS)** — pinned in
+    [`.nvmrc`](../../.nvmrc), read by every workflow via `node-version-file`, `engines.node >=24`.
+  - ✅ **Cluster 1 (2026-07-05): Vite 5→8 · @vitejs/plugin-react 4→6 · Vitest 2→4 · jsdom 25→29** —
+    zero source changes needed (config options all still valid); all gates green; **`npm audit` is
+    now fully clean (0 vulnerabilities incl. dev)** — the old dev-only Vite/esbuild dev-server
+    advisory is gone; bundle slightly smaller (initial ~107 kB).
+  - ⏳ **Cluster 2 (next): ESLint 8→10 + typescript-eslint 7→8 + plugins** — requires the flat-config
+    migration (`.eslintrc.cjs` → `eslint.config.js`); also unblocks the `eslint-plugin-react-refresh`
+    bump. Then **TypeScript 5→6** as its own step.
+  GitHub Actions are already current — the Node-20 runner deprecation is resolved.
 - **Content rollout — later waves (deferred).** Wave B (Library trend articles), Wave C (Roadmap,
   Academy, Lab), and the **SSG/SEO** layer (sitemap/robots/hreflang/JSON-LD) are each their own
   reviewed proposal once Wave A proves its value; link-liveness + review-cadence become scheduled,

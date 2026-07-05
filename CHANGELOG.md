@@ -90,6 +90,13 @@ The decision **model** carries its own version, recorded in the
 
 ### Changed
 
+- **Tooling majors, cluster 1: Vite 5→8 · @vitejs/plugin-react 4→6 · Vitest 2→4 · jsdom 25→29.**
+  Zero source changes required (every config option in `vite.config.ts` is still valid); all 85
+  unit tests, 14 E2E, and every guard pass unchanged. **The full `npm audit` (dev deps included) is
+  now 0 vulnerabilities** — the long-tracked dev-only Vite/esbuild dev-server advisory is resolved
+  (SECURITY.md + test-plan §8 updated). Bundle slightly smaller (initial ~107 kB / total ~148 kB
+  gzip). Remaining clusters (ESLint 10 flat-config + typescript-eslint 8, then TypeScript 6) are
+  tracked in the [maintenance backlog](docs/07-maintenance/README.md).
 - **Node baseline → 24 (LTS).** The Node version is now pinned in `.nvmrc` (24.18.0) as the single
   source of truth: all four workflows (`ci`, `e2e`, `deploy`, `docs-integrity`) read it via
   `node-version-file` (previously hardcoded `20`), `package.json` gains `engines.node >=24`, and the

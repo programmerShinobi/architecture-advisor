@@ -230,8 +230,9 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
       or mislead the app.
 - [x] **Dependencies:** **CI-gated** — `npm run audit:prod` (`npm audit --omit=dev --audit-level=high`)
       runs after the build; production deps (React + fontsource + tabler icons) report **0
-      vulnerabilities**. The known **dev-only** Vite/esbuild dev-server advisory does not ship and is
-      excluded; track it and bump Vite/Vitest when a non-breaking fix lands.
+      vulnerabilities**. Since the Vite 8 / Vitest 4 upgrade (2026-07-05), the **full** `npm audit`
+      (dev deps included) is also **0 vulnerabilities** — the old dev-only Vite/esbuild dev-server
+      advisory is resolved.
 - [ ] **Supply chain:** `package-lock.json` committed; CI uses `npm ci`.
 
 ---
@@ -239,8 +240,8 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 ## 9. Performance verification (L7)
 
 - [x] **Bundle budget:** **CI-gated** — `npm run size` ([`scripts/check-bundle-size.mjs`](../../scripts/check-bundle-size.mjs))
-      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤160kB** / CSS ≤25kB (currently ~108 initial /
-      ~150 total / ~19 CSS with React 19). The guard reads the **real initial set from `dist/index.html`** (entry
+      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤160kB** / CSS ≤25kB (currently ~107 initial /
+      ~148 total / ~20 CSS with React 19 on Vite 8). The guard reads the **real initial set from `dist/index.html`** (entry
       script + modulepreloads), so lazy views (Manual/Guide, Insights) **and their shared async chunks** (e.g.
       `readerContent`, which powers the data-driven Catalog) are correctly excluded from the first load — none can be
       silently mis-counted. No chart/diagram/markdown library ships — all visuals are hand-built SVG and Markdown is

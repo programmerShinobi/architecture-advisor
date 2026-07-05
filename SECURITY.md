@@ -42,5 +42,6 @@ promptly given the static hosting model.
   (Section 8).
 - **Locked, reproducible builds:** `package-lock.json` is committed; CI uses `npm ci`.
 
-> Note: the known `vite`/`esbuild` advisories are **dev-server only** and do not ship in the static
-> bundle; they are excluded from the production audit and tracked for upstream updates via Dependabot.
+> Note: the historical `vite`/`esbuild` advisories were **dev-server only** and never shipped in the
+> static bundle; since the Vite 8 / Vitest 4 upgrade (2026-07-05) the **full** `npm audit` — dev
+> dependencies included — reports **0 vulnerabilities**.
