@@ -43,7 +43,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 | **L2 · Component/Integration** | Vitest + Testing Library | The 4-step flow, reactivity, override panel + redistribution, radar, command palette, manual & A/B compare overlays | ✅ Mostly done |
 | **L3 · System / E2E** | Playwright (chromium) | Full journeys in a real browser: smoke, share-URL deep-link, structural a11y, keyboard | ✅ Done |
 | **L4 · Accessibility** | `vitest-axe` + Playwright + `@axe-core/playwright` | Names/roles/ARIA (jsdom + real browser), keyboard, and **full color-contrast** (real browser, both themes) — all automated | ✅ Done |
-| **L5 · UAT** | Scripted scenarios — [uat-script.md](uat-script.md) | Real architects/newcomers confirm usefulness & clarity | ⏳ Script ready (not run) |
+| **L5 · UAT** | Scripted scenarios — [uat-script.md](uat-script.md) v0.3 + [session form](uat-session-form.md) (SUS-10) + [summary](uat-summary.md) | Real architects/newcomers confirm usefulness, clarity, and **SUS ≥ 70** (NFR-USE-1) | ⏳ Kit ready; dry-run re-verified on the live build (2026-07-05); sessions pending |
 | **L6 · Security** | `npm audit --omit=dev` in CI (Section 8) | Client-side injection, storage, dependencies | ✅ Gated in CI |
 | **L7 · Performance** | Bundle-size budget guard in CI (Section 9) | Bundle budget, first paint, instant recompute | ✅ Gated in CI |
 

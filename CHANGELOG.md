@@ -131,7 +131,10 @@ The decision **model** carries its own version, recorded in the
 
 ### Known / tracked
 
-- **UAT** scripted scenarios are authored but not yet executed with participants.
+- **UAT** — the execution kit is ready: script v0.3 aligned to the current app (new Insights tasks
+  A5/B7, ≥1 phone-tier session per persona), a bilingual session form with **SUS-10** (the SRS
+  NFR-USE-1 metric, mean ≥ 70), a summary/exit-criteria sheet, and a facilitator dry-run re-verified
+  on the live build (all 11 task paths, 2026-07-05). Outstanding: **≥3 participants per persona**.
 
 ## [1.0.0] — 2026-06-20
 
