@@ -281,8 +281,15 @@ export default function LearnView({ onOpenAdvisor }: Props) {
   // ---- Section view ----
   if (section) {
     const meta = sectionMeta(section);
+    // Only the three model-bound lenses render the per-architecture grid; article-only sections
+    // (Library, …) list their Markdown pieces without repeating the 21 architectures.
+    const hasArchGrid = section === 'catalog' || section === 'playbook' || section === 'review';
     const angle: Angle = section === 'playbook' ? 'playbook' : section === 'review' ? 'review' : 'catalog';
-    const intro = section === 'catalog' ? t('learn.catalogIntro') : section === 'playbook' ? t('learn.playbookIntro') : t('learn.reviewIntro');
+    const intro =
+      section === 'catalog' ? t('learn.catalogIntro')
+      : section === 'playbook' ? t('learn.playbookIntro')
+      : section === 'review' ? t('learn.reviewIntro')
+      : meta ? t(meta.desc) : '';
     const guides = section === 'catalog' ? [] : contentBySection(section);
 
     return (
@@ -290,20 +297,23 @@ export default function LearnView({ onOpenAdvisor }: Props) {
         {backLink(t('learn.back'), () => setSection(null))}
         <h1 style={{ fontSize: 'var(--aa-fs-xl)', fontWeight: 600, marginBottom: '4px' }}>{meta ? t(meta.label) : section}</h1>
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '18px', maxWidth: '72ch' }}>
-          {totalArchitectures} {t('learn.architectures')} · {intro}
+          {hasArchGrid ? `${totalArchitectures} ${t('learn.architectures')} · ` : `${guides.length} ${t('learn.articles')} · `}{intro}
         </p>
 
         {/* By architecture — all D1–D5 options, through this section's lens */}
-        {section !== 'catalog' && (
+        {hasArchGrid && section !== 'catalog' && (
           <h2 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', margin: '4px 0 12px' }}>{t('learn.byArchitecture')}</h2>
         )}
-        {architectureGrid(angle)}
+        {hasArchGrid && architectureGrid(angle)}
 
-        {/* Cross-cutting guides / methods (Markdown) */}
+        {/* Cross-cutting guides / methods (Markdown). Article-only sections (Library) skip the
+            divider/heading — their articles ARE the section, not an appendix under a grid. */}
         {guides.length > 0 && (
           <div style={{ marginTop: '8px' }}>
-            <div className="f-div" style={{ margin: '4px 0 16px' }} />
-            <h2 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', marginBottom: '12px' }}>{t('learn.guides')}</h2>
+            {hasArchGrid && <div className="f-div" style={{ margin: '4px 0 16px' }} />}
+            {hasArchGrid && (
+              <h2 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', marginBottom: '12px' }}>{t('learn.guides')}</h2>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
               {guides.map((d) => (
                 <button key={d.slug} type="button" className="learn-card" style={cardBase} onClick={() => setSlug(d.slug)}>
@@ -331,6 +341,7 @@ export default function LearnView({ onOpenAdvisor }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '14px' }}>
         {AVAILABLE_SECTIONS.map((s) => {
           const Icon = s.icon;
+          const isLens = s.id === 'catalog' || s.id === 'playbook' || s.id === 'review';
           const guides = s.id === 'catalog' ? 0 : contentBySection(s.id).length;
           return (
             <button key={s.id} type="button" className="learn-card" style={{ ...cardBase, padding: 'var(--aa-panel-pad)', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
@@ -340,8 +351,14 @@ export default function LearnView({ onOpenAdvisor }: Props) {
               <span style={{ fontSize: '16px', fontWeight: 600 }}>{t(s.label)}</span>
               <span style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5, flexGrow: 1 }}>{t(s.desc)}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--color-text-info)', fontWeight: 600, flexWrap: 'wrap' }}>
-                {totalArchitectures} {t('learn.architectures')}
-                {guides > 0 && <span style={{ color: 'var(--color-text-tertiary)' }}>· {guides} {t('learn.guidesWord')}</span>}
+                {isLens ? (
+                  <>
+                    {totalArchitectures} {t('learn.architectures')}
+                    {guides > 0 && <span style={{ color: 'var(--color-text-tertiary)' }}>· {guides} {t('learn.guidesWord')}</span>}
+                  </>
+                ) : (
+                  <>{guides} {t('learn.articles')}</>
+                )}
                 <IconArrowRight size={13} aria-hidden />
               </span>
             </button>

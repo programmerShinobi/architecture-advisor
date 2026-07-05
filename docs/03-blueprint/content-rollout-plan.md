@@ -7,7 +7,7 @@
 > spec, the test plan) and in root [`DECISIONS.md`](../../DECISIONS.md); this file is the single
 > structured home for the plan itself.
 >
-> **Status:** *client-rendered first (no SSG), Wave A + pipeline* — **implemented**.
+> **Status:** *client-rendered first (no SSG)* — **Wave A + pipeline and Wave B (Library) implemented**.
 > **Language:** this plan and all code/docs are English; article content + UI strings are bilingual
 > (ID default), per the repo convention.
 
@@ -103,7 +103,7 @@ TL;DR → plain explanation (`:::guided`) → deep dive with evidence (`:::exper
 Advisor" → credibility block (multiple `sources[]`, evidence badge, "Terakhir ditinjau", and a
 "Perlu ditinjau" flag once `review_due` passes). The **Catalog** renders the same shape from the model.
 
-## 8. Scope delivered — Wave A + pipeline
+## 8. Scope delivered — Waves A & B + pipeline
 
 **Phase 0 — Pipeline (client-rendered, no SSG):** `contentSchema.ts` (dependency-free types, no zod)
 + `site.ts` + `sections.ts`; `content.ts` (index via `import.meta.glob`), `frontmatter.ts`,
@@ -125,8 +125,9 @@ wired into `ci.yml` (`docs-integrity.yml` untouched); `LearnView` (lazy) + `Cred
 - **Guided / Expert reading mode** (the app's mode; one control in the header — no duplicate).
 - All Markdown guides pass `content:validate`.
 
-**Deferred (own future proposals):** SSG/SEO (sitemap/robots/hreflang/JSON-LD), Wave B (Library
-trend articles), Wave C (Roadmap, Academy quizzes, interactive Lab).
+**Wave B — delivered (2026-07-05):** the **Library** section is live with 5 trend articles — GenAI & architecture, green/carbon-efficient software (SCI / ISO/IEC 21031), architectural technical debt, the monolith→microservices decision map, and Conway’s Law / Team Topologies — each with real, current sources and honest `evidence_strength`; article-only sections render without repeating the architecture grid (no redundancy).
+
+**Deferred (own future proposals):** SSG/SEO (sitemap/robots/hreflang/JSON-LD), Wave C (Roadmap, Academy quizzes, interactive Lab).
 
 ## 9. Definition of done (met)
 

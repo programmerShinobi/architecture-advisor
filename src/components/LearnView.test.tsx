@@ -38,6 +38,16 @@ describe('LearnView', () => {
     expect(screen.getAllByRole('link').length).toBeGreaterThan(0); // trusted cited sources
   });
 
+  it('the Library section lists its articles WITHOUT repeating the architecture grid', () => {
+    render();
+    fireEvent.click(screen.getByRole('button', { name: /Library/ }));
+    // Wave B articles are listed…
+    expect(screen.getByRole('button', { name: /GenAI/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Conway/ })).toBeInTheDocument();
+    // …and the 21-architecture grid is NOT duplicated here (no redundancy).
+    expect(screen.queryByRole('button', { name: 'Modular Monolith' })).not.toBeInTheDocument();
+  });
+
   it('the Review section shows every architecture through a review lens', () => {
     const { onOpenAdvisor } = render();
     fireEvent.click(screen.getByRole('button', { name: /Review/ }));

@@ -27,7 +27,7 @@ export const SECTIONS: SectionMeta[] = [
   { id: 'catalog', icon: IconLayoutGrid, label: 'section.catalog', desc: 'section.catalog.desc', available: true },
   { id: 'playbook', icon: IconNotebook, label: 'section.playbook', desc: 'section.playbook.desc', available: true },
   { id: 'review', icon: IconClipboardCheck, label: 'section.review', desc: 'section.review.desc', available: true },
-  { id: 'library', icon: IconBooks, label: 'section.library', desc: 'section.library.desc', available: false },
+  { id: 'library', icon: IconBooks, label: 'section.library', desc: 'section.library.desc', available: true },
   { id: 'roadmap', icon: IconMap2, label: 'section.roadmap', desc: 'section.roadmap.desc', available: false },
   { id: 'academy', icon: IconSchool, label: 'section.academy', desc: 'section.academy.desc', available: false },
   { id: 'lab', icon: IconFlask, label: 'section.lab', desc: 'section.lab.desc', available: false },

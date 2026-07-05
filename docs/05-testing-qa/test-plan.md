@@ -1,12 +1,12 @@
 # Test Plan & QA — Architecture Advisor
 
-> **Phase 5 of 7 · Status: 🔬 In progress.** **85 Vitest** unit/component/integration tests + an
+> **Phase 5 of 7 · Status: 🔬 In progress.** **86 Vitest** unit/component/integration tests + an
 > **axe-core a11y** suite (incl. the lazy Manual/Guide and Insights article), three **model-integrity
 > guards** + a **content-validation guard**, and a **Playwright** real-browser E2E suite (smoke,
 > share deep-link, structural a11y incl. the Manual and Insights, keyboard) — all in CI, which now also
 > gates a **bundle-size budget** and a **production-dependency audit**. Real-browser a11y gates
-> **full WCAG A/AA including color-contrast** in both themes. Open: the **UAT script** is written but not
-> yet run with participants. This document is the test strategy, the current inventory, the
+> **full WCAG A/AA including color-contrast** in both themes. Open: the **UAT kit** is ready (script v0.3 + SUS-10
+> session form); participant sessions pending. This document is the test strategy, the current inventory, the
 > acceptance-criteria traceability matrix, and the honest gap list.
 
 Primary references: [Build Spec Section 14](../specs/build-spec-v3.md#14-acceptance-criteria-verify-before-finishing)
@@ -53,7 +53,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.1 Automated unit suite — `npm run test` (Vitest)
 
-**85 tests across 15 files**, all green:
+**86 tests across 15 files**, all green:
 
 | File | Cases | Covers |
 |---|---:|---|
@@ -69,7 +69,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 | [`src/lib/frontmatter.test.ts`](../../src/lib/frontmatter.test.ts) | 6 | **Content pipeline:** the dependency-free frontmatter parser — scalars, inline arrays, nested map, list of flow maps, body split, no-frontmatter fallback |
 | [`src/lib/markdown.test.tsx`](../../src/lib/markdown.test.tsx) | 6 | **Content pipeline:** the safe Markdown-subset renderer — headings/lists/inline, safe links, `:::guided`/`:::expert` mode blocks, and **no raw-HTML/`javascript:` injection** (XSS-safe by construction) |
 | [`src/lib/content.test.ts`](../../src/lib/content.test.ts) | 5 | **Content index (FR-LEARN-2/3):** every article well-formed and **every `related_advisor` id resolves to the frozen model**; section/slug filters; review-due flag |
-| [`src/components/LearnView.test.tsx`](../../src/components/LearnView.test.tsx) | 3 | **Component (FR-LEARN-1/4/6):** **every architecture has a Catalog, Playbook, and Review angle** (parity with the model); Playbook opens "How to adopt" + cited sources; Review opens "What to check" + "Try in the Advisor" returns to the Advisor |
+| [`src/components/LearnView.test.tsx`](../../src/components/LearnView.test.tsx) | 4 | **Component (FR-LEARN-1/4/6):** **every architecture has a Catalog, Playbook, and Review angle** (parity with the model); Playbook opens "How to adopt" + cited sources; Review opens "What to check" + "Try in the Advisor" returns to the Advisor; the Library section lists its articles WITHOUT repeating the architecture grid |
 | [`src/a11y.test.tsx`](../../src/a11y.test.tsx) | 4 | **Accessibility (AC-15):** axe-core WCAG A/AA on the composed app, Expert/override panel, the lazy Manual/Guide, and the lazy **Insights article** — caught & fixed an unlabeled file input |
 | [`src/i18n/dict.test.ts`](../../src/i18n/dict.test.ts) | 1 | Dictionary completeness — every key has EN **and** ID (covers the new Insights/section keys) |
 
@@ -240,8 +240,8 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 ## 9. Performance verification (L7)
 
 - [x] **Bundle budget:** **CI-gated** — `npm run size` ([`scripts/check-bundle-size.mjs`](../../scripts/check-bundle-size.mjs))
-      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤160kB** / CSS ≤25kB (currently ~107 initial /
-      ~148 total / ~20 CSS with React 19 on Vite 8). The guard reads the **real initial set from `dist/index.html`** (entry
+      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤200kB** (raised for Insights Wave B — content is lazy; NFR cap 300) / CSS ≤25kB (currently ~107 initial /
+      ~155 total / ~20 CSS with React 19 on Vite 8). The guard reads the **real initial set from `dist/index.html`** (entry
       script + modulepreloads), so lazy views (Manual/Guide, Insights) **and their shared async chunks** (e.g.
       `readerContent`, which powers the data-driven Catalog) are correctly excluded from the first load — none can be
       silently mis-counted. No chart/diagram/markdown library ships — all visuals are hand-built SVG and Markdown is

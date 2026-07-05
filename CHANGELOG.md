@@ -42,6 +42,17 @@ The decision **model** carries its own version, recorded in the
 
 ### Added
 
+- **Insights Wave B — the Library section is live** with **5 trend articles**, each with real,
+  current sources and honest `evidence_strength`: *GenAI & software architecture* (emerging —
+  Copilot RCT, DORA 2024, Fowler/Böckeler memos), *green/carbon-efficient architecture* (moderate —
+  **SCI, ISO/IEC 21031:2024**, Green Software Foundation, AWS sustainability pillar),
+  *architectural technical debt* (strong — Cunningham 1992, Kruchten/Nord/Ozkaya IEEE SW 2012 +
+  SEI book, Dagstuhl 16162), *the monolith→microservices decision map* (strong), and *Conway's Law
+  & Team Topologies* (moderate — Conway 1968, mirroring-hypothesis study, Skelton & Pais). All pass
+  `content:validate` (18 articles total). Article-only sections render **without** repeating the
+  21-architecture grid (no redundancy; regression-tested), and section cards show article counts.
+  Total-JS budget deliberately raised 160→200 kB (content is lazy; initial JS untouched at ~107 kB;
+  NFR cap 300).
 - **Browser-support guidance + unsupported-browser fallback.** Documented the recommended browsers
   (latest Chrome / Edge / Firefox / Safari, desktop & mobile; not IE) in the README and the
   deployment docs, pointing at the canonical [SRS §2.3](docs/02-requirement-analysis/software-requirements-specification.md#23-operating-environment).

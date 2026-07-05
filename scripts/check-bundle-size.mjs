@@ -17,7 +17,7 @@ import { gzipSync } from 'node:zlib';
 // shared async chunk can't silently be mis-counted. Headroom catches a real regression; raise the
 // budgets deliberately (with a note) if the app grows.
 const JS_INITIAL_BUDGET_KB = 120;
-const JS_TOTAL_BUDGET_KB = 160;
+const JS_TOTAL_BUDGET_KB = 200; // raised 160→200 for Insights Wave B (5 Library articles; content is lazy — initial budget untouched; NFR cap is 300)
 const CSS_BUDGET_KB = 25;
 
 const dir = 'dist/assets';
