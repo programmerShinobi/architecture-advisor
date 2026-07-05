@@ -44,8 +44,7 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
 
 ## Open backlog (tracked)
 
-- **UAT execution** — scripted scenarios authored ([UAT script](../05-testing-qa/uat-script.md));
-  run with ≥3 participants per persona.
+- **UAT execution** — the kit is **ready to run**: [script v0.3](../05-testing-qa/uat-script.md) aligned to the current app (incl. Insights tasks + a phone-tier session), bilingual [session form](../05-testing-qa/uat-session-form.md) with **SUS-10** (NFR-USE-1: mean ≥ 70), and a [summary sheet](../05-testing-qa/uat-summary.md); facilitator dry-run re-verified all 11 task paths on the live build (2026-07-05). Outstanding: schedule **≥3 participants per persona** and record the sessions.
 - **Major dev-tooling upgrades — one cluster at a time.**
   - ✅ **Prerequisite (2026-07-05): Node baseline aligned to 24 (LTS)** — pinned in
     [`.nvmrc`](../../.nvmrc), read by every workflow via `node-version-file`, `engines.node >=24`.
