@@ -145,9 +145,12 @@ export default function App() {
     { label: t('pal.shortcuts'), run: () => setOverlay('shortcuts') },
   ];
 
-  // Global shortcuts: ⌘K palette, ⌘S save, Esc close. Use a ref so the listener stays stable.
+  // Global shortcuts: ⌘K palette, ⌘S save, Esc close. Use a ref so the listener stays stable —
+  // updated in an effect, not during render (react-hooks v7 `refs` rule).
   const adrRef = useRef(run.adr);
-  adrRef.current = run.adr;
+  useEffect(() => {
+    adrRef.current = run.adr;
+  }, [run.adr]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {

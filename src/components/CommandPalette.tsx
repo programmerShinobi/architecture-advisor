@@ -20,10 +20,16 @@ export function CommandPalette({ open, commands, onClose }: Props) {
   const { t } = useI18n();
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  // Reset the query on each open via the sanctioned render-time "derive state from props" pattern —
+  // react-hooks v7 flags setState inside an effect body as a cascading render.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) setQuery('');
+  }
 
   useEffect(() => {
     if (open) {
-      setQuery('');
       const id = setTimeout(() => inputRef.current?.focus(), 30);
       return () => clearTimeout(id);
     }

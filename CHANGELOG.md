@@ -90,6 +90,17 @@ The decision **model** carries its own version, recorded in the
 
 ### Changed
 
+- **Tooling majors, cluster 3: TypeScript 5→6** — landed via Dependabot PR #15 and verified together
+  with the new ESLint 10 / typescript-eslint 8 stack (build, lint, tests all green). All deferred
+  tooling majors are now complete.
+- **Tooling majors, cluster 2: ESLint 8→10 (flat config) · typescript-eslint 7→8 ·
+  eslint-plugin-react-hooks 4→7 · eslint-plugin-react-refresh 0.4→0.5.** `.eslintrc.cjs` is replaced
+  by `eslint.config.js` (same rule intent: js/ts/react-hooks recommended + react-refresh, identical
+  ignore scope); the legacy `@typescript-eslint/{parser,eslint-plugin}` pair is replaced by the
+  `typescript-eslint` meta package. react-hooks v7's stricter rules surfaced two real legacy
+  patterns — a ref written during render (App shortcuts) and a setState inside an effect
+  (CommandPalette query reset) — both **fixed with sanctioned patterns**, not silenced. CI path
+  filters updated. `npm audit` stays at 0.
 - **Tooling majors, cluster 1: Vite 5→8 · @vitejs/plugin-react 4→6 · Vitest 2→4 · jsdom 25→29.**
   Zero source changes required (every config option in `vite.config.ts` is still valid); all 85
   unit tests, 14 E2E, and every guard pass unchanged. **The full `npm audit` (dev deps included) is

@@ -14,7 +14,7 @@ on:
       - 'vite.config.ts'
       - 'tailwind.config.js'
       - 'postcss.config.js'
-      - '.eslintrc.cjs'
+      - 'eslint.config.js'
       - '.github/workflows/ci.yml'
   pull_request:
     paths:
@@ -28,7 +28,7 @@ on:
       - 'vite.config.ts'
       - 'tailwind.config.js'
       - 'postcss.config.js'
-      - '.eslintrc.cjs'
+      - 'eslint.config.js'
       - '.github/workflows/ci.yml'
 
 jobs:
