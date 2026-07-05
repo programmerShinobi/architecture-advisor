@@ -50,7 +50,10 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
   typescript-eslint 7→8, Vite 5→8, Vitest 2→4, TypeScript 5→6 are open Dependabot PRs, to be
   migrated **one cluster at a time** with full testing (the Vite/esbuild bump also clears the
   dev-only advisory). GitHub Actions are already current — the Node-20 runner deprecation is
-  resolved.
+  resolved. **Prerequisite done (2026-07-05): the Node baseline is aligned to 24 (LTS)** — pinned in
+  [`.nvmrc`](../../.nvmrc) and read by every workflow via `node-version-file`, `engines.node >=24`
+  in `package.json`; all gates verified green under 24 — so the tooling majors start from a current
+  runtime that satisfies their Node requirements.
 - **Content rollout — later waves (deferred).** Wave B (Library trend articles), Wave C (Roadmap,
   Academy, Lab), and the **SSG/SEO** layer (sitemap/robots/hreflang/JSON-LD) are each their own
   reviewed proposal once Wave A proves its value; link-liveness + review-cadence become scheduled,

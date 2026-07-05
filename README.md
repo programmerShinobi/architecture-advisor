@@ -95,6 +95,9 @@ rollout plan and the deferred SSG/SEO decision are in the
 
 ## Run it locally
 
+> **Prerequisite:** Node **24** (LTS) — the version is pinned in [`.nvmrc`](.nvmrc) and used by all
+> CI workflows (`node-version-file`), so local and CI always match.
+
 ```bash
 npm install
 npm run dev      # start the dev server (fully client-side)
