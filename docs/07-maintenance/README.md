@@ -58,8 +58,10 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
     config** (`.eslintrc.cjs` → `eslint.config.js`, same rule intent). react-hooks v7's stricter
     rules caught two legacy patterns (a ref written during render; a setState inside an effect) —
     both fixed properly rather than silenced.
-  - ⏳ **Cluster 3 (next): TypeScript 5→6** (Dependabot PR #15 tracks it).
-  GitHub Actions are already current — the Node-20 runner deprecation is resolved.
+  - ✅ **Cluster 3 (2026-07-05): TypeScript 5→6** — landed via Dependabot PR #15; verified together
+    with the ESLint 10 / typescript-eslint 8 stack (build, lint, and all tests green).
+  **All deferred tooling majors are now complete.** GitHub Actions are already current — the Node-20
+  runner deprecation is resolved.
 - **Content rollout — later waves (deferred).** Wave B (Library trend articles), Wave C (Roadmap,
   Academy, Lab), and the **SSG/SEO** layer (sitemap/robots/hreflang/JSON-LD) are each their own
   reviewed proposal once Wave A proves its value; link-liveness + review-cadence become scheduled,

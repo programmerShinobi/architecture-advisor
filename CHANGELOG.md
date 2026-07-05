@@ -90,6 +90,9 @@ The decision **model** carries its own version, recorded in the
 
 ### Changed
 
+- **Tooling majors, cluster 3: TypeScript 5→6** — landed via Dependabot PR #15 and verified together
+  with the new ESLint 10 / typescript-eslint 8 stack (build, lint, tests all green). All deferred
+  tooling majors are now complete.
 - **Tooling majors, cluster 2: ESLint 8→10 (flat config) · typescript-eslint 7→8 ·
   eslint-plugin-react-hooks 4→7 · eslint-plugin-react-refresh 0.4→0.5.** `.eslintrc.cjs` is replaced
   by `eslint.config.js` (same rule intent: js/ts/react-hooks recommended + react-refresh, identical
