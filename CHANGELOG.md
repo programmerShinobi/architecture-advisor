@@ -90,6 +90,13 @@ The decision **model** carries its own version, recorded in the
 
 ### Changed
 
+- **Node baseline → 24 (LTS).** The Node version is now pinned in `.nvmrc` (24.18.0) as the single
+  source of truth: all four workflows (`ci`, `e2e`, `deploy`, `docs-integrity`) read it via
+  `node-version-file` (previously hardcoded `20`), `package.json` gains `engines.node >=24`, and the
+  README/deployment guide document the prerequisite. All gates verified green under Node 24. This is
+  the groundwork for the deferred major tooling upgrades (Vite/Vitest/ESLint/TypeScript), whose next
+  majors require a modern Node. Only the runner version changed in `docs-integrity.yml` — the guard
+  steps themselves are untouched.
 - **React 18 → 19** (with matching `@types`). No source changes (the app already uses `createRoot`);
   bundle grew ~115kB → ~129kB gzip, still within the CI budget.
 - **CI:** GitHub Actions bumped to current majors (checkout v7, cache v5, upload-artifact v7,

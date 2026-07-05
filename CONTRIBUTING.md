@@ -4,9 +4,12 @@ Thank you for your interest in building this tool. Contributions of all kinds ar
 code, documentation, translations (i18n), accessibility (a11y), and review of the
 decision model itself.
 
-> This project is in the **planning & specification** phase. Until the application is
-> scaffolded, the most valuable contributions are to the documentation, the spec, and the
-> decision model described in [Build Spec v3](docs/specs/build-spec-v3.md).
+> The app is **live** at <https://programmershinobi.github.io/architecture-advisor/> — v1.0 MVP is
+> implemented. Valuable contributions include the app itself, the documentation, and the decision
+> model described in [Build Spec v3](docs/specs/build-spec-v3.md).
+>
+> **Prerequisite:** Node **24** (LTS), pinned in [`.nvmrc`](.nvmrc) — CI reads the same file, so
+> local and CI always match.
 
 ## Code of Conduct
 
@@ -34,7 +37,7 @@ By participating, you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
    both guards locally — `node scripts/verify-model.mjs` and `node scripts/cross-check-docs.mjs` —
    and log the change in an ADR (Charter Section 14.4). They also run in CI
    (`.github/workflows/docs-integrity.yml`).
-5. Ensure quality gates pass (once the app exists): lint, tests, and build must be green in CI.
+5. Ensure quality gates pass: lint, tests, and build must be green in CI.
 6. Open a **Pull Request** with a clear description and link to the related issue.
 7. A maintainer reviews; at least one approval is required before merge.
 

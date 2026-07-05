@@ -5,6 +5,9 @@
   "type": "module",
   "description": "A quality-attribute-driven architecture decision framework — transparent, client-side, MAVT-based.",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
