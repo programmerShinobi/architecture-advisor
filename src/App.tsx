@@ -222,7 +222,13 @@ export default function App() {
 
             {mainView === 'learn' ? (
               <Suspense fallback={<div style={{ padding: 'var(--aa-panel-pad)', color: 'var(--color-text-tertiary)' }}>{t('save.saving')}</div>}>
-                <LearnView onOpenAdvisor={() => setMainView('advisor')} />
+                <LearnView
+                  onOpenAdvisor={() => setMainView('advisor')}
+                  onLoadLab={(labLevels) => {
+                    setLevels(labLevels);
+                    setMainView('advisor');
+                  }}
+                />
               </Suspense>
             ) : (
             <>

@@ -6,7 +6,7 @@
 Layered testing to separate a prototype from a product: **unit**, **integration**, and **system**
 tests, then **UAT** (user-acceptance testing), plus **security** and **performance** checks.
 
-The scoring engine, exporters, and UI are covered by **87 Vitest cases** (unit + component +
+The scoring engine, exporters, and UI are covered by **96 Vitest cases** (unit + component +
 integration + axe a11y), **three model-integrity guards** + a **content-validation guard**, and a
 **Playwright real-browser E2E** suite — all in CI, which now also gates a **bundle-size budget** and
 a **production-dependency audit**. **Full color-contrast AA** (both themes, incl. the Manual/Guide

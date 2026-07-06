@@ -26,17 +26,27 @@ import { INSIGHT_PLAYBOOKS } from '../config/insightPlaybooks';
 import { INSIGHT_REVIEWS } from '../config/insightReviews';
 import { INSIGHT_LIBRARY } from '../config/insightLibrary';
 import { CredibilityBlock } from './CredibilityBlock';
+import RoadmapView from './RoadmapView';
+import AcademyView from './AcademyView';
+import LabView from './LabView';
+import { LEARNING_PATHS } from '../config/insightRoadmaps';
+import { ACADEMY_QUIZZES } from '../config/academyQuizzes';
+import { LAB_EXPERIMENTS } from '../config/labExperiments';
 import type { SectionId, ContentDoc } from '../config/contentSchema';
-import type { DimensionId } from '../types';
+import type { DimensionId, Levels } from '../types';
 
 // The "Insights" content area — a lazy-loaded island implementing HOLISTIC ARCHITECTURE COVERAGE:
-// every architecture the Advisor evaluates (all 21 D1–D5 options) appears in ALL FOUR sections,
-// data-driven from the model so coverage can never be partial or drift. Each section is a distinct
-// reading experience (no duplicated content — deep links cross-reference instead):
+// every architecture the Advisor evaluates (all 21 D1–D5 options) appears in ALL FOUR lens
+// sections, data-driven from the model so coverage can never be partial or drift. Each section is
+// a distinct reading experience (no duplicated content — deep links cross-reference instead):
 //   • Catalog  → discover: what it is / when it fits / what it costs
 //   • Playbook → implement: goal, prerequisites, steps, best practices, pitfalls
 //   • Review   → evaluate: pros/cons, performance, scalability, DX, use cases, verdict
 //   • Library  → reference: definition, concepts, patterns, terminology
+// Wave C adds three sections ON TOP of the lenses (they curate/exercise, never duplicate):
+//   • Roadmap  → follow: guided learning paths whose steps deep-link into the lenses & articles
+//   • Academy  → test: quiz modules scored client-side, wrong answers link back to the teaching page
+//   • Lab      → experiment: hypothesis + prepared factor levels loaded into the live Advisor engine
 // Content is English (product decision); UI chrome stays bilingual via the dict.
 
 type Angle = 'catalog' | 'playbook' | 'review' | 'library';
@@ -44,6 +54,8 @@ const LENSES: Angle[] = ['catalog', 'playbook', 'review', 'library'];
 
 interface Props {
   onOpenAdvisor: () => void;
+  /** Load a Lab experiment's factor levels into the Advisor (and switch to it). */
+  onLoadLab: (levels: Levels) => void;
 }
 
 const totalArchitectures = READER_SECTIONS.reduce((n, s) => n + s.entries.length, 0);
@@ -355,7 +367,7 @@ function MarkdownArticle({ doc, onOpenAdvisor }: { doc: ContentDoc; onOpenAdviso
   );
 }
 
-export default function LearnView({ onOpenAdvisor }: Props) {
+export default function LearnView({ onOpenAdvisor, onLoadLab }: Props) {
   const { t, tr, lang } = useI18n();
   const [section, setSection] = useState<SectionId | null>(null);
   const [slug, setSlug] = useState<string | null>(null);
@@ -446,16 +458,38 @@ export default function LearnView({ onOpenAdvisor }: Props) {
       : section === 'playbook' ? t('learn.playbookIntro')
       : section === 'review' ? t('learn.reviewIntro')
       : section === 'library' ? t('learn.libraryIntro')
+      : section === 'roadmap' ? t('learn.roadmapIntro')
+      : section === 'academy' ? t('learn.academyIntro')
+      : section === 'lab' ? t('learn.labIntro')
       : meta ? t(meta.desc) : '';
     const guides = section === 'catalog' ? [] : contentBySection(section);
+    const countLine =
+      section === 'roadmap' ? `${LEARNING_PATHS.length} ${t('learn.paths')} · `
+      : section === 'academy' ? `${ACADEMY_QUIZZES.length} ${t('learn.modules')} · `
+      : section === 'lab' ? `${LAB_EXPERIMENTS.length} ${t('learn.experiments')} · `
+      : isLens ? `${totalArchitectures} ${t('learn.architectures')} · `
+      : `${guides.length} ${t('learn.articles')} · `;
 
     return (
       <div className="aa-panel">
         {backLink(t('learn.back'), () => setSection(null))}
         <h1 style={{ fontSize: 'var(--aa-fs-xl)', fontWeight: 600, marginBottom: '4px' }}>{meta ? t(meta.label) : section}</h1>
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '18px', maxWidth: '72ch' }}>
-          {isLens ? `${totalArchitectures} ${t('learn.architectures')} · ` : `${guides.length} ${t('learn.articles')} · `}{intro}
+          {countLine}{intro}
         </p>
+
+        {/* Wave C sections: curated journeys, quizzes, and live-engine experiments. */}
+        {section === 'roadmap' && (
+          <RoadmapView
+            onOpenArch={(dim, optId, lens) => setArch({ dim, optId, angle: lens })}
+            onOpenArticle={setSlug}
+            onOpenAdvisor={onOpenAdvisor}
+          />
+        )}
+        {section === 'academy' && (
+          <AcademyView onOpenArch={(dim, optId, lens) => setArch({ dim, optId, angle: lens })} onOpenArticle={setSlug} />
+        )}
+        {section === 'lab' && <LabView onRun={onLoadLab} />}
 
         {/* By architecture — all D1–D5 options, through this section's lens */}
         {isLens && section !== 'catalog' && (
@@ -514,6 +548,12 @@ export default function LearnView({ onOpenAdvisor }: Props) {
                     {totalArchitectures} {t('learn.architectures')}
                     {guides > 0 && <span style={{ color: 'var(--color-text-tertiary)' }}>· {guides} {t('learn.guidesWord')}</span>}
                   </>
+                ) : s.id === 'roadmap' ? (
+                  <>{LEARNING_PATHS.length} {t('learn.paths')}</>
+                ) : s.id === 'academy' ? (
+                  <>{ACADEMY_QUIZZES.length} {t('learn.modules')}</>
+                ) : s.id === 'lab' ? (
+                  <>{LAB_EXPERIMENTS.length} {t('learn.experiments')}</>
                 ) : (
                   <>{guides} {t('learn.articles')}</>
                 )}

@@ -92,6 +92,29 @@ for the language toggle); content never re-copies model data — reference `src/
 drift from the engine. Link liveness (`links:check`) and review cadence (`content:review`) are
 separate **non-blocking** checks, not build gates (deferred to a later wave).
 
+## Extending Roadmap / Academy / Lab (Wave C)
+
+These sections **curate and exercise** the content above — they never carry their own explanations:
+
+- **Add a learning path** — append to `LEARNING_PATHS` in `src/config/insightRoadmaps.ts`. Steps
+  are `{ kind: 'arch', dim, optionId, lens }`, `{ kind: 'article', slug }`, or `{ kind: 'advisor' }`;
+  every target must already exist (`src/config/waveC.test.ts` resolves them all, so a typo fails
+  the build).
+- **Add a quiz module/question** — edit `ACADEMY_QUIZZES` in `src/config/academyQuizzes.ts`.
+  `answer` is an index into `choices`; give every question an `explain` and a `review` deep link to
+  the page that teaches it (both unit-tested). Scoring stays client-side — no persistence.
+- **Add a Lab experiment** — append to `LAB_EXPERIMENTS` in `src/config/labExperiments.ts`. Set
+  **all 14 factors** in `levels` (values 0–2, validated against `FACTORS` by the unit test), state
+  the hypothesis, what to watch, and the takeaway. "Run it" loads the levels into the live Advisor.
+
+## SEO snapshots & sitemap
+
+`npm run build` ends with `scripts/generate-seo.mjs`, which writes `dist/sitemap.xml` and a static
+HTML snapshot per article (`dist/insights/<section>/<slug>/`) — new articles are picked up
+automatically. If the deployed origin ever changes, update `SITE_URL` in `src/config/site.ts` **and**
+the canonical tag in `index.html` **and** `public/robots.txt` — the script fails the build until all
+three agree.
+
 ## Guards — run after any model change
 
 ```bash

@@ -1,6 +1,6 @@
 # Test Plan & QA — Architecture Advisor
 
-> **Phase 5 of 7 · Status: 🔬 In progress.** **87 Vitest** unit/component/integration tests + an
+> **Phase 5 of 7 · Status: 🔬 In progress.** **96 Vitest** unit/component/integration tests + an
 > **axe-core a11y** suite (incl. the lazy Manual/Guide and Insights article), three **model-integrity
 > guards** + a **content-validation guard**, and a **Playwright** real-browser E2E suite (smoke,
 > share deep-link, structural a11y incl. the Manual and Insights, keyboard) — all in CI, which now also
@@ -53,7 +53,7 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 
 ### 3.1 Automated unit suite — `npm run test` (Vitest)
 
-**87 tests across 15 files**, all green:
+**96 tests across 16 files**, all green:
 
 | File | Cases | Covers |
 |---|---:|---|
@@ -69,7 +69,8 @@ lives in fast unit tests and the cross-document guards; UI and human-judgement c
 | [`src/lib/frontmatter.test.ts`](../../src/lib/frontmatter.test.ts) | 6 | **Content pipeline:** the dependency-free frontmatter parser — scalars, inline arrays, nested map, list of flow maps, body split, no-frontmatter fallback |
 | [`src/lib/markdown.test.tsx`](../../src/lib/markdown.test.tsx) | 6 | **Content pipeline:** the safe Markdown-subset renderer — headings/lists/inline, safe links, `:::guided`/`:::expert` mode blocks, and **no raw-HTML/`javascript:` injection** (XSS-safe by construction) |
 | [`src/lib/content.test.ts`](../../src/lib/content.test.ts) | 5 | **Content index (FR-LEARN-2/3):** every article well-formed and **every `related_advisor` id resolves to the frozen model**; section/slug filters; review-due flag |
-| [`src/components/LearnView.test.tsx`](../../src/components/LearnView.test.tsx) | 5 | **Component (FR-LEARN-1/4/6):** **every architecture has a Catalog, Playbook, Review, AND Library entry** (21×4 parity with the model); Playbook opens as a step-by-step implementation guide (Prerequisites/Steps/Best practices/Pitfalls) + cited sources; Review opens as a structured evaluation (Pros/Cons/metrics/Final verdict) + "Try in the Advisor" returns to the Advisor; Library covers every architecture as reference (Key concepts/Terminology) AND lists its evergreen articles; the **LensNav** walks one architecture through the Catalog → Playbook → Review → Library journey |
+| [`src/components/LearnView.test.tsx`](../../src/components/LearnView.test.tsx) | 8 | **Component (FR-LEARN-1/4/6/8/9/10):** **every architecture has a Catalog, Playbook, Review, AND Library entry** (21×4 parity with the model); Playbook opens as a step-by-step implementation guide (Prerequisites/Steps/Best practices/Pitfalls) + cited sources; Review opens as a structured evaluation (Pros/Cons/metrics/Final verdict) + "Try in the Advisor" returns to the Advisor; Library covers every architecture as reference (Key concepts/Terminology) AND lists its evergreen articles; the **LensNav** walks one architecture through the Catalog → Playbook → Review → Library journey; a **Roadmap** path's step deep-links to its article; an **Academy** quiz gives client-side feedback + a review link; a **Lab** run calls the Advisor with the prepared factor levels |
+| [`src/config/waveC.test.ts`](../../src/config/waveC.test.ts) | 6 | **Wave C datasets (FR-LEARN-8/9/10):** every Roadmap step resolves to a real architecture page / article / the Advisor; every Academy answer index is in range and every "review the topic" link resolves; every Lab experiment sets **all 14 model factors** to a valid level with no unknown factors; path/module/experiment ids unique |
 | [`src/a11y.test.tsx`](../../src/a11y.test.tsx) | 4 | **Accessibility (AC-15):** axe-core WCAG A/AA on the composed app, Expert/override panel, the lazy Manual/Guide, and the lazy **Insights article** — caught & fixed an unlabeled file input |
 | [`src/i18n/dict.test.ts`](../../src/i18n/dict.test.ts) | 1 | Dictionary completeness — every key has EN **and** ID (covers the new Insights/section keys) |
 
@@ -284,3 +285,4 @@ affordance is covered by the release checklist (Section 6); and no acceptance cr
 | 0.5 | 2026-06-20 | **L3 E2E** (Playwright: smoke, share deep-link, structural a11y, keyboard) + real-browser keyboard for AC-15; **L6/L7 gated in CI** (`audit:prod`, bundle-size budget); **L5 UAT script** added ([uat-script.md](uat-script.md)). Full color-contrast AA tracked as a `test.fixme`. |
 | 0.6 | 2026-06-20 | **Full color-contrast AA remediated and gated** in the real browser (tertiary tokens, light success green, off-chip/hidden-row opacity) — `e2e/a11y.spec` now asserts color-contrast in both themes (no `fixme`); L4 ✅; AC-15 ✅ automated (15/16 AC automated). |
 | 0.7 | 2026-07-06 | **Insights holistic coverage:** `LearnView.test.tsx` rewritten (4→5 cases) for the four structured lenses — 21×4 parity vs `insightPlaybooks`/`insightReviews`/`insightLibrary`, per-lens layout assertions, and the LensNav journey; e2e specs updated for the English default language (exact `Guide` match vs the `Guided` toggle) and the richer card accessible names. Inventory 86→87 Vitest + 14 e2e, all green. |
+| 0.8 | 2026-07-06 | **Insights Wave C:** new `src/config/waveC.test.ts` (6 cases — Roadmap/Academy/Lab dataset validity: every deep-link target resolves, quiz answers in range, Lab levels valid for all 14 factors, ids unique) + 3 new `LearnView` cases (Roadmap step → article; Academy feedback + review link; Lab run passes prepared levels to the Advisor). The SEO generator (`generate-seo.mjs`) self-guards canonical/robots vs `SITE_URL` at build time. Inventory 87→96 Vitest (16 files) + 14 e2e, all green. |
