@@ -117,6 +117,11 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   page, a Markdown article, or the Advisor). Their datasets (`insightRoadmaps.ts`,
   `academyQuizzes.ts`, `labExperiments.ts`) are unit-tested so every target resolves against the
   frozen model / content index — the same anti-drift discipline as the lenses.
+- **Wave C carries the same 21-architecture parity as the lenses (2026-07-06).** Coverage is not
+  left to editorial luck: per-section unit tests assert that **every one of the 21 architectures**
+  appears in ≥1 Roadmap path, is reviewed by ≥1 Academy question, and is "in play" (the
+  experiment's `focus` deep-link chips) in ≥1 Lab experiment — so the Wave C sections can never
+  mismatch the lenses' 21×4 coverage.
 - **The Lab runs the real engine, not a simulation.** An experiment is a hypothesis plus prepared
   levels for **all 14 model factors** (validated by a unit test); "run it" loads those levels into
   the Advisor via the same `setLevels` path presets use. No second engine, no canned outcomes —

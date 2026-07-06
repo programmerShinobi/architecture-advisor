@@ -18,11 +18,18 @@ export interface LabExperiment {
   watch: string[];
   /** The reading of the result, grounded in the model. */
   takeaway: string;
+  /**
+   * The architectures this experiment puts in play (`"D<n>:<optionId>"` keys) — shown as
+   * deep-link chips on the page. Across all experiments the union covers ALL 21 options
+   * (holistic parity with the four lenses; unit-tested).
+   */
+  focus: string[];
 }
 
 export const LAB_EXPERIMENTS: LabExperiment[] = [
   {
     id: 'team-size-flip',
+    focus: ['D1:layered', 'D1:monolith', 'D1:modular-monolith', 'D1:microservices', 'D1:serverless'],
     title: 'When does team size flip D1?',
     brief:
       'A proven product that is growing: several teams, moderate scale, decent DevOps — but nothing extreme.',
@@ -39,6 +46,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
   },
   {
     id: 'premature-split',
+    focus: ['D1:monolith', 'D1:modular-monolith', 'D1:microservices'],
     title: 'Trigger the premature-microservices warning',
     brief:
       'A small co-located team with immature DevOps — but imagine they pick microservices anyway.',
@@ -55,6 +63,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
   },
   {
     id: 'realtime-streaming',
+    focus: ['D2:synchronous', 'D2:async-messaging', 'D2:event-driven', 'D2:streaming'],
     title: 'Push D2 towards streaming',
     brief:
       'An IoT-flavoured system: high data volume, heavily async, near-real-time processing.',
@@ -71,6 +80,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
   },
   {
     id: 'consistency-anchor',
+    focus: ['D3:single-db', 'D3:db-per-service', 'D3:cqrs', 'D3:event-sourcing', 'D3:polyglot'],
     title: 'Consistency as the data anchor',
     brief:
       'A regulated, correctness-critical system: strong consistency demands, high security, long lifespan.',
@@ -87,6 +97,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
   },
   {
     id: 'legacy-strangler',
+    focus: ['D1:monolith', 'D1:modular-monolith', 'D1:microservices'],
     title: 'Legacy weight and the migration path',
     brief:
       'A heavy legacy estate with a plan to modernise: big system, old constraints, decent team.',
@@ -100,5 +111,39 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     ],
     takeaway:
       'The map\'s rungs apply: enforce boundaries first, extract along bounded contexts, keep every step reversible — the engine encodes the same incremental bias as the Strangler Fig literature.',
+  },
+  {
+    id: 'ceremony-vs-speed',
+    focus: ['D4:layered', 'D4:hexagonal', 'D4:clean', 'D4:vertical-slice'],
+    title: 'Code structure: ceremony vs speed (D4)',
+    brief:
+      'A long-lived product with a complex domain and a stable team — the opposite of a throwaway prototype.',
+    hypothesis:
+      'Domain complexity and lifespan push D4 towards the framework-free cores (Hexagonal/Clean); a short-lived simple app flips it back to Layered/Vertical Slice.',
+    levels: { team: 1, distribution: 0, ttm: 0, budget: 1, lifespan: 2, scale: 1, dataVolume: 1, async: 0, realtime: 0, domain: 2, consistency: 1, security: 1, legacy: 0, devops: 1 },
+    watch: [
+      'The D4 ranking — where do Hexagonal and Clean sit versus Layered?',
+      'Now set Lifespan to its lowest and Time-to-market to its highest, and compare (pin A/B).',
+      'The contribution bars: which quality attributes carry the D4 decision.',
+    ],
+    takeaway:
+      'The ceremony of a protected core is an investment priced by lifespan and domain complexity — exactly the "don\'t impose Clean on a small app" guidance, computed.',
+  },
+  {
+    id: 'frontend-autonomy',
+    focus: ['D5:spa', 'D5:ssr', 'D5:micro-frontends'],
+    title: 'When do micro-frontends earn their cost? (D5)',
+    brief:
+      'A large, distributed organisation with many UI teams on one product — high scale, mature DevOps.',
+    hypothesis:
+      'Micro-frontends only rise in D5 when team size and distribution are high; below that, SPA/SSR win on simplicity.',
+    levels: { team: 2, distribution: 2, ttm: 1, budget: 2, lifespan: 2, scale: 2, dataVolume: 1, async: 1, realtime: 1, domain: 1, consistency: 1, security: 1, legacy: 0, devops: 2 },
+    watch: [
+      'The D5 ranking — how close do micro-frontends get to the top?',
+      'Now set Team size and Team distribution to their lowest levels and compare (pin A/B).',
+      'The trade-off radar: what micro-frontends pay in simplicity and first-paint.',
+    ],
+    takeaway:
+      'Team autonomy is an organisational benefit — Conway\'s Law again: the org chart, not the framework, decides when micro-frontends are worth their integration cost.',
   },
 ];

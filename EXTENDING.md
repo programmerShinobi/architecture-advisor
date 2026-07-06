@@ -105,7 +105,15 @@ These sections **curate and exercise** the content above — they never carry th
   the page that teaches it (both unit-tested). Scoring stays client-side — no persistence.
 - **Add a Lab experiment** — append to `LAB_EXPERIMENTS` in `src/config/labExperiments.ts`. Set
   **all 14 factors** in `levels` (values 0–2, validated against `FACTORS` by the unit test), state
-  the hypothesis, what to watch, and the takeaway. "Run it" loads the levels into the live Advisor.
+  the hypothesis, what to watch, the takeaway, and the `focus` list of `"D<n>:<optionId>"` keys
+  (rendered as deep-link chips). "Run it" loads the levels into the live Advisor.
+
+**Holistic parity (don't break it):** like the four lenses (21×4), each Wave C section must cover
+**all 21 architectures** — every one in ≥1 learning path, reviewed by ≥1 quiz question, and in play
+in ≥1 experiment. `waveC.test.ts` asserts this, so **removing** a step/question/experiment that was
+the sole cover for an architecture fails the build until you cover it elsewhere. **If you add a new
+option to a dimension** (model change), all three Wave C datasets need an entry covering it, along
+with the four lens datasets.
 
 ## SEO snapshots & sitemap
 

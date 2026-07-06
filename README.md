@@ -82,7 +82,8 @@ sections also list hand-authored, English-first Markdown guides under [`content/
 bound to the model and gated by `content:validate`. Three more sections build **on top of** the
 lenses: **Roadmap** (guided learning paths), **Academy** (client-side quiz modules that link back to
 the page that teaches each answer), and **Lab** (hypothesis experiments whose prepared scenarios
-load into the live scoring engine). The area is **client-rendered, lazy-loaded, and
+load into the live scoring engine) — each covering **all 21 architectures** too (unit-tested
+parity, matching the lenses). The area is **client-rendered, lazy-loaded, and
 dependency-free** (a small XSS-safe Markdown renderer); search engines get a build-time **SEO
 layer** (sitemap, robots, JSON-LD, static crawlable article snapshots) without any SSG/router —
 see the [content rollout plan](docs/03-blueprint/content-rollout-plan.md).
@@ -127,7 +128,7 @@ traceable:
 | 2 | [Requirement Analysis](docs/02-requirement-analysis/) | [SRS](docs/02-requirement-analysis/software-requirements-specification.md) | 🔬 In progress |
 | 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [Model Data Sheet](docs/03-blueprint/model-data-sheet.md) + [Architecture Reader](docs/03-blueprint/architecture-reader.md) + [Content Rollout Plan](docs/03-blueprint/content-rollout-plan.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | [Development](docs/04-development/) | Source code (`src/`, scoring engine, components) | ✅ v1.0 implemented |
-| 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 96 Vitest + Playwright E2E + 3 model guards + content guard; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
+| 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 99 Vitest + Playwright E2E + 3 model guards + content guard; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
 | 6 | [Deployment / Release](docs/06-deployment/) | [Live on GitHub Pages](https://programmershinobi.github.io/architecture-advisor/) via `deploy.yml` (CI/CD) | ✅ Live |
 | 7 | [Maintenance & Iteration](docs/07-maintenance/) | [Changelog](CHANGELOG.md), Dependabot, issue/PR templates, [security policy](SECURITY.md) | 🔄 Ongoing |
 

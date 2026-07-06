@@ -466,6 +466,7 @@ export const DICT = {
   'learn.lab.allExperiments': { en: '← All experiments', id: '← Semua eksperimen' },
   'learn.lab.hypothesis': { en: 'The hypothesis', id: 'Hipotesis' },
   'learn.lab.watch': { en: 'What to watch', id: 'Yang diamati' },
+  'learn.lab.focus': { en: 'Architectures in play', id: 'Arsitektur yang terlibat' },
   'learn.lab.scenario': { en: 'The prepared scenario', id: 'Skenario siap pakai' },
   'learn.lab.takeaway': { en: 'The takeaway', id: 'Intisari' },
   'learn.lab.run': { en: 'Load this scenario in the Advisor', id: 'Muat skenario ini di Advisor' },
