@@ -3,14 +3,17 @@ import { IconArrowRight, IconChevronRight, IconEye, IconFlask, IconBulb } from '
 import { useI18n } from '../i18n/I18nContext';
 import { LAB_EXPERIMENTS, type LabExperiment } from '../config/labExperiments';
 import { FACTORS } from '../config/factors';
-import type { FactorId, Levels } from '../types';
+import { DIMENSIONS } from '../config/dimensions';
+import type { DimensionId, FactorId, Levels } from '../types';
 
 // The Lab section: interactive sandboxes on the real engine. Each experiment prepares a scenario
 // (factor levels for the frozen model) and loads it into the Advisor, so the reader tests the
-// hypothesis against the live calculation — no canned answers, no second engine.
+// hypothesis against the live calculation — no canned answers, no second engine. The experiment's
+// `focus` chips deep-link to the architectures in play (holistic parity: all 21 across the Lab).
 
 interface Props {
   onRun: (levels: Levels) => void;
+  onOpenArch: (dim: DimensionId, optId: string) => void;
 }
 
 const cardBase: React.CSSProperties = {
@@ -23,7 +26,7 @@ const cardBase: React.CSSProperties = {
   width: '100%',
 };
 
-export default function LabView({ onRun }: Props) {
+export default function LabView({ onRun, onOpenArch }: Props) {
   const { t, tr } = useI18n();
   const [expId, setExpId] = useState<string | null>(null);
   const exp: LabExperiment | undefined = LAB_EXPERIMENTS.find((e) => e.id === expId);
@@ -52,6 +55,19 @@ export default function LabView({ onRun }: Props) {
             <li key={w}>{w}</li>
           ))}
         </ol>
+        <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--color-text-tertiary)', margin: '0 0 8px' }}>{t('learn.lab.focus')}</h3>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+          {exp.focus.map((key) => {
+            const [dim, optId] = key.split(':') as [DimensionId, string];
+            const opt = DIMENSIONS[dim]?.options.find((o) => o.id === optId);
+            if (!opt) return null;
+            return (
+              <button key={key} type="button" className="f-chip" onClick={() => onOpenArch(dim, optId)} style={{ color: 'var(--color-text-info)' }}>
+                {opt.name}
+              </button>
+            );
+          })}
+        </div>
         <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--color-text-tertiary)', margin: '0 0 8px' }}>{t('learn.lab.scenario')}</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
           {(Object.entries(exp.levels) as [FactorId, number][]).map(([fid, lvl]) => {

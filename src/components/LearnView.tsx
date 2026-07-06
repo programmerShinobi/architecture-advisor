@@ -489,7 +489,9 @@ export default function LearnView({ onOpenAdvisor, onLoadLab }: Props) {
         {section === 'academy' && (
           <AcademyView onOpenArch={(dim, optId, lens) => setArch({ dim, optId, angle: lens })} onOpenArticle={setSlug} />
         )}
-        {section === 'lab' && <LabView onRun={onLoadLab} />}
+        {section === 'lab' && (
+          <LabView onRun={onLoadLab} onOpenArch={(dim, optId) => setArch({ dim, optId, angle: 'catalog' })} />
+        )}
 
         {/* By architecture — all D1–D5 options, through this section's lens */}
         {isLens && section !== 'catalog' && (

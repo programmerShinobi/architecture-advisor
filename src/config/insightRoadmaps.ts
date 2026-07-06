@@ -56,20 +56,37 @@ export const LEARNING_PATHS: LearningPath[] = [
     ],
   },
   {
-    id: 'event-driven-and-data',
-    title: 'Going event-driven (and keeping data correct)',
+    id: 'communication-styles',
+    title: 'Going event-driven — sync, async, events, streams',
     audience: 'practitioner',
     description:
-      'Loosen coupling with messaging and events — and learn the data patterns (sagas, outbox) that keep a distributed system correct.',
-    outcome: 'You can choose a communication style deliberately and review a cross-service flow for consistency.',
+      'The whole D2 spectrum: when request–response is right, when messaging and events loosen the coupling, and when a durable stream is the backbone.',
+    outcome: 'You can choose a communication style deliberately, with its failure modes priced in.',
     steps: [
       { kind: 'article', slug: 'choosing-communication-style', note: 'Sync vs async vs events — the core question.' },
+      { kind: 'arch', dim: 'D2', optionId: 'synchronous', lens: 'catalog', note: 'The baseline: request–response, and where its coupling strains.' },
       { kind: 'arch', dim: 'D2', optionId: 'event-driven', lens: 'catalog', note: 'What event-driven really buys you.' },
       { kind: 'arch', dim: 'D2', optionId: 'async-messaging', lens: 'playbook', note: 'Adopt messaging step by step (idempotency, DLQs, ordering).' },
+      { kind: 'arch', dim: 'D2', optionId: 'streaming', lens: 'review', note: 'The durable, replayable log — evaluated honestly.' },
+      { kind: 'advisor', note: 'Raise the async and real-time factors and watch D2 reorder.' },
+    ],
+  },
+  {
+    id: 'data-ownership',
+    title: 'Data ownership, from one database to polyglot',
+    audience: 'practitioner',
+    description:
+      'The hardest decision to reverse: who owns the data, how it stays consistent, and the patterns (sagas, outbox, CQRS, event sourcing) that keep a split correct.',
+    outcome: 'You can decide when to split data — and keep a cross-service flow correct when you do.',
+    steps: [
       { kind: 'article', slug: 'choosing-data-management', note: 'The D3 decision: from one DB to polyglot.' },
+      { kind: 'arch', dim: 'D3', optionId: 'single-db', lens: 'catalog', note: 'Start here — and why staying is often right.' },
+      { kind: 'arch', dim: 'D3', optionId: 'db-per-service', lens: 'playbook', note: 'Split ownership properly: sagas, the outbox, contracts.' },
+      { kind: 'arch', dim: 'D3', optionId: 'cqrs', lens: 'review', note: 'Separate read/write models — evaluated, including the over-use trap.' },
       { kind: 'arch', dim: 'D3', optionId: 'event-sourcing', lens: 'review', note: 'The audit-trail heavyweight — evaluated honestly.' },
+      { kind: 'arch', dim: 'D3', optionId: 'polyglot', lens: 'library', note: 'The right store per job — concepts and terminology.' },
       { kind: 'article', slug: 'data-consistency-review', note: 'Sagas, the outbox, and eventual consistency — the review checklist.' },
-      { kind: 'advisor', note: 'Raise the async and consistency factors and watch D2/D3 shift.' },
+      { kind: 'advisor', note: 'Raise the consistency and data-volume factors and watch D3 shift.' },
     ],
   },
   {
@@ -81,6 +98,7 @@ export const LEARNING_PATHS: LearningPath[] = [
     outcome: 'You can pick between Hexagonal, Clean, Vertical Slice, and Layered for a given codebase.',
     steps: [
       { kind: 'article', slug: 'choosing-code-structure', note: 'The D4 decision in one guide.' },
+      { kind: 'arch', dim: 'D4', optionId: 'layered', lens: 'review', note: 'The familiar baseline — honestly evaluated, erosion included.' },
       { kind: 'arch', dim: 'D4', optionId: 'hexagonal', lens: 'catalog', note: 'Ports & adapters — the core idea.' },
       { kind: 'arch', dim: 'D4', optionId: 'clean', lens: 'playbook', note: 'Adopt the dependency rule without the ceremony trap.' },
       { kind: 'arch', dim: 'D4', optionId: 'vertical-slice', lens: 'review', note: 'The feature-first alternative, evaluated.' },

@@ -141,16 +141,21 @@ wired into `ci.yml` (`docs-integrity.yml` untouched); `LearnView` (lazy) + `Cred
   requires at least the `en` version.
 
 **Wave C — delivered (2026-07-06):** the last three sections are live, each built ON TOP of the
-lens content (curate / exercise — never duplicate):
-- **Roadmap** — 6 guided learning paths (newcomer → practitioner → architect) in
+lens content (curate / exercise — never duplicate) and each carrying the same **21-architecture
+holistic parity** as the four lenses (unit-tested per section, so Wave C can never mismatch the
+lens coverage):
+- **Roadmap** — 8 guided learning paths (newcomer → practitioner → architect) in
   `src/config/insightRoadmaps.ts`; every step deep-links to an existing architecture lens page,
-  Markdown article, or the Advisor, and a unit test resolves every target (anti-drift).
-- **Academy** — 6 quiz modules (one per dimension + methods; 30 questions) in
+  Markdown article, or the Advisor; **every one of the 21 architectures appears in ≥1 path**
+  (a unit test resolves every target and asserts the coverage — anti-drift).
+- **Academy** — 6 quiz modules (one per dimension + methods; 32 questions) in
   `src/config/academyQuizzes.ts`, scored **entirely client-side**; each answer explains itself and
-  links back to the page that teaches it (every link unit-tested).
-- **Lab** — 5 hypothesis-driven experiments in `src/config/labExperiments.ts`; each prepares valid
-  levels for **all 14 model factors** (unit-tested) and loads them into the Advisor, so the claim
-  is tested on the live engine.
+  links back to the page that teaches it; **every one of the 21 architectures is reviewed by ≥1
+  question** (links + coverage unit-tested).
+- **Lab** — 7 hypothesis-driven experiments (spanning D1–D5) in `src/config/labExperiments.ts`;
+  each prepares valid levels for **all 14 model factors** (unit-tested) and loads them into the
+  Advisor, so the claim is tested on the live engine; each lists its **"architectures in play"**
+  as deep-link chips and **the union covers all 21** (unit-tested).
 
 **SEO / SSG-lite — delivered (2026-07-06):** discoverability without changing the SPA architecture
 (the "SSG deferred" decision is superseded in this narrower form — still no router, no hydration):

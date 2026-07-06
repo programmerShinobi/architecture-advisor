@@ -13,6 +13,11 @@ import type { FactorId } from '../types';
 const archExists = (dim: keyof typeof DIMENSIONS, optionId: string) =>
   DIMENSIONS[dim].options.some((o) => o.id === optionId);
 
+// All 21 canonical `dim:optionId` keys — the same universe the four lenses cover (21×4 parity).
+const ALL_ARCH_KEYS = (Object.keys(DIMENSIONS) as (keyof typeof DIMENSIONS)[]).flatMap((dim) =>
+  DIMENSIONS[dim].options.map((o) => `${dim}:${o.id}`),
+);
+
 describe('Roadmap learning paths (insightRoadmaps)', () => {
   it('every step resolves to a real architecture page, article, or the Advisor', () => {
     expect(LEARNING_PATHS.length).toBeGreaterThanOrEqual(5);
@@ -31,6 +36,13 @@ describe('Roadmap learning paths (insightRoadmaps)', () => {
   it('path ids are unique', () => {
     const ids = LEARNING_PATHS.map((p) => p.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('EVERY one of the 21 architectures appears in at least one learning path (holistic parity)', () => {
+    const covered = new Set(
+      LEARNING_PATHS.flatMap((p) => p.steps).flatMap((s) => (s.kind === 'arch' ? [`${s.dim}:${s.optionId}`] : [])),
+    );
+    for (const key of ALL_ARCH_KEYS) expect(covered.has(key), `roadmap missing ${key}`).toBe(true);
   });
 });
 
@@ -55,6 +67,15 @@ describe('Academy quizzes (academyQuizzes)', () => {
     const ids = ACADEMY_QUIZZES.map((m) => m.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it('EVERY one of the 21 architectures is quizzed — some question reviews it (holistic parity)', () => {
+    const covered = new Set(
+      ACADEMY_QUIZZES.flatMap((m) => m.questions).flatMap((q) =>
+        q.review.kind === 'arch' ? [`${q.review.dim}:${q.review.optionId}`] : [],
+      ),
+    );
+    for (const key of ALL_ARCH_KEYS) expect(covered.has(key), `academy missing ${key}`).toBe(true);
+  });
 });
 
 describe('Lab experiments (labExperiments)', () => {
@@ -78,5 +99,16 @@ describe('Lab experiments (labExperiments)', () => {
   it('experiment ids are unique', () => {
     const ids = LAB_EXPERIMENTS.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('EVERY one of the 21 architectures is in play in some experiment, and every focus key is canonical (holistic parity)', () => {
+    const covered = new Set<string>();
+    for (const exp of LAB_EXPERIMENTS) {
+      for (const key of exp.focus) {
+        expect(ALL_ARCH_KEYS, `${exp.id}: unknown focus "${key}"`).toContain(key);
+        covered.add(key);
+      }
+    }
+    for (const key of ALL_ARCH_KEYS) expect(covered.has(key), `lab missing ${key}`).toBe(true);
   });
 });

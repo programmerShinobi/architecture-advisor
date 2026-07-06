@@ -12,16 +12,22 @@ The decision **model** carries its own version, recorded in the
 ### Added (Insights Wave C: Roadmap · Academy · Lab + SEO — 2026-07-06)
 
 - **All seven Insights sections are now live.** Wave C completes the area with three sections built
-  **on top of** the four lenses — they curate and exercise the content, never duplicate it:
-  - **Roadmap** — 6 guided learning paths (newcomer → practitioner → architect,
+  **on top of** the four lenses — they curate and exercise the content, never duplicate it — and
+  each carries the same **21-architecture holistic parity** as the lenses (unit-tested, so no
+  mismatch is possible):
+  - **Roadmap** — 8 guided learning paths (newcomer → practitioner → architect,
     `src/config/insightRoadmaps.ts`); every step deep-links into an existing architecture lens
-    page, Markdown article, or the Advisor. A unit test resolves every target (anti-drift).
-  - **Academy** — 6 quiz modules / 30 questions (one module per dimension + methods,
+    page, Markdown article, or the Advisor, and **every one of the 21 architectures appears in at
+    least one path**. A unit test resolves every target and asserts the coverage (anti-drift).
+  - **Academy** — 6 quiz modules / 32 questions (one module per dimension + methods,
     `src/config/academyQuizzes.ts`), scored **entirely client-side** (no accounts, no telemetry);
-    each answer explains itself and links back to the page that teaches it (links unit-tested).
-  - **Lab** — 5 hypothesis-driven experiments (`src/config/labExperiments.ts`); each prepares valid
-    levels for **all 14 model factors** (unit-tested) and loads them into the Advisor via the same
-    path presets use — the claim is tested on the **live engine**, not a canned result.
+    each answer explains itself and links back to the page that teaches it, and **every one of the
+    21 architectures is reviewed by at least one question** (links + coverage unit-tested).
+  - **Lab** — 7 hypothesis-driven experiments (`src/config/labExperiments.ts`) spanning D1–D5; each
+    prepares valid levels for **all 14 model factors** (unit-tested) and loads them into the
+    Advisor via the same path presets use — the claim is tested on the **live engine**, not a
+    canned result. Each experiment lists its **"architectures in play"** as deep-link chips, and
+    **the union covers all 21** (unit-tested).
 - **SEO / SSG-lite (FR-SEO-1).** Discoverability without changing the SPA architecture:
   `scripts/generate-seo.mjs` (dependency-free, runs after `vite build`) emits `sitemap.xml` and
   **static crawlable HTML snapshots** of all 18 articles (`dist/insights/<section>/<slug>/`,
@@ -30,10 +36,11 @@ The decision **model** carries its own version, recorded in the
   shell; `<html lang>` fixed to `en` (English default). The script doubles as a **guard** — the
   build fails if the canonical/robots URLs drift from `SITE_URL`. Pure HTML: zero impact on the JS
   budgets (total JS 186.5 kB / 200 kB after Wave C).
-- **Tests:** +9 (Vitest 87 → **96**): `src/config/waveC.test.ts` (6 — every Roadmap/Academy/Lab
-  target resolves; quiz answers in range; Lab levels valid for all 14 factors; unique ids) and 3
-  new LearnView cases (Roadmap path → article deep link; Academy quiz feedback + review link;
-  Lab run calls the Advisor with the prepared levels).
+- **Tests:** +12 (Vitest 87 → **99**): `src/config/waveC.test.ts` (9 — every Roadmap/Academy/Lab
+  target resolves; quiz answers in range; Lab levels valid for all 14 factors; unique ids; and
+  **three 21-architecture parity tests**, one per section) and 3 new LearnView cases (Roadmap path
+  → article deep link; Academy quiz feedback + review link; Lab run calls the Advisor with the
+  prepared levels).
 
 ### Changed (Insights holistic coverage + English-first — 2026-07-06)
 
