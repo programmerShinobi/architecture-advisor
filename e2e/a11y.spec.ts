@@ -26,8 +26,8 @@ test('no WCAG A/AA violations incl. color-contrast (Expert mode + light theme)',
 
 test('no WCAG A/AA violations incl. color-contrast (Manual/Guide, dark theme)', async ({ page }) => {
   await page.goto(APP);
-  // Default language is Indonesian, so the Manual button is labelled "Panduan".
-  await page.getByRole('button', { name: /Guide|Panduan/ }).click();
+  // Exact match: with English default, /Guide/ would also hit the "Guided" mode toggle.
+  await page.getByRole('button', { name: /^(Guide|Panduan)$/ }).click();
   await expect(page.getByRole('dialog', { name: /Manual/ })).toBeVisible(); // lazy Manual chunk loaded
   expect((await scan(page)).violations).toEqual([]);
 });
@@ -35,16 +35,16 @@ test('no WCAG A/AA violations incl. color-contrast (Manual/Guide, dark theme)', 
 test('no WCAG A/AA violations incl. color-contrast (Manual/Guide, light theme)', async ({ page }) => {
   await page.goto(APP);
   await page.getByRole('button', { name: /Toggle theme|Ganti tema/ }).click(); // → light
-  await page.getByRole('button', { name: /Guide|Panduan/ }).click();
+  await page.getByRole('button', { name: /^(Guide|Panduan)$/ }).click();
   await expect(page.getByRole('dialog', { name: /Manual/ })).toBeVisible();
   expect((await scan(page)).violations).toEqual([]);
 });
 
 async function openSeedArticle(page: Page) {
-  // Default language is Indonesian → the nav item is "Wawasan", the section "Katalog".
+  // Works in either language (default is English; the ID toggle keeps "Wawasan" / "Katalog" alive).
   await page.getByRole('button', { name: /Insights|Wawasan/ }).click();
   await page.getByRole('button', { name: /Catalog|Katalog/ }).click();
-  await page.getByRole('button', { name: 'Microservices' }).first().click();
+  await page.getByRole('button', { name: /^Microservices/ }).first().click();
   // The architecture page rendered (option name is language-neutral, so this is i18n-agnostic).
   await expect(page.getByRole('heading', { name: 'Microservices' })).toBeVisible();
 }

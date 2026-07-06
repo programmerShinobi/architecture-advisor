@@ -9,6 +9,31 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed (Insights holistic coverage + English-first — 2026-07-06)
+
+- **Every one of the 21 architectures now appears in all four Insights sections** — Catalog,
+  Playbook, Review, **and Library** — as four *distinct structured reading experiences*, forming the
+  knowledge journey **discover → implement → evaluate → reference**:
+  - **Playbook** pages are real step-by-step implementation guides: goal, prerequisites, numbered
+    steps, best practices, pitfalls to avoid (`src/config/insightPlaybooks.ts`).
+  - **Review** pages are structured objective evaluations: overview, pros/cons, performance,
+    scalability, developer experience, suitable use cases, and a final verdict
+    (`src/config/insightReviews.ts`).
+  - **Library** pages are evergreen reference cards: definition, key concepts, related patterns,
+    terminology (`src/config/insightLibrary.ts`) — alongside the existing Wave B trend articles,
+    now listed as "Further reading".
+  - A new per-page **lens navigation** (Catalog · Playbook · Review · Library chips) walks one
+    architecture through all four lenses; it replaces the earlier one-way "Full explanation in the
+    Catalog →" cross-link. The thin `readerAngles.ts` (two paragraphs per lens) is **removed**,
+    superseded by the three datasets above; a unit test asserts **21×4 parity** with the frozen
+    model so coverage can never go partial.
+- **English consistency across the site.** The default language is now **English** (the ID toggle
+  stays fully functional for UI chrome); all **18 Markdown articles** ship English bodies
+  (`translation_status: en`, ID titles/summaries kept in frontmatter); the three lens datasets are
+  English; and the content gate (`check-content.mjs`) now requires **at least the `en` version**
+  instead of `id`. Section descriptions were rewritten to state each section's purpose
+  (discover / implement / evaluate / reference).
+
 ### Changed (UI redesign — in progress on `redesign/ui-ux`)
 
 - **Stage 1 — design tokens.** New `--aa-*` token layer (fluid spacing/type via `clamp()`, soft
@@ -42,6 +67,17 @@ The decision **model** carries its own version, recorded in the
 
 ### Added
 
+- **Insights Wave B — the Library section is live** with **5 trend articles**, each with real,
+  current sources and honest `evidence_strength`: *GenAI & software architecture* (emerging —
+  Copilot RCT, DORA 2024, Fowler/Böckeler memos), *green/carbon-efficient architecture* (moderate —
+  **SCI, ISO/IEC 21031:2024**, Green Software Foundation, AWS sustainability pillar),
+  *architectural technical debt* (strong — Cunningham 1992, Kruchten/Nord/Ozkaya IEEE SW 2012 +
+  SEI book, Dagstuhl 16162), *the monolith→microservices decision map* (strong), and *Conway's Law
+  & Team Topologies* (moderate — Conway 1968, mirroring-hypothesis study, Skelton & Pais). All pass
+  `content:validate` (18 articles total). Article-only sections render **without** repeating the
+  21-architecture grid (no redundancy; regression-tested), and section cards show article counts.
+  Total-JS budget deliberately raised 160→200 kB (content is lazy; initial JS untouched at ~107 kB;
+  NFR cap 300).
 - **Browser-support guidance + unsupported-browser fallback.** Documented the recommended browsers
   (latest Chrome / Edge / Firefox / Safari, desktop & mobile; not IE) in the README and the
   deployment docs, pointing at the canonical [SRS §2.3](docs/02-requirement-analysis/software-requirements-specification.md#23-operating-environment).

@@ -9,7 +9,7 @@ summary_tldr_en: "Serverless shines for spiky, event-driven workloads and teams 
 evidence_strength: moderate
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1]
   options: [serverless]
@@ -21,35 +21,35 @@ status: published
 author: Architecture Advisor
 ---
 
-## Kapan serverless masuk akal
+## When serverless makes sense
 
-Serverless bukan "microservices yang lebih kecil" — ia model eksekusi berbeda dengan trade-off
-tersendiri.
+Serverless is not "smaller microservices" — it is a different execution model with its own
+trade-offs.
 
 :::guided
-**Cocok untuk:** beban yang naik-turun tajam atau tak terduga, perekat berbasis peristiwa (mis. proses
-gambar saat diunggah), dan tim kecil yang ingin fokus ke kode, bukan server.
+**A good fit for:** sharply fluctuating or unpredictable load, event-driven glue (e.g. process an
+image when it's uploaded), and small teams that want to focus on code, not servers.
 
-**Kurang cocok untuk:** beban berjalan-lama, kritis-latensi, atau sangat berkeadaan (stateful).
+**A poor fit for:** long-running, latency-critical, or heavily stateful workloads.
 :::
 
-## Checklist kesiapan
+## Readiness checklist
 
-- [ ] Beban **bergelombang / event-driven** (skala-ke-nol benar-benar menguntungkan).
-- [ ] Fungsi **singkat & sebisa mungkin stateless**; keadaan ditaruh di layanan terkelola.
-- [ ] **Cold start** dapat ditoleransi untuk jalur yang latensi-sensitif (atau dimitigasi).
-- [ ] Ada strategi **pengujian lokal & observability** (tracing terdistribusi).
-- [ ] **Keterikatan vendor** dipahami dan dapat diterima; batas eksekusi diperiksa.
-- [ ] **Model biaya** diproyeksikan pada volume tinggi berkelanjutan (bisa berbalik lebih mahal).
+- [ ] The workload is **spiky / event-driven** (scale-to-zero genuinely pays off).
+- [ ] Functions are **short & as stateless as possible**; state lives in managed services.
+- [ ] **Cold starts** are tolerable on latency-sensitive paths (or mitigated).
+- [ ] There is a strategy for **local testing & observability** (distributed tracing).
+- [ ] **Vendor lock-in** is understood and acceptable; execution limits are checked.
+- [ ] The **cost model** is projected at sustained high volume (it can flip to more expensive).
 
 :::expert
-**Lebih dalam.** *Berkeley View* membingkai serverless sebagai pemrograman cloud yang disederhanakan
-dengan masalah terbuka: keadaan, latensi, dan portabilitas. Castro et al. (CACM) memberi tinjauan
-seimbang; Baldini et al. memetakan tren & masalah. Pola umum: pakai FaaS untuk tepi yang bursty dan
-event-driven, dengan inti yang lebih stabil di layanan lain.
+**Deeper.** The *Berkeley View* frames serverless as simplified cloud programming with open
+problems: state, latency, and portability. Castro et al. (CACM) give a balanced overview; Baldini et
+al. map the trends & open issues. The common pattern: use FaaS for the bursty, event-driven edges,
+with a more stable core in other services.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Faktor *scale*, *realtime*, dan *budget* menggeser posisi **Serverless** di D1 — bandingkan dengan
-monolith/microservices di radar Advisor.
+The *scale*, *realtime*, and *budget* factors shift where **Serverless** lands in D1 — compare it
+with monolith/microservices on the Advisor's radar.

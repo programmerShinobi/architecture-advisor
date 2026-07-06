@@ -61,10 +61,7 @@ This is a **static, client-side** app with **no backend and no telemetry** (priv
     with the ESLint 10 / typescript-eslint 8 stack (build, lint, and all tests green).
   **All deferred tooling majors are now complete.** GitHub Actions are already current — the Node-20
   runner deprecation is resolved.
-- **Content rollout — later waves (deferred).** Wave B (Library trend articles), Wave C (Roadmap,
-  Academy, Lab), and the **SSG/SEO** layer (sitemap/robots/hreflang/JSON-LD) are each their own
-  reviewed proposal once Wave A proves its value; link-liveness + review-cadence become scheduled,
-  non-blocking jobs. See [content rollout plan](../03-blueprint/content-rollout-plan.md).
+- **Content rollout.** ✅ **Wave B delivered (2026-07-05)** — the Library section is live with 5 trend articles (GenAI, green/SCI, architectural tech debt, monolith→microservices decision map, Conway/Team Topologies), all passing `content:validate`. **Deferred:** Wave C (Roadmap, Academy, Lab) and the **SSG/SEO** layer — each its own reviewed proposal; link-liveness + review-cadence become scheduled, non-blocking jobs. See [content rollout plan](../03-blueprint/content-rollout-plan.md).
 - **Annual model review** against the latest standards, recorded as ADRs (charter 15.5).
 
 **References:** charter [Section 15](../01-discovery-and-planning/discovery-and-planning.md#15-versioning-policy--evolution-roadmap)

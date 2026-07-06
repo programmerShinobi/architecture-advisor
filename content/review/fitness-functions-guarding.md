@@ -9,7 +9,7 @@ summary_tldr_en: "Architecture isn't a one-off document — it keeps changing. A
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1, D2, D3, D4, D5]
   options: []
@@ -21,39 +21,40 @@ status: published
 author: Architecture Advisor
 ---
 
-## Masalah yang dipecahkan
+## The problem it solves
 
-Keputusan arsitektur yang bagus perlahan tererosi: seseorang menambah impor "sekali ini saja",
-latensi merayak naik, batas modul bocor. Tanpa penjaga, arsitektur menyimpang dari niatnya.
+Good architectural decisions slowly erode: someone adds an import "just this once", latency creeps
+up, module boundaries leak. Without a guard, the architecture drifts away from its intent.
 
 :::guided
-**Ide sederhananya:** sama seperti tes unit menjaga *perilaku*, **fitness function** menjaga
-*sifat arsitektur*. Tulis sebagai pemeriksaan otomatis yang **gagal** bila sifat penting dilanggar,
-lalu jalankan di CI.
+**The simple idea:** just as unit tests protect *behaviour*, a **fitness function** protects an
+*architectural property*. Write it as an automated check that **fails** when an important property
+is violated, then run it in CI.
 :::
 
-## Checklist penerapan
+## Adoption checklist
 
-- [ ] Ambil **sifat sensitif** dari review (mis. hasil sesi ATAM) — yang paling memengaruhi kualitas.
-- [ ] Ubah tiap sifat jadi **pemeriksaan objektif**: uji ketergantungan, batas latensi, ukuran bundel,
-      cakupan tes, pemeriksaan keamanan.
-- [ ] **Jalankan di CI** agar pelanggaran menghentikan merge, bukan ditemukan di produksi.
-- [ ] Jaga jumlahnya sedikit tapi bermakna; tinjau ulang berkala.
+- [ ] Take the **sensitive properties** from a review (e.g. an ATAM session) — the ones that most
+      affect quality.
+- [ ] Turn each property into an **objective check**: dependency tests, latency budgets, bundle-size
+      budgets, test coverage, security checks.
+- [ ] **Run them in CI** so a violation blocks the merge instead of being discovered in production.
+- [ ] Keep the set small but meaningful; revisit it periodically.
 
-## Contoh di repo ini
+## Examples in this repo
 
-Proyek Architecture Advisor sendiri memakainya: **anggaran ukuran bundel**, **guard model** yang
-menjaga docs↔config tidak menyimpang, dan **guard konten** yang memastikan tiap artikel terikat ke
-model beku. Semuanya adalah fitness function.
+The Architecture Advisor project uses them itself: **bundle-size budgets**, a **model guard** that
+keeps docs↔config from drifting, and a **content guard** that ensures every article is bound to the
+frozen model. All of these are fitness functions.
 
 :::expert
-**Lebih dalam.** *Building Evolutionary Architectures* memformalkan gagasan ini; fitness function bisa
-*atomik* (satu sifat) atau *holistik* (beberapa sifat bersamaan), dan *dipicu* (di CI) atau *kontinu*
-(monitoring). Pasangkan dengan ATAM: titik sensitif dan trade-off yang ditemukan dalam review adalah
-kandidat terbaik untuk dijadikan fitness function.
+**Deeper.** *Building Evolutionary Architectures* formalises the idea; fitness functions can be
+*atomic* (one property) or *holistic* (several properties together), and *triggered* (in CI) or
+*continuous* (monitoring). Pair them with ATAM: the sensitivity and trade-off points found in a
+review are the best candidates to turn into fitness functions.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Advisor menampilkan **template fitness function per atribut kualitas** di mode Ahli — pakai sebagai
-titik awal untuk skenariomu.
+The Advisor shows **fitness-function templates per quality attribute** in Expert mode — use them as
+a starting point for your scenario.

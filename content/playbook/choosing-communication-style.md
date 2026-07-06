@@ -9,7 +9,7 @@ summary_tldr_en: "Synchronous is simple but ties the caller to the callee's fate
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D2]
   options: [synchronous, async-messaging, event-driven, streaming]
@@ -21,35 +21,35 @@ status: published
 author: Architecture Advisor
 ---
 
-## Pertanyaan intinya
+## The core question
 
-Apakah pemanggil **harus menunggu** jawaban sekarang, atau cukup **memberi tahu** dan melanjutkan?
+Does the caller **have to wait** for an answer right now, or is it enough to **notify** and move on?
 
 :::guided
-- **Sinkron (minta–jawab):** seperti menelепon dan menunggu di telepon. Sederhana, tetapi kalau yang
-  ditelepon lambat atau mati, kamu ikut terjebak.
-- **Asinkron (pesan):** seperti mengirim pesan singkat — yang dituju membalas saat siap. Lebih tahan
-  banting, tapi lebih sulit melacak alurnya.
-- **Berbasis peristiwa:** kamu mengumumkan "ini terjadi", dan siapa pun yang berkepentingan bereaksi.
-  Sangat longgar dan mudah diperluas.
+- **Synchronous (request–response):** like phoning someone and waiting on the line. Simple, but if
+  the person you called is slow or unreachable, you are stuck too.
+- **Asynchronous (messaging):** like sending a text message — the recipient replies when ready. More
+  resilient, but the flow is harder to trace.
+- **Event-driven:** you announce "this happened", and whoever cares reacts. Very loosely coupled and
+  easy to extend.
 :::
 
-## Kapan memakai yang mana
+## When to use which
 
-- Butuh jawaban seketika untuk melanjutkan → **sinkron**.
-- Menyangga lonjakan beban, kerja latar, integrasi antar-sistem → **asinkron**.
-- Banyak konsumen yang bereaksi atas fakta yang sama, perlu mudah diperluas → **event-driven**.
-- Aliran data terus-menerus dan real-time (log, telemetri) → **streaming**.
+- You need an immediate answer to continue → **synchronous**.
+- Buffering load spikes, background work, cross-system integration → **async messaging**.
+- Many consumers reacting to the same fact, easy extensibility → **event-driven**.
+- Continuous, real-time data flows (logs, telemetry) → **streaming**.
 
 :::expert
-**Lebih dalam.** Kopling sinkron itu *temporal*: latensi dan kegagalan menumpuk sepanjang rantai
-panggilan — pasang timeout, retry idempoten, dan circuit breaker. Gaya asinkron menuntut memikirkan
-semantik pengiriman (at-least-once), idempotensi, dan pengurutan; *Enterprise Integration Patterns*
-adalah katalog kanoniknya, sementara Kleppmann memberi fondasi konsistensi/pengurutan. Rancang untuk
-**konsistensi eventual** secara sengaja, bukan sebagai kejutan.
+**Deeper.** Synchronous coupling is *temporal*: latency and failures accumulate along the call
+chain — add timeouts, idempotent retries, and circuit breakers. Async styles force you to think
+about delivery semantics (at-least-once), idempotency, and ordering; *Enterprise Integration
+Patterns* is the canonical catalogue, while Kleppmann provides the consistency/ordering
+foundations. Design for **eventual consistency** deliberately, not as a surprise.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Di **Advisor**, faktor seperti *real-time* dan *async* menggeser rekomendasi **D2** — lihat radar
-trade-off untuk membandingkan gaya komunikasi pada skenariomu.
+In the **Advisor**, factors such as *real-time* and *async* shift the **D2** recommendation — check
+the trade-off radar to compare communication styles for your scenario.

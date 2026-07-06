@@ -9,7 +9,7 @@ summary_tldr_en: "SPAs win interactivity but are weak on first paint & SEO unles
 evidence_strength: moderate
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D5]
   options: [spa, ssr, micro-frontends]
@@ -23,33 +23,34 @@ status: published
 author: Architecture Advisor
 ---
 
-## Apa yang menentukan pilihan
+## What decides the choice
 
-Frontend adalah trade-off antara **render pertama & SEO** melawan **interaktivitas** dan **otonomi
-tim**.
+Frontend architecture is a trade-off between **first paint & SEO** versus **interactivity** and
+**team autonomy**.
 
 :::guided
-- **SPA (Single-Page App):** satu aplikasi klien yang kaya; berpindah halaman tanpa muat-ulang. Sangat
-  interaktif, tapi render pertama & SEO perlu diperhatikan (aplikasi ini sendiri sebuah SPA).
-- **SSR/SSG (server/statis):** render di server atau saat build → render pertama cepat & SEO kuat,
-  cocok untuk situs konten.
-- **Micro-frontend:** potongan UI milik tim berbeda yang dideploy mandiri — otonomi tim di skala besar.
+- **SPA (Single-Page App):** one rich client application; page changes without reloads. Highly
+  interactive, but first paint & SEO need attention (this app is itself a SPA).
+- **SSR/SSG (server/static):** render on the server or at build time → fast first paint & strong
+  SEO, great for content sites.
+- **Micro-frontends:** UI pieces owned by different teams, deployed independently — team autonomy at
+  large scale.
 :::
 
-## Panduan singkat
+## A short guide
 
-- Aplikasi internal yang sangat interaktif, SEO tak penting → **SPA**.
-- Situs konten/pemasaran, SEO & kecepatan tampil penting → **SSR/SSG** (utamakan statis/inkremental).
-- Organisasi besar dengan banyak tim UI di satu produk → **micro-frontend**.
+- Highly interactive internal app, SEO irrelevant → **SPA**.
+- Content/marketing site, SEO & time-to-content matter → **SSR/SSG** (prefer static/incremental).
+- Large organisation with many UI teams on one product → **micro-frontends**.
 
 :::expert
-**Lebih dalam.** Trade-off ini mengikuti **Core Web Vitals**: SSR/SSG menang di first-contentful-paint
-dan SEO; SPA menang di interaktivitas kaya (pasangkan dengan code-splitting + prefetch untuk melunakkan
-muat-pertama). Micro-frontend membeli independensi tim yang baru dibutuhkan di atas ukuran organisasi
-tertentu — di bawahnya, beban integrasi & konsistensi mendominasi.
+**Deeper.** The trade-off follows **Core Web Vitals**: SSR/SSG win first-contentful-paint and SEO;
+SPAs win rich interactivity (pair them with code-splitting + prefetching to soften the first load).
+Micro-frontends buy team independence that is only needed above a certain organisation size — below
+it, the integration & consistency overhead dominates.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Di Advisor, D5 dinilai independen — faktor seperti *scale* dan *team* memengaruhi apakah otonomi
-micro-frontend sepadan dengan bebannya.
+In the Advisor, D5 is scored independently — factors such as *scale* and *team* decide whether
+micro-frontend autonomy is worth its weight.

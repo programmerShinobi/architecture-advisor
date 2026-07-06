@@ -9,7 +9,7 @@ summary_tldr_en: "An ADR (Architecture Decision Record) captures an important de
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1, D2, D3, D4, D5]
   options: []
@@ -22,40 +22,41 @@ status: published
 author: Architecture Advisor
 ---
 
-## Untuk siapa halaman ini
+## Who this page is for
 
-Untuk **kamu yang baru mengenal ADR** maupun **arsitek** yang ingin menstandарkan cara timnya
-mencatat keputusan. Advisor sendiri mengekspor rekomendasi sebagai **ADR berformat MADR**.
+For **readers new to ADRs** as well as **architects** who want to standardise how their team records
+decisions. The Advisor itself exports its recommendation as a **MADR-formatted ADR**.
 
-## Apa itu ADR
+## What an ADR is
 
-**Architecture Decision Record** adalah catatan singkat satu keputusan arsitektur: *konteksnya apa,
-opsi apa saja yang dipertimbangkan, apa yang diputuskan, dan konsekuensinya apa.* Nilainya bukan
-dokumen tebal — melainkan **jejak alasan** agar tim di masa depan tahu *mengapa* sesuatu dipilih,
-bukan sekadar *apa* yang dipilih.
+An **Architecture Decision Record** is a short note about one architectural decision: *what the
+context was, which options were considered, what was decided, and what the consequences are.* Its
+value is not a thick document — it is a **trail of reasoning**, so that a future team knows *why*
+something was chosen, not merely *what* was chosen.
 
-## Empat format, singkat
+## Four formats, briefly
 
-- **Nygard (2011)** — format asli yang sangat ringan: *Title, Status, Context, Decision,
-  Consequences*. Cocok untuk memulai; nyaris tanpa friksi.
-- **MADR** — *Markdown Architectural Decision Records*. Menambah **daftar opsi yang dipertimbangkan**
-  beserta pro/kontra, sehingga trade-off terekam eksplisit. Ini format yang diekspor Advisor.
-- **Y-statements** — satu kalimat terstruktur: *"Dalam konteks X, menghadapi Y, kami memutuskan Z,
-  untuk mencapai A, menerima konsekuensi B."* Sangat padat; bagus untuk keputusan kecil.
-- **arc42 (Bagian 9)** — bukan format ADR tersendiri, melainkan tempat menaruh kumpulan ADR di dalam
-  templат dokumentasi arsitektur yang lebih besar.
+- **Nygard (2011)** — the original, very lightweight format: *Title, Status, Context, Decision,
+  Consequences*. Great for getting started; almost zero friction.
+- **MADR** — *Markdown Architectural Decision Records*. Adds an explicit **list of considered
+  options** with pros/cons, so the trade-off is recorded. This is the format the Advisor exports.
+- **Y-statements** — one structured sentence: *"In the context of X, facing Y, we decided Z, to
+  achieve A, accepting consequence B."* Extremely compact; good for small decisions.
+- **arc42 (Section 9)** — not a standalone ADR format, but the place to keep your collection of ADRs
+  inside a larger architecture-documentation template.
 
-## Lebih dalam
+## Going deeper
 
 :::expert
-Pilih **format teringan yang tetap merekam konsekuensi**. Kesalahan umum bukan memilih format yang
-salah, melainkan **tidak mencatat sama sekali** atau mencatat keputusan tanpa *alasan* dan *opsi yang
-ditolak*. ADR bersifat **immutable**: bila keputusan berubah, buat ADR baru yang *menggantikan* (bukan
-mengedit) yang lama — statusnya menjadi *superseded*. Simpan ADR **di dalam repo**, dekat kode, agar
-ikut ditinjau lewat pull request.
+Choose **the lightest format that still records consequences**. The common failure is not picking
+the wrong format — it is **not recording at all**, or recording the decision without the *rationale*
+and the *rejected options*. ADRs are **immutable**: when a decision changes, write a new ADR that
+*supersedes* (rather than edits) the old one — its status becomes *superseded*. Keep ADRs **in the
+repo**, close to the code, so they are reviewed through pull requests.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Setelah menjalankan **Advisor**, ekspor hasilnya sebagai **ADR (MADR)** dari toolbar — lengkap dengan
-faktor, prioritas kualitas, dan rekomendasi lima dimensi sebagai konteks keputusanmu.
+After running the **Advisor**, export the result as an **ADR (MADR)** from the toolbar — complete
+with your factors, quality priorities, and the five-dimension recommendation as the context of your
+decision.

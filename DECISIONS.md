@@ -59,6 +59,13 @@ few notable interpretations. The model values themselves are canonical — see t
 - **Canonical bilingual content** (factor labels/levels/help, option names, anti-pattern messages,
   fitness templates, risks) is reproduced verbatim from the Model Data Sheet and Option Content
   Sheet — see [EXTENDING.md](EXTENDING.md) for where each lives.
+- **English-first (2026-07).** The **default language is English** (`aa.lang` defaults to `'en'`;
+  the ID toggle stays fully functional for UI chrome) and the **Insights content layer is
+  English-only**: all 18 Markdown articles ship `translation_status: en` (ID titles/summaries stay
+  in frontmatter for the toggle-happy reader), the three lens datasets are plain English strings,
+  and the content gate now requires **at least the `en` version**. Rationale: one consistent
+  reading experience — mixing English UI copy with Indonesian article bodies read as unfinished,
+  and the model's canonical vocabulary (pattern names, QA terms) is English anyway.
 
 ## Content & features rollout (the "Insights" layer)
 
@@ -89,15 +96,21 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   domain (custom-domain safe).
 - **Review cadence + link liveness are non-blocking** by design (WARN / scheduled), never on the
   build path, so CI cannot turn red months later with no code change.
-- **Catalog, Playbook, and Review are all data-driven, not hand-authored per architecture.** Each
-  renders every architecture (all 21 D1–D5 options) from the model — `readerContent.ts` for the
-  explanation, and `readerAngles.ts` for the Playbook ("how to adopt") and Review ("what to check")
-  lenses — so **coverage can never be partial or drift**. Hand-authored Markdown is reserved for
-  *cross-cutting* guides & methods (decision guides, review checklists) listed under each section.
-  Each architecture cites **multiple** references (books + peer-reviewed journals/surveys), all real.
-- **No content is duplicated across lenses.** Only the Catalog carries the explanation (what / when
-  it fits / what it costs / deeper); a Playbook or Review page shows **only its own angle** plus a
-  **"Full explanation in the Catalog →" cross-link** — so the same text is never repeated three times.
+- **All four sections are data-driven, not hand-authored per architecture** (holistic coverage,
+  2026-07). Each of Catalog, Playbook, Review, **and Library** renders every architecture (all 21
+  D1–D5 options) from the model — `readerContent.ts` for the Catalog explanation, plus three
+  structured English datasets `insightPlaybooks.ts` (goal/prerequisites/steps/practices/pitfalls),
+  `insightReviews.ts` (overview/pros/cons/performance/scalability/DX/use-cases/verdict), and
+  `insightLibrary.ts` (definition/concepts/patterns/terminology), keyed `${dim}:${optionId}` — so
+  **coverage can never be partial or drift** (a unit test asserts 21×4 parity). These datasets
+  **replace the earlier `readerAngles.ts`** (two thin paragraphs per lens), which could not carry
+  the distinct section purposes. Hand-authored Markdown remains reserved for *cross-cutting* guides
+  & methods; each architecture cites **multiple** real references (books + peer-reviewed sources).
+- **No content is duplicated across lenses — the lens nav replaces the cross-link.** Each lens has
+  its own fields (nothing is repeated verbatim), and every architecture page carries a **LensNav**
+  (Catalog · Playbook · Review · Library chips) so the reader walks the **knowledge journey**
+  discover → implement → evaluate → reference on one page, instead of the earlier one-way
+  "Full explanation in the Catalog →" link.
 - **The reading-mode toggle lives in one place** (the header's Guided/Expert); the Insights area shows
   a one-line hint, not a second toggle — removing an earlier redundant control.
 - **Guided / Expert in Insights reuses the Advisor's `mode`** and the existing `.guided-only` /

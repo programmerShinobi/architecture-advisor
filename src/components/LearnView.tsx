@@ -5,8 +5,16 @@ import {
   IconAlertTriangle,
   IconMicroscope,
   IconChevronRight,
-  IconRocket,
   IconChecklist,
+  IconListNumbers,
+  IconShieldCheck,
+  IconBook2,
+  IconPuzzle,
+  IconAbc,
+  IconTargetArrow,
+  IconGauge,
+  IconUsers,
+  IconScale,
 } from '@tabler/icons-react';
 import { useI18n } from '../i18n/I18nContext';
 import { AVAILABLE_SECTIONS, sectionMeta } from '../config/sections';
@@ -14,20 +22,25 @@ import { contentBySection, contentBySlug, docTitle, docTldr } from '../lib/conte
 import { renderMarkdown } from '../lib/markdown';
 import { DIMENSIONS, DIMENSION_ORDER } from '../config/dimensions';
 import { READER_SECTIONS, READER_CITATIONS } from '../config/readerContent';
-import { PLAYBOOK_ANGLE, REVIEW_ANGLE } from '../config/readerAngles';
+import { INSIGHT_PLAYBOOKS } from '../config/insightPlaybooks';
+import { INSIGHT_REVIEWS } from '../config/insightReviews';
+import { INSIGHT_LIBRARY } from '../config/insightLibrary';
 import { CredibilityBlock } from './CredibilityBlock';
 import type { SectionId, ContentDoc } from '../config/contentSchema';
-import type { DimensionId, Bilingual } from '../types';
+import type { DimensionId } from '../types';
 
-// The "Learn" content area — a lazy-loaded island. Every architecture the Advisor evaluates (all
-// D1–D5 options) appears across ALL THREE sections, data-driven from the model so coverage can never
-// be partial or drift:
-//   • Catalog  → what it is / when it fits / what it costs (explain it)
-//   • Playbook → how to adopt it (+ decision guides in Markdown)
-//   • Review   → what to check when evaluating it (+ review methods in Markdown)
-// Guided/Expert (the app's mode, toggled once in the header) tailors the depth.
+// The "Insights" content area — a lazy-loaded island implementing HOLISTIC ARCHITECTURE COVERAGE:
+// every architecture the Advisor evaluates (all 21 D1–D5 options) appears in ALL FOUR sections,
+// data-driven from the model so coverage can never be partial or drift. Each section is a distinct
+// reading experience (no duplicated content — deep links cross-reference instead):
+//   • Catalog  → discover: what it is / when it fits / what it costs
+//   • Playbook → implement: goal, prerequisites, steps, best practices, pitfalls
+//   • Review   → evaluate: pros/cons, performance, scalability, DX, use cases, verdict
+//   • Library  → reference: definition, concepts, patterns, terminology
+// Content is English (product decision); UI chrome stays bilingual via the dict.
 
-type Angle = 'catalog' | 'playbook' | 'review';
+type Angle = 'catalog' | 'playbook' | 'review' | 'library';
+const LENSES: Angle[] = ['catalog', 'playbook', 'review', 'library'];
 
 interface Props {
   onOpenAdvisor: () => void;
@@ -44,6 +57,17 @@ const cardBase: React.CSSProperties = {
   textAlign: 'left',
   cursor: 'pointer',
   width: '100%',
+};
+
+const sectionHeading: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '7px',
+  fontSize: '12px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '.04em',
+  margin: '18px 0 8px',
 };
 
 function Sources({ cites }: { cites: string[] }) {
@@ -87,38 +111,97 @@ function InfoBlock({ icon, label, text, color }: { icon: React.ReactNode; label:
   );
 }
 
+function Bullets({ items, marker = '›', color = 'var(--color-text-tertiary)' }: { items: string[]; marker?: string; color?: string }) {
+  return (
+    <ul style={{ display: 'grid', gap: '6px', margin: 0, padding: 0, listStyle: 'none', fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>
+      {items.map((it) => (
+        <li key={it} style={{ display: 'flex', gap: '8px' }}>
+          <span style={{ color, flexShrink: 0 }}>{marker}</span>
+          <span>{it}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function LensHeading({ icon, label, color = 'var(--color-text-info)' }: { icon: React.ReactNode; label: string; color?: string }) {
+  return (
+    <h3 style={{ ...sectionHeading, color }}>
+      {icon}
+      {label}
+    </h3>
+  );
+}
+
+/** The lens-switcher shown on every architecture page: jump between the four perspectives. */
+function LensNav({ current, onSelect }: { current: Angle; onSelect: (a: Angle) => void }) {
+  const { t } = useI18n();
+  const label: Record<Angle, string> = {
+    catalog: t('section.catalog'),
+    playbook: t('section.playbook'),
+    review: t('section.review'),
+    library: t('section.library'),
+  };
+  return (
+    <nav aria-label={t('learn.lensNav')} style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '2px 0 16px' }}>
+      {LENSES.map((a) => (
+        <button
+          key={a}
+          type="button"
+          aria-current={a === current ? 'page' : undefined}
+          onClick={() => onSelect(a)}
+          className="f-chip"
+          style={a === current ? { color: 'var(--color-text-info)', background: 'var(--color-background-info)', borderColor: 'var(--color-border-info)' } : undefined}
+        >
+          {label[a]}
+        </button>
+      ))}
+    </nav>
+  );
+}
+
 /**
- * One architecture, seen through ONE lens — rendered from the model, with no content repeated
- * across sections: Catalog explains it (what/when-fits/what-costs/deeper); Playbook gives only the
- * "how to adopt" angle; Review gives only the "what to check" angle. Playbook/Review cross-link to
- * the Catalog for the full explanation instead of duplicating it.
+ * One architecture through ONE lens — all four lenses are data-driven from the model, each a
+ * distinct reading experience (discover / implement / evaluate / reference). The LensNav lets the
+ * reader walk the whole knowledge journey without leaving the page.
  */
 function ArchitectureArticle({
   dim,
   optId,
   angle,
   onOpenAdvisor,
-  onOpenCatalog,
+  onSelectLens,
 }: {
   dim: DimensionId;
   optId: string;
   angle: Angle;
   onOpenAdvisor: () => void;
-  onOpenCatalog: () => void;
+  onSelectLens: (a: Angle) => void;
 }) {
   const { t, tr } = useI18n();
   const section = READER_SECTIONS.find((s) => s.dim === dim);
   const entry = section?.entries.find((e) => e.optionId === optId);
   if (!section || !entry) return <p>{t('learn.empty')}</p>;
   const key = angleKey(dim, optId);
+  const playbook = INSIGHT_PLAYBOOKS[key];
+  const review = INSIGHT_REVIEWS[key];
+  const libraryRef = INSIGHT_LIBRARY[key];
 
   const header = (
     <>
       <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', marginBottom: '4px' }}>
         {dim} · <span className="guided-only">{tr(DIMENSIONS[dim].guidedLabel)}</span><span className="expert-only">{tr(DIMENSIONS[dim].name)}</span>
       </div>
-      <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '14px' }}>{entry.name}</h2>
+      <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '10px' }}>{entry.name}</h2>
+      <LensNav current={angle} onSelect={onSelectLens} />
     </>
+  );
+
+  const lead = (text: string, label: string) => (
+    <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginBottom: '14px' }}>
+      <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-info)', marginBottom: '4px', letterSpacing: '.04em' }}>{label}</div>
+      <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{text}</p>
+    </div>
   );
 
   const tryAdvisor = (
@@ -130,40 +213,111 @@ function ArchitectureArticle({
     </div>
   );
 
-  // Playbook / Review — only the lens content, plus a cross-link to the Catalog (no duplication).
-  if (angle !== 'catalog') {
-    const lens = angle === 'playbook' ? PLAYBOOK_ANGLE[key] : REVIEW_ANGLE[key];
-    const label = angle === 'playbook' ? t('learn.howToAdopt') : t('learn.whatToReview');
-    const Icon = angle === 'playbook' ? IconRocket : IconChecklist;
+  // ---- Playbook lens: implement it, step by step ----
+  if (angle === 'playbook' && playbook) {
     return (
       <article className="learn-article">
         {header}
-        <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '14px 16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: 700, color: 'var(--color-text-info)', marginBottom: '6px', letterSpacing: '.03em' }}>
-            <Icon size={16} aria-hidden />
-            {label}
-          </div>
-          <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--color-text-secondary)' }}>{lens ? tr(lens) : ''}</p>
-        </div>
-        <p style={{ marginTop: '12px' }}>
-          <button type="button" onClick={onOpenCatalog} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: 'var(--color-text-info)', fontSize: '12.5px', fontWeight: 500 }}>
-            {t('learn.seeInCatalog')}
-          </button>
-        </p>
+        {lead(playbook.goal, t('learn.pb.goal'))}
+        <LensHeading icon={<IconChecklist size={15} aria-hidden />} label={t('learn.pb.prereqs')} />
+        <Bullets items={playbook.prerequisites} />
+        <LensHeading icon={<IconListNumbers size={15} aria-hidden />} label={t('learn.pb.steps')} />
+        <ol style={{ display: 'grid', gap: '7px', margin: 0, paddingLeft: '22px', fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>
+          {playbook.steps.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ol>
+        <LensHeading icon={<IconShieldCheck size={15} aria-hidden />} label={t('learn.pb.practices')} color="var(--color-text-success)" />
+        <Bullets items={playbook.practices} marker="✓" color="var(--color-text-success)" />
+        <LensHeading icon={<IconAlertTriangle size={15} aria-hidden />} label={t('learn.pb.pitfalls')} color="var(--color-text-cost)" />
+        <Bullets items={playbook.pitfalls} marker="!" color="var(--color-text-cost)" />
         {tryAdvisor}
         <Sources cites={entry.cites} />
       </article>
     );
   }
 
-  // Catalog — the full explanation.
+  // ---- Review lens: evaluate it objectively ----
+  if (angle === 'review' && review) {
+    const metric = (label: string, icon: React.ReactNode, text: string) => (
+      <div style={{ ...cardBase, cursor: 'default' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 700, color: 'var(--color-text-tertiary)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '5px' }}>
+          {icon}
+          {label}
+        </div>
+        <div style={{ fontSize: '12.5px', lineHeight: 1.5, color: 'var(--color-text-secondary)' }}>{text}</div>
+      </div>
+    );
+    return (
+      <article className="learn-article">
+        {header}
+        {lead(review.overview, t('learn.rv.overview'))}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '12px', marginBottom: '4px' }}>
+          <div>
+            <LensHeading icon={<IconThumbUp size={15} aria-hidden />} label={t('learn.rv.pros')} color="var(--color-text-success)" />
+            <Bullets items={review.pros} marker="+" color="var(--color-text-success)" />
+          </div>
+          <div>
+            <LensHeading icon={<IconAlertTriangle size={15} aria-hidden />} label={t('learn.rv.cons')} color="var(--color-text-cost)" />
+            <Bullets items={review.cons} marker="−" color="var(--color-text-cost)" />
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '10px', margin: '14px 0' }}>
+          {metric(t('learn.rv.performance'), <IconGauge size={13} aria-hidden />, review.performance)}
+          {metric(t('learn.rv.scalability'), <IconTargetArrow size={13} aria-hidden />, review.scalability)}
+          {metric(t('learn.rv.dx'), <IconUsers size={13} aria-hidden />, review.dx)}
+        </div>
+        <LensHeading icon={<IconChecklist size={15} aria-hidden />} label={t('learn.rv.useCases')} />
+        <Bullets items={review.useCases} />
+        <div style={{ marginTop: '16px', background: 'var(--color-background-success)', border: '1px solid var(--color-text-success)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 700, color: 'var(--color-text-success)', marginBottom: '4px', letterSpacing: '.04em' }}>
+            <IconScale size={14} aria-hidden />
+            {t('learn.rv.verdict')}
+          </div>
+          <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{review.verdict}</p>
+        </div>
+        {tryAdvisor}
+        <Sources cites={entry.cites} />
+      </article>
+    );
+  }
+
+  // ---- Library lens: the reference card ----
+  if (angle === 'library' && libraryRef) {
+    return (
+      <article className="learn-article">
+        {header}
+        {lead(libraryRef.definition, t('learn.lb.definition'))}
+        <LensHeading icon={<IconBook2 size={15} aria-hidden />} label={t('learn.lb.concepts')} />
+        <Bullets items={libraryRef.concepts} />
+        <LensHeading icon={<IconPuzzle size={15} aria-hidden />} label={t('learn.lb.patterns')} />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          {libraryRef.patterns.map((p) => (
+            <span key={p} className="f-chip" style={{ cursor: 'default' }}>
+              {p}
+            </span>
+          ))}
+        </div>
+        <LensHeading icon={<IconAbc size={15} aria-hidden />} label={t('learn.lb.terms')} />
+        <dl style={{ display: 'grid', gap: '8px', margin: 0, fontSize: '13px', lineHeight: 1.5 }}>
+          {libraryRef.terms.map(({ term, def }) => (
+            <div key={term}>
+              <dt style={{ display: 'inline', fontWeight: 600, color: 'var(--color-text-primary)' }}>{term}</dt>
+              <dd style={{ display: 'inline', margin: 0, color: 'var(--color-text-secondary)' }}> — {def}</dd>
+            </div>
+          ))}
+        </dl>
+        {tryAdvisor}
+        <Sources cites={entry.cites} />
+      </article>
+    );
+  }
+
+  // ---- Catalog lens (default): discover it ----
   return (
     <article className="learn-article">
       {header}
-      <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginBottom: '16px' }}>
-        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-info)', marginBottom: '4px', letterSpacing: '.04em' }}>{t('learn.tldr')}</div>
-        <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{tr(entry.what)}</p>
-      </div>
+      {lead(tr(entry.what), t('learn.tldr'))}
       <div style={{ display: 'grid', gap: '14px' }}>
         <InfoBlock icon={<IconThumbUp size={18} aria-hidden />} label={t('learn.whenFits')} text={tr(entry.fits)} color="var(--color-text-success)" />
         <InfoBlock icon={<IconAlertTriangle size={18} aria-hidden />} label={t('learn.whatCosts')} text={tr(entry.cost)} color="var(--color-text-cost)" />
@@ -177,7 +331,7 @@ function ArchitectureArticle({
   );
 }
 
-/** A hand-authored Markdown article (decision guides / review methods). */
+/** A hand-authored Markdown article (cross-cutting guides / methods / further reading). */
 function MarkdownArticle({ doc, onOpenAdvisor }: { doc: ContentDoc; onOpenAdvisor: () => void }) {
   const { t, lang } = useI18n();
   return (
@@ -213,11 +367,14 @@ export default function LearnView({ onOpenAdvisor }: Props) {
     </button>
   );
 
-  const shortAngle = (dim: DimensionId, optId: string, angle: Angle, entryWhat: Bilingual): string => {
+  // The one-line card blurb differs per lens so each section reads distinctly.
+  const cardBlurb = (dim: DimensionId, optId: string, angle: Angle): string => {
     const key = angleKey(dim, optId);
-    if (angle === 'playbook' && PLAYBOOK_ANGLE[key]) return tr(PLAYBOOK_ANGLE[key]);
-    if (angle === 'review' && REVIEW_ANGLE[key]) return tr(REVIEW_ANGLE[key]);
-    return tr(entryWhat);
+    if (angle === 'playbook') return INSIGHT_PLAYBOOKS[key]?.goal ?? '';
+    if (angle === 'review') return INSIGHT_REVIEWS[key]?.overview ?? '';
+    if (angle === 'library') return INSIGHT_LIBRARY[key]?.definition ?? '';
+    const entry = READER_SECTIONS.find((s) => s.dim === dim)?.entries.find((e) => e.optionId === optId);
+    return entry ? tr(entry.what) : '';
   };
 
   // A dimension-grouped grid of every architecture, for a given lens.
@@ -234,13 +391,14 @@ export default function LearnView({ onOpenAdvisor }: Props) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '11px' }}>
             {DIMENSIONS[dim].options.map((opt) => {
               const entry = READER_SECTIONS.find((s) => s.dim === dim)?.entries.find((e) => e.optionId === opt.id);
+              const blurb = cardBlurb(dim, opt.id, angle);
               return (
                 <button key={opt.id} type="button" className="learn-card" style={cardBase} onClick={() => setArch({ dim, optId: opt.id, angle })}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '14px', fontWeight: 600 }}>{opt.name}</span>
                     <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0 }} />
                   </div>
-                  {entry && <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>{shortAngle(dim, opt.id, angle, entry.what)}</div>}
+                  {blurb && <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>{blurb}</div>}
                   <div style={{ fontSize: '10.5px', color: 'var(--color-text-info)', marginTop: '8px', fontWeight: 500 }}>{entry?.cites.length ?? 0} {t('learn.refs')}</div>
                 </button>
               );
@@ -261,7 +419,7 @@ export default function LearnView({ onOpenAdvisor }: Props) {
           optId={arch.optId}
           angle={arch.angle}
           onOpenAdvisor={onOpenAdvisor}
-          onOpenCatalog={() => setArch({ dim: arch.dim, optId: arch.optId, angle: 'catalog' })}
+          onSelectLens={(a) => setArch({ dim: arch.dim, optId: arch.optId, angle: a })}
         />
       </div>
     );
@@ -278,11 +436,17 @@ export default function LearnView({ onOpenAdvisor }: Props) {
     );
   }
 
-  // ---- Section view ----
+  // ---- Section view (all four sections carry the per-architecture grid) ----
   if (section) {
     const meta = sectionMeta(section);
-    const angle: Angle = section === 'playbook' ? 'playbook' : section === 'review' ? 'review' : 'catalog';
-    const intro = section === 'catalog' ? t('learn.catalogIntro') : section === 'playbook' ? t('learn.playbookIntro') : t('learn.reviewIntro');
+    const isLens = (LENSES as string[]).includes(section);
+    const angle = (isLens ? section : 'catalog') as Angle;
+    const intro =
+      section === 'catalog' ? t('learn.catalogIntro')
+      : section === 'playbook' ? t('learn.playbookIntro')
+      : section === 'review' ? t('learn.reviewIntro')
+      : section === 'library' ? t('learn.libraryIntro')
+      : meta ? t(meta.desc) : '';
     const guides = section === 'catalog' ? [] : contentBySection(section);
 
     return (
@@ -290,20 +454,24 @@ export default function LearnView({ onOpenAdvisor }: Props) {
         {backLink(t('learn.back'), () => setSection(null))}
         <h1 style={{ fontSize: 'var(--aa-fs-xl)', fontWeight: 600, marginBottom: '4px' }}>{meta ? t(meta.label) : section}</h1>
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '18px', maxWidth: '72ch' }}>
-          {totalArchitectures} {t('learn.architectures')} · {intro}
+          {isLens ? `${totalArchitectures} ${t('learn.architectures')} · ` : `${guides.length} ${t('learn.articles')} · `}{intro}
         </p>
 
         {/* By architecture — all D1–D5 options, through this section's lens */}
-        {section !== 'catalog' && (
+        {isLens && section !== 'catalog' && (
           <h2 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', margin: '4px 0 12px' }}>{t('learn.byArchitecture')}</h2>
         )}
-        {architectureGrid(angle)}
+        {isLens && architectureGrid(angle)}
 
-        {/* Cross-cutting guides / methods (Markdown) */}
+        {/* Cross-cutting Markdown pieces: guides/methods under Playbook & Review, further reading under Library. */}
         {guides.length > 0 && (
           <div style={{ marginTop: '8px' }}>
-            <div className="f-div" style={{ margin: '4px 0 16px' }} />
-            <h2 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', marginBottom: '12px' }}>{t('learn.guides')}</h2>
+            {isLens && <div className="f-div" style={{ margin: '4px 0 16px' }} />}
+            {isLens && (
+              <h2 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--color-text-tertiary)', marginBottom: '12px' }}>
+                {section === 'library' ? t('learn.furtherReading') : t('learn.guides')}
+              </h2>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
               {guides.map((d) => (
                 <button key={d.slug} type="button" className="learn-card" style={cardBase} onClick={() => setSlug(d.slug)}>
@@ -331,6 +499,7 @@ export default function LearnView({ onOpenAdvisor }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '14px' }}>
         {AVAILABLE_SECTIONS.map((s) => {
           const Icon = s.icon;
+          const isLens = (LENSES as string[]).includes(s.id);
           const guides = s.id === 'catalog' ? 0 : contentBySection(s.id).length;
           return (
             <button key={s.id} type="button" className="learn-card" style={{ ...cardBase, padding: 'var(--aa-panel-pad)', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
@@ -340,8 +509,14 @@ export default function LearnView({ onOpenAdvisor }: Props) {
               <span style={{ fontSize: '16px', fontWeight: 600 }}>{t(s.label)}</span>
               <span style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5, flexGrow: 1 }}>{t(s.desc)}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--color-text-info)', fontWeight: 600, flexWrap: 'wrap' }}>
-                {totalArchitectures} {t('learn.architectures')}
-                {guides > 0 && <span style={{ color: 'var(--color-text-tertiary)' }}>· {guides} {t('learn.guidesWord')}</span>}
+                {isLens ? (
+                  <>
+                    {totalArchitectures} {t('learn.architectures')}
+                    {guides > 0 && <span style={{ color: 'var(--color-text-tertiary)' }}>· {guides} {t('learn.guidesWord')}</span>}
+                  </>
+                ) : (
+                  <>{guides} {t('learn.articles')}</>
+                )}
                 <IconArrowRight size={13} aria-hidden />
               </span>
             </button>

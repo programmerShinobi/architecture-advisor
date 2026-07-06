@@ -9,7 +9,7 @@ summary_tldr_en: "Data is the hardest decision to reverse. A single shared datab
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D3]
   options: [single-db, db-per-service, cqrs, event-sourcing, polyglot]
@@ -24,38 +24,38 @@ status: published
 author: Architecture Advisor
 ---
 
-## Kenapa data itu genting
+## Why data is the critical decision
 
-Kamu bisa mengganti bahasa atau framework, tetapi mengubah cara data dimiliki dan dijaga konsisten
-jauh lebih mahal. Karena itu, putuskan D3 dengan hati-hati.
+You can swap a language or a framework, but changing how data is owned and kept consistent is far
+more expensive. That is why D3 deserves the most care.
 
 :::guided
-- **Satu basis data bersama:** semua bagian membaca/menulis ke satu tempat. Paling sederhana, dan
-  "benar seketika" itu mudah — tetapi semua ikut terkopling.
-- **Database-per-service:** tiap layanan punya datanya sendiri. Mandiri, tetapi menjaga data lintas
-  layanan tetap cocok jadi urusan aplikasi.
-- **CQRS:** pisahkan model *menulis* dari model *membaca* saat keduanya sangat berbeda bebannya.
-- **Event Sourcing:** simpan riwayat sebagai daftar peristiwa — audit lengkap, tapi rumit.
-- **Polyglot:** pakai jenis basis data yang tepat untuk tiap kebutuhan.
+- **Single shared database:** every part reads/writes one place. Simplest, and "immediately correct"
+  comes for free — but everything is coupled.
+- **Database-per-service:** each service owns its data. Independent, but keeping data consistent
+  across services becomes the application's job.
+- **CQRS:** separate the *write* model from the *read* model when their loads differ sharply.
+- **Event sourcing:** store history as a list of events — a complete audit trail, but complex.
+- **Polyglot:** use the right kind of database for each need.
 :::
 
-## Panduan singkat
+## A short guide
 
-- Sistem kecil / satu tim → **satu basis data** (jangan memecah tanpa alasan).
-- Layanan yang benar-benar butuh mandiri → **database-per-service** (+ saga/outbox).
-- Baca dan tulis sangat berbeda skalanya → **CQRS** pada irisan itu saja.
-- Riwayat adalah domainnya (keuangan, audit) → **event sourcing**.
-- Pola akses beragam tajam → **polyglot** (sadari biaya operasionalnya).
+- Small system / one team → **single database** (don't split without a reason).
+- Services that genuinely need independence → **database-per-service** (+ sagas/outbox).
+- Reads and writes scale very differently → **CQRS** on that slice only.
+- History *is* the domain (finance, audit) → **event sourcing**.
+- Sharply divergent access patterns → **polyglot** (know the operational cost).
 
 :::expert
-**Lebih dalam.** Kleppmann adalah rujukan untuk replikasi, partisi, dan model konsistensi. Di dunia
-microservices, ganti transaksi lintas-layanan dengan **saga** + **transactional outbox** dan rangkul
-konsistensi eventual secara sengaja. CQRS dan event sourcing **sering diterapkan berlebihan** — pakai
-selektif pada bagian yang benar-benar menuntutnya. Studi empiris (Laigner et al.) menegaskan data
-per-layanan adalah bagian tersulit dari microservices dalam praktik.
+**Deeper.** Kleppmann is the reference for replication, partitioning, and consistency models. In a
+microservices world, replace cross-service transactions with **sagas** + the **transactional
+outbox** and embrace eventual consistency deliberately. CQRS and event sourcing are **commonly
+over-applied** — use them selectively on the parts that truly demand them. The empirical study
+(Laigner et al.) confirms per-service data is the hardest part of microservices in practice.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Faktor seperti *dataVolume* dan *consistency* menggeser rekomendasi **D3** di Advisor — lihat radar
-dan peringatan anti-pattern (mis. microservices di atas satu basis data bersama).
+Factors such as *dataVolume* and *consistency* shift the **D3** recommendation in the Advisor —
+check the radar and the anti-pattern warnings (e.g. microservices on top of one shared database).
