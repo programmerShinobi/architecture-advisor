@@ -50,12 +50,13 @@ Articles are Markdown files under **`content/<section>/<slug>.md`** (git-as-CMS;
 are the teaching layer around the Advisor — plain-language for newcomers, deeper for experts — and
 every article is **bound to the frozen model**.
 
-1. Create `content/<section>/<slug>.md` (`<section>` ∈ catalog · playbook · review; more sections
-   are defined in `src/config/sections.ts` but gated `available: false` until built).
+1. Create `content/<section>/<slug>.md` (`<section>` ∈ catalog · playbook · review · library; more
+   sections are defined in `src/config/sections.ts` but gated `available: false` until built).
 2. Fill the **frontmatter** — the contract is `src/config/contentSchema.ts`:
    `title_id/_en`, `slug` (must equal the filename), `section`, `audience` (`awam`/`expert`),
    `summary_tldr_id/_en`, `evidence_strength` (`strong`/`moderate`/`emerging`), `last_reviewed`
-   and `review_due = last_reviewed + 12 months`, `translation_status` (must include `id`),
+   and `review_due = last_reviewed + 12 months`, `translation_status` (must include `en` —
+   English-first content, decision 2026-07),
    `related_advisor` ({dimensions, options} — **every id must exist in `src/config/dimensions.ts`**),
    `sources` (≥1 with a well-formed URL/DOI), `status`, `author`.
 3. Write the body: TL;DR → explanation → deep dive → "Try in the Advisor" → the credibility block
@@ -68,15 +69,28 @@ every article is **bound to the frozen model**.
 `:::`) — the safe renderer maps these to the app's `.expert-only` / `.guided-only` classes, so the
 Insights header's Guided/Expert toggle tailors the reading for newcomers vs experts.
 
-**The Catalog is different — it is data-driven, not Markdown.** It renders from
-`src/config/readerContent.ts` so it always covers **every** architecture the Advisor evaluates
-(all D1–D5 options). To add/extend an architecture's explanation or its cited references, edit the
-option's entry (or `READER_CITATIONS`) there — do **not** add a Catalog Markdown file. Hand-authored
-Markdown is for Playbook / Review / other sections.
+**The per-architecture pages are data-driven, not Markdown.** All four sections render an entry
+for **every** architecture the Advisor evaluates (all 21 D1–D5 options) from four datasets keyed by
+the frozen model:
 
-Article content is bilingual (ID default); it never re-copies model data — reference `src/config`
-so it can't drift from the engine. Link liveness (`links:check`) and review cadence
-(`content:review`) are separate **non-blocking** checks, not build gates (deferred to a later wave).
+- **Catalog** — `src/config/readerContent.ts` (what it is / when it fits / what it costs / deeper,
+  plus `READER_CITATIONS`).
+- **Playbook** — `src/config/insightPlaybooks.ts` (goal, prerequisites, steps, best practices,
+  pitfalls).
+- **Review** — `src/config/insightReviews.ts` (overview, pros/cons, performance, scalability,
+  developer experience, use cases, verdict).
+- **Library** — `src/config/insightLibrary.ts` (definition, key concepts, related patterns,
+  terminology).
+
+To extend an architecture's coverage, edit its `'D<n>:<optionId>'` entry in the matching dataset —
+do **not** add a per-architecture Markdown file. A unit test (`LearnView.test.tsx`) asserts 21×4
+parity, so a missing entry fails the build. Hand-authored Markdown is for **cross-cutting** guides,
+methods, and Library further-reading articles.
+
+Article bodies are **English** (the site's default language; ID titles/TL;DRs stay in frontmatter
+for the language toggle); content never re-copies model data — reference `src/config` so it can't
+drift from the engine. Link liveness (`links:check`) and review cadence (`content:review`) are
+separate **non-blocking** checks, not build gates (deferred to a later wave).
 
 ## Guards — run after any model change
 

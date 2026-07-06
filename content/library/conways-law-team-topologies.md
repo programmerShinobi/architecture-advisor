@@ -9,7 +9,7 @@ summary_tldr_en: "Systems tend to mirror the communication structure of the orga
 evidence_strength: moderate
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1, D5]
   options: [microservices, modular-monolith, micro-frontends]
@@ -22,49 +22,51 @@ status: published
 author: Architecture Advisor
 ---
 
-## Hukumnya
+## The law
 
-> *"Organisasi yang merancang sistem … dibatasi untuk menghasilkan desain yang meniru struktur
-> komunikasi organisasi itu."* — Mel Conway, 1968
+> *"Any organization that designs a system … is constrained to produce a design whose structure is a
+> copy of the organization's communication structure."* — Mel Conway, 1968
 
-Bukan slogan: studi *mirroring hypothesis* (MacCormack dkk.) menemukan produk dari organisasi yang
-longgar-terkopling memang lebih modular daripada produk dari organisasi yang rapat-terkopling.
+Not just a slogan: the *mirroring hypothesis* study (MacCormack et al.) found that products from
+loosely-coupled organizations really are more modular than products from tightly-coupled ones.
 
 :::guided
-**Analogi:** kalau tiga tim membangun satu rumah tanpa saling bicara, hasilnya rumah dengan tiga
-gaya dapur. Software sama: batas layanan diam-diam mengikuti batas obrolan tim.
+**An analogy:** if three teams build one house without talking to each other, you get a house with
+three kitchen styles. Software is the same: service boundaries quietly follow the boundaries of who
+talks to whom.
 :::
 
-## Dipakai dua arah
+## Use it in both directions
 
-- **Diagnosis:** arsitektur "berantakan" sering kali cermin struktur komunikasi — memperbaiki kode
-  tanpa memperbaiki tim hanya menunda kambuh.
-- **Inverse Conway Maneuver:** tentukan dulu arsitektur target, lalu **susun tim mengikuti batas
-  itu** — tim per bounded context menghasilkan layanan per bounded context.
+- **Diagnosis:** a "messy" architecture is often a mirror of the communication structure — fixing
+  the code without fixing the teams only postpones the relapse.
+- **Inverse Conway Maneuver:** decide the target architecture first, then **shape the teams along
+  those boundaries** — a team per bounded context yields a service per bounded context.
 
-## Kosakata Team Topologies (2019)
+## The Team Topologies vocabulary (2019)
 
-| Jenis tim | Peran |
+| Team type | Role |
 |---|---|
-| **Stream-aligned** | memiliki satu alur nilai ujung-ke-ujung (mayoritas tim) |
-| **Platform** | menyediakan layanan internal self-service agar stream-aligned cepat |
-| **Enabling** | melatih/menularkan kemampuan, lalu pergi |
-| **Complicated-subsystem** | memiliki bagian yang butuh keahlian langka |
+| **Stream-aligned** | owns one end-to-end stream of value (the majority of teams) |
+| **Platform** | provides self-service internal services so stream-aligned teams move fast |
+| **Enabling** | teaches/transfers a capability, then leaves |
+| **Complicated-subsystem** | owns a part that needs rare expertise |
 
-Plus tiga mode interaksi: *collaboration*, *X-as-a-service*, *facilitating* — dipilih sadar, karena
-setiap kolaborasi permanen adalah kopling organisasi (dan, per Conway, akan jadi kopling sistem).
+Plus three interaction modes: *collaboration*, *X-as-a-service*, *facilitating* — chosen
+deliberately, because every permanent collaboration is organizational coupling (and, per Conway,
+will become system coupling).
 
 :::expert
-**Lebih dalam.** Inilah alasan faktor **team/distribution** menggerakkan D1 di Advisor: microservices
-"berhasil" ketika batas layanan = batas tim stream-aligned dengan *cognitive load* yang pas — bukan
-sebaliknya. Gejala arsitektural dari topologi yang salah: layanan yang selalu dirilis bersama
-(kopling tim tersembunyi), platform yang jadi bottleneck tiket (bukan self-service), dan
-micro-frontends tanpa tim UI yang benar-benar terpisah. Untuk organisasi kecil, kesimpulannya
-menenangkan: satu tim → satu deployable (modular monolith) bukan kompromi, melainkan Conway yang
-sedang berpihak padamu.
+**Deeper.** This is why the **team/distribution** factors move D1 in the Advisor: microservices
+"work" when service boundaries = the boundaries of stream-aligned teams with the right *cognitive
+load* — not the other way round. Architectural symptoms of the wrong topology: services always
+released together (hidden team coupling), a platform that becomes a ticket bottleneck (not
+self-service), and micro-frontends without genuinely separate UI teams. For small organizations the
+conclusion is calming: one team → one deployable (a modular monolith) is not a compromise — it is
+Conway's Law working in your favour.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Ubah faktor **ukuran tim** dan **distribusi tim** di Advisor lalu perhatikan D1/D5 bergeser — itulah
-Hukum Conway yang sedang dihitung.
+Change the **team size** and **team distribution** factors in the Advisor and watch D1/D5 shift —
+that is Conway's Law being computed.

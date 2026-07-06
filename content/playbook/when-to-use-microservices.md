@@ -9,7 +9,7 @@ summary_tldr_en: "Microservices pay off for large organisations with parts that 
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices, serverless]
@@ -23,36 +23,36 @@ status: published
 author: Architecture Advisor
 ---
 
-## Godaan dan jebakannya
+## The temptation and the trap
 
-Microservices sering dipilih karena tren, bukan kebutuhan. Padahal manfaatnya **bersyarat** — dan
-biayanya nyata sejak hari pertama.
+Microservices are often chosen because of the trend, not the need. Yet their benefits are
+**conditional** — and the costs are real from day one.
 
 :::guided
-**Kapan cocok:** organisasi besar/terdistribusi; bagian-bagian yang benar-benar butuh skala berbeda;
-tim yang sudah punya otomasi, observability, dan DevOps matang.
+**When they fit:** a large or distributed organisation; parts of the system that genuinely need to
+scale differently; teams that already have automation, observability, and mature DevOps.
 
-**Kapan sebaiknya tidak:** produk awal, tim kecil, domain yang belum stabil. Di sini monolith atau
-**modular monolith** biasanya lebih cepat dan lebih murah.
+**When to hold off:** an early product, a small team, an unstable domain. There, a monolith or a
+**modular monolith** is usually faster and cheaper.
 :::
 
-## Aturan praktis
+## Rules of thumb
 
-1. **Mulai monolitik.** Buktikan produk dan temukan batas domainnya dulu.
-2. **Tegakkan batas modul** (modular monolith) di dalam satu proses.
-3. **Ekstrak layanan** hanya saat ada kebutuhan nyata: skala independen, deploy independen, atau tim
-   independen — sepanjang *bounded context*, memakai Strangler Fig.
-4. **Ukur biayanya:** jaringan, konsistensi eventual, tracing, dan operasional.
+1. **Start monolithic.** Prove the product and discover the domain boundaries first.
+2. **Enforce module boundaries** (modular monolith) inside a single process.
+3. **Extract services** only when there is a real need: independent scaling, independent deploys, or
+   independent teams — along *bounded contexts*, using the Strangler Fig.
+4. **Measure the cost:** network hops, eventual consistency, tracing, and operations.
 
 :::expert
-**Lebih dalam.** Survei (Dragoni et al.) dan tinjauan sistematis (Soldani et al.) menunjukkan manfaat
-microservices bergantung pada kematangan organisasi; keluhan teratas konsisten: kompleksitas
-operasional dan konsistensi data. Studi industri (Bogner et al.) mencatat dampak beragam pada
-maintainability. Hukum Conway berlaku: batas layanan cenderung mengikuti batas tim — rancang keduanya
-bersama.
+**Deeper.** Surveys (Dragoni et al.) and systematic reviews (Soldani et al.) show that microservice
+benefits depend on organisational maturity; the top complaints are consistent: operational
+complexity and data consistency. Industry studies (Bogner et al.) record mixed effects on
+maintainability. Conway's Law applies: service boundaries tend to follow team boundaries — design
+both together.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Faktor *scale*, *team*, dan *devops* di Advisor menggeser D1 — lihat apakah microservices benar-benar
-unggul untuk skenariomu, atau justru modular monolith.
+The *scale*, *team*, and *devops* factors shift D1 in the Advisor — see whether microservices truly
+win for your scenario, or whether a modular monolith does.

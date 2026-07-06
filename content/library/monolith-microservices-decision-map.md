@@ -9,7 +9,7 @@ summary_tldr_en: "It's not a binary choice. The map: (1) starting out → monoli
 evidence_strength: strong
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices, serverless]
@@ -23,46 +23,46 @@ status: published
 author: Architecture Advisor
 ---
 
-## Petanya, satu layar
+## The map, on one screen
 
 ```
-Mulai baru? ──────────────► MONOLITH (satu deploy, satu DB, modul rapi sejak awal)
+Starting fresh? ──────────► MONOLITH (one deploy, one DB, tidy modules from day one)
       │
-      ▼ tim saling injak / build lambat?
-MODULAR MONOLITH (batas modul ditegakkan CI, per bounded context)
+      ▼ teams stepping on each other / slow builds?
+MODULAR MONOLITH (module boundaries enforced in CI, per bounded context)
       │
-      ▼ ada bagian yang BUTUH skala/deploy/tim mandiri + DevOps matang?
-EKSTRAK LAYANAN ITU SAJA (Strangler Fig; data ikut dimiliki layanan)
+      ▼ one part NEEDS independent scale/deploys/teams + mature DevOps?
+EXTRACT JUST THAT SERVICE (Strangler Fig; the data moves with the service)
       │
-      ▼ beban bergelombang, stateless, toleran cold-start?
-SERVERLESS untuk tepi ber-burst (fungsi kecil, keadaan di layanan terkelola)
+      ▼ spiky, stateless, cold-start-tolerant load?
+SERVERLESS for the bursty edges (small functions, state in managed services)
 ```
 
 :::guided
-**Cara membacanya:** turun satu anak tangga hanya ketika **sakitnya nyata** — bukan karena tren.
-Setiap anak tangga menambah biaya operasional yang permanen.
+**How to read it:** step down one rung only when **the pain is real** — not because of the trend.
+Every rung adds permanent operational cost.
 :::
 
-## Sinyal untuk tiap langkah
+## Signals for each step
 
-| Langkah | Sinyal "waktunya" | Sinyal "jangan dulu" |
+| Step | "It's time" signals | "Not yet" signals |
 |---|---|---|
-| Tetap monolith | produk belum terbukti; tim ≤ ~8 | — |
-| → Modular monolith | konflik merge sering; domain mulai jelas | batas domain masih berubah-ubah |
-| → Ekstrak layanan | satu modul dominan beban/rilisnya | belum ada CI/CD + observability |
-| → Serverless di tepi | trafik burst; kerja event-driven | jalur kritis-latensi; stateful berat |
+| Stay monolith | product unproven; team ≤ ~8 | — |
+| → Modular monolith | frequent merge conflicts; domain taking shape | domain boundaries still churning |
+| → Extract a service | one module dominates load/releases | no CI/CD + observability yet |
+| → Serverless at the edge | bursty traffic; event-driven work | latency-critical paths; heavy state |
 
 :::expert
-**Lebih dalam.** Klasifikasi refactoring (Fritzsch et al.) menunjukkan ekstraksi inkremental
-per-bounded-context adalah jalur yang paling sering berhasil; tinjauan sistematis (Soldani et al.)
-menempatkan kompleksitas operasional dan konsistensi data sebagai "pain" dominan — keduanya biaya
-tetap begitu kamu terdistribusi. Aturan emas Newman: *jangan pecah basis datanya belakangan* —
-kepemilikan data ikut layanan sejak ekstraksi pertama (saga/outbox menggantikan transaksi lintas
-layanan; lihat artikel Review "Konsistensi Data"). Kembali satu langkah (merge layanan yang terlalu
-halus) adalah keputusan sah — arah panah peta ini dua arah.
+**Deeper.** The refactoring classification (Fritzsch et al.) shows incremental,
+per-bounded-context extraction is the path that most often succeeds; the systematic review
+(Soldani et al.) ranks operational complexity and data consistency as the dominant "pains" — both
+are fixed costs once you distribute. Newman's golden rule: *don't split the database later* — data
+ownership moves with the service from the first extraction (sagas/outbox replace cross-service
+transactions; see the Review article "Reviewing Data Consistency"). Stepping back up (merging
+over-fine services) is a legitimate decision — this map's arrows run both ways.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Isi faktor proyekmu di **Advisor** — peringkat **D1** + kartu **jalur migrasi** pada dasarnya
-menempatkanmu di salah satu anak tangga peta ini, lengkap dengan alasannya.
+Fill in your project factors in the **Advisor** — the **D1** ranking + the **migration path** card
+essentially place you on one of this map's rungs, reasons included.

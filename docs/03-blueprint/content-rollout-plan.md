@@ -41,7 +41,7 @@ hand-authored per architecture — and no explanation is repeated across them.
 |---|---|---|
 | **Discoverability / SSG** | **Deferred.** Client-rendered inside the existing SPA; SSG is a separate future proposal only if search discoverability becomes a stated goal. | Hash-state SPA on GitHub Pages (no custom domain → limited SEO upside); SSG + router would risk hydration clashes with the Advisor's `#s=` share-state and the 120 kB initial-JS budget. |
 | **Routing** | **Light**: a two-item top nav (Advisor · Insights) + in-view section/article state, lazy-loaded. **No `react-router`.** | Avoids a second navigation paradigm; the Advisor keeps sole ownership of the URL hash / share links. |
-| **Section shape** | **All three sections are data-driven** from the model (`readerContent.ts` + `readerAngles.ts`) → every architecture (all 21 D1–D5 options), grouped by decision, through three lenses (Catalog = explain, Playbook = how-to-adopt, Review = what-to-check). Hand-authored Markdown is reserved for **cross-cutting** guides/methods listed under Playbook & Review. | Comprehensive by construction; cannot go partial or drift from the model. **No explanation is duplicated** — Playbook/Review cross-link to the Catalog. |
+| **Section shape** | **All four sections are data-driven** from the model (`readerContent.ts` + `insightPlaybooks.ts` / `insightReviews.ts` / `insightLibrary.ts`) → every architecture (all 21 D1–D5 options), grouped by decision, through four structured lenses (Catalog = discover, Playbook = implement, Review = evaluate, Library = reference). Hand-authored Markdown is reserved for **cross-cutting** guides/methods/further reading listed under each section. | Comprehensive by construction (a unit test asserts 21×4 parity); cannot go partial or drift from the model. **No explanation is duplicated** — a per-page **LensNav** walks the Catalog → Playbook → Review → Library journey. |
 | **Content format** | **Markdown + YAML frontmatter** for the cross-cutting guides; rendered by a small **dependency-free, XSS-safe** renderer with `:::guided` / `:::expert` blocks. | Matches the repo's hand-built ethos (no `gray-matter` / `react-markdown` / micromark); keeps the Insights chunk small. |
 | **Diagrams** | **Hand-built SVG or static images only. No Mermaid.** | DECISIONS.md already **rejected Mermaid** (unreliable + heavy). |
 | **Frontmatter validation** | **Dependency-free guard** ([`scripts/check-content.mjs`](../../scripts/check-content.mjs)) in the style of the model guards — **not** `zod`. | The repo's guards are proudly dependency-free; it also cross-checks `related_advisor` against the frozen model. |
@@ -111,21 +111,34 @@ Advisor" → credibility block (multiple `sources[]`, evidence badge, "Terakhir 
 wired into `ci.yml` (`docs-integrity.yml` untouched); `LearnView` (lazy) + `CredibilityBlock`; i18n.
 
 **Phase 1 — Wave A:**
-- **Every architecture appears in all three sections**, data-driven from the model — three lenses on
-  the same 21 D1–D5 options (`readerContent.ts` + `readerAngles.ts`):
+- **Every architecture appears in all sections**, data-driven from the model — distinct lenses on
+  the same 21 D1–D5 options:
   - **Catalog** — what it is / when it fits / what it costs.
   - **Playbook** — how to adopt it (+ 7 cross-cutting decision guides in Markdown: ADRs, Strangler-Fig
     migration, choosing communication / data / code-structure / frontend, when to use microservices).
   - **Review** — what to check when evaluating it (+ 6 Markdown methods: ATAM checklist, detecting a
     distributed monolith, fitness functions, data-consistency review, serverless readiness, avoiding
     premature microservices).
-- **No content is duplicated across lenses:** only the Catalog carries the explanation; a Playbook or
-  Review page shows its own angle plus a **"Full explanation in the Catalog →"** cross-link.
 - Each architecture carries **several cited references** (books + peer-reviewed journals/surveys).
 - **Guided / Expert reading mode** (the app's mode; one control in the header — no duplicate).
 - All Markdown guides pass `content:validate`.
 
-**Wave B — delivered (2026-07-05):** the **Library** section is live with 5 trend articles — GenAI & architecture, green/carbon-efficient software (SCI / ISO/IEC 21031), architectural technical debt, the monolith→microservices decision map, and Conway’s Law / Team Topologies — each with real, current sources and honest `evidence_strength`; article-only sections render without repeating the architecture grid (no redundancy).
+**Wave B — delivered (2026-07-05):** the **Library** section is live with 5 trend articles — GenAI & architecture, green/carbon-efficient software (SCI / ISO/IEC 21031), architectural technical debt, the monolith→microservices decision map, and Conway’s Law / Team Topologies — each with real, current sources and honest `evidence_strength`.
+
+**Holistic coverage + English-first — delivered (2026-07-06):**
+- **All 21 architectures in all four sections.** The thin `readerAngles.ts` (two paragraphs per
+  lens) was replaced by three structured English datasets — `insightPlaybooks.ts`
+  (goal/prerequisites/steps/practices/pitfalls), `insightReviews.ts`
+  (overview/pros/cons/performance/scalability/DX/use-cases/verdict), `insightLibrary.ts`
+  (definition/concepts/patterns/terminology) — each keyed `${dim}:${optionId}`, 21 entries per lens,
+  with a unit test asserting 21×4 parity against the frozen model.
+- **Each section is now a distinct reading experience** (discover / implement / evaluate /
+  reference) with its own structured layout; a per-page **LensNav** walks one architecture through
+  the Catalog → Playbook → Review → Library knowledge journey. The Library section carries the
+  reference grid **and** its evergreen articles as "Further reading".
+- **English consistency:** the default language is EN, all 18 Markdown articles ship English bodies
+  (`translation_status: en`; ID titles/summaries kept in frontmatter), and `check-content.mjs` now
+  requires at least the `en` version.
 
 **Deferred (own future proposals):** SSG/SEO (sitemap/robots/hreflang/JSON-LD), Wave C (Roadmap, Academy quizzes, interactive Lab).
 

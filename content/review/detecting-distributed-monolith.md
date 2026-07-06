@@ -4,12 +4,12 @@ title_en: "Detecting the 'Distributed Monolith' Before It Hurts You"
 slug: detecting-distributed-monolith
 section: review
 audience: [awam, expert]
-summary_tldr_id: "Distributed monolith adalah kegagalan microservices paling klasik: layanan yang terpisah tetapi harus dideploy bersama — membayar seluruh biaya sistem terdistribusi tanpa satu pun manfaatnya. Kenali tandanya lewat basis data bersама, deploy yang terkopling, dan komunikasi sinkron yang berantai."
+summary_tldr_id: "Distributed monolith adalah kegagalan microservices paling klasik: layanan yang terpisah tetapi harus dideploy bersama — membayar seluruh biaya sistem terdistribusi tanpa satu pun manfaatnya. Kenali tandanya lewat basis data bersama, deploy yang terkopling, dan komunikasi sinkron yang berantai."
 summary_tldr_en: "A distributed monolith is microservices' most classic failure: services that are split yet must deploy together — paying all the cost of a distributed system for none of its benefits. Spot it via a shared database, coupled deploys, and chatty synchronous chains."
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1, D3]
   options: [microservices, single-db]
@@ -21,36 +21,37 @@ status: published
 author: Architecture Advisor
 ---
 
-## Kenapa ini penting
+## Why this matters
 
-Banyak tim memecah monolith menjadi "microservices", lalu heran mengapa segalanya jadi lebih sulit,
-bukan lebih mudah. Biasanya penyebabnya sama: mereka membangun **monolit terdistribusi**.
+Many teams split their monolith into "microservices" and then wonder why everything got harder, not
+easier. The cause is usually the same: they built a **distributed monolith**.
 
 :::guided
-**Analogi sederhana:** kamu memisahkan dapur, ruang tamu, dan kamar ke gedung berbeda — tetapi semua
-tetap berbagi satu saklar listrik dan satu pintu. Sekarang kamu punya semua kerumitan gedung
-terpisah, tanpa satu pun kebebasannya.
+**A simple analogy:** you move the kitchen, living room, and bedroom into separate buildings — but
+they still share one light switch and one door. Now you have all the complexity of separate
+buildings, and none of the freedom.
 :::
 
-## Checklist tanda bahaya
+## Warning-sign checklist
 
-- [ ] Beberapa layanan **berbagi satu basis data** (atau tabel yang sama).
-- [ ] Satu perubahan sering **memaksa beberapa layanan dideploy bersama**.
-- [ ] Alur umum berupa **rantai panggilan sinkron** yang panjang antar layanan.
-- [ ] Layanan **tidak bisa dirilis atau diskalakan sendiri-sendiri**.
-- [ ] Tim harus berkoordinasi ketat untuk hampir setiap perubahan.
+- [ ] Several services **share one database** (or the same tables).
+- [ ] One change regularly **forces several services to deploy together**.
+- [ ] Common flows are **long synchronous call chains** across services.
+- [ ] Services **cannot be released or scaled independently**.
+- [ ] Teams must coordinate tightly for almost every change.
 
-Semakin banyak yang tercentang, semakin besar kemungkinan kamu punya distributed monolith.
+The more boxes you tick, the more likely you have a distributed monolith.
 
 :::expert
-**Lebih dalam.** Akar penyebab tersembunyi paling lazim adalah **basis data bersama** — ia diam-diam
-mengopling ulang layanan yang seharusnya independen. Perbaikannya: pisahkan kepemilikan data
-(*database-per-service*), ganti transaksi lintas-layanan dengan **saga** + **transactional outbox**,
-dan kurangi rantai sinkron dengan peristiwa asinkron. Taibi & Lenarduzzi memberi definisi *bad smell*
-yang bisa diuji; secara empiris, distributed monolith konsisten muncul sebagai anti-pola teratas.
+**Deeper.** The most common hidden root cause is the **shared database** — it quietly re-couples
+services that were meant to be independent. The fix: separate data ownership
+(*database-per-service*), replace cross-service transactions with **sagas** + the **transactional
+outbox**, and reduce synchronous chains with asynchronous events. Taibi & Lenarduzzi provide
+testable *bad-smell* definitions; empirically, the distributed monolith consistently ranks as the
+top anti-pattern.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-**Advisor** menandai kombinasi ini lewat **peringatan anti-pattern** (mis. microservices di atas satu
-basis data bersama). Uji skenariomu dan lihat apakah peringatan itu muncul.
+The **Advisor** flags this combination through its **anti-pattern warnings** (e.g. microservices on
+top of one shared database). Test your scenario and see whether the warning appears.

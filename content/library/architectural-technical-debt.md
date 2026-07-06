@@ -9,12 +9,12 @@ summary_tldr_en: "Technical debt isn't just 'bad code' — at the architecture l
 evidence_strength: strong
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1, D4]
   options: [layered, modular-monolith, monolith]
 sources:
-  - { label: "Cunningham — The WyCash Portfolio Management System (asal metafora 'debt')", venue: "OOPSLA / ACM", year: 1992, url: "https://doi.org/10.1145/157710.157715" }
+  - { label: "Cunningham — The WyCash Portfolio Management System (origin of the 'debt' metaphor)", venue: "OOPSLA / ACM", year: 1992, url: "https://doi.org/10.1145/157710.157715" }
   - { label: "Kruchten, Nord & Ozkaya — Technical Debt: From Metaphor to Theory and Practice", venue: "IEEE Software", year: 2012, url: "https://doi.org/10.1109/MS.2012.167" }
   - { label: "Kruchten, Nord & Ozkaya — Managing Technical Debt: Reducing Friction in Software Development", venue: "Addison-Wesley (SEI)", year: 2019, url: "https://www.oreilly.com/library/view/managing-technical-debt/9780135646052/" }
   - { label: "Avgeriou et al. — Managing Technical Debt in Software Engineering (Dagstuhl Seminar 16162)", venue: "Dagstuhl Reports", year: 2016, url: "https://doi.org/10.4230/DagRep.6.4.110" }
@@ -22,45 +22,47 @@ status: published
 author: Architecture Advisor
 ---
 
-## Metafora aslinya
+## The original metaphor
 
-Ward Cunningham (1992): mengirim lebih cepat dengan kompromi itu seperti **berutang** — sah dan
-kadang cerdas, asal kamu **membayar bunganya** (kerja ekstra di setiap perubahan) dan suatu saat
-**melunasi pokoknya** (refactor). Masalah muncul saat utang tak terlihat dan bunganya diam-diam
-memakan kecepatan tim.
+Ward Cunningham (1992): shipping faster by compromising is like **taking a loan** — legitimate and
+sometimes smart, as long as you **pay the interest** (extra work on every change) and eventually
+**repay the principal** (refactor). Trouble starts when the debt is invisible and its interest
+quietly eats the team's velocity.
 
 :::guided
-**Analogi:** cicilan rumah itu wajar; kartu kredit yang lupa dicatat itu bahaya. Utang teknis yang
-tercatat = cicilan terencana. Yang tak tercatat = tagihan kejutan tiap bulan.
+**An analogy:** a mortgage is fine; a forgotten credit card is dangerous. Recorded technical debt =
+a planned instalment. Unrecorded debt = a surprise bill every month.
 :::
 
-## Utang arsitektural ≠ kode kotor
+## Architectural debt ≠ messy code
 
-- **Level kode:** duplikasi, penamaan buruk — murah diperbaiki setempat.
-- **Level arsitektur:** batas modul yang bocor, lapisan yang saling menembus, basis data bersama,
-  kerangka usang — **mahal**, karena perbaikannya menyentuh banyak bagian sekaligus. Inilah utang
-  yang riset (Kruchten dkk.) tunjukkan paling menggerus produktivitas jangka panjang.
+- **Code level:** duplication, poor naming — cheap to fix locally.
+- **Architecture level:** leaking module boundaries, layers piercing each other, a shared database,
+  an obsolete framework — **expensive**, because the fix touches many parts at once. This is the
+  debt that research (Kruchten et al.) shows erodes long-term productivity the most.
 
-## Mengelolanya seperti orang keuangan
+## Manage it like a finance person
 
-1. **Buat terlihat**: daftar utang arsitektural sebagai item backlog dengan *bunga* yang ditaksir
-   (waktu ekstra per perubahan yang terdampak).
-2. **Catat keputusannya**: kompromi yang disengaja masuk **ADR** — "kami tahu, ini alasannya, ini
-   pemicunya untuk dilunasi".
-3. **Bayar bertahap**: alokasi rutin (mis. tiap sprint) untuk pelunasan; hindari "big-bang rewrite".
-4. **Cegah bunga baru**: batas modul ditegakkan CI + *fitness functions*.
+1. **Make it visible**: list architectural debt as backlog items with estimated *interest* (extra
+   time per affected change).
+2. **Record the decision**: a deliberate compromise goes into an **ADR** — "we know, here's why,
+   here's the trigger to repay it".
+3. **Repay incrementally**: a regular allocation (e.g. each sprint) for repayment; avoid the
+   "big-bang rewrite".
+4. **Prevent new interest**: CI-enforced module boundaries + *fitness functions*.
 
 :::expert
-**Lebih dalam.** Kruchten–Nord–Ozkaya memformalkan spektrum *deliberate/inadvertent ×
-prudent/reckless*: utang bijak yang disengaja adalah alat strategi; utang sembrono yang tak sadar
-adalah erosi. Dagstuhl 16162 menyatukan definisi riset: utang teknis = artefak desain/implementasi
-yang menguntungkan jangka pendek namun membebani evolusi. Sinyal arsitektural yang paling prediktif:
-*change amplification* (satu kebutuhan menyentuh banyak modul) — persis kelemahan lapisan teknis
-murni (lihat Layered di Katalog), dan alasan modular monolith dengan batas yang ditegakkan sering
-jadi pelunasan terbaik pertama.
+**Deeper.** Kruchten–Nord–Ozkaya formalise the *deliberate/inadvertent × prudent/reckless*
+spectrum: deliberate, prudent debt is a strategic tool; inadvertent, reckless debt is erosion.
+Dagstuhl 16162 unified the research definition: technical debt = design/implementation artefacts
+that pay off short-term but tax evolution. The most predictive architectural signal is *change
+amplification* (one requirement touching many modules) — precisely the weakness of purely technical
+layering (see Layered in the Catalog), and the reason a modular monolith with enforced boundaries is
+often the best first repayment.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Peringatan **anti-pattern** dan kartu **risiko** di Advisor adalah radar utang: kombinasi seperti
-microservices + basis data bersama pada dasarnya utang berbunga tinggi yang sudah dikenali literatur.
+The Advisor's **anti-pattern** warnings and **risk** cards are a debt radar: combinations like
+microservices + a shared database are exactly the high-interest debt the literature has already
+identified.

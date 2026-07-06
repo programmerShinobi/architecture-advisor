@@ -9,7 +9,7 @@ summary_tldr_en: "ATAM (Architecture Tradeoff Analysis Method) evaluates an arch
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1, D2, D3, D4, D5]
   options: []
@@ -21,44 +21,43 @@ status: published
 author: Architecture Advisor
 ---
 
-## Untuk siapa halaman ini
+## Who this page is for
 
-Untuk **kamu yang akan menilai sebuah arsitektur** — baik pemula yang butuh langkah jelas maupun
-arsitek yang ingin review yang terstruktur dan jujur. Advisor memakai gagasan inti ATAM: **pohon
-utilitas** dan **analisis trade-off**.
+For **anyone about to evaluate an architecture** — from beginners who need clear steps to architects
+who want a structured, honest review. The Advisor uses ATAM's core ideas: the **utility tree** and
+**trade-off analysis**.
 
-## Ide inti ATAM
+## ATAM's core idea
 
-ATAM tidak bertanya *"apakah arsitektur ini bagus?"* melainkan *"seberapa baik ia memenuhi atribut
-kualitas yang paling penting bagi pemangku kepentingan — dan apa yang dikorbankan untuk itu?"*
-Keputusan yang menaikkan satu kualitas hampir selalu menurunkan yang lain; tugas review adalah
-**membuat trade-off itu terlihat**, bukan menyembunyikannya.
+ATAM does not ask *"is this architecture good?"* but *"how well does it satisfy the quality
+attributes that matter most to the stakeholders — and what is sacrificed for that?"* A decision that
+raises one quality almost always lowers another; the review's job is to **make that trade-off
+visible**, not to hide it.
 
-## Checklist ringkas
+## The checklist, briefly
 
-1. **Sepakati atribut kualitas yang diprioritaskan** (mis. performa, skalabilitas, keamanan,
-   ketersediaan) — pakai kosakata bersama seperti ISO/IEC 25010.
-2. **Bangun pohon utilitas**: pecah tiap atribut jadi skenario konkret yang bisa diuji, lalu beri
-   bobot *penting* dan *sulit*.
-3. **Presentasikan pendekatan arsitektur** yang dipakai untuk memenuhi skenario itu.
-4. **Analisis tiap skenario** dan tandai tiga hal: *risiko*, *titik sensitif* (keputusan yang sangat
-   memengaruhi satu atribut), dan *titik trade-off* (keputusan yang memengaruhi beberapa atribut
-   berlawanan arah).
-5. **Kelompokkan risiko jadi tema** (mis. "semua risiko konsistensi data berasal dari satu basis data
-   bersama").
-6. **Rangkum**: bukan skor lulus/gagal, melainkan daftar risiko + pemahaman bersama untuk ditindak.
+1. **Agree on the prioritised quality attributes** (e.g. performance, scalability, security,
+   availability) — use a shared vocabulary such as ISO/IEC 25010.
+2. **Build a utility tree**: break each attribute into concrete, testable scenarios, then weight
+   them by *importance* and *difficulty*.
+3. **Present the architectural approaches** used to satisfy those scenarios.
+4. **Analyse each scenario** and mark three things: *risks*, *sensitivity points* (decisions that
+   strongly affect one attribute), and *trade-off points* (decisions that push several attributes in
+   opposite directions).
+5. **Group risks into themes** (e.g. "all data-consistency risks stem from one shared database").
+6. **Summarise**: not a pass/fail score, but a list of risks plus a shared understanding to act on.
 
-## Lebih dalam
+## Going deeper
 
 :::expert
-Kekuatan ATAM adalah **menemukan risiko lebih awal**, saat mengubah arsitektur masih murah. Titik
-sensitif layak diberi *fitness function* agar terjaga saat sistem berevolusi. Waspadai **non-risk**
-yang menyamar jadi keputusan — dan ingat bahwa review yang baik menghasilkan *pertanyaan yang lebih
-tajam*, bukan kepastian palsu. Untuk sistem kecil, versi ringan (Lightweight ATAM) sudah memadai.
+ATAM's strength is **finding risks early**, while changing the architecture is still cheap.
+Sensitivity points deserve *fitness functions* so they stay protected as the system evolves. Watch
+for **non-risks** masquerading as decisions — and remember that a good review produces *sharper
+questions*, not false certainty. For small systems, a light version (Lightweight ATAM) is enough.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-**Advisor** menurunkan prioritas atribut kualitas dari faktor proyekmu (mirip pohon utilitas), lalu
-menampilkan **radar trade-off**, **kartu sensitivitas**, dan **peringatan anti-pattern** — bahan
-mentah yang berguna untuk sesi review bergaya ATAM.
+The **Advisor** derives quality-attribute priorities from your project factors (much like a utility
+tree), then shows the **trade-off radar**, **sensitivity cards**, and **anti-pattern warnings** —
+useful raw material for an ATAM-style review session.

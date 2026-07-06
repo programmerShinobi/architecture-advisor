@@ -16,7 +16,9 @@ interface I18nValue {
 const I18nContext = createContext<I18nValue | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = usePersistedState<Lang>('aa.lang', 'id');
+  // Default language is ENGLISH (product decision 2026-07: consistent English experience; the
+  // ID toggle remains fully functional for UI chrome — see DECISIONS.md and SRS FR-SHELL-2).
+  const [lang, setLang] = usePersistedState<Lang>('aa.lang', 'en');
 
   const tr = useCallback((value: Bilingual) => value[lang], [lang]);
   const t = useCallback((key: DictKey) => DICT[key][lang], [lang]);

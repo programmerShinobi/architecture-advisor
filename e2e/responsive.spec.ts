@@ -28,7 +28,7 @@ for (const vp of VIEWPORTS) {
     // Insights → Catalog → one architecture page.
     await page.getByRole('button', { name: /Insights|Wawasan/ }).click();
     await page.getByRole('button', { name: /Catalog|Katalog/ }).click();
-    await page.getByRole('button', { name: 'Microservices' }).first().click();
+    await page.getByRole('button', { name: /^Microservices/ }).first().click();
     await expect(page.getByRole('heading', { name: 'Microservices' })).toBeVisible();
     await assertNoHorizontalScroll(page, `Insights article @${vp.name}`);
   });
@@ -42,6 +42,6 @@ test('phone tier hides keyboard-centric chrome but keeps core actions reachable'
   await expect(page.getByRole('button', { name: /Command palette|palet/i })).toBeHidden();
   await expect(page.getByText(/All changes saved|Semua perubahan tersimpan/)).toBeHidden();
   // … while the Guide, mode toggle, language, and theme stay usable.
-  await expect(page.getByRole('button', { name: /Guide|Panduan/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(Guide|Panduan)$/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /Toggle theme|Ganti tema/ })).toBeVisible();
 });

@@ -172,8 +172,8 @@ for (const file of files) {
     for (const a of fm.audience) if (!AUDIENCES.includes(a)) bad(`invalid audience "${a}"`);
   } else if (fm.audience !== undefined) bad('audience must be a list');
 
-  // "at least the id version"
-  if (fm.translation_status && !['id', 'id+en'].includes(fm.translation_status)) bad('must have at least the id version (translation_status id or id+en)');
+  // English-first content (product decision 2026-07): every article ships in English
+  if (fm.translation_status && !['en', 'id+en'].includes(fm.translation_status)) bad('must have at least the en version (translation_status en or id+en)');
 
   // review dates
   if (fm.last_reviewed && !isDate(fm.last_reviewed)) bad(`last_reviewed not YYYY-MM-DD: "${fm.last_reviewed}"`);

@@ -9,7 +9,7 @@ summary_tldr_en: "Don't rewrite the whole system at once. The Strangler Fig patt
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices]
@@ -21,35 +21,36 @@ status: published
 author: Architecture Advisor
 ---
 
-## Masalahnya
+## The problem
 
-Menulis ulang sistem besar sekaligus ("big bang rewrite") adalah salah satu cara paling terkenal
-untuk gagal: mahal, lama, dan berisiko tinggi karena tidak ada nilai sampai semuanya selesai.
+Rewriting a large system in one go (the "big bang rewrite") is one of the most famous ways to fail:
+expensive, slow, and high-risk, because no value ships until everything is finished.
 
 :::guided
-**Ide sederhananya:** bayangkan pohon ara pencekik yang tumbuh perlahan mengelilingi pohon inang.
-Alih-alih menebang pohon lama, kita menumbuhkan yang baru **sepotong demi sepotong** di sekitarnya,
-sampai akhirnya pohon lama tidak lagi dibutuhkan.
+**The simple idea:** picture a strangler fig slowly growing around its host tree. Instead of cutting
+the old tree down, we grow the new one **piece by piece** around it, until the old tree is no longer
+needed.
 :::
 
-## Langkah pola Strangler Fig
+## The Strangler Fig steps
 
-1. **Pasang "penyadap" (facade/proxy)** di depan monolith agar trafik bisa dialihkan per-rute.
-2. **Pilih satu kemampuan** yang bernilai dan batasnya jelas untuk diekstrak lebih dulu.
-3. **Bangun layanan baru** untuk kemampuan itu; alihkan trafiknya lewat facade.
-4. **Ulangi** kemampuan demi kemampuan, selalu bisa dibatalkan (rollback) bila bermasalah.
-5. **Pensiunkan** bagian monolith yang sudah tergantikan.
+1. **Put a facade/proxy** in front of the monolith so traffic can be redirected route by route.
+2. **Pick one capability** that is valuable and clearly bounded to extract first.
+3. **Build the new service** for that capability; route its traffic through the facade.
+4. **Repeat**, capability by capability — always able to roll back if something goes wrong.
+5. **Retire** the parts of the monolith that have been replaced.
 
 :::expert
-**Lebih dalam.** Prasyaratnya adalah **batas yang benar** — ekstrak sepanjang *bounded context*,
-bukan sepanjang lapisan teknis; keluar dari satu basis data bersama biasanya bagian tersulit
-(butuh pola seperti *transactional outbox* dan *saga*). Sering kali **modular monolith** adalah
-langkah antara yang bijak: tegakkan batas modul dulu di dalam satu proses, buktikan, baru ekstrak
-yang benar-benar butuh skala/deploy mandiri. Studi klasifikasi refactoring (Fritzsch et al.)
-menunjukkan pendekatan bertahap jauh lebih aman daripada rewrite.
+**Deeper.** The prerequisite is **correct boundaries** — extract along *bounded contexts*, not along
+technical layers; getting out of a shared database is usually the hardest part (it needs patterns
+like the *transactional outbox* and *sagas*). Often a **modular monolith** is the wise intermediate
+step: enforce module boundaries inside one process first, prove them, then extract only what truly
+needs independent scaling or deployment. The refactoring-classification study (Fritzsch et al.)
+shows incremental approaches are far safer than rewrites.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Jalankan **Advisor** untuk sistem lamamu (pilih profil "sudah punya sistem") — lihat rekomendasi
-D1 dan **kartu jalur migrasi** yang menyarankan rute bertahap, bukan lompatan besar.
+Run the **Advisor** for your existing system (pick the "existing system" profile) — look at the D1
+recommendation and the **migration-path card**, which suggests a gradual route rather than a big
+leap.

@@ -9,7 +9,7 @@ summary_tldr_en: "Independent of deployment, internal structure governs how easi
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D4]
   options: [hexagonal, clean, vertical-slice, layered]
@@ -23,35 +23,36 @@ status: published
 author: Architecture Advisor
 ---
 
-## Yang sebenarnya diatur D4
+## What D4 actually governs
 
-D4 bukan soal berapa aplikasi yang kamu deploy, melainkan **bagaimana kode ditata di dalam** satu
-aplikasi — dan itu menentukan biaya perubahan serta keterujian.
+D4 is not about how many applications you deploy — it is about **how code is organised inside** one
+application, and that determines the cost of change and testability.
 
 :::guided
-- **Hexagonal (Ports & Adapters):** kurung logika inti; framework & database jadi "colokan" di tepi.
-  Inti sangat mudah diuji.
-- **Clean Architecture:** lapisan konsentris dengan aturan "ketergantungan mengarah ke dalam". Niat
-  sama dengan hexagonal, lebih preskriptif.
-- **Vertical Slice:** tata per **fitur**, bukan per lapisan teknis — satu fitur hidup di satu tempat.
-- **Berlapis:** klasik dan akrab; bisa kusut saat domain tumbuh.
+- **Hexagonal (Ports & Adapters):** fence off the core logic; frameworks & databases become "plugs"
+  at the edges. The core is very easy to test.
+- **Clean Architecture:** concentric layers with the rule "dependencies point inwards". Same intent
+  as hexagonal, more prescriptive.
+- **Vertical Slice:** organise by **feature**, not by technical layer — one feature lives in one
+  place.
+- **Layered:** classic and familiar; can tangle as the domain grows.
 :::
 
-## Panduan singkat
+## A short guide
 
-- Butuh inti bebas-framework yang awet & teruji → **Hexagonal** atau **Clean**.
-- Tim kecil, ingin perubahan terlokalisasi per fitur → **Vertical Slice**.
-- Domain kecil/stabil, ingin cepat → **Berlapis** (waspadai erosi).
+- Need a long-lived, framework-free, well-tested core → **Hexagonal** or **Clean**.
+- Small team, want changes localised per feature → **Vertical Slice**.
+- Small/stable domain, want speed → **Layered** (watch for erosion).
 
 :::expert
-**Lebih dalam.** Hexagonal dan Clean sama-sama menegakkan bahwa **aturan bisnis tidak bergantung pada
-IO/framework** — itulah yang membuat inti dapat diuji-unit dan tahan lama; DDD menyediakan *bounded
-context* yang dilindungi struktur ini. Vertical Slice mengoptimalkan cara perangkat lunak benar-benar
-berubah (per fitur), kebalikan dari kelemahan berlapis. Jangan memaksakan seremoni Clean pada aplikasi
-kecil — biayanya bisa melebihi manfaat.
+**Deeper.** Hexagonal and Clean both enforce that **business rules do not depend on IO/frameworks**
+— that is what makes the core unit-testable and durable; DDD supplies the *bounded contexts* this
+structure protects. Vertical Slice optimises for how software actually changes (per feature), the
+inverse of layered's weakness. Don't impose Clean's ceremony on a small application — the cost can
+exceed the benefit.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Di Advisor, D4 dinilai independen dari D1 — lihat bagaimana faktor seperti *maintainability* dan
-*testability* menaikkan pilihan yang menjaga inti tetap bersih.
+In the Advisor, D4 is scored independently of D1 — see how factors such as *maintainability* and
+*testability* boost the options that keep the core clean.

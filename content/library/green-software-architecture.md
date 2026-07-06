@@ -9,7 +9,7 @@ summary_tldr_en: "Software consumes electricity, and electricity has a carbon fo
 evidence_strength: moderate
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1]
   options: [serverless, monolith, microservices]
@@ -22,43 +22,42 @@ status: published
 author: Architecture Advisor
 ---
 
-## Kenapa arsitek perlu peduli
+## Why architects should care
 
-Server yang menganggur tetap menyedot listrik. Keputusan arsitektur — berapa banyak layanan, kapan
-mereka berjalan, di mana — menentukan seberapa banyak energi terpakai per unit kerja.
+An idle server still draws electricity. Architectural decisions — how many services, when they run,
+where — determine how much energy is used per unit of work.
 
 :::guided
-**Analogi:** lampu di rumah. Hemat bukan berarti gelap-gelapan, tapi mematikan lampu di ruangan
-kosong. *Scale-to-zero* = lampu dengan sensor gerak untuk software-mu.
+**An analogy:** the lights in a house. Saving energy doesn't mean sitting in the dark; it means
+turning off lights in empty rooms. *Scale-to-zero* = motion-sensor lights for your software.
 :::
 
-## Tuas arsitektural yang terbukti
+## Proven architectural levers
 
-- **Utilisasi > jumlah mesin.** Banyak layanan kecil dengan utilisasi 5% lebih boros daripada satu
-  layanan dengan utilisasi 60%. Monolith yang padat bisa lebih "hijau" daripada microservices yang
-  jarang dipakai.
-- **Skala-ke-nol** untuk beban jarang/bergelombang (serverless) — tidak ada kerja, tidak ada watt.
-- **Right-sizing & pilih wilayah/jam** dengan listrik lebih bersih (carbon-aware scheduling untuk
-  kerja batch yang bisa digeser).
-- **Efisiensi kode & data**: lebih sedikit byte yang dipindah dan disimpan = lebih sedikit energi.
+- **Utilization > machine count.** Many small services at 5% utilization waste more than one service
+  at 60%. A well-packed monolith can be "greener" than rarely-used microservices.
+- **Scale-to-zero** for rare/spiky workloads (serverless) — no work, no watts.
+- **Right-sizing & choosing regions/hours** with cleaner electricity (carbon-aware scheduling for
+  batch work that can be shifted).
+- **Code & data efficiency**: fewer bytes moved and stored = less energy.
 
-## Mengukurnya (bukan menebak)
+## Measure it (don't guess)
 
-**SCI = ((E × I) + M) / R** — energi (E) × intensitas karbon listrik (I) + emisi *embodied*
-perangkat keras (M), dibagi unit fungsional (R, mis. per permintaan). Kini standar **ISO/IEC
-21031:2024** — sehingga target "hijau" bisa masuk *fitness function*.
+**SCI = ((E × I) + M) / R** — energy (E) × the electricity's carbon intensity (I) + the hardware's
+*embodied* emissions (M), divided by a functional unit (R, e.g. per request). Now the **ISO/IEC
+21031:2024** standard — so a "green" target can become a *fitness function*.
 
 :::expert
-**Lebih dalam.** SCI adalah *rate*, bukan total — mendorong desain yang efisien per unit kerja,
-bukan sekadar membeli offset. Pilihan **D1** paling berdampak: serverless unggul saat trafik
-bergelombang (utilisasi ~0 saat sepi), tetapi pada volume tinggi dan stabil, layanan yang padat dan
-right-sized biasanya menang. Perhatikan juga *embodied carbon* (M): memperpanjang umur perangkat
-keras dan mengurangi over-provisioning sering kali tuas terbesar. Untuk beban AI, Patterson et al.
-menunjukkan pemilihan wilayah + arsitektur model bisa mengubah emisi puluhan kali lipat — pola pikir
-yang sama berlaku untuk beban aplikasi biasa.
+**Deeper.** SCI is a *rate*, not a total — it rewards designs that are efficient per unit of work,
+not merely buying offsets. The **D1** choice matters most: serverless wins for spiky traffic
+(utilization ~0 when idle), but at high, steady volume, dense right-sized services usually win. Also
+watch *embodied carbon* (M): extending hardware life and reducing over-provisioning are often the
+biggest levers. For AI workloads, Patterson et al. show region choice + model architecture can
+change emissions by an order of magnitude — the same mindset applies to ordinary application
+workloads.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Faktor *scale* dan *budget* di **Advisor** menggeser D1 antara monolith padat, microservices, dan
-serverless — pertimbangkan utilisasi sebagai lensa "hijau" saat membaca trade-off biayanya.
+The *scale* and *budget* factors shift D1 between a dense monolith, microservices, and serverless in
+the **Advisor** — treat utilization as the "green" lens when reading the cost trade-offs.

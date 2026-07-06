@@ -9,7 +9,7 @@ summary_tldr_en: "Generative AI speeds up writing code, but it doesn't change ar
 evidence_strength: emerging
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1, D4]
   options: [hexagonal, clean, modular-monolith]
@@ -22,43 +22,44 @@ status: published
 author: Architecture Advisor
 ---
 
-## Pertanyaan yang sebenarnya
+## The real question
 
-Bukan *"apakah AI akan menulis arsitektur kita?"*, melainkan *"desain seperti apa yang tetap sehat
-ketika sebagian besar kode ditulis (atau diubah) dengan bantuan AI?"*
+Not *"will AI write our architecture?"* but *"what kind of design stays healthy when most code is
+written (or changed) with AI assistance?"*
 
 :::guided
-**Analogi:** AI seperti tukang bangunan super cepat. Kecepatan itu berkah kalau denah rumahnya
-jelas — dan bencana kalau denahnya berantakan, karena tembok yang salah pun berdiri lebih cepat.
+**An analogy:** AI is like a super-fast builder. That speed is a blessing when the house plan is
+clear — and a disaster when the plan is a mess, because the wrong walls go up faster too.
 :::
 
-## Yang berubah — dan yang tidak
+## What changes — and what doesn't
 
-- **Berubah:** kecepatan menulis/mengubah kode; eksperimen makin murah; studi terkontrol awal
-  (Copilot) mencatat penyelesaian tugas ~55% lebih cepat pada tugas tertentu.
-- **Tidak berubah:** biaya *memahami* sistem. Kode yang lebih banyak dan lebih cepat berarti batas
-  modul, konvensi, dan tes justru menjadi rem pengaman utama.
-- **Risiko baru:** perubahan besar yang "kelihatan benar" — tanpa arsitektur yang menegakkan batas
-  (module boundary, dependency rule), erosi terjadi lebih cepat dari sebelumnya.
+- **Changes:** the speed of writing/changing code; experiments get cheaper; early controlled studies
+  (Copilot) record ~55% faster completion on certain tasks.
+- **Doesn't change:** the cost of *understanding* the system. More code, produced faster, means
+  module boundaries, conventions, and tests become the primary safety brakes.
+- **New risk:** large changes that "look right" — without an architecture that enforces boundaries
+  (module boundaries, the dependency rule), erosion happens faster than before.
 
-## Implikasi praktis untuk keputusan Advisor
+## Practical implications for Advisor decisions
 
-- **D4 (struktur kode)** naik nilainya: inti yang teruji dan bebas-framework (Hexagonal/Clean)
-  membuat perubahan berbantuan AI lebih aman diverifikasi.
-- **Modular monolith** (D1) memberi "pagar" yang murah: batas modul yang ditegakkan CI membatasi
-  radius ledakan dari perubahan otomatis.
-- **Fitness functions** makin relevan: sifat arsitektur dijaga mesin, bukan kesadaran manusia.
+- **D4 (code structure)** gains value: a tested, framework-free core (Hexagonal/Clean) makes
+  AI-assisted changes safer to verify.
+- A **modular monolith** (D1) provides cheap "fences": CI-enforced module boundaries limit the blast
+  radius of automated changes.
+- **Fitness functions** become more relevant: architectural properties guarded by machines, not by
+  human vigilance.
 
 :::expert
-**Lebih dalam.** Bukti kuantitatif masih *emerging*: studi Copilot (Peng et al.) mengukur tugas
-sempit; DORA 2024 mencatat adopsi AI meluas namun dampaknya pada *delivery performance* bervariasi
-dan bergantung pada praktik dasar (ukuran batch kecil, tes otomatis). Memo Thoughtworks/Fowler
-menekankan pola yang sama: AI memperbesar kecepatan umpan balik di dalam *guardrail* yang sudah
-baik — dan memperbesar kekacauan di sistem tanpa batas yang jelas. Perlakukan klaim produktivitas
-sebagai hipotesis untuk diukur di konteksmu, bukan fakta universal.
+**Deeper.** The quantitative evidence is still *emerging*: the Copilot study (Peng et al.) measures
+a narrow task; DORA 2024 records broad AI adoption but varied impact on *delivery performance*,
+dependent on the underlying practices (small batch sizes, automated tests). The
+Thoughtworks/Fowler memos stress the same pattern: AI amplifies feedback speed inside good
+*guardrails* — and amplifies chaos in systems without clear boundaries. Treat productivity claims as
+hypotheses to measure in your context, not universal facts.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Di **Advisor**, naikkan faktor *maintainability/testability* dan lihat bagaimana D4 mengarah ke
-Hexagonal/Clean — struktur yang paling "ramah AI" karena perubahannya mudah diuji.
+In the **Advisor**, raise the *maintainability/testability* factors and watch D4 point towards
+Hexagonal/Clean — the most "AI-friendly" structures, because their changes are easy to test.

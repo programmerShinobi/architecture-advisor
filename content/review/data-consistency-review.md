@@ -9,7 +9,7 @@ summary_tldr_en: "Once data is split across services, you lose the single transa
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D3]
   options: [db-per-service, single-db, event-sourcing]
@@ -22,34 +22,36 @@ status: published
 author: Architecture Advisor
 ---
 
-## Kapan review ini dibutuhkan
+## When this review is needed
 
-Setiap kali sebuah alur menyentuh data di **lebih dari satu layanan/basis data**. Di sinilah banyak
-sistem terdistribusi diam-diam menjadi tidak benar.
+Any time a flow touches data in **more than one service/database**. This is where many distributed
+systems quietly become incorrect.
 
 :::guided
-**Analogi:** memesan tiket + kursi + pembayaran di tiga loket berbeda. Tidak ada satu "batalkan semua"
-ajaib — jika satu gagal, kamu harus **membatalkan langkah yang sudah terjadi**. Itulah inti saga.
+**An analogy:** booking a ticket + a seat + the payment at three separate counters. There is no
+magic "cancel everything" — if one step fails, you must **undo the steps that already happened**.
+That is the essence of a saga.
 :::
 
-## Checklist review
+## Review checklist
 
-- [ ] Alur lintas-layanan memakai **saga** (koreografi atau orkestrasi), bukan transaksi terdistribusi.
-- [ ] Tiap langkah punya **kompensasi** bila langkah berikutnya gagal.
-- [ ] "Simpan data + terbitkan peristiwa" memakai **transactional outbox** (tak pernah terpisah).
-- [ ] Konsumen bersifat **idempoten** (aman diproses ulang; pengiriman biasanya at-least-once).
-- [ ] Jendela **konsistensi eventual** dipahami dan dapat diterima bisnis.
-- [ ] Tidak ada **basis data bersama** yang diam-diam mengembalikan kopling (lihat distributed monolith).
+- [ ] Cross-service flows use a **saga** (choreography or orchestration), not distributed
+      transactions.
+- [ ] Every step has a **compensation** in case a later step fails.
+- [ ] "Save data + publish an event" uses the **transactional outbox** (they can never drift apart).
+- [ ] Consumers are **idempotent** (safe to reprocess; delivery is usually at-least-once).
+- [ ] The **eventual-consistency window** is understood and acceptable to the business.
+- [ ] No **shared database** quietly reintroducing coupling (see the distributed monolith).
 
 :::expert
-**Lebih dalam.** Richardson mengkatalogkan saga + outbox + API composition; Kleppmann memberi fondasi
-konsistensi/pengurutan. Orkestrasi (satu koordinator) lebih mudah dipahami tetapi memusatkan logika;
-koreografi (berbasis peristiwa) lebih longgar tetapi alur muncul secara emergent dan sulit di-debug —
-investasikan pada tracing dan skema peristiwa. Event sourcing dapat menjadikan "peristiwa" sebagai
-sumber kebenaran, dengan biaya evolusi skema.
+**Deeper.** Richardson catalogues sagas + the outbox + API composition; Kleppmann provides the
+consistency/ordering foundations. Orchestration (one coordinator) is easier to reason about but
+centralises logic; choreography (event-based) is looser but the flow becomes emergent and harder to
+debug — invest in tracing and event schemas. Event sourcing can make "the events" the source of
+truth, at the cost of schema evolution.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Faktor *consistency* dan pilihan **D3** di Advisor menyalakan peringatan anti-pattern saat kombinasi
-data berisiko — pakai sebagai pemicu review ini.
+The *consistency* factor and the **D3** choice light up anti-pattern warnings in the Advisor when a
+data combination is risky — use them as the trigger for this review.

@@ -9,6 +9,31 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed (Insights holistic coverage + English-first — 2026-07-06)
+
+- **Every one of the 21 architectures now appears in all four Insights sections** — Catalog,
+  Playbook, Review, **and Library** — as four *distinct structured reading experiences*, forming the
+  knowledge journey **discover → implement → evaluate → reference**:
+  - **Playbook** pages are real step-by-step implementation guides: goal, prerequisites, numbered
+    steps, best practices, pitfalls to avoid (`src/config/insightPlaybooks.ts`).
+  - **Review** pages are structured objective evaluations: overview, pros/cons, performance,
+    scalability, developer experience, suitable use cases, and a final verdict
+    (`src/config/insightReviews.ts`).
+  - **Library** pages are evergreen reference cards: definition, key concepts, related patterns,
+    terminology (`src/config/insightLibrary.ts`) — alongside the existing Wave B trend articles,
+    now listed as "Further reading".
+  - A new per-page **lens navigation** (Catalog · Playbook · Review · Library chips) walks one
+    architecture through all four lenses; it replaces the earlier one-way "Full explanation in the
+    Catalog →" cross-link. The thin `readerAngles.ts` (two paragraphs per lens) is **removed**,
+    superseded by the three datasets above; a unit test asserts **21×4 parity** with the frozen
+    model so coverage can never go partial.
+- **English consistency across the site.** The default language is now **English** (the ID toggle
+  stays fully functional for UI chrome); all **18 Markdown articles** ship English bodies
+  (`translation_status: en`, ID titles/summaries kept in frontmatter); the three lens datasets are
+  English; and the content gate (`check-content.mjs`) now requires **at least the `en` version**
+  instead of `id`. Section descriptions were rewritten to state each section's purpose
+  (discover / implement / evaluate / reference).
+
 ### Changed (UI redesign — in progress on `redesign/ui-ux`)
 
 - **Stage 1 — design tokens.** New `--aa-*` token layer (fluid spacing/type via `clamp()`, soft

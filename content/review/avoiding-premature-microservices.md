@@ -9,7 +9,7 @@ summary_tldr_en: "Splitting into microservices too early — before the domain a
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: id
+translation_status: en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices]
@@ -22,39 +22,40 @@ status: published
 author: Architecture Advisor
 ---
 
-## Kenapa ini sering terjadi
+## Why this keeps happening
 
-Microservices dianggap "cara profesional membangun". Padahal memecah **sebelum** memahami domain dan
-menyiapkan operasional justru memperlambat tim.
+Microservices are seen as "the professional way to build". Yet splitting **before** understanding
+the domain and preparing the operations actually slows teams down.
 
 :::guided
-**Analogi:** memisahkan tim menjadi banyak departemen kecil sebelum tahu siapa mengerjakan apa —
-akhirnya semua orang menghabiskan waktu untuk rapat koordinasi, bukan bekerja.
+**An analogy:** splitting a team into many small departments before anyone knows who does what —
+everyone ends up spending their time in coordination meetings instead of working.
 :::
 
-## Checklist tanda prematur
+## Checklist: signs you split too early
 
-- [ ] **Batas layanan sering berubah** (domain belum stabil).
-- [ ] Perubahan kecil butuh **mengubah banyak layanan** sekaligus.
-- [ ] Banyak **koordinasi antar-tim** untuk hampir setiap fitur.
-- [ ] Ada **"nano-services"** — layanan yang terlalu halus sehingga overhead > nilai.
-- [ ] Operasional (CI/CD, observability, tracing) **belum matang**.
-- [ ] Muncul **basis data bersama** (gejala distributed monolith).
+- [ ] **Service boundaries keep changing** (the domain isn't stable yet).
+- [ ] Small changes require **touching many services** at once.
+- [ ] Heavy **cross-team coordination** for almost every feature.
+- [ ] **"Nano-services"** — services so fine-grained that overhead exceeds value.
+- [ ] Operations (CI/CD, observability, tracing) are **not mature yet**.
+- [ ] A **shared database** appears (a distributed-monolith symptom).
 
-## Jalan yang lebih aman
+## The safer path
 
-1. **Monolith / modular monolith** dulu; tegakkan batas modul di CI.
-2. Temukan *bounded context* yang stabil.
-3. **Ekstrak** hanya bagian yang terbukti butuh skala/deploy/tim mandiri (Strangler Fig).
+1. **Monolith / modular monolith** first; enforce module boundaries in CI.
+2. Discover the stable *bounded contexts*.
+3. **Extract** only the parts with proven need for independent scaling/deploys/teams (Strangler
+   Fig).
 
 :::expert
-**Lebih dalam.** Fowler ("MonolithFirst") dan Newman menyarankan menunda distribusi sampai batas
-terbukti; Taibi & Lenarduzzi mendefinisikan *bad smells* yang bisa diuji (termasuk distributed
-monolith dan nano-services). Studi klasifikasi refactoring (Fritzsch et al.) menegaskan pendekatan
-bertahap lebih aman daripada langsung memecah.
+**Deeper.** Fowler ("MonolithFirst") and Newman advise deferring distribution until boundaries are
+proven; Taibi & Lenarduzzi define testable *bad smells* (including the distributed monolith and
+nano-services). The refactoring-classification study (Fritzsch et al.) confirms incremental
+approaches are safer than splitting outright.
 :::
 
-## Coba di Advisor
+## Try it in the Advisor
 
-Advisor menyalakan peringatan **"premature microservices"** saat faktor tim/skala/DevOps belum
-mendukung — pakai sebagai pemeriksa kewarasan sebelum memecah.
+The Advisor raises a **"premature microservices"** warning when the team/scale/DevOps factors don't
+support the split — use it as a sanity check before you distribute.
