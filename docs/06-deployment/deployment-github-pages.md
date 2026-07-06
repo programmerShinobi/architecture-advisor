@@ -78,6 +78,12 @@ npm run test     # run the unit tests
 npm run build    # produce the static site in ./dist
 ```
 
+> `npm run build` ends with `scripts/generate-seo.mjs` (FR-SEO-1), which adds `sitemap.xml` and
+> static, crawlable HTML snapshots of every Insights article under `dist/insights/…` (plus
+> `robots.txt` from `public/`). They deploy with the same `dist` artifact — nothing extra to
+> configure. The script fails the build if the canonical/robots URLs drift from `SITE_URL`
+> (`src/config/site.ts`), so keep all three in sync if the origin ever changes.
+
 ---
 
 ## 3. Configure Vite for GitHub Pages (critical step)

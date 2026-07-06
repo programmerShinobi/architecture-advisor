@@ -14,8 +14,9 @@ import { DIMENSIONS, DIMENSION_ORDER } from '../config/dimensions';
 describe('LearnView', () => {
   const render = () => {
     const onOpenAdvisor = vi.fn();
-    renderWithI18n(<LearnView onOpenAdvisor={onOpenAdvisor} />, 'en');
-    return { onOpenAdvisor };
+    const onLoadLab = vi.fn();
+    renderWithI18n(<LearnView onOpenAdvisor={onOpenAdvisor} onLoadLab={onLoadLab} />, 'en');
+    return { onOpenAdvisor, onLoadLab };
   };
 
   it('every architecture has a Catalog, Playbook, Review, and Library entry (parity with the model)', () => {
@@ -33,7 +34,7 @@ describe('LearnView', () => {
 
   it('the Playbook section opens an architecture as a step-by-step implementation guide', () => {
     render();
-    expect(AVAILABLE_SECTIONS.map((s) => s.id)).toEqual(['catalog', 'playbook', 'review', 'library']);
+    expect(AVAILABLE_SECTIONS.map((s) => s.id)).toEqual(['catalog', 'playbook', 'review', 'library', 'roadmap', 'academy', 'lab']);
     fireEvent.click(screen.getByRole('button', { name: /Playbook/ }));
     // Data-driven "by architecture" grid — a representative option (name doesn't collide with guides).
     fireEvent.click(screen.getByRole('button', { name: /Serverless/ }));
@@ -67,6 +68,39 @@ describe('LearnView', () => {
     fireEvent.click(screen.getByRole('button', { name: /Modular Monolith/ }));
     expect(screen.getByRole('heading', { name: 'Key concepts' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Terminology' })).toBeInTheDocument();
+  });
+
+  it('the Roadmap section opens a learning path whose steps deep-link into content', () => {
+    render();
+    fireEvent.click(screen.getByRole('button', { name: /Roadmap/ }));
+    fireEvent.click(screen.getByRole('button', { name: /From monolith to microservices/ }));
+    expect(screen.getByText('What you will be able to do')).toBeInTheDocument();
+    // A step that targets a Markdown article opens that article.
+    fireEvent.click(screen.getByRole('button', { name: /Strangler Fig/ }));
+    expect(screen.getByRole('heading', { name: /Strangler Fig: Migrating a Monolith/ })).toBeInTheDocument();
+  });
+
+  it('the Academy section runs a quiz client-side with feedback and a review link', () => {
+    render();
+    fireEvent.click(screen.getByRole('button', { name: /Academy/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Deployment & composition/ }));
+    expect(screen.getByText(/Question/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /A monolith \(or modular monolith\)/ }));
+    expect(screen.getByText('Correct')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Review the topic/ })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Next question/ }));
+    expect(screen.getByText(/Question/)).toBeInTheDocument();
+  });
+
+  it('the Lab section loads an experiment scenario into the Advisor engine', () => {
+    const { onLoadLab } = render();
+    fireEvent.click(screen.getByRole('button', { name: /^Lab/ }));
+    fireEvent.click(screen.getByRole('button', { name: /premature-microservices warning/ }));
+    expect(screen.getByText('The hypothesis')).toBeInTheDocument();
+    expect(screen.getByText('What to watch')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Load this scenario in the Advisor/ }));
+    expect(onLoadLab).toHaveBeenCalledTimes(1);
+    expect(onLoadLab.mock.calls[0][0]).toMatchObject({ team: 0, devops: 0 });
   });
 
   it('the lens nav walks one architecture through the whole knowledge journey', () => {

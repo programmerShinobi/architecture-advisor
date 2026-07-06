@@ -1,13 +1,44 @@
 <!doctype html>
-<html lang="id" class="">
+<html lang="en" class="">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Architecture Advisor — a transparent, quality-attribute-driven architecture decision framework."
+      content="Architecture Advisor — a transparent, quality-attribute-driven decision-support tool for choosing software architecture, and always explaining why. Free, client-side, open source."
     />
     <title>Architecture Advisor</title>
+
+    <!-- SEO (FR-SEO): canonical + social cards + structured data. URLs come from src/config/site.ts;
+         a guard in scripts/generate-seo.mjs cross-checks they never drift. -->
+    <link rel="canonical" href="https://programmershinobi.github.io/architecture-advisor/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Architecture Advisor" />
+    <meta property="og:title" content="Architecture Advisor" />
+    <meta
+      property="og:description"
+      content="A transparent, quality-attribute-driven decision-support tool for choosing software architecture — and always explaining why."
+    />
+    <meta property="og:url" content="https://programmershinobi.github.io/architecture-advisor/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Architecture Advisor" />
+    <meta
+      name="twitter:description"
+      content="Answer a few questions about your project — get an explained architecture recommendation across 5 dimensions."
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Architecture Advisor",
+        "url": "https://programmershinobi.github.io/architecture-advisor/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web browser)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "description": "A transparent, quality-attribute-driven decision-support tool for choosing software architecture — grounded in ISO/IEC 25010, ATAM, and Attribute-Driven Design, and always explaining why.",
+        "license": "https://opensource.org/license/mit/"
+      }
+    </script>
     <script>
       // Dark by default (matches the design reference); apply light pre-paint if chosen.
       try {

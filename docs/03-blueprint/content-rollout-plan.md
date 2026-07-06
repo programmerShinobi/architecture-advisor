@@ -39,7 +39,7 @@ hand-authored per architecture — and no explanation is repeated across them.
 
 | Topic | Decision | Why (fit to this repo) |
 |---|---|---|
-| **Discoverability / SSG** | **Deferred.** Client-rendered inside the existing SPA; SSG is a separate future proposal only if search discoverability becomes a stated goal. | Hash-state SPA on GitHub Pages (no custom domain → limited SEO upside); SSG + router would risk hydration clashes with the Advisor's `#s=` share-state and the 120 kB initial-JS budget. |
+| **Discoverability / SSG** | **SSG-lite (Wave C, 2026-07-06).** The app stays a client-rendered SPA (no router, no hydration); a build-time script emits `sitemap.xml`, `robots.txt`, app-shell canonical/OG/JSON-LD, and **static crawlable HTML snapshots of every article** (`dist/insights/…`, self-canonical `TechArticle`). Full SSG of the app itself remains deferred. | Search discoverability became a stated goal; snapshots give crawlers real content with **zero** JS-budget impact and no hydration clash with the Advisor's `#s=` share-state. A guard fails the build if canonical/robots drift from `SITE_URL`. |
 | **Routing** | **Light**: a two-item top nav (Advisor · Insights) + in-view section/article state, lazy-loaded. **No `react-router`.** | Avoids a second navigation paradigm; the Advisor keeps sole ownership of the URL hash / share links. |
 | **Section shape** | **All four sections are data-driven** from the model (`readerContent.ts` + `insightPlaybooks.ts` / `insightReviews.ts` / `insightLibrary.ts`) → every architecture (all 21 D1–D5 options), grouped by decision, through four structured lenses (Catalog = discover, Playbook = implement, Review = evaluate, Library = reference). Hand-authored Markdown is reserved for **cross-cutting** guides/methods/further reading listed under each section. | Comprehensive by construction (a unit test asserts 21×4 parity); cannot go partial or drift from the model. **No explanation is duplicated** — a per-page **LensNav** walks the Catalog → Playbook → Review → Library journey. |
 | **Content format** | **Markdown + YAML frontmatter** for the cross-cutting guides; rendered by a small **dependency-free, XSS-safe** renderer with `:::guided` / `:::expert` blocks. | Matches the repo's hand-built ethos (no `gray-matter` / `react-markdown` / micromark); keeps the Insights chunk small. |
@@ -140,7 +140,28 @@ wired into `ci.yml` (`docs-integrity.yml` untouched); `LearnView` (lazy) + `Cred
   (`translation_status: en`; ID titles/summaries kept in frontmatter), and `check-content.mjs` now
   requires at least the `en` version.
 
-**Deferred (own future proposals):** SSG/SEO (sitemap/robots/hreflang/JSON-LD), Wave C (Roadmap, Academy quizzes, interactive Lab).
+**Wave C — delivered (2026-07-06):** the last three sections are live, each built ON TOP of the
+lens content (curate / exercise — never duplicate):
+- **Roadmap** — 6 guided learning paths (newcomer → practitioner → architect) in
+  `src/config/insightRoadmaps.ts`; every step deep-links to an existing architecture lens page,
+  Markdown article, or the Advisor, and a unit test resolves every target (anti-drift).
+- **Academy** — 6 quiz modules (one per dimension + methods; 30 questions) in
+  `src/config/academyQuizzes.ts`, scored **entirely client-side**; each answer explains itself and
+  links back to the page that teaches it (every link unit-tested).
+- **Lab** — 5 hypothesis-driven experiments in `src/config/labExperiments.ts`; each prepares valid
+  levels for **all 14 model factors** (unit-tested) and loads them into the Advisor, so the claim
+  is tested on the live engine.
+
+**SEO / SSG-lite — delivered (2026-07-06):** discoverability without changing the SPA architecture
+(the "SSG deferred" decision is superseded in this narrower form — still no router, no hydration):
+`scripts/generate-seo.mjs` runs after `vite build` and emits `sitemap.xml` + static, crawlable HTML
+snapshots of all 18 articles (`dist/insights/<section>/<slug>/`, self-canonical, JSON-LD
+`TechArticle`, linking into the app); `public/robots.txt` + canonical/OG/JSON-LD on the app shell;
+a build guard fails if the canonical/robots URLs drift from `SITE_URL`. Pure HTML — zero impact on
+the JS budgets. `hreflang` is `en` + `x-default` only (the content layer is English-first; UI
+chrome bilingualism is client-side state, not separate URLs).
+
+**Deferred (own future proposals):** full SSG/hydration of the app itself, Academy progress persistence, additional Lab experiment packs.
 
 ## 9. Definition of done (met)
 

@@ -111,6 +111,28 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   (Catalog · Playbook · Review · Library chips) so the reader walks the **knowledge journey**
   discover → implement → evaluate → reference on one page, instead of the earlier one-way
   "Full explanation in the Catalog →" link.
+- **Wave C sections curate and exercise — they never duplicate (2026-07-06).** Roadmap, Academy,
+  and Lab are built **on top of** the lens content: a Roadmap step, a quiz's "review the topic"
+  link, and a Lab run all **deep-link into pages/state that already exist** (an architecture lens
+  page, a Markdown article, or the Advisor). Their datasets (`insightRoadmaps.ts`,
+  `academyQuizzes.ts`, `labExperiments.ts`) are unit-tested so every target resolves against the
+  frozen model / content index — the same anti-drift discipline as the lenses.
+- **The Lab runs the real engine, not a simulation.** An experiment is a hypothesis plus prepared
+  levels for **all 14 model factors** (validated by a unit test); "run it" loads those levels into
+  the Advisor via the same `setLevels` path presets use. No second engine, no canned outcomes —
+  if the model changes, the Lab's claims are tested against it, not against a snapshot.
+- **Academy is client-side only.** Quizzes are scored in the component; no accounts, persistence,
+  or telemetry (per the standing no-backend constraint). A wrong answer teaches: explanation +
+  deep link, not a grade book.
+- **SEO is SSG-lite, not SSG (2026-07-06).** The app remains a client-rendered SPA (no router —
+  the Advisor keeps sole ownership of the URL hash; no hydration risk; budgets untouched). A
+  build-time script (`scripts/generate-seo.mjs`, dependency-free like the guards) emits
+  `sitemap.xml` and **static crawlable HTML snapshots** of every article under
+  `dist/insights/<section>/<slug>/` (self-canonical, JSON-LD `TechArticle`, English), plus
+  canonical/OG/JSON-LD on the app shell and `public/robots.txt`. It doubles as a **guard**: the
+  build fails if the canonical or robots URLs drift from `SITE_URL` (`src/config/site.ts`).
+  `hreflang` is `en` + `x-default` only — the content layer is English-first and UI-chrome
+  bilingualism is client-side state, not separate URLs. Full SSG of the app stays deferred.
 - **The reading-mode toggle lives in one place** (the header's Guided/Expert); the Insights area shows
   a one-line hint, not a second toggle — removing an earlier redundant control.
 - **Guided / Expert in Insights reuses the Advisor's `mode`** and the existing `.guided-only` /
