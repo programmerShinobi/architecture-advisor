@@ -49,16 +49,17 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }
             width: '36px',
             height: '36px',
             borderRadius: 'var(--border-radius-md)',
-            background: 'var(--color-background-info)',
+            background: 'var(--aa-grad-accent)',
+            boxShadow: '0 0 16px -4px rgba(56, 225, 255, 0.5)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <IconSitemap size={21} style={{ color: 'var(--color-text-info)' }} aria-hidden />
+          <IconSitemap size={21} style={{ color: 'var(--color-background-primary)' }} aria-hidden />
         </div>
         <div>
-          <div style={{ fontSize: '16px', fontWeight: 500, lineHeight: 1.25 }}>{t('app.title')}</div>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.25 }}>{t('app.title')}</div>
           <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)' }}>{t('app.tagline')}</div>
         </div>
       </div>

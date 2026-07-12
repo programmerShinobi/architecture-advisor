@@ -162,3 +162,37 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   not big-banged.
 - **Breakpoints** are canonical values documented in design-spec §6.1 (≤640 / 641–1024 / ≥1025) —
   CSS `@media` cannot read custom properties, so they are kept in sync by documentation + review.
+
+## "Aurora Slate" visual reskin (2026-07)
+
+- **A reskin *in place*, not a rewrite (ADR-009).** The "Aurora Slate" blueprint proposed replacing
+  React with a vanilla/MPA stack (its "ADR-000"); that was **rejected**. The scoring engine, the
+  21-architecture model, the seven-section Insights area, and all 99 tests are preserved — only the
+  *look* changes. Visual source of truth: [`docs/03-blueprint/prototype-v2/preview-modern.html`](docs/03-blueprint/prototype-v2/preview-modern.html).
+- **Palette via token *values*, not a parallel system.** The Aurora palette (deep-navy surfaces,
+  violet/cyan/mint accent) is applied by **remapping the existing `--color-*` token values** in
+  `:root` (dark) and `html.light`; because Tailwind and every component reference those vars, the
+  whole app inherited the new look with no per-component churn and **no hardcoded hex**. The accent
+  (`--color-text-info`) moved from blue to a violet tuned for **AA in both themes** (verified by the
+  axe contrast gate). New tokens added: `--aa-accent{,-2,-3}`, `--aa-grad-accent`, `--font-display`,
+  `--aa-ease`, and theme-aware `--radar-1..5`.
+- **Display type:** Space Grotesk (self-hosted via `@fontsource`, headings only) alongside the
+  existing Inter/JetBrains Mono. woff2 are separate assets — the CSS budget stays green.
+- **Two signatures, everything else calm** (per the prototype's own discipline):
+  1. **Aurora background** — a fixed, blurred, drifting glow (`AuroraBackground.tsx` + `.aa-aurora`)
+     rendered *ambient* behind the app frame (the opaque content panels are untouched, so dense
+     forms stay readable). Guards: `aria-hidden`, transform-only animation, disabled under
+     `prefers-reduced-motion`, and an `aurora-static` freeze on ≤4-core devices.
+  2. **Radar** — the app's existing hand-built comparison radar restyled with the aurora accent
+     family. It stays a **theme-aware categorical** palette (vibrant on dark, deeper on light) so up
+     to five overlaid options remain distinct and legible; it was *not* collapsed to a single accent
+     (it's a comparison chart, not the prototype's single decorative shape).
+- **Restrained polish:** gradient brand chip + display-font wordmark, an active-tab pill, a faint
+  pointer-following glow on Insights cards (fine-pointer + reduced-motion guarded), and a subtle
+  scroll-reveal on the Insights landing cards (instant under reduced-motion; never leaves content
+  hidden). **The title text is *not* gradient-filled** — a light gradient would fail AA on the light
+  theme, so the gradient lives on the decorative brand chip instead.
+- **Blueprint items dropped as stack-specific** (they targeted a greenfield vanilla MPA, not this
+  SPA): the vanilla rewrite, the multi-file `@layer`/`js/` split + `ROOT` depth helper + per-page
+  anti-FOUC script, cross-document View Transitions, a hand-rolled service worker/manifest, and the
+  `.card`/`.nav` class rename. PWA remains an optional future follow-up.
