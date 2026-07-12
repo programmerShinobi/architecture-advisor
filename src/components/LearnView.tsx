@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   IconArrowRight,
   IconThumbUp,
@@ -373,6 +373,32 @@ export default function LearnView({ onOpenAdvisor, onLoadLab }: Props) {
   const [slug, setSlug] = useState<string | null>(null);
   const [arch, setArch] = useState<{ dim: DimensionId; optId: string; angle: Angle } | null>(null);
 
+  // Aurora Slate: fade-up any `.aa-reveal` elements as they enter view (ADR-009). Re-runs when the
+  // view changes; instant under reduced-motion or without IntersectionObserver (never leaves content
+  // hidden). The CSS keeps reduced-motion content visible even if this never runs.
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('.aa-reveal:not(.in)'));
+    if (els.length === 0) return;
+    const reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const en of entries) {
+          if (en.isIntersecting) {
+            en.target.classList.add('in');
+            io.unobserve(en.target);
+          }
+        }
+      },
+      { threshold: 0.1 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [section, slug, arch]);
+
   const backLink = (label: string, onClick: () => void) => (
     <button type="button" onClick={onClick} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
       {label}
@@ -538,7 +564,7 @@ export default function LearnView({ onOpenAdvisor, onLoadLab }: Props) {
           const isLens = (LENSES as string[]).includes(s.id);
           const guides = s.id === 'catalog' ? 0 : contentBySection(s.id).length;
           return (
-            <button key={s.id} type="button" className="learn-card" style={{ ...cardBase, padding: 'var(--aa-panel-pad)', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
+            <button key={s.id} type="button" className="learn-card aa-reveal" style={{ ...cardBase, padding: 'var(--aa-panel-pad)', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
               <span className="learn-chip">
                 <Icon size={19} aria-hidden />
               </span>

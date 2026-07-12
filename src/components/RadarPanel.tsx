@@ -20,7 +20,9 @@ const SHORT: Bilingual[] = [
   { en: 'Low cost', id: 'Biaya' },
   { en: 'Speed to ship', id: 'Waktu rilis' },
 ];
-const PALETTE = ['#1D9E75', '#D85A30', '#7F77DD', '#378ADD', '#BA7517'];
+// Theme-aware series colors (defined in index.css :root / html.light) — vibrant aurora hues on
+// dark, deeper versions on light, so overlaid options stay distinct and legible in both themes.
+const PALETTE = ['var(--radar-1)', 'var(--radar-2)', 'var(--radar-3)', 'var(--radar-4)', 'var(--radar-5)'];
 
 const cx = 190;
 const cy = 178;

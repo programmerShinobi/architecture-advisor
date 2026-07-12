@@ -153,7 +153,7 @@ The canonical statement is [SRS §2.3 — Operating Environment](docs/02-require
 
 ## Tech stack
 
-- **Vite + React + TypeScript** (strict), Tailwind CSS — **dark by default**, Inter + JetBrains Mono, Tabler icons
+- **Vite + React + TypeScript** (strict), Tailwind CSS — **dark by default** (“Aurora Slate” — ADR-009), Space Grotesk + Inter + JetBrains Mono, Tabler icons
 - **Hand-built SVG/CSS** visuals (trade-off radar, score bars, C4-style diagram stub) — no chart or diagram library
 - React hooks only; state persisted to `localStorage` and encoded in the URL hash (shareable links)
 - Lightweight i18n (ID/EN), Vitest + Testing Library, ESLint + Prettier

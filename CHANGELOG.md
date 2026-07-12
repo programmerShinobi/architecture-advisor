@@ -9,6 +9,34 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed ("Aurora Slate" visual reskin — 2026-07-12)
+
+- **A full visual reskin applied *in place*** (ADR-009) — the deep-navy + violet/cyan **"Aurora
+  Slate"** look, from the approved [`prototype-v2/preview-modern.html`](docs/03-blueprint/prototype-v2/preview-modern.html).
+  The blueprint's proposed vanilla/MPA rewrite was **rejected**: the scoring engine, the
+  21-architecture model, the seven-section Insights area, and all **99 tests** are unchanged — only
+  the look changed.
+  - **Palette** applied by remapping the existing `--color-*` token *values* (dark `:root` +
+    `html.light`), so every component and Tailwind utility inherited it with no hardcoded hex; the
+    accent moved from blue to a violet tuned for **WCAG AA in both themes** (axe contrast gate
+    green). New tokens: `--aa-accent{,-2,-3}`, `--aa-grad-accent`, `--font-display`, `--aa-ease`,
+    theme-aware `--radar-1..5`.
+  - **Space Grotesk** display face on headings (self-hosted via `@fontsource`, woff2 as separate
+    assets — CSS budget stays green).
+  - **Two signatures:** an **aurora background** (`AuroraBackground.tsx` — fixed, blurred, drifting;
+    `aria-hidden`, transform-only, disabled under `prefers-reduced-motion`, frozen via
+    `aurora-static` on ≤4-core devices) rendered ambient behind the frame so dense content stays
+    readable; and the **existing comparison radar** restyled with the aurora accent family, kept
+    theme-aware and categorical so up to five overlaid options remain distinct and legible.
+  - **Restrained polish:** gradient brand chip + display-font wordmark, an active-tab pill, a faint
+    pointer-following glow on Insights cards, and a subtle scroll-reveal on the landing cards — all
+    fine-pointer / reduced-motion guarded, and never leaving content hidden. Title text is *not*
+    gradient-filled (would fail AA on light).
+  - Stack-specific blueprint items (vanilla rewrite, multi-file MPA + `ROOT` helper + anti-FOUC
+    script, cross-document View Transitions, hand-rolled SW/manifest, `.card`/`.nav` rename) were
+    **dropped** as inapplicable to the React SPA; PWA remains an optional follow-up. All gates green:
+    build, lint, 99 unit, a11y/contrast both themes, size (total JS 188.4/200 kB), 14 e2e.
+
 ### Added (Insights Wave C: Roadmap · Academy · Lab + SEO — 2026-07-06)
 
 - **All seven Insights sections are now live.** Wave C completes the area with three sections built

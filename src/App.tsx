@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { AuroraBackground } from './components/AuroraBackground';
 import { Header, type Mode } from './components/Header';
 import { CommandPalette, type Command } from './components/CommandPalette';
 import { ShortcutsModal } from './components/ShortcutsModal';
@@ -167,8 +168,33 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // Aurora Slate: pointer-following glow on Insights cards (ADR-009). Fine-pointer only, skipped
+  // under reduced-motion, throttled to one rAF; sets the --mx/--my the `.learn-card::before` reads.
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let raf = 0;
+    const onMove = (e: PointerEvent) => {
+      const card = (e.target as HTMLElement | null)?.closest?.('.learn-card') as HTMLElement | null;
+      if (!card || raf) return;
+      raf = requestAnimationFrame(() => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        card.style.setProperty('--my', `${e.clientY - r.top}px`);
+        raf = 0;
+      });
+    };
+    document.addEventListener('pointermove', onMove, { passive: true });
+    return () => {
+      document.removeEventListener('pointermove', onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <>
+    <AuroraBackground />
     <div className="screen-only aa-page">
       <div className="page aa-frame">
         <div style={{ background: 'var(--color-background-secondary)', borderRadius: 'var(--border-radius-xl)', padding: 'var(--aa-space-3)' }}>
@@ -203,15 +229,17 @@ export default function App() {
                     onClick={() => setMainView(v)}
                     style={{
                       appearance: 'none',
-                      background: 'transparent',
+                      background: active ? 'var(--color-background-info)' : 'transparent',
                       border: 'none',
                       borderBottom: `2px solid ${active ? 'var(--color-text-info)' : 'transparent'}`,
+                      borderRadius: 'var(--border-radius-md) var(--border-radius-md) 0 0',
                       color: active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                       fontSize: '14px',
                       fontWeight: active ? 600 : 500,
-                      padding: '8px 14px',
+                      padding: '8px 16px',
                       marginBottom: '-0.5px',
                       cursor: 'pointer',
+                      transition: 'background 0.15s ease, color 0.15s ease',
                     }}
                   >
                     {t(v === 'advisor' ? 'nav.advisor' : 'nav.learn')}

@@ -8,25 +8,28 @@
    light overrides under html.light.
    ============================================================ */
 :root {
-  --color-background-primary: #1f2226;
-  --color-background-secondary: #282c31;
-  --color-background-tertiary: #343a41;
-  --color-text-primary: #eceded;
-  --color-text-secondary: #aeb4bc;
-  --color-text-tertiary: #909aa3;
-  --color-text-info: #6aa6ff;
+  /* ---- Aurora Slate palette (ADR-009) — dark is the default theme.
+     Values remap the existing --color-* contract to the approved
+     prototype-v2/preview-modern.html; components inherit the new look. ---- */
+  --color-background-primary: #05060f; /* deepest — prototype --bg */
+  --color-background-secondary: #0a0c1a; /* body / panels — prototype --bg-elevated */
+  --color-background-tertiary: #141829; /* raised cards */
+  --color-text-primary: #edeff7;
+  --color-text-secondary: #a7aec4;
+  --color-text-tertiary: #8b93ad; /* kept lighter than the prototype --text-3 for AA on the deep bg */
+  --color-text-info: #a99bff; /* violet accent (links / active) — AA on the deep bg */
   --color-text-success: #35c28d;
   --color-text-warning: #e0a93b;
   /* "What it costs" label in the Reader — matches warning on dark, darkened on light for AA on cards. */
   --color-text-cost: #e0a93b;
   --color-text-danger: #ec6a60;
-  --color-background-info: rgba(106, 166, 255, 0.13);
+  --color-background-info: rgba(139, 124, 255, 0.14);
   --color-background-success: rgba(53, 194, 141, 0.13);
   --color-background-warning: rgba(224, 169, 59, 0.13);
   --color-background-danger: rgba(236, 106, 96, 0.13);
-  --color-border-secondary: rgba(255, 255, 255, 0.15);
+  --color-border-secondary: rgba(255, 255, 255, 0.12);
   --color-border-tertiary: rgba(255, 255, 255, 0.08);
-  --color-border-info: rgba(106, 166, 255, 0.45);
+  --color-border-info: rgba(139, 124, 255, 0.45);
   --color-border-warning: rgba(224, 169, 59, 0.45);
   --color-border-danger: rgba(236, 106, 96, 0.45);
   --border-radius-md: 8px;
@@ -34,6 +37,20 @@
   --border-radius-xl: 16px;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: 'Space Grotesk', var(--font-sans);
+  /* Aurora Slate accents (ADR-009) — the two-signature accent system. */
+  --aa-accent: #8b7cff;
+  --aa-accent-2: #38e1ff;
+  --aa-accent-3: #ff7ac3;
+  --aa-grad-accent: linear-gradient(120deg, #8b7cff 0%, #38e1ff 55%, #7cf5c8 100%);
+  --aa-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Radar comparison series — theme-aware so up to 5 overlaid options stay distinct AND legible;
+     vibrant aurora hues on dark, deeper versions on light (html.light below). */
+  --radar-1: #8b7cff;
+  --radar-2: #38e1ff;
+  --radar-3: #ff7ac3;
+  --radar-4: #5eead4;
+  --radar-5: #e0a93b;
 
   /* ---- aa- redesign tokens (design-spec §6.1) ----------------------------
      Sizing/spacing/elevation for the responsive redesign. View code must
@@ -71,27 +88,33 @@
   --aa-focus-ring: 2px solid var(--color-text-info);
 }
 html.light {
+  /* Aurora Slate — light theme (ADR-009). */
   --color-background-primary: #ffffff;
-  --color-background-secondary: #f4f5f7;
-  --color-background-tertiary: #e7e9ec;
-  --color-text-primary: #1b1d1f;
-  --color-text-secondary: #4a4f57;
-  --color-text-tertiary: #6b7178;
-  --color-text-info: #2563eb;
+  --color-background-secondary: #f6f7fc; /* prototype light --bg */
+  --color-background-tertiary: #eceef6;
+  --color-text-primary: #0b0d1a;
+  --color-text-secondary: #454c66;
+  --color-text-tertiary: #63697f;
+  --color-text-info: #6d4ef0; /* deep violet — AA on white */
   --color-text-success: #0a7048;
   --color-text-warning: #b5790e;
   --color-text-cost: #8a5300; /* darker amber → ≥4.5:1 on the light card background */
   --color-text-danger: #c4392e;
-  --color-background-info: rgba(37, 99, 235, 0.08);
+  --color-background-info: rgba(109, 78, 240, 0.08);
   --color-background-success: rgba(15, 138, 95, 0.1);
   --color-background-warning: rgba(181, 121, 14, 0.1);
   --color-background-danger: rgba(196, 57, 46, 0.08);
-  --color-border-secondary: rgba(0, 0, 0, 0.16);
+  --color-border-secondary: rgba(0, 0, 0, 0.14);
   --color-border-tertiary: rgba(0, 0, 0, 0.09);
-  --color-border-info: rgba(37, 99, 235, 0.45);
+  --color-border-info: rgba(109, 78, 240, 0.4);
   --color-border-warning: rgba(181, 121, 14, 0.45);
   --color-border-danger: rgba(196, 57, 46, 0.45);
   --aa-shadow-color: rgba(16, 24, 40, 0.1);
+  --radar-1: #6d4ef0;
+  --radar-2: #0e8aa8;
+  --radar-3: #c03d86;
+  --radar-4: #0a7a63;
+  --radar-5: #b5790e;
 }
 
 @layer base {
@@ -102,10 +125,18 @@ html.light {
   }
   body {
     margin: 0;
-    background: var(--color-background-secondary);
+    /* Deepest surface so the aurora signature glows against near-black in the page margins. */
+    background: var(--color-background-primary);
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+  }
+  /* Aurora Slate: headings use the Space Grotesk display face (ADR-009). */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
   .num {
     font-family: var(--font-mono);
@@ -513,10 +544,82 @@ button:focus-visible {
 /* Page shell: fluid outer gutter, centered column. */
 .aa-page {
   padding: var(--aa-page-pad);
+  /* Sits above the fixed aurora background (z-index:0). */
+  position: relative;
+  z-index: 1;
 }
 .aa-frame {
   max-width: 1180px;
   margin: 0 auto;
+}
+
+/* Aurora Slate signature background (ADR-009): ambient glow behind the app frame.
+   Fixed + blurred, transform-only drift; disabled under reduced-motion and on the
+   low-core `aurora-static` fallback. Decorative element rendered by AuroraBackground.tsx. */
+.aa-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  filter: blur(90px);
+  opacity: 0.5;
+}
+html.light .aa-aurora {
+  opacity: 0.28;
+}
+.aa-aurora i {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+}
+.aa-aurora i:nth-child(1) {
+  width: 52vw;
+  height: 52vw;
+  left: -14vw;
+  top: -20vw;
+  background: radial-gradient(circle, #5b3df5 0%, transparent 65%);
+  animation: aa-drift1 26s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+}
+.aa-aurora i:nth-child(2) {
+  width: 44vw;
+  height: 44vw;
+  right: -16vw;
+  top: 4vw;
+  background: radial-gradient(circle, #0fb5d8 0%, transparent 65%);
+  animation: aa-drift2 32s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+}
+.aa-aurora i:nth-child(3) {
+  width: 38vw;
+  height: 38vw;
+  left: 28vw;
+  top: 40vw;
+  background: radial-gradient(circle, #c33da8 0%, transparent 65%);
+  animation: aa-drift3 38s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+  opacity: 0.6;
+}
+@keyframes aa-drift1 {
+  to {
+    transform: translate(9vw, 7vw) scale(1.12);
+  }
+}
+@keyframes aa-drift2 {
+  to {
+    transform: translate(-8vw, 10vw) scale(0.94);
+  }
+}
+@keyframes aa-drift3 {
+  to {
+    transform: translate(-10vw, -8vw) scale(1.1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aa-aurora i {
+    animation: none;
+  }
+}
+:root.aurora-static .aa-aurora i {
+  animation: none;
 }
 /* The app surface gets a soft elevation so it reads as one clean card. */
 .aa-surface {
@@ -613,6 +716,53 @@ svg {
   background: var(--color-background-info);
   color: var(--color-text-info);
   flex-shrink: 0;
+}
+
+/* ---- Aurora Slate polish (ADR-009) ------------------------------------- */
+
+/* Pointer-following glow on Insights cards — fine-pointer only, faint enough to keep text
+   readable, non-interactive; the --mx/--my vars are set by a guarded rAF listener in App.tsx. */
+@media (hover: hover) and (pointer: fine) {
+  .learn-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .learn-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      460px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(139, 124, 255, 0.1),
+      transparent 45%
+    );
+  }
+  .learn-card:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Scroll-reveal — subtle fade-up; instant under reduced-motion (see the IO effect in LearnView). */
+.aa-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s var(--aa-ease),
+    transform 0.5s var(--aa-ease);
+}
+.aa-reveal.in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .aa-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 /* Article body spacing so long reads are comfortable. */
 .learn-prose h2 {
