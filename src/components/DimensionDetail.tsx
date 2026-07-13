@@ -112,7 +112,7 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
             <div key={c.qa} style={{ display: 'grid', gridTemplateColumns: '120px 1fr 38px', alignItems: 'center', gap: '9px', marginBottom: '7px' }}>
               <span style={{ fontSize: '12px' }}>{QUALITY_ATTRIBUTES[c.qa].name[lang]}</span>
               <div style={{ height: '6px', background: 'var(--color-background-tertiary)', borderRadius: '99px' }}>
-                <div style={{ height: '100%', width: `${(c.points / maxPts) * 100}%`, background: '#1D9E75', borderRadius: '99px' }} />
+                <div style={{ height: '100%', width: `${(c.points / maxPts) * 100}%`, background: 'var(--color-text-info)', borderRadius: '99px' }} />
               </div>
               <span className="num" style={{ fontSize: '11px', color: 'var(--color-text-secondary)', textAlign: 'right' }}>
                 {c.points.toFixed(2)}

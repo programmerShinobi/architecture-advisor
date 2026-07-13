@@ -48,7 +48,9 @@ export function PrioritiesCard({ weights, onAdjust, editing = false }: Props) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {rows.map((q, i) => {
-          const color = i < 2 ? '#1D9E75' : '#7F77DD';
+          // Top-two priorities in the brand accent, the rest muted — theme-aware tokens (not the
+          // pre-reskin hardcoded green/purple) so the bars track the Aurora palette in both themes.
+          const color = i < 2 ? 'var(--color-text-info)' : 'var(--color-text-tertiary)';
           return (
             <div key={q}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '2px' }}>
