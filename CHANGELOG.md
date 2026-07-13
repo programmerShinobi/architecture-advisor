@@ -9,6 +9,28 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Added (PWA — installable + offline — 2026-07-13)
+
+- **The app is now an installable PWA that works offline**, via `vite-plugin-pwa` (Workbox
+  `generateSW`, a build-time devDependency). `registerType: 'autoUpdate'` → a new deploy's service
+  worker skip-waits and claims clients, so there's **no stale-version footgun** on GitHub Pages
+  (`cleanupOutdatedCaches` drops old precaches).
+  - **Manifest** (`manifest.webmanifest`): name/short_name, `start_url`/`scope` `./` (subpath-safe),
+    `display: standalone`, Aurora `theme_color`/`background_color` `#05060f`, and 192 / 512 /
+    maskable-512 icons — generated from a node-tree brand glyph on the Aurora gradient
+    (`public/favicon.svg` + `public/icons/*`, rendered headlessly, no image-lib dependency).
+    `index.html` gains the favicon, apple-touch-icon, and `theme-color`.
+  - **Caching:** the app shell (JS/CSS/HTML/SVG + icons) is precached; **fonts are runtime-cached**
+    (CacheFirst) so the install stays lean; the crawlable SEO snapshots under `insights/` are
+    excluded (network-served). Verified in a production preview — SW **activated** at the
+    `/architecture-advisor/` scope, manifest valid.
+  - `devOptions.enabled: false` keeps the SW out of the dev server (local dev + Playwright e2e
+    unaffected). Bundle budgets stay green (total JS 188.5/200 kB); registerSW is ~0.2 kB.
+- **Test hardening:** the a11y/contrast e2e now emulates `prefers-reduced-motion` before scanning,
+  so a theme-toggle's colour transition can't leave a half-toggled frame under axe (a race exposed
+  on slower hardware; the settled contrast was already AA). All gates green: build, lint, 99 unit,
+  **a11y both themes**, size, 14 e2e.
+
 ### Changed ("Aurora Slate" visual reskin — 2026-07-12)
 
 - **A full visual reskin applied *in place*** (ADR-009) — the deep-navy + violet/cyan **"Aurora

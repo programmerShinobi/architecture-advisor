@@ -10,6 +10,13 @@ function scan(page: Page) {
   return new AxeBuilder({ page }).withTags(TAGS).analyze();
 }
 
+// Scan under reduced-motion so the app's colour transitions (which it disables globally under
+// prefers-reduced-motion) can't leave a half-toggled theme frame under axe — contrast is evaluated
+// on the settled computed colours, which are identical with or without motion.
+test.beforeEach(async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+});
+
 test('no WCAG A/AA violations incl. color-contrast (Guided, dark theme)', async ({ page }) => {
   await page.goto(APP);
   expect((await scan(page)).violations).toEqual([]);
