@@ -84,6 +84,14 @@ npm run build    # produce the static site in ./dist
 > configure. The script fails the build if the canonical/robots URLs drift from `SITE_URL`
 > (`src/config/site.ts`), so keep all three in sync if the origin ever changes.
 
+> **PWA (ADR-010).** The build also emits `manifest.webmanifest`, a generated service worker
+> (`sw.js` + `workbox-*.js` + `registerSW.js`), and the app icons — so the deployed site is
+> **installable and works offline**. `vite-plugin-pwa` uses `registerType: 'autoUpdate'`, so each
+> deploy's SW skip-waits and replaces the old precache (no stale-version footgun). The SW scope is
+> the `/architecture-advisor/` base; nothing extra to configure on GitHub Pages. If you fork to a
+> different origin/sub-path, update `base` in `vite.config.ts` (the manifest `start_url`/`scope` are
+> relative `./`, so they follow automatically).
+
 ---
 
 ## 3. Configure Vite for GitHub Pages (critical step)

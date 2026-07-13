@@ -196,3 +196,25 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   SPA): the vanilla rewrite, the multi-file `@layer`/`js/` split + `ROOT` depth helper + per-page
   anti-FOUC script, cross-document View Transitions, a hand-rolled service worker/manifest, and the
   `.card`/`.nav` class rename. PWA remains an optional future follow-up.
+
+## PWA — installable + offline (2026-07)
+
+- **`vite-plugin-pwa` (Workbox `generateSW`), not a hand-rolled service worker.** The blueprint's SW
+  targeted a static file list, which breaks against Vite's content-hashed filenames; the plugin
+  generates the precache manifest from the real build output every time, so there is no stale
+  hardcoded shell list. It is a **build-time devDependency** — the runtime cost is a ~0.2 kB
+  `registerSW.js` + the generated `sw.js` (both outside the JS bundle budget, which stays green).
+- **`registerType: 'autoUpdate'`** so a new deploy's SW skip-waits and claims clients — the
+  GitHub-Pages caching footgun (users stranded on an old version) is avoided; `cleanupOutdatedCaches`
+  drops superseded precaches.
+- **Lean precache, runtime-cache the rest.** The app shell (JS/CSS/HTML/SVG + the PWA icons) is
+  precached; **fonts (`.woff2`) are runtime-cached CacheFirst** on demand rather than precached (the
+  app ships many script-subset font files — precaching all of them would bloat the install). The
+  crawlable **SEO snapshots under `insights/` are excluded** from both precache and
+  `navigateFallback` (they are network-served for crawlers; the SPA shell handles real navigations).
+- **Subpath-safe:** `start_url`/`scope` are `./` and the SW registers under the
+  `/architecture-advisor/` base — verified in a production preview (SW *activated*, manifest valid).
+- **Dev/e2e untouched:** `devOptions.enabled: false` keeps the SW out of the dev server, so local
+  dev and the Playwright suite never fight a cache.
+- **Icons** are generated from a single node-tree brand glyph on the Aurora gradient (`public/favicon.svg`
+  → 192/512/maskable PNGs), rendered headlessly — no image-processing dependency added.
