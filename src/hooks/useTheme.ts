@@ -14,7 +14,10 @@ export function useTheme(): [Theme, () => void] {
   );
 
   useEffect(() => {
-    document.documentElement.classList.toggle('light', theme === 'light');
+    const isLight = theme === 'light';
+    document.documentElement.classList.toggle('light', isLight);
+    // Keep the browser / installed-PWA chrome colour in sync with the theme (was dark-only).
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isLight ? '#ffffff' : '#05060f');
   }, [theme]);
 
   const toggle = useCallback(() => setTheme(theme === 'light' ? 'dark' : 'light'), [theme, setTheme]);

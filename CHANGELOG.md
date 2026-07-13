@@ -9,6 +9,16 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Added (PWA resilience polish — 2026-07-13)
+
+- **Stale-chunk auto-recovery.** A tab left open across a deploy could 404 on an old lazy chunk
+  (GitHub Pages replaces the hashed files; the auto-updating SW drops the old precache). `main.tsx`
+  now listens for Vite's `vite:preloadError` and reloads once to fetch the fresh chunks — time-boxed
+  (10 s) so a genuinely missing chunk can never cause a reload loop. Closes review item **S1**.
+- **Theme-aware `theme-color`.** The browser / installed-PWA chrome colour now tracks the theme
+  (`#05060f` dark ↔ `#ffffff` light) instead of being dark-only — updated in `useTheme` alongside the
+  `html.light` toggle. Closes review item **S2**.
+
 ### Fixed (Aurora Slate palette consistency — 2026-07-13)
 
 - **Two data bars still rendered the pre-reskin green/purple.** `PrioritiesCard` (the "what matters
