@@ -14,6 +14,18 @@ import '@fontsource/space-grotesk/600.css';
 import '@fontsource/space-grotesk/700.css';
 import './index.css';
 
+// Recover from a stale lazy chunk after a deploy replaced the hashed files mid-session (the classic
+// SPA + auto-updating service worker footgun). Vite fires `vite:preloadError` when a code-split
+// chunk fails to load; reload once to fetch the fresh index.html + new hashed chunks. Time-boxed so
+// a genuinely missing chunk can never cause a reload loop.
+window.addEventListener('vite:preloadError', () => {
+  const key = 'aa-chunk-reload-at';
+  const last = Number(sessionStorage.getItem(key) ?? 0);
+  if (Date.now() - last < 10_000) return;
+  sessionStorage.setItem(key, String(Date.now()));
+  window.location.reload();
+});
+
 // Apply a shared scenario (#s=...) into localStorage before the app reads its persisted state.
 hydrateFromUrl();
 
