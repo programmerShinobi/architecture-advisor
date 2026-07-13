@@ -9,6 +9,25 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Added (Genuinely-mobile experience — 2026-07-14)
+
+- **A real mobile UI for the whole app** (plan: [mobile-experience-plan.md](docs/03-blueprint/mobile-experience-plan.md),
+  written *before* implementation) — not a shrunk desktop layout. On phones (≤640px):
+  - **Fixed bottom tab bar** (`MobileChrome`) — **Home · Advisor · Insights · More** (thumb-zone
+    navigation); the desktop top-nav hides.
+  - **Settings sheet** (slides up from "More") with **Theme · Language · Reading mode** as
+    first-class segmented controls — so all three product toggles are reachable on mobile (the header
+    cluster is hidden there). `useTheme` is lifted to `App` and shared, so header + sheet never
+    desync.
+  - **Sticky bottom primary action** on the Advisor (`AdvisorMobileBar`) — a contextual
+    **"Get your plan" → "Save & share"** button (the "primary button at the bottom" pattern) that
+    scrolls the one-page flow forward via an `IntersectionObserver`. It's navigation sugar; the flow,
+    steps, and model are unchanged.
+  - Decluttered mobile header (brand + Guide); safe-area insets (`viewport-fit=cover`,
+    `env(safe-area-inset-bottom)`); content padding clears the fixed bars.
+  - Desktop (≥641px) is unchanged. Both themes verified. e2e updated for the mobile chrome; budget
+    total JS 193.2/200 kB, CSS 22.9/25 kB.
+
 ### Added (Home landing page — 2026-07-13)
 
 - **A proper Home landing page** (`LandingView` + `HeroRadar`), now the **default view**, mirroring

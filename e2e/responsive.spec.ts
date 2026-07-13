@@ -36,14 +36,21 @@ for (const vp of VIEWPORTS) {
   });
 }
 
-test('phone tier hides keyboard-centric chrome but keeps core actions reachable', async ({ page }) => {
+test('phone tier: keyboard chrome hidden; mobile bottom bar + settings sheet carry nav and toggles', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 });
   await page.goto(APP);
   // ⌘K + "?" + the save indicator are hidden on phones (aa-hide-phone). The save indicator is the
   // regression trap: an inline `display` on its span once defeated the class (caught visually).
   await expect(page.getByRole('button', { name: /Command palette|palet/i })).toBeHidden();
   await expect(page.getByText(/All changes saved|Semua perubahan tersimpan/)).toBeHidden();
-  // … while the Guide, mode toggle, language, and theme stay usable.
+  // The Guide stays in the header; primary navigation moves to the fixed bottom tab bar.
   await expect(page.getByRole('button', { name: /^(Guide|Panduan)$/ })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Toggle theme|Ganti tema/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(Advisor)$/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(Insights|Wawasan)$/ })).toBeVisible();
+  // Theme / language / reading-mode move into the bottom "More" settings sheet.
+  await page.getByRole('button', { name: /^(More|Lainnya)$/ }).click();
+  await expect(page.getByRole('dialog', { name: /Settings|Pengaturan/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(Dark|Gelap)$/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'EN', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(Guided|Terpandu)$/ })).toBeVisible();
 });

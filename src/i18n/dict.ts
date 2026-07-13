@@ -348,6 +348,22 @@ export const DICT = {
   'nav.home': { en: 'Home', id: 'Beranda' },
   'nav.advisor': { en: 'Advisor', id: 'Advisor' },
   'nav.learn': { en: 'Insights', id: 'Wawasan' },
+  'nav.more': { en: 'More', id: 'Lainnya' },
+  // ---- Mobile chrome (bottom nav + settings sheet) ----
+  'm.settings': { en: 'Settings', id: 'Pengaturan' },
+  'm.theme': { en: 'Theme', id: 'Tema' },
+  'm.theme.dark': { en: 'Dark', id: 'Gelap' },
+  'm.theme.light': { en: 'Light', id: 'Terang' },
+  'm.language': { en: 'Language', id: 'Bahasa' },
+  'm.mode': { en: 'Reading mode', id: 'Mode baca' },
+  'm.guided': { en: 'Guided', id: 'Terpandu' },
+  'm.expert': { en: 'Expert', id: 'Ahli' },
+  'm.close': { en: 'Close', id: 'Tutup' },
+  'm.primaryNav': { en: 'Primary', id: 'Utama' },
+  // ---- Advisor mobile action bar (contextual primary button) ----
+  'm.act.priorities': { en: 'See what matters', id: 'Lihat yang penting' },
+  'm.act.plan': { en: 'Get your plan', id: 'Dapatkan rencana' },
+  'm.act.save': { en: 'Save & share', id: 'Simpan & bagikan' },
   // ---- Landing page (Aurora Slate — mirrors prototype-v2/preview-modern.html) ----
   'lp.eyebrow.a': { en: 'Open source · Client-side', id: 'Open source · Client-side' },
   'lp.eyebrow.b': { en: 'Always explains “why”', id: 'Selalu menjelaskan “kenapa”' },
