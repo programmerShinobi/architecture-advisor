@@ -28,6 +28,7 @@
 | 0.9 | 2026-07-04 | **Responsive UI redesign**: added the `--aa-*` token layer + base classes (§6.1 — fluid spacing/type, soft elevation, 44 px touch targets, global focus ring, canonical breakpoints ≤640/641–1024/≥1025). Supersedes prototype-exact *look* (copy/features/model unchanged — see DECISIONS.md); Advisor & Insights views restyled responsive/card-based. No logic or data changes |
 | 1.0 | 2026-07-12 | **"Aurora Slate" visual direction (ADR-009)** — approved reskin *in place* of the existing React app (aurora palette + accent gradient + Space Grotesk display face, two signatures: aurora background + the existing radar restyled). The blueprint's proposed vanilla/MPA rewrite is **rejected** (ADR-003/004 stand — engine, model, seven-section Insights, and 99 tests preserved). Visual source of truth committed to [`prototype-v2/preview-modern.html`](prototype-v2/preview-modern.html). Implementation is token-value remapping, not a rewrite |
 | 1.1 | 2026-07-13 | **PWA — installable + offline (ADR-010)** via `vite-plugin-pwa` (Workbox `generateSW`, `autoUpdate`); manifest + generated service worker, app shell precached / fonts runtime-cached / SEO snapshots excluded, subpath-safe scope. No app-logic or model changes |
+| 1.2 | 2026-07-13 | **Home landing page (FR-SHELL-11)** — new default view (`LandingView` + `HeroRadar`) mirroring the prototype composition (hero + real Pattern Library + how-it-works); top nav Home · Advisor · Insights; CTAs → Advisor, pattern cards deep-link → Insights Catalog. Part of ADR-009 (Aurora Slate). Landing kept out of `readerContent` to protect the initial-JS budget. No model changes |
 
 ---
 
@@ -121,7 +122,7 @@ src/
 ├── lib/            scoring · sensitivity · antiPatternEngine · adr · report
 │                   c4 · urlState · customConfig · content · frontmatter · markdown
 ├── hooks/          usePersistedState · useUrlSyncedState
-└── components/     Header · ManualBook (Guide + architecture explanations, lazy) · Disclaimer · ModeToggle · PresetBar · FactorGroup …
+└── components/     Header · LandingView + HeroRadar (Home landing, default) · AuroraBackground · ManualBook (Guide, lazy) · Disclaimer · ModeToggle · PresetBar · FactorGroup …
                     QaWeightChart · DimensionResults · RadarTradeoff · ContributionTable
                     ComparisonMode · SensitivityCard · RiskRegister · AntiPatternAlerts
                     FitnessFunctions · MigrationPath · MethodologyPanel · ReportPreview …

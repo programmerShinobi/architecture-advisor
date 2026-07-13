@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { AuroraBackground } from './components/AuroraBackground';
+import { LandingView } from './components/LandingView';
 import { Header, type Mode } from './components/Header';
 import { CommandPalette, type Command } from './components/CommandPalette';
 import { ShortcutsModal } from './components/ShortcutsModal';
@@ -52,7 +53,9 @@ type Selections = Partial<Record<DimensionId, string>>;
 
 export default function App() {
   const { t, lang, setLang } = useI18n();
-  const [mainView, setMainView] = usePersistedState<'advisor' | 'learn'>('aa.main', 'advisor');
+  const [mainView, setMainView] = usePersistedState<'home' | 'advisor' | 'learn'>('aa.main', 'home');
+  // A pending Insights deep-link target (set from the landing's pattern cards).
+  const [learnTarget, setLearnTarget] = useState<{ dim: DimensionId; optId: string } | null>(null);
   const [mode, setMode] = usePersistedState<Mode>('aa.mode', 'guided');
   const [levels, setLevels] = usePersistedState<Levels>('aa.levels', DEFAULT_LEVELS);
   const [selections, setSelections] = usePersistedState<Selections>('aa.selections', {});
@@ -219,14 +222,19 @@ export default function App() {
             />
 
             <nav aria-label={t('learn.title')} className="screen-only" style={{ display: 'flex', gap: '4px', padding: 'var(--aa-space-3) var(--aa-panel-pad) 0', borderBottom: '0.5px solid var(--color-border-tertiary)' }}>
-              {(['advisor', 'learn'] as const).map((v) => {
+              {(['home', 'advisor', 'learn'] as const).map((v) => {
                 const active = mainView === v;
                 return (
                   <button
                     key={v}
                     type="button"
                     aria-current={active ? 'page' : undefined}
-                    onClick={() => setMainView(v)}
+                    onClick={() => {
+                      // A plain Insights tab click clears any stale landing deep-link (→ shows the
+                      // Insights home, not a re-opened architecture).
+                      if (v === 'learn') setLearnTarget(null);
+                      setMainView(v);
+                    }}
                     style={{
                       appearance: 'none',
                       background: active ? 'var(--color-background-info)' : 'transparent',
@@ -242,13 +250,24 @@ export default function App() {
                       transition: 'background 0.15s ease, color 0.15s ease',
                     }}
                   >
-                    {t(v === 'advisor' ? 'nav.advisor' : 'nav.learn')}
+                    {t(v === 'home' ? 'nav.home' : v === 'advisor' ? 'nav.advisor' : 'nav.learn')}
                   </button>
                 );
               })}
             </nav>
 
-            {mainView === 'learn' ? (
+            {mainView === 'home' ? (
+              <div className="aa-panel">
+                <LandingView
+                  onStart={() => setMainView('advisor')}
+                  onOpenInsights={() => setMainView('learn')}
+                  onOpenArch={(dim, optId) => {
+                    setLearnTarget({ dim, optId });
+                    setMainView('learn');
+                  }}
+                />
+              </div>
+            ) : mainView === 'learn' ? (
               <Suspense fallback={<div style={{ padding: 'var(--aa-panel-pad)', color: 'var(--color-text-tertiary)' }}>{t('save.saving')}</div>}>
                 <LearnView
                   onOpenAdvisor={() => setMainView('advisor')}
@@ -256,6 +275,7 @@ export default function App() {
                     setLevels(labLevels);
                     setMainView('advisor');
                   }}
+                  initialTarget={learnTarget}
                 />
               </Suspense>
             ) : (

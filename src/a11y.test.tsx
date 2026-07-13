@@ -39,6 +39,7 @@ describe('Accessibility (AC-15) — axe-core, WCAG A/AA', () => {
     'no violations with Expert mode + the weight-override panel open',
     async () => {
       const { container } = renderWithI18n(<App />, 'en');
+      fireEvent.click(screen.getByRole('button', { name: 'Advisor' })); // default view is now Home
       fireEvent.click(screen.getByRole('button', { name: 'Expert' }));
       fireEvent.click(screen.getByRole('button', { name: /Adjust weights/ }));
       expect(await violations(container)).toEqual([]);

@@ -21,8 +21,10 @@ for (const vp of VIEWPORTS) {
     await page.setViewportSize({ width: vp.width, height: vp.height });
     await page.goto(APP);
 
-    // Advisor (default view) renders inside the viewport.
+    // The default view is now the Home landing — check it, then the Advisor, then Insights.
     await expect(page.getByRole('button', { name: /Insights|Wawasan/ })).toBeVisible();
+    await assertNoHorizontalScroll(page, `Home @${vp.name}`);
+    await page.getByRole('button', { name: /^(Advisor)$/ }).click();
     await assertNoHorizontalScroll(page, `Advisor @${vp.name}`);
 
     // Insights → Catalog → one architecture page.

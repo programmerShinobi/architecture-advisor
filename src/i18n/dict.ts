@@ -345,8 +345,69 @@ export const DICT = {
 
   // "Learn" content layer — sections, article view, credibility block (src/config/sections.ts,
   // src/components/Learn*.tsx). Section labels/descriptions live here; content lives in /content.
+  'nav.home': { en: 'Home', id: 'Beranda' },
   'nav.advisor': { en: 'Advisor', id: 'Advisor' },
   'nav.learn': { en: 'Insights', id: 'Wawasan' },
+  // ---- Landing page (Aurora Slate — mirrors prototype-v2/preview-modern.html) ----
+  'lp.eyebrow.a': { en: 'Open source · Client-side', id: 'Open source · Client-side' },
+  'lp.eyebrow.b': { en: 'Always explains “why”', id: 'Selalu menjelaskan “kenapa”' },
+  'lp.h1.pre': { en: 'Choose your architecture with ', id: 'Pilih arsitektur dengan ' },
+  'lp.h1.grad': { en: 'evidence,', id: 'bukti,' },
+  'lp.h1.post': { en: ' not trends.', id: ' bukan tren.' },
+  'lp.lede': {
+    en: 'Answer a few questions about your project — get an architecture recommendation across 5 dimensions, with the full calculation you can audit and edit yourself.',
+    id: 'Jawab beberapa pertanyaan tentang proyekmu — dapatkan rekomendasi arsitektur di 5 dimensi, lengkap dengan perhitungan yang bisa kamu audit dan ubah sendiri.',
+  },
+  'lp.cta.start': { en: 'Start free analysis', id: 'Mulai analisis gratis' },
+  'lp.cta.how': { en: 'See how it works', id: 'Lihat cara kerja' },
+  'lp.meta.dims': { en: 'architecture dimensions', id: 'dimensi arsitektur' },
+  'lp.meta.iso': { en: 'ISO/IEC 2023', id: 'ISO/IEC 2023' },
+  'lp.meta.client': { en: 'client-side', id: 'client-side' },
+  'lp.radar.aria': { en: 'Trade-off radar across five architecture dimensions', id: 'Radar trade-off lima dimensi arsitektur' },
+  'lp.chip.fit': { en: 'Fit score · 8.4 / 10', id: 'Skor cocok · 8.4 / 10' },
+  'lp.chip.rec': { en: 'Event-driven · recommended', id: 'Event-driven · direkomendasikan' },
+  'lp.patterns.kicker': { en: 'Pattern Library', id: 'Pustaka Pola' },
+  'lp.patterns.h2': { en: 'Know the pattern before you pick it.', id: 'Kenali polanya sebelum memilihnya.' },
+  'lp.patterns.sub': {
+    en: 'Every option is explained in plain language: when it fits, when it doesn’t, and what it costs.',
+    id: 'Setiap pola dijelaskan dengan bahasa sederhana: kapan cocok, kapan tidak, dan apa harganya.',
+  },
+  'lp.patterns.all': { en: 'All architectures', id: 'Semua arsitektur' },
+  'lp.card.learn': { en: 'Learn this pattern', id: 'Pelajari pola ini' },
+  'lp.tag.popular': { en: 'POPULAR', id: 'POPULER' },
+  'lp.blurb.event-driven': {
+    en: 'Loosely-coupled services over async events — high throughput, independent teams, paid for with eventual consistency.',
+    id: 'Layanan yang saling lepas lewat event asinkron — throughput tinggi, tim mandiri, dibayar dengan eventual consistency.',
+  },
+  'lp.blurb.modular-monolith': {
+    en: 'One deployment, firm module boundaries. The sanest starting point for most products.',
+    id: 'Satu deployment, batas modul tegas. Titik awal paling waras untuk mayoritas produk.',
+  },
+  'lp.blurb.serverless': {
+    en: 'Pay per execution, scales automatically — mind cold starts and vendor lock-in.',
+    id: 'Bayar per eksekusi, skala otomatis — waspadai cold start dan vendor lock-in.',
+  },
+  'lp.blurb.cqrs': {
+    en: 'Separate the read and write paths, store history as events. Strong for audit & replay — costly to learn.',
+    id: 'Pisahkan jalur baca dan tulis, simpan sejarah sebagai event. Kuat untuk audit & replay — mahal untuk dipelajari.',
+  },
+  'lp.how.kicker': { en: 'How it works', id: 'Cara kerja' },
+  'lp.how.h2': { en: 'Three steps. Every number is open.', id: 'Tiga langkah. Semua angkanya terbuka.' },
+  'lp.how.s1.h': { en: 'Tell us about your project', id: 'Ceritakan proyekmu' },
+  'lp.how.s1.p': {
+    en: 'Answer short questions about team, scale, and constraints — Guided for newcomers, Expert for architects.',
+    id: 'Jawab pertanyaan singkat tentang tim, skala, dan constraint — Guided untuk pemula, Expert untuk arsitek.',
+  },
+  'lp.how.s2.h': { en: 'See your quality priorities', id: 'Lihat prioritas kualitasmu' },
+  'lp.how.s2.p': {
+    en: 'Your answers map to quality-attribute weights grounded in ISO/IEC 25010 — editable on the spot.',
+    id: 'Jawabanmu dipetakan ke bobot quality attribute berbasis ISO/IEC 25010 — bisa kamu edit langsung.',
+  },
+  'lp.how.s3.h': { en: 'Get the recommendation + why', id: 'Dapatkan rekomendasi + alasannya' },
+  'lp.how.s3.p': {
+    en: 'A trade-off radar, ranked alternatives, and an ADR export. Every score traces back to its factors.',
+    id: 'Radar trade-off, ranking alternatif, dan export ADR. Setiap skor bisa ditelusuri sampai ke faktornya.',
+  },
   'learn.title': { en: 'Architecture Insights', id: 'Wawasan Arsitektur' },
   'learn.intro': {
     en: 'Plain-language, evidence-grounded insights into every architecture the Advisor evaluates — for newcomers and experts alike, with real cited sources.',

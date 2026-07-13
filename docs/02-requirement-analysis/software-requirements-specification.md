@@ -32,6 +32,7 @@
 | 1.3 | 2026-07-06 | **Insights holistic coverage + English-first**: FR-LEARN-6 extended to all four sections (Catalog/Playbook/Review/Library) with distinct structured lenses and a per-page lens navigation (the Catalog → Playbook → Review → Library knowledge journey) for every one of the 21 architectures; FR-SHELL-2 default language flipped to **EN** (toggle unchanged); FR-LEARN-2 content gate now requires **at least the `en` version**. See [DECISIONS.md](../../DECISIONS.md). No requirements removed |
 | 1.4 | 2026-07-06 | **Insights Wave C + SEO**: added FR-LEARN-8 (Roadmap — guided learning paths), FR-LEARN-9 (Academy — client-side quiz modules), FR-LEARN-10 (Lab — hypothesis experiments that load prepared scenarios into the live engine), and FR-SEO-1 (build-time sitemap/robots/JSON-LD + static crawlable article snapshots; SSG-lite — the SPA architecture is unchanged, superseding "SSG deferred" for discoverability). §3.10 updated to seven sections. No requirements removed |
 | 1.5 | 2026-07-06 | **Wave C holistic parity**: FR-LEARN-8/9/10 strengthened — the Roadmap, Academy, and Lab must each cover **all 21 architectures** (every architecture in ≥1 learning path, reviewed by ≥1 quiz question, and in play in ≥1 experiment), matching the four lenses' 21×4 parity so Wave C can never mismatch the lens coverage; enforced by per-section unit tests. No requirements removed |
+| 1.6 | 2026-07-13 | **Home landing page** (FR-SHELL-11): added a default Home view mirroring the approved prototype composition (hero + real Pattern Library + how-it-works), bilingual/responsive, CTAs into the Advisor and deep-links into Insights; top nav becomes Home · Advisor · Insights. Part of the "Aurora Slate" visual programme (ADR-009). No requirements removed |
 
 ---
 
@@ -216,6 +217,7 @@ v1.0:
 | FR-SHELL-8 | Provide a **command palette and keyboard shortcuts** covering all core actions. | Should | UI/UX Playbook Task 2 | T |
 | FR-SHELL-9 | Provide an in-app **Manual / Guide** that explains the tool end to end — including the full scoring calculation — with a **live worked example** computed from the user's current inputs. | Should | v1.1 enhancement | D |
 | FR-SHELL-10 | Extend the in-app **Manual / Guide** into a genuine deep-dive that, alongside the scoring walkthrough, **explains every architecture the Advisor evaluates** (see §3.9). The Manual is **lazy-loaded** on demand. | Should | v1.1 enhancement | T |
+| FR-SHELL-11 | Provide a **Home landing view** — the **default** top-nav destination (Home · Advisor · Insights) — that mirrors the approved prototype composition: a hero (headline, CTAs, key stats, decorative radar motif), a **Pattern Library** featuring **real** architectures from the frozen model (each deep-linking into its Insights Catalog), and a **how-it-works** summary of the Advisor flow. Bilingual, responsive, and reveal-on-scroll (reduced-motion safe). CTAs open the Advisor; a shared `#s=…` link bypasses Home and opens the Advisor directly. | Should | 2026-07 landing | T |
 
 ### 3.2 Step 1 — Project Factors
 

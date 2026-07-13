@@ -56,6 +56,9 @@ interface Props {
   onOpenAdvisor: () => void;
   /** Load a Lab experiment's factor levels into the Advisor (and switch to it). */
   onLoadLab: (levels: Levels) => void;
+  /** A deep-link (e.g. from the landing's pattern cards): open this architecture's Catalog on mount.
+   *  LearnView remounts on every visit to Insights, so this is read as the initial state. */
+  initialTarget?: { dim: DimensionId; optId: string } | null;
 }
 
 const totalArchitectures = READER_SECTIONS.reduce((n, s) => n + s.entries.length, 0);
@@ -367,11 +370,15 @@ function MarkdownArticle({ doc, onOpenAdvisor }: { doc: ContentDoc; onOpenAdviso
   );
 }
 
-export default function LearnView({ onOpenAdvisor, onLoadLab }: Props) {
+export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: Props) {
   const { t, tr, lang } = useI18n();
-  const [section, setSection] = useState<SectionId | null>(null);
+  // A landing deep-link opens straight to that architecture's Catalog page. LearnView remounts on
+  // every visit to Insights, so reading `initialTarget` as the initial state is correct (no effect).
+  const [section, setSection] = useState<SectionId | null>(initialTarget ? 'catalog' : null);
   const [slug, setSlug] = useState<string | null>(null);
-  const [arch, setArch] = useState<{ dim: DimensionId; optId: string; angle: Angle } | null>(null);
+  const [arch, setArch] = useState<{ dim: DimensionId; optId: string; angle: Angle } | null>(
+    initialTarget ? { dim: initialTarget.dim, optId: initialTarget.optId, angle: 'catalog' } : null,
+  );
 
   // Aurora Slate: fade-up any `.aa-reveal` elements as they enter view (ADR-009). Re-runs when the
   // view changes; instant under reduced-motion or without IntersectionObserver (never leaves content

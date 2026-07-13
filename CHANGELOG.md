@@ -9,6 +9,27 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Added (Home landing page — 2026-07-13)
+
+- **A proper Home landing page** (`LandingView` + `HeroRadar`), now the **default view**, mirroring
+  the composition of the approved [`prototype-v2/preview-modern.html`](docs/03-blueprint/prototype-v2/preview-modern.html)
+  — closing the gap between the prototype's *layout* and the app (the Aurora reskin had applied the
+  prototype's *style* but kept the tool-first structure).
+  - **Hero:** gradient headline, eyebrow badge, lede, primary/secondary CTAs, hero-meta stats, and
+    the decorative 5-dimension **radar motif** with floating chips (static brand art, distinct from
+    the Advisor's functional radar).
+  - **Pattern Library bento:** four **real** architectures from the frozen model (Event-driven,
+    Modular Monolith, Serverless, CQRS — names from `dimensions.ts`, blurbs bilingual in the dict),
+    each **deep-linking into its Insights Catalog page**.
+  - **How it works:** the three real Advisor steps.
+  - Fully **bilingual** (EN/ID via the dict), **responsive** (radar-first on mobile, bento reflows),
+    reveal-on-scroll (reduced-motion safe), and pointer-glow cards — all reusing the Aurora tokens.
+  - Top nav is now **Home · Advisor · Insights** (Home default). A shared `#s=…` link still opens the
+    Advisor directly. CTAs drive the Advisor; "All architectures" opens Insights.
+  - Kept light: the landing uses `DIMENSIONS` + dict strings (no `readerContent` pulled into the
+    initial bundle); initial JS+CSS 134.1 kB, total JS 191.9 kB — within budget. +3 unit tests
+    (`LandingView.test.tsx`); e2e updated for the new default view. All gates green.
+
 ### Added (PWA resilience polish — 2026-07-13)
 
 - **Stale-chunk auto-recovery.** A tab left open across a deploy could 404 on an old lazy chunk

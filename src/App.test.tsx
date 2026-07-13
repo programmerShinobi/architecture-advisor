@@ -9,7 +9,12 @@ import { renderWithI18n } from './test/render';
 const VERDICT = /leads at \d+%|within \d+ points/;
 
 describe('App integration', () => {
-  beforeEach(() => localStorage.clear());
+  // These exercise the Advisor; the app's default view is now the Home landing, so start on the
+  // Advisor (a returning-user state) by seeding the persisted view.
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('aa.main', JSON.stringify('advisor'));
+  });
 
   it('AC-2: applying a preset instantly recomputes the recommendation', () => {
     renderWithI18n(<App />, 'en');
