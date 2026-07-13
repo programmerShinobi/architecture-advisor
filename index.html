@@ -9,6 +9,11 @@
     />
     <title>Architecture Advisor</title>
 
+    <!-- Icons + PWA theme (manifest link is injected by vite-plugin-pwa). -->
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="%BASE_URL%icons/apple-touch-icon.png" />
+    <meta name="theme-color" content="#05060f" />
+
     <!-- SEO (FR-SEO): canonical + social cards + structured data. URLs come from src/config/site.ts;
          a guard in scripts/generate-seo.mjs cross-checks they never drift. -->
     <link rel="canonical" href="https://programmershinobi.github.io/architecture-advisor/" />
