@@ -9,6 +9,14 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Fixed (Aurora Slate palette consistency — 2026-07-13)
+
+- **Two data bars still rendered the pre-reskin green/purple.** `PrioritiesCard` (the "what matters
+  most" weight bars) and `DimensionDetail` (the Expert per-attribute contribution bar) hardcoded the
+  old radar hexes (`#1D9E75`/`#7F77DD`), which the ADR-009 token remap couldn't reach — so they
+  clashed with the Aurora palette. Both now use the theme-aware `--color-text-*` tokens (accent for
+  emphasis, muted for the rest), consistent in both themes. Colour-token-only change; no logic.
+
 ### Added (PWA — installable + offline — 2026-07-13)
 
 - **The app is now an installable PWA that works offline**, via `vite-plugin-pwa` (Workbox
