@@ -1,5 +1,8 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { AuroraBackground } from './components/AuroraBackground';
+import { MobileChrome } from './components/MobileChrome';
+import { AdvisorMobileBar } from './components/AdvisorMobileBar';
+import { LandingView } from './components/LandingView';
 import { Header, type Mode } from './components/Header';
 import { CommandPalette, type Command } from './components/CommandPalette';
 import { ShortcutsModal } from './components/ShortcutsModal';
@@ -28,6 +31,7 @@ import { MethodologyPanel } from './components/MethodologyPanel';
 import { Glossary } from './components/Glossary';
 import { useI18n } from './i18n/I18nContext';
 import { usePersistedState } from './hooks/usePersistedState';
+import { useTheme } from './hooks/useTheme';
 import { useExportActions } from './hooks/useExportActions';
 import { DEFAULT_LEVELS } from './config/defaults';
 import { PRESETS } from './config/presets';
@@ -52,8 +56,16 @@ type Selections = Partial<Record<DimensionId, string>>;
 
 export default function App() {
   const { t, lang, setLang } = useI18n();
-  const [mainView, setMainView] = usePersistedState<'advisor' | 'learn'>('aa.main', 'advisor');
+  const [mainView, setMainView] = usePersistedState<'home' | 'advisor' | 'learn'>('aa.main', 'home');
+  // A pending Insights deep-link target (set from the landing's pattern cards).
+  const [learnTarget, setLearnTarget] = useState<{ dim: DimensionId; optId: string } | null>(null);
   const [mode, setMode] = usePersistedState<Mode>('aa.mode', 'guided');
+  const [theme, toggleTheme] = useTheme();
+  // Top nav + mobile bottom bar share this: a plain Insights visit clears any landing deep-link.
+  const navigate = (v: 'home' | 'advisor' | 'learn') => {
+    if (v === 'learn') setLearnTarget(null);
+    setMainView(v);
+  };
   const [levels, setLevels] = usePersistedState<Levels>('aa.levels', DEFAULT_LEVELS);
   const [selections, setSelections] = usePersistedState<Selections>('aa.selections', {});
   const [overrides, setOverrides] = usePersistedState<Overrides>('aa.overrides', {});
@@ -195,7 +207,9 @@ export default function App() {
   return (
     <>
     <AuroraBackground />
-    <div className="screen-only aa-page">
+    <MobileChrome mainView={mainView} onNavigate={navigate} theme={theme} onToggleTheme={toggleTheme} mode={mode} onSetMode={setMode} />
+    {mainView === 'advisor' && <AdvisorMobileBar />}
+    <div className={'screen-only aa-page' + (mainView === 'advisor' ? ' has-actionbar' : '')}>
       <div className="page aa-frame">
         <div style={{ background: 'var(--color-background-secondary)', borderRadius: 'var(--border-radius-xl)', padding: 'var(--aa-space-3)' }}>
           <div
@@ -215,18 +229,20 @@ export default function App() {
               onCmdK={() => setOverlay('palette')}
               onHelp={() => setOverlay('shortcuts')}
               onManual={() => setOverlay('manual')}
+              theme={theme}
+              onToggleTheme={toggleTheme}
               saveSig={saveSig}
             />
 
-            <nav aria-label={t('learn.title')} className="screen-only" style={{ display: 'flex', gap: '4px', padding: 'var(--aa-space-3) var(--aa-panel-pad) 0', borderBottom: '0.5px solid var(--color-border-tertiary)' }}>
-              {(['advisor', 'learn'] as const).map((v) => {
+            <nav aria-label={t('m.primaryNav')} className="screen-only aa-topnav">
+              {(['home', 'advisor', 'learn'] as const).map((v) => {
                 const active = mainView === v;
                 return (
                   <button
                     key={v}
                     type="button"
                     aria-current={active ? 'page' : undefined}
-                    onClick={() => setMainView(v)}
+                    onClick={() => navigate(v)}
                     style={{
                       appearance: 'none',
                       background: active ? 'var(--color-background-info)' : 'transparent',
@@ -242,13 +258,24 @@ export default function App() {
                       transition: 'background 0.15s ease, color 0.15s ease',
                     }}
                   >
-                    {t(v === 'advisor' ? 'nav.advisor' : 'nav.learn')}
+                    {t(v === 'home' ? 'nav.home' : v === 'advisor' ? 'nav.advisor' : 'nav.learn')}
                   </button>
                 );
               })}
             </nav>
 
-            {mainView === 'learn' ? (
+            {mainView === 'home' ? (
+              <div className="aa-panel">
+                <LandingView
+                  onStart={() => setMainView('advisor')}
+                  onOpenInsights={() => setMainView('learn')}
+                  onOpenArch={(dim, optId) => {
+                    setLearnTarget({ dim, optId });
+                    setMainView('learn');
+                  }}
+                />
+              </div>
+            ) : mainView === 'learn' ? (
               <Suspense fallback={<div style={{ padding: 'var(--aa-panel-pad)', color: 'var(--color-text-tertiary)' }}>{t('save.saving')}</div>}>
                 <LearnView
                   onOpenAdvisor={() => setMainView('advisor')}
@@ -256,6 +283,7 @@ export default function App() {
                     setLevels(labLevels);
                     setMainView('advisor');
                   }}
+                  initialTarget={learnTarget}
                 />
               </Suspense>
             ) : (
@@ -289,7 +317,7 @@ export default function App() {
         <div className="f-div" />
 
         {/* Step 3 — recommendation across dimensions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '13px' }}>
+        <div id="adv-plan" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '13px', scrollMarginTop: '12px' }}>
           <span className="f-num">3</span>
           <span style={{ fontSize: '15px', fontWeight: 500 }}>
             <span className="guided-only">{t('results.title.g')}</span>
@@ -337,7 +365,7 @@ export default function App() {
           </div>
         </section>
 
-        <div className="f-div" />
+        <div id="adv-save" className="f-div" style={{ scrollMarginTop: '12px' }} />
         <Toolbar run={run} status={exportStatus} setStatus={setExportStatus} mode={mode} onImport={importScenario} />
 
               <p

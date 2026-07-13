@@ -25,6 +25,7 @@ test('no WCAG A/AA violations incl. color-contrast (Guided, dark theme)', async 
 test('no WCAG A/AA violations incl. color-contrast (Expert mode + light theme)', async ({ page }) => {
   await page.goto(APP);
   await page.getByRole('button', { name: 'EN', exact: true }).click();
+  await page.getByRole('button', { name: 'Advisor', exact: true }).click(); // default view is now Home
   await page.getByRole('button', { name: 'Expert', exact: true }).click();
   await page.getByRole('button', { name: 'Toggle theme' }).click(); // → light
   await page.getByRole('button', { name: /Adjust weights/ }).click(); // mount the override panel
@@ -78,5 +79,6 @@ test('controls are keyboard-operable', async ({ page }) => {
   // which renames the Indonesian preset chips to their English labels)
   await page.getByRole('button', { name: 'EN', exact: true }).focus();
   await page.keyboard.press('Enter');
+  await page.getByRole('button', { name: 'Advisor', exact: true }).click(); // default view is now Home
   await expect(page.getByRole('button', { name: 'Busy online shop' })).toBeVisible();
 });

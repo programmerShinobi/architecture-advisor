@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { IconBook2, IconCircleCheck, IconCommand, IconMoon, IconSitemap, IconSun } from '@tabler/icons-react';
 import { useI18n } from '../i18n/I18nContext';
-import { useTheme } from '../hooks/useTheme';
 
 export type Mode = 'guided' | 'expert';
 
@@ -11,13 +10,16 @@ interface Props {
   onCmdK: () => void;
   onHelp: () => void;
   onManual: () => void;
+  /** Theme is lifted to App and shared (Header + mobile chrome) so they never desync. */
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
   /** Changes whenever persisted state changes, to flash the save indicator. */
   saveSig: string;
 }
 
-export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }: Props) {
+export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, onToggleTheme, saveSig }: Props) {
   const { t, lang, setLang } = useI18n();
-  const [theme, toggleTheme] = useTheme();
+  const toggleTheme = onToggleTheme;
   const [saving, setSaving] = useState(false);
   const firstRun = useRef(true);
 
@@ -93,6 +95,8 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }
           ?
         </button>
 
+        {/* Theme / language / mode live in the mobile settings sheet on phones (MobileChrome). */}
+        <div className="aa-desktop-controls">
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'var(--color-background-secondary)', borderRadius: '99px', padding: '2px' }}>
           <button type="button" className={'f-mode' + (mode === 'guided' ? ' on' : '')} onClick={() => onToggleMode('guided')}>
             {t('mode.guided')}
@@ -131,6 +135,7 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, saveSig }
               <IconMoon size={16} style={{ color: 'var(--color-text-secondary)' }} aria-hidden />
             )}
           </button>
+        </div>
         </div>
       </div>
     </div>

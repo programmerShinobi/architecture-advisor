@@ -196,6 +196,16 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   SPA): the vanilla rewrite, the multi-file `@layer`/`js/` split + `ROOT` depth helper + per-page
   anti-FOUC script, cross-document View Transitions, a hand-rolled service worker/manifest, and the
   `.card`/`.nav` class rename. PWA remains an optional future follow-up.
+- **The prototype's *layout* now ships too — as a Home landing (2026-07-13, FR-SHELL-11).** The
+  reskin first applied only the prototype's *style*; a follow-up added a real **Home landing view**
+  (`LandingView` + `HeroRadar`) mirroring the prototype's composition (hero + Pattern Library +
+  how-it-works). It is the **default** view (top nav Home · Advisor · Insights). Reconciliations vs
+  the prototype (a marketing mockup): the Pattern Library features **real** model architectures
+  (deep-linking into Insights), copy is **bilingual** via the dict, and the decorative hero radar is
+  a *separate* static motif — **not** the Advisor's functional 12-attribute radar (M13 discipline:
+  one radar visual system, two uses). The landing deliberately avoids importing `readerContent`
+  (uses `DIMENSIONS` + dict strings) so the now-default view doesn't pull the content layer into the
+  initial-JS budget. A shared `#s=…` link sets `aa.main=advisor` pre-render so it opens the Advisor.
 
 ## PWA — installable + offline (2026-07)
 

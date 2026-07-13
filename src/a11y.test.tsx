@@ -39,6 +39,9 @@ describe('Accessibility (AC-15) — axe-core, WCAG A/AA', () => {
     'no violations with Expert mode + the weight-override panel open',
     async () => {
       const { container } = renderWithI18n(<App />, 'en');
+      // Default view is now Home; go to the Advisor. Top nav + mobile bottom bar both render under
+      // css:false (jsdom applies no CSS media queries), so pick the first "Advisor" tab.
+      fireEvent.click(screen.getAllByRole('button', { name: 'Advisor' })[0]);
       fireEvent.click(screen.getByRole('button', { name: 'Expert' }));
       fireEvent.click(screen.getByRole('button', { name: /Adjust weights/ }));
       expect(await violations(container)).toEqual([]);
@@ -62,7 +65,7 @@ describe('Accessibility (AC-15) — axe-core, WCAG A/AA', () => {
     'no violations in the Learn content area, including an open article (lazy-loaded)',
     async () => {
       const { container } = renderWithI18n(<App />, 'en');
-      fireEvent.click(screen.getByRole('button', { name: 'Insights' }));
+      fireEvent.click(screen.getAllByRole('button', { name: 'Insights' })[0]); // top nav + mobile bar both in jsdom
       // Drill into the Catalog (data-driven, all architectures) and open one architecture page.
       fireEvent.click(await screen.findByRole('button', { name: /Catalog/ }));
       fireEvent.click(await screen.findByRole('button', { name: /Microservices/ }));

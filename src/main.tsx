@@ -27,7 +27,14 @@ window.addEventListener('vite:preloadError', () => {
 });
 
 // Apply a shared scenario (#s=...) into localStorage before the app reads its persisted state.
-hydrateFromUrl();
+// A shared link should land on the Advisor (to show the restored scenario), not the home landing.
+if (hydrateFromUrl()) {
+  try {
+    localStorage.setItem('aa.main', JSON.stringify('advisor'));
+  } catch {
+    /* ignore storage errors */
+  }
+}
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Root element #root not found');

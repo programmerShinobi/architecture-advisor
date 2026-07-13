@@ -8,6 +8,8 @@ const VERDICT = /leads at \d+%|within \d+ points/;
 async function english(page: Page) {
   await page.goto(APP);
   await page.getByRole('button', { name: 'EN', exact: true }).click();
+  // The default view is now the Home landing; these tests exercise the Advisor.
+  await page.getByRole('button', { name: 'Advisor', exact: true }).click();
 }
 
 test('the four-step flow loads and the recommendation recomputes on a preset', async ({ page }) => {
