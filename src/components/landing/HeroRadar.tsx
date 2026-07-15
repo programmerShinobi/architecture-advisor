@@ -1,12 +1,24 @@
 import { useI18n } from '../../i18n/I18nContext';
+import { PRESETS } from '../../config/presets';
+import { rank, displayScore } from '../../lib/scoring';
 
 /**
  * Decorative 5-dimension radar motif for the landing hero (Aurora Slate signature #2), mirroring
  * `prototype-v2/preview-modern.html`. Static and `role="img"` — it's brand art, NOT the app's
  * functional 12-attribute RadarPanel. Gradient ids are landing-scoped (`lp-…`) to stay unique.
+ *
+ * The floating badges are NOT mockup text: they show the frozen engine's real communication-style
+ * (D2) recommendation + fit score for the "busy online shop" preset — the same architecture the
+ * landing's featured pattern card highlights. Computed once at module load (pure, deterministic).
  */
+const HERO_PRESET = PRESETS.find((p) => p.id === 'high-traffic-ecommerce');
+const HERO_TOP = HERO_PRESET ? rank(HERO_PRESET.levels, 'D2')[0] : undefined;
+/** "Event-driven (pub/sub)" → "Event-driven" — the chip is a badge, not a spec. */
+const HERO_TOP_NAME = HERO_TOP?.name.split(' (')[0] ?? '';
+const HERO_TOP_SCORE = HERO_TOP ? displayScore(HERO_TOP.score) : 0;
+
 export function HeroRadar() {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   return (
     <div className="radar-wrap">
       <div className="radar-card">
@@ -44,13 +56,13 @@ export function HeroRadar() {
           <text className="radar-label" x="62" y="86" textAnchor="end">DELIVERY</text>
         </svg>
       </div>
-      <div className="radar-chip chip-a">
+      <div className="radar-chip chip-a" title={HERO_PRESET ? tr(HERO_PRESET.label) : undefined}>
         <span className="dot" style={{ background: '#7CF5C8' }} />
-        {t('lp.chip.fit')}
+        {t('lp.chip.fit')} · {HERO_TOP_SCORE} / 100
       </div>
-      <div className="radar-chip chip-b">
+      <div className="radar-chip chip-b" title={HERO_PRESET ? tr(HERO_PRESET.label) : undefined}>
         <span className="dot" style={{ background: '#8B7CFF' }} />
-        {t('lp.chip.rec')}
+        {HERO_TOP_NAME} · {t('lp.chip.rec')}
       </div>
     </div>
   );

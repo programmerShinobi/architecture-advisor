@@ -41,6 +41,7 @@ import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/s
 import { detectAntiPatterns } from './lib/antiPatternEngine';
 import type { ExportInput } from './lib/snapshot';
 import type { ScenarioState } from './lib/scenarioIO';
+import { SITE_COPYRIGHT } from './config/site';
 import type { DimensionId, Levels, RankedOption } from './types';
 
 // The Manual/Guide is lazy-loaded: it is an on-demand modal and now carries the detailed,
@@ -211,18 +212,10 @@ export default function App() {
     {mainView === 'advisor' && <AdvisorMobileBar />}
     <div className={'screen-only aa-page' + (mainView === 'advisor' ? ' has-actionbar' : '')}>
       <div className="page aa-frame">
-        <div style={{ background: 'var(--color-background-secondary)', borderRadius: 'var(--border-radius-xl)', padding: 'var(--aa-space-3)' }}>
-          <div
-            id="f-app"
-            className={mode + ' aa-surface'}
-            style={{
-              position: 'relative',
-              background: 'var(--color-background-primary)',
-              border: '0.5px solid var(--color-border-tertiary)',
-              borderRadius: 'var(--border-radius-lg)',
-              overflow: 'hidden',
-            }}
-          >
+        {/* Borderless full-bleed shell (Fase 1): no framed box — content floats on the aurora
+            canvas; the header/nav are glass. The extra wrapper div is gone with the frame. */}
+        <div>
+          <div id="f-app" className={mode} style={{ position: 'relative' }}>
             <Header
               mode={mode}
               onToggleMode={setMode}
@@ -234,7 +227,7 @@ export default function App() {
               saveSig={saveSig}
             />
 
-            <nav aria-label={t('m.primaryNav')} className="screen-only aa-topnav">
+            <nav aria-label={t('m.primaryNav')} className="screen-only aa-topnav aa-glass">
               {(['home', 'advisor', 'learn'] as const).map((v) => {
                 const active = mainView === v;
                 return (
@@ -247,13 +240,11 @@ export default function App() {
                       appearance: 'none',
                       background: active ? 'var(--color-background-info)' : 'transparent',
                       border: 'none',
-                      borderBottom: `2px solid ${active ? 'var(--color-text-info)' : 'transparent'}`,
-                      borderRadius: 'var(--border-radius-md) var(--border-radius-md) 0 0',
-                      color: active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                      borderRadius: '999px',
+                      color: active ? 'var(--color-text-info)' : 'var(--color-text-secondary)',
                       fontSize: '14px',
                       fontWeight: active ? 600 : 500,
-                      padding: '8px 16px',
-                      marginBottom: '-0.5px',
+                      padding: '8px 18px',
                       cursor: 'pointer',
                       transition: 'background 0.15s ease, color 0.15s ease',
                     }}
@@ -403,18 +394,21 @@ export default function App() {
               }}
             />
 
-            {/* Global footer — always visible (both Advisor & Insights); browser guidance (FR-EDGE-4 / SRS §2.3). */}
+            {/* Global footer — always visible (both Advisor & Insights); browser guidance (FR-EDGE-4 / SRS §2.3)
+                + copyright & identity (Fase 1, DECISIONS.md). Borderless: whitespace, no hairline. */}
             <footer
               className="screen-only"
               style={{
-                padding: 'var(--aa-space-3) var(--aa-panel-pad)',
-                borderTop: '0.5px solid var(--color-border-tertiary)',
+                padding: 'var(--aa-space-6) var(--aa-panel-pad) var(--aa-space-4)',
                 fontSize: 'var(--aa-fs-2xs)',
                 color: 'var(--color-text-tertiary)',
                 textAlign: 'center',
               }}
             >
-              {t('footer.browsers')}
+              <div>{t('footer.browsers')}</div>
+              <div style={{ marginTop: 'var(--aa-space-2)' }}>
+                {SITE_COPYRIGHT} · {t('footer.rights')}
+              </div>
             </footer>
           </div>
         </div>

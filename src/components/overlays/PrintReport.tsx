@@ -4,6 +4,7 @@ import { label } from '../../lib/exportLabels';
 import { executiveSummary } from '../../lib/summary';
 import { contributions, displayScore } from '../../lib/scoring';
 import { QUALITY_ATTRIBUTES } from '../../config/qualityAttributes';
+import { SITE_COPYRIGHT } from '../../config/site';
 import { FACTOR_ORDER, FACTORS } from '../../config/factors';
 import { DIMENSION_ORDER, DIMENSIONS } from '../../config/dimensions';
 
@@ -28,7 +29,7 @@ export function PrintReport({ exportInput }: { exportInput: ExportInput }) {
     <div className="print-only" style={box}>
       <h1 style={{ fontSize: '18px', margin: 0 }}>{t('print.title')}</h1>
       <div style={{ color: '#666', fontSize: '11px' }}>
-        {t('print.generated')}: {new Date().toISOString().slice(0, 10)}
+        {t('print.generated')}: {new Date().toISOString().slice(0, 10)} · {SITE_COPYRIGHT}
       </div>
 
       <h2 style={h2}>{L('execSummary')}</h2>

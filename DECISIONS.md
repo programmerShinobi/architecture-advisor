@@ -272,7 +272,7 @@ commitment the code must match (cross-checked by review, gates, and tests).
   recommendation). Single source (`public/favicon.svg` + a `BrandMark` component), reused for
   header wordmark, favicon and regenerated PWA icons (192/512/maskable) via the existing headless
   render script — no image dependency added.
-- **Copyright & identity.** A footer identity line — `© 2026 Faqih Ibrahim Abdullah (programmerShinobi).
+- **Copyright & identity.** A footer identity line — `© 2026 Faqih Pratama Muhti (programmerShinobi).
   All rights reserved.` — plus the same notice in `site.ts` config, the SEO snapshots, the README
   and the print report. **Scope note:** code stays MIT and docs CC BY 4.0 (unchanged LICENSE
   files); the copyright line asserts *identity/attribution* of the work, it does not re-license it.

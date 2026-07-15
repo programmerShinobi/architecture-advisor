@@ -18,8 +18,8 @@ function style(kind: C4NodeKind) {
   if (kind === 'actor')
     return { fill: 'var(--color-background-info)', stroke: 'var(--color-text-info)', text: 'var(--color-text-info)' };
   if (kind === 'store')
-    return { fill: 'var(--color-background-secondary)', stroke: 'var(--color-border-secondary)', text: 'var(--color-text-secondary)' };
-  return { fill: 'var(--color-background-secondary)', stroke: 'var(--color-border-secondary)', text: 'var(--color-text-primary)' };
+    return { fill: 'var(--color-background-secondary)', stroke: 'var(--aa-grid-line)', text: 'var(--color-text-secondary)' };
+  return { fill: 'var(--color-background-secondary)', stroke: 'var(--aa-grid-line)', text: 'var(--color-text-primary)' };
 }
 
 // Renders the C4 stub as deterministic SVG (rows of nodes, fan-out / 1:1 edges). Theme-aware

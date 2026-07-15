@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Architecture Advisor">
+  <!-- Brand mark (Fase 1): a 5-dimension radar pentagon with one lit decision apex —
+       "five dimensions, one recommendation". Single source for header, favicon and PWA icons. -->
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#8b7cff"/>
@@ -7,10 +9,13 @@
     </linearGradient>
   </defs>
   <rect width="100" height="100" rx="22" fill="url(#g)"/>
-  <g fill="#05060f" stroke="#05060f" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round">
-    <path fill="none" d="M50 32 L50 48 M50 48 L26 64 M50 48 L74 64"/>
-    <rect x="39" y="16" width="22" height="17" rx="5"/>
-    <rect x="15" y="63" width="22" height="17" rx="5"/>
-    <rect x="63" y="63" width="22" height="17" rx="5"/>
+  <g stroke="#05060f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- outer radar pentagon (the 5 dimensions) -->
+    <polygon fill="none" points="50,22 78.5,42.7 67.6,76.3 32.4,76.3 21.5,42.7"/>
+    <!-- the scenario's reading: an irregular inner polygon peaking at the apex -->
+    <polygon fill="#05060f" fill-opacity="0.28" points="50,22 65.7,46.9 63.2,70.2 39.4,66.6 27.2,44.6"/>
   </g>
+  <!-- the decision: one lit vertex -->
+  <circle cx="50" cy="22" r="7" fill="#05060f"/>
+  <circle cx="50" cy="22" r="3" fill="#ffffff"/>
 </svg>

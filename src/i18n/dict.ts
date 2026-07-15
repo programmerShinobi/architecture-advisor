@@ -334,6 +334,11 @@ export const DICT = {
     en: 'Best viewed in the latest Chrome, Edge, Firefox, or Safari (desktop or mobile).',
     id: 'Ditampilkan terbaik di Chrome, Edge, Firefox, atau Safari versi terbaru (desktop atau mobile).',
   },
+  /* Copyright scope (Fase 1, DECISIONS.md): identity/brand is exclusive; licenses unchanged. */
+  'footer.rights': {
+    en: 'Brand & identity — all rights reserved · Code MIT · Content CC BY 4.0',
+    id: 'Merek & identitas — hak eksklusif dilindungi · Kode MIT · Konten CC BY 4.0',
+  },
 
   // Detailed architecture explanations folded into the Manual/Guide (Section 5) — see
   // src/config/readerContent.ts / docs/03-blueprint/architecture-reader.md
@@ -384,8 +389,11 @@ export const DICT = {
   'lp.meta.iso': { en: 'ISO/IEC 2023', id: 'ISO/IEC 2023' },
   'lp.meta.client': { en: 'client-side', id: 'client-side' },
   'lp.radar.aria': { en: 'Trade-off radar across five architecture dimensions', id: 'Radar trade-off lima dimensi arsitektur' },
-  'lp.chip.fit': { en: 'Fit score · 8.4 / 10', id: 'Skor cocok · 8.4 / 10' },
-  'lp.chip.rec': { en: 'Event-driven · recommended', id: 'Event-driven · direkomendasikan' },
+  /* Hero radar chips — the words are dict strings; the pattern name and score are COMPUTED live
+     from the frozen engine for the "busy online shop" preset (see HeroRadar.tsx), so the badge can
+     never drift from what the Advisor actually recommends. */
+  'lp.chip.fit': { en: 'Fit score', id: 'Skor kecocokan' },
+  'lp.chip.rec': { en: 'recommended', id: 'direkomendasikan' },
   'lp.patterns.kicker': { en: 'Pattern Library', id: 'Pustaka Pola' },
   'lp.patterns.h2': { en: 'Know the pattern before you pick it.', id: 'Kenali polanya sebelum memilihnya.' },
   'lp.patterns.sub': {

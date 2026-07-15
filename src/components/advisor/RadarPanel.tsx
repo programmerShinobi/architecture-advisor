@@ -144,7 +144,7 @@ export function RadarPanel({ weights, mode }: Props) {
         <div style={{ minHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <svg viewBox="0 0 380 360" width="100%" style={{ maxWidth: '380px' }} role="img" aria-label="Radar chart across twelve quality attributes">
             {rings.map((ring) => (
-              <polygon key={ring} points={poly(Array(N).fill(ring))} fill="none" stroke="var(--color-border-tertiary)" strokeWidth={ring === 5 ? 1 : 0.5} />
+              <polygon key={ring} points={poly(Array(N).fill(ring))} fill="none" stroke="var(--aa-grid-line)" strokeWidth={ring === 5 ? 1 : 0.5} />
             ))}
             {Array.from({ length: N }).map((_, i) => {
               const pe = pt(i, 5);
@@ -153,7 +153,7 @@ export function RadarPanel({ weights, mode }: Props) {
               const anchor = c > 0.25 ? 'start' : c < -0.25 ? 'end' : 'middle';
               return (
                 <g key={i}>
-                  <line x1={cx} y1={cy} x2={pe[0].toFixed(1)} y2={pe[1].toFixed(1)} stroke="var(--color-border-tertiary)" strokeWidth={0.5} />
+                  <line x1={cx} y1={cy} x2={pe[0].toFixed(1)} y2={pe[1].toFixed(1)} stroke="var(--aa-grid-line)" strokeWidth={0.5} />
                   <text x={lp[0].toFixed(1)} y={(lp[1] + 3).toFixed(1)} textAnchor={anchor} fontSize={11} fill="var(--color-text-secondary)">
                     {tr(SHORT[i])}
                   </text>

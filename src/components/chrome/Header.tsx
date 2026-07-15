@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { IconBook2, IconCircleCheck, IconCommand, IconMoon, IconSitemap, IconSun } from '@tabler/icons-react';
+import { IconBook2, IconCircleCheck, IconCommand, IconMoon, IconSun } from '@tabler/icons-react';
+import { BrandMark } from './BrandMark';
 import { useI18n } from '../../i18n/I18nContext';
 
 export type Mode = 'guided' | 'expert';
@@ -35,12 +36,13 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
 
   return (
     <div
+      className="aa-glass"
       style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 'var(--aa-space-4) var(--aa-panel-pad)',
-        borderBottom: '0.5px solid var(--color-border-tertiary)',
+        borderRadius: 'var(--border-radius-xl)',
         flexWrap: 'wrap',
         gap: '10px',
       }}
@@ -58,7 +60,7 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
             justifyContent: 'center',
           }}
         >
-          <IconSitemap size={21} style={{ color: 'var(--color-background-primary)' }} aria-hidden />
+          <BrandMark size={22} />
         </div>
         <div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.25 }}>{t('app.title')}</div>
