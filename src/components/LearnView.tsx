@@ -18,7 +18,7 @@ import {
 } from '@tabler/icons-react';
 import { useI18n } from '../i18n/I18nContext';
 import { AVAILABLE_SECTIONS, sectionMeta } from '../config/sections';
-import { contentBySection, contentBySlug, docTitle, docTldr } from '../lib/content';
+import { contentBySection, contentBySlug, docBody, docTitle, docTldr } from '../lib/content';
 import { renderMarkdown } from '../lib/markdown';
 import { DIMENSIONS, DIMENSION_ORDER } from '../config/dimensions';
 import { READER_SECTIONS, READER_CITATIONS } from '../config/readerContent';
@@ -358,7 +358,7 @@ function MarkdownArticle({ doc, onOpenAdvisor }: { doc: ContentDoc; onOpenAdviso
         <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{docTldr(doc, lang)}</p>
       </div>
       <div className="learn-prose" style={{ fontSize: '13.5px', lineHeight: 1.7, color: 'var(--color-text-secondary)' }}>
-        {renderMarkdown(doc.body)}
+        {renderMarkdown(docBody(doc, lang))}
       </div>
       <div style={{ marginTop: '18px' }}>
         <button type="button" onClick={onOpenAdvisor} className="f-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>

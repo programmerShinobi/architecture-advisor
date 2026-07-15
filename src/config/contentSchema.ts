@@ -60,10 +60,12 @@ export interface ContentFrontmatter {
   author: string;
 }
 
-/** A parsed article: validated frontmatter + the raw Markdown body. */
+/** A parsed article: validated frontmatter + the Markdown body per language. */
 export interface ContentDoc extends ContentFrontmatter {
-  /** Markdown body after the frontmatter block. */
-  body: string;
+  /** English Markdown body (the part before the `<!-- lang:id -->` delimiter, or the whole body). */
+  body_en: string;
+  /** Indonesian Markdown body (after the delimiter; falls back to `body_en` when absent). */
+  body_id: string;
 }
 
 /** Required frontmatter keys — the app type and the guard both reference this list. */

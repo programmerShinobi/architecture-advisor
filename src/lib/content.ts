@@ -33,8 +33,20 @@ function toRelated(v: unknown): RelatedAdvisor {
   };
 }
 
+// Bilingual bodies live in ONE file: the English body, an optional `<!-- lang:id -->` line, then the
+// Indonesian body. Articles not yet translated (no delimiter) fall back to English for both langs.
+const BODY_LANG_DELIM = /^<!--\s*lang:id\s*-->\s*$/m;
+function splitBody(body: string): { body_en: string; body_id: string } {
+  const m = BODY_LANG_DELIM.exec(body);
+  if (!m) return { body_en: body, body_id: body };
+  const en = body.slice(0, m.index).trimEnd();
+  const id = body.slice(m.index + m[0].length).replace(/^\n+/, '');
+  return { body_en: en, body_id: id || en };
+}
+
 function toDoc(raw: string): ContentDoc {
   const { data, body } = parseFrontmatter(raw);
+  const { body_en, body_id } = splitBody(body);
   return {
     title_id: asStr(data.title_id),
     title_en: asStr(data.title_en),
@@ -51,7 +63,8 @@ function toDoc(raw: string): ContentDoc {
     sources: toSources(data.sources),
     status: (asStr(data.status) as ContentDoc['status']) || 'draft',
     author: asStr(data.author),
-    body,
+    body_en,
+    body_id,
   };
 }
 
@@ -90,6 +103,11 @@ export function docTitle(doc: ContentDoc, lang: 'en' | 'id'): string {
 /** TL;DR in the active language. */
 export function docTldr(doc: ContentDoc, lang: 'en' | 'id'): string {
   return lang === 'id' ? doc.summary_tldr_id || doc.summary_tldr_en : doc.summary_tldr_en || doc.summary_tldr_id;
+}
+
+/** Markdown body in the active language (falls back to the other when one is empty). */
+export function docBody(doc: ContentDoc, lang: 'en' | 'id'): string {
+  return lang === 'id' ? doc.body_id || doc.body_en : doc.body_en || doc.body_id;
 }
 
 /** True when the article's 12-month review window has lapsed (for the "needs review" badge). */
