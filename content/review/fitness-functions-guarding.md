@@ -9,7 +9,7 @@ summary_tldr_en: "Architecture isn't a one-off document — it keeps changing. A
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1, D2, D3, D4, D5]
   options: []
@@ -58,3 +58,42 @@ review are the best candidates to turn into fitness functions.
 
 The Advisor shows **fitness-function templates per quality attribute** in Expert mode — use them as
 a starting point for your scenario.
+
+<!-- lang:id -->
+
+## Masalah yang ia pecahkan
+
+Keputusan arsitektur yang baik perlahan terkikis: seseorang menambah impor "sekali ini saja", latensi
+merangkak naik, batas modul bocor. Tanpa penjaga, arsitektur menyimpang dari maksudnya.
+
+:::guided
+**Ide sederhananya:** sebagaimana unit test melindungi *perilaku*, sebuah **fitness function** melindungi
+*properti arsitektur*. Tulis sebagai pemeriksaan otomatis yang **gagal** saat properti penting dilanggar,
+lalu jalankan di CI.
+:::
+
+## Checklist adopsi
+
+- [ ] Ambil **properti sensitif** dari sebuah tinjauan (mis. sesi ATAM) — yang paling memengaruhi kualitas.
+- [ ] Ubah tiap properti menjadi **pemeriksaan objektif**: dependency test, anggaran latensi, anggaran
+      ukuran bundel, cakupan tes, pemeriksaan keamanan.
+- [ ] **Jalankan di CI** agar pelanggaran memblokir merge alih-alih ditemukan di produksi.
+- [ ] Jaga himpunannya kecil tapi bermakna; tinjau ulang secara berkala.
+
+## Contoh di repo ini
+
+Proyek Architecture Advisor memakainya sendiri: **anggaran ukuran bundel**, **penjaga model** yang
+menjaga docs↔config agar tak menyimpang, dan **penjaga konten** yang memastikan setiap artikel terikat
+pada model yang dibekukan. Semuanya adalah fitness function.
+
+:::expert
+**Lebih dalam.** *Building Evolutionary Architectures* memformalkan idenya; fitness function bisa *atomik*
+(satu properti) atau *holistik* (beberapa properti bersama), dan *triggered* (di CI) atau *continuous*
+(pemantauan). Padukan dengan ATAM: titik sensitivitas dan trade-off yang ditemukan dalam tinjauan adalah
+kandidat terbaik untuk dijadikan fitness function.
+:::
+
+## Coba di Advisor
+
+Advisor menampilkan **template fitness-function per quality attribute** di mode Expert — pakai sebagai
+titik awal untuk skenariomu.

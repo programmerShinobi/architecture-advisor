@@ -9,7 +9,7 @@ summary_tldr_en: "Systems tend to mirror the communication structure of the orga
 evidence_strength: moderate
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1, D5]
   options: [microservices, modular-monolith, micro-frontends]
@@ -70,3 +70,51 @@ Conway's Law working in your favour.
 
 Change the **team size** and **team distribution** factors in the Advisor and watch D1/D5 shift —
 that is Conway's Law being computed.
+
+<!-- lang:id -->
+
+## Hukumnya
+
+> *"Organisasi mana pun yang merancang sebuah sistem … terpaksa menghasilkan desain yang strukturnya
+> merupakan salinan struktur komunikasi organisasi itu."* — Mel Conway, 1968
+
+Bukan sekadar slogan: studi *mirroring hypothesis* (MacCormack dkk.) menemukan bahwa produk dari organisasi
+berkopling-longgar memang lebih modular daripada produk dari organisasi berkopling-ketat.
+
+:::guided
+**Sebuah analogi:** jika tiga tim membangun satu rumah tanpa saling bicara, kamu mendapat rumah dengan tiga
+gaya dapur. Perangkat lunak sama saja: batas layanan diam-diam mengikuti batas siapa berbicara dengan siapa.
+:::
+
+## Pakai dalam dua arah
+
+- **Diagnosis:** arsitektur yang "berantakan" sering merupakan cermin struktur komunikasi — memperbaiki kode
+  tanpa memperbaiki tim hanya menunda kambuhnya.
+- **Inverse Conway Maneuver:** tentukan arsitektur target lebih dulu, lalu **bentuk tim sepanjang batas
+  tersebut** — satu tim per bounded context menghasilkan satu layanan per bounded context.
+
+## Kosakata Team Topologies (2019)
+
+| Jenis tim | Peran |
+|---|---|
+| **Stream-aligned** | memiliki satu aliran nilai ujung-ke-ujung (mayoritas tim) |
+| **Platform** | menyediakan layanan internal swalayan agar tim stream-aligned bergerak cepat |
+| **Enabling** | mengajarkan/mentransfer suatu kapabilitas, lalu pergi |
+| **Complicated-subsystem** | memiliki bagian yang butuh keahlian langka |
+
+Plus tiga mode interaksi: *collaboration*, *X-as-a-service*, *facilitating* — dipilih secara sengaja, karena
+setiap kolaborasi permanen adalah kopling organisasi (dan, menurut Conway, akan menjadi kopling sistem).
+
+:::expert
+**Lebih dalam.** Inilah alasan faktor **team/distribution** menggeser D1 di Advisor: microservices "bekerja"
+saat batas layanan = batas tim stream-aligned dengan *cognitive load* yang tepat — bukan sebaliknya. Gejala
+arsitektur dari topologi yang salah: layanan yang selalu dirilis bersama (kopling tim tersembunyi), platform
+yang menjadi bottleneck tiket (bukan swalayan), dan micro-frontend tanpa tim UI yang benar-benar terpisah.
+Untuk organisasi kecil, kesimpulannya menenangkan: satu tim → satu deployable (modular monolith) bukan
+kompromi — itu Hukum Conway bekerja untuk keuntunganmu.
+:::
+
+## Coba di Advisor
+
+Ubah faktor **ukuran tim** dan **sebaran tim** di Advisor dan lihat D1/D5 bergeser — itulah Hukum Conway yang
+sedang dihitung.

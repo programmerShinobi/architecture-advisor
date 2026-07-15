@@ -9,6 +9,32 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed (Full bilingualisation + light-theme polish — 2026-07-15)
+
+- **Light theme softened** — the page background is now an off-white slate (`#e8ecf4`) instead of
+  stark white, cards read as lighter/elevated, fills/tracks are deeper, and the info-violet was
+  deepened (`#5733c6`) to keep every combination ≥ WCAG AA on the softer background (a11y gate 7/7).
+- **Mode-aware Home** — the landing lede and the three "how it works" steps now have distinct
+  **Guided** vs **Expert** copy (`.guided-only` / `.expert-only`), so selecting a reading mode
+  changes the Home page too, not just the Advisor/Insights.
+- **Insights content going fully bilingual (EN/ID)** — reversing the earlier *English-first content*
+  decision so **every** Insights surface responds to the language toggle down to the deepest
+  sub-level. Datasets are being converted from `string` to `Bilingual { en, id }` and rendered via
+  `tr()`. **Done so far:** all six Insights datasets — **Lab** (`labExperiments.ts`), **Roadmap**
+  (`insightRoadmaps.ts`), **Playbook** (`insightPlaybooks.ts`), **Review** (`insightReviews.ts`),
+  **Library** (`insightLibrary.ts`, prose translated; pattern/term proper-nouns kept canonical), and
+  **Academy** quizzes (`academyQuizzes.ts`) — with their renderers (`LabView`, `RoadmapView`,
+  `LearnView`, `AcademyView`) reading through `tr()`.
+- **All 18 Markdown articles are now bilingual** — each body carries the English text, a
+  `<!-- lang:id -->` delimiter, then the Indonesian translation (`docBody(doc, lang)` splits per
+  language; markdown structure, `:::guided`/`:::expert` fences, tables, and the decision-map code
+  block preserved). `translation_status` is `id+en` and the content gate **requires** both languages
+  plus the delimiter. SEO snapshots keep the English canonical (body above the delimiter).
+- **Docs reconciled** — the *English-first content* decision is reversed to *fully bilingual* across
+  DECISIONS.md, the SRS (v1.7 + FR-LEARN-2), the design spec, and the content-rollout plan.
+- **Budget:** total-JS gzip budget raised 200→260 kB (the EN+ID content lives in the lazy Insights
+  chunk; initial-load JS untouched at ~114 kB, NFR cap 300). Now ~114 initial / ~237 total / ~23 CSS.
+
 ### Added (Genuinely-mobile experience — 2026-07-14)
 
 - **A real mobile UI for the whole app** (plan: [mobile-experience-plan.md](docs/03-blueprint/mobile-experience-plan.md),

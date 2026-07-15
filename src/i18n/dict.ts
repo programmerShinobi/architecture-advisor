@@ -374,6 +374,10 @@ export const DICT = {
     en: 'Answer a few questions about your project — get an architecture recommendation across 5 dimensions, with the full calculation you can audit and edit yourself.',
     id: 'Jawab beberapa pertanyaan tentang proyekmu — dapatkan rekomendasi arsitektur di 5 dimensi, lengkap dengan perhitungan yang bisa kamu audit dan ubah sendiri.',
   },
+  'lp.lede.x': {
+    en: 'Encode your project factors and get a defensible recommendation across 5 orthogonal dimensions — with the full weighted-utility calculation, editable ISO/IEC 25010 quality-attribute weights, sensitivity analysis, and an ADR export.',
+    id: 'Kodekan faktor proyekmu dan dapatkan rekomendasi yang bisa dipertanggungjawabkan di 5 dimensi ortogonal — lengkap dengan perhitungan weighted-utility, bobot quality attribute ISO/IEC 25010 yang bisa diedit, analisis sensitivitas, dan export ADR.',
+  },
   'lp.cta.start': { en: 'Start free analysis', id: 'Mulai analisis gratis' },
   'lp.cta.how': { en: 'See how it works', id: 'Lihat cara kerja' },
   'lp.meta.dims': { en: 'architecture dimensions', id: 'dimensi arsitektur' },
@@ -414,15 +418,27 @@ export const DICT = {
     en: 'Answer short questions about team, scale, and constraints — Guided for newcomers, Expert for architects.',
     id: 'Jawab pertanyaan singkat tentang tim, skala, dan constraint — Guided untuk pemula, Expert untuk arsitek.',
   },
+  'lp.how.s1.px': {
+    en: 'Set the project factors (team, scale, constraints); in Expert mode you can edit the derived quality-attribute weights directly.',
+    id: 'Atur faktor proyek (tim, skala, constraint); di mode Expert kamu bisa langsung mengedit bobot quality attribute turunannya.',
+  },
   'lp.how.s2.h': { en: 'See your quality priorities', id: 'Lihat prioritas kualitasmu' },
   'lp.how.s2.p': {
     en: 'Your answers map to quality-attribute weights grounded in ISO/IEC 25010 — editable on the spot.',
     id: 'Jawabanmu dipetakan ke bobot quality attribute berbasis ISO/IEC 25010 — bisa kamu edit langsung.',
   },
+  'lp.how.s2.px': {
+    en: 'Factors map to ISO/IEC 25010 quality-attribute weights through the influence matrix — inspect and override each weight.',
+    id: 'Faktor dipetakan ke bobot quality attribute ISO/IEC 25010 lewat influence matrix — periksa dan timpa tiap bobotnya.',
+  },
   'lp.how.s3.h': { en: 'Get the recommendation + why', id: 'Dapatkan rekomendasi + alasannya' },
   'lp.how.s3.p': {
     en: 'A trade-off radar, ranked alternatives, and an ADR export. Every score traces back to its factors.',
     id: 'Radar trade-off, ranking alternatif, dan export ADR. Setiap skor bisa ditelusuri sampai ke faktornya.',
+  },
+  'lp.how.s3.px': {
+    en: 'Ranked options per dimension with a trade-off radar, sensitivity flips, anti-pattern checks, and a MADR-formatted ADR export.',
+    id: 'Opsi berperingkat per dimensi dengan radar trade-off, sensitivitas, pengecekan anti-pattern, dan export ADR berformat MADR.',
   },
   'learn.title': { en: 'Architecture Insights', id: 'Wawasan Arsitektur' },
   'learn.intro': {

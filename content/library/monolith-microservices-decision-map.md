@@ -9,7 +9,7 @@ summary_tldr_en: "It's not a binary choice. The map: (1) starting out → monoli
 evidence_strength: strong
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices, serverless]
@@ -66,3 +66,49 @@ over-fine services) is a legitimate decision — this map's arrows run both ways
 
 Fill in your project factors in the **Advisor** — the **D1** ranking + the **migration path** card
 essentially place you on one of this map's rungs, reasons included.
+
+<!-- lang:id -->
+
+## Peta itu, dalam satu layar
+
+```
+Mulai dari nol? ──────────► MONOLITH (satu deploy, satu DB, modul rapi sejak awal)
+      │
+      ▼ tim saling menginjak / build lambat?
+MODULAR MONOLITH (batas modul ditegakkan di CI, per bounded context)
+      │
+      ▼ satu bagian BUTUH skala/deploy/tim independen + DevOps matang?
+EKSTRAK LAYANAN ITU SAJA (Strangler Fig; datanya ikut pindah bersama layanan)
+      │
+      ▼ beban berlonjak, stateless, toleran cold-start?
+SERVERLESS untuk tepian yang berlonjak (fungsi kecil, state di layanan terkelola)
+```
+
+:::guided
+**Cara membacanya:** turun satu anak tangga hanya saat **rasa sakitnya nyata** — bukan karena tren. Setiap
+anak tangga menambah biaya operasional permanen.
+:::
+
+## Sinyal untuk tiap langkah
+
+| Langkah | Sinyal "sudah waktunya" | Sinyal "belum" |
+|---|---|---|
+| Tetap monolith | produk belum terbukti; tim ≤ ~8 | — |
+| → Modular monolith | konflik merge sering; domain mulai terbentuk | batas domain masih bergejolak |
+| → Ekstrak layanan | satu modul mendominasi beban/rilis | belum ada CI/CD + observabilitas |
+| → Serverless di tepian | trafik berlonjak; kerja event-driven | jalur kritis-latensi; state berat |
+
+:::expert
+**Lebih dalam.** Klasifikasi refaktor (Fritzsch dkk.) menunjukkan ekstraksi bertahap per-bounded-context
+adalah jalur yang paling sering berhasil; tinjauan sistematis (Soldani dkk.) menempatkan kompleksitas
+operasional dan konsistensi data sebagai "rasa sakit" dominan — keduanya biaya tetap begitu kamu
+mendistribusikan. Aturan emas Newman: *jangan memecah basis data belakangan* — kepemilikan data ikut pindah
+bersama layanan sejak ekstraksi pertama (saga/outbox menggantikan transaksi lintas-layanan; lihat artikel
+Review "Meninjau Konsistensi Data"). Naik kembali (menggabungkan layanan yang terlalu halus) adalah
+keputusan yang sah — panah peta ini berjalan dua arah.
+:::
+
+## Coba di Advisor
+
+Isi faktor proyekmu di **Advisor** — peringkat **D1** + kartu **jalur migrasi** pada dasarnya menempatkanmu
+pada salah satu anak tangga peta ini, lengkap dengan alasannya.

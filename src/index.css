@@ -89,24 +89,26 @@
 }
 html.light {
   /* Aurora Slate — light theme (ADR-009). */
-  --color-background-primary: #ffffff;
-  --color-background-secondary: #f6f7fc; /* prototype light --bg */
-  --color-background-tertiary: #eceef6;
+  /* Softer light theme — the page is a gentle blue-grey (not stark white); cards sit lighter on it
+     so the layering reads without glare. Aurora tint stays subtle. */
+  --color-background-primary: #e8ecf4; /* page / body — soft, not pure white */
+  --color-background-secondary: #f4f7fc; /* panels & cards — lighter, gently elevated over the page */
+  --color-background-tertiary: #dde3ef; /* subtle fills / tracks / hover — a touch deeper for definition */
   --color-text-primary: #0b0d1a;
   --color-text-secondary: #454c66;
   --color-text-tertiary: #63697f;
-  --color-text-info: #6d4ef0; /* deep violet — AA on white */
+  --color-text-info: #5733c6; /* deeper violet — AA on the softer light bg AND on accent badges */
   --color-text-success: #0a7048;
   --color-text-warning: #b5790e;
   --color-text-cost: #8a5300; /* darker amber → ≥4.5:1 on the light card background */
   --color-text-danger: #c4392e;
-  --color-background-info: rgba(109, 78, 240, 0.08);
+  --color-background-info: rgba(87, 51, 198, 0.09);
   --color-background-success: rgba(15, 138, 95, 0.1);
   --color-background-warning: rgba(181, 121, 14, 0.1);
   --color-background-danger: rgba(196, 57, 46, 0.08);
   --color-border-secondary: rgba(0, 0, 0, 0.14);
   --color-border-tertiary: rgba(0, 0, 0, 0.09);
-  --color-border-info: rgba(109, 78, 240, 0.4);
+  --color-border-info: rgba(87, 51, 198, 0.42);
   --color-border-warning: rgba(181, 121, 14, 0.45);
   --color-border-danger: rgba(196, 57, 46, 0.45);
   --aa-shadow-color: rgba(16, 24, 40, 0.1);
@@ -566,7 +568,7 @@ button:focus-visible {
   opacity: 0.5;
 }
 html.light .aa-aurora {
-  opacity: 0.28;
+  opacity: 0.2;
 }
 .aa-aurora i {
   position: absolute;

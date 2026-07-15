@@ -9,7 +9,7 @@ summary_tldr_en: "Technical debt isn't just 'bad code' — at the architecture l
 evidence_strength: strong
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1, D4]
   options: [layered, modular-monolith, monolith]
@@ -66,3 +66,48 @@ often the best first repayment.
 The Advisor's **anti-pattern** warnings and **risk** cards are a debt radar: combinations like
 microservices + a shared database are exactly the high-interest debt the literature has already
 identified.
+
+<!-- lang:id -->
+
+## Metafora aslinya
+
+Ward Cunningham (1992): merilis lebih cepat dengan berkompromi itu seperti **mengambil pinjaman** — sah dan
+kadang cerdas, selama kamu **membayar bunganya** (kerja ekstra pada tiap perubahan) dan akhirnya **melunasi
+pokoknya** (refaktor). Masalah dimulai saat utangnya tak terlihat dan bunganya diam-diam menggerogoti
+kecepatan tim.
+
+:::guided
+**Sebuah analogi:** KPR itu wajar; kartu kredit yang terlupakan itu berbahaya. Utang teknis yang dicatat =
+cicilan terencana. Utang tak tercatat = tagihan kejutan tiap bulan.
+:::
+
+## Utang arsitektur ≠ kode berantakan
+
+- **Tingkat kode:** duplikasi, penamaan buruk — murah diperbaiki secara lokal.
+- **Tingkat arsitektur:** batas modul yang bocor, lapisan yang saling menembus, basis data bersama,
+  framework usang — **mahal**, karena perbaikannya menyentuh banyak bagian sekaligus. Inilah utang yang,
+  menurut riset (Kruchten dkk.), paling menggerus produktivitas jangka panjang.
+
+## Kelola seperti orang keuangan
+
+1. **Buat terlihat**: daftarkan utang arsitektur sebagai item backlog dengan estimasi *bunga* (waktu ekstra
+   per perubahan yang terdampak).
+2. **Catat keputusannya**: kompromi yang disengaja masuk ke **ADR** — "kami tahu, ini alasannya, ini pemicu
+   pelunasannya".
+3. **Lunasi bertahap**: alokasi rutin (mis. tiap sprint) untuk pelunasan; hindari "big-bang rewrite".
+4. **Cegah bunga baru**: batas modul yang ditegakkan CI + *fitness function*.
+
+:::expert
+**Lebih dalam.** Kruchten–Nord–Ozkaya memformalkan spektrum *disengaja/tak-disengaja × bijaksana/ceroboh*:
+utang yang disengaja dan bijaksana adalah alat strategis; utang tak-disengaja dan ceroboh adalah erosi.
+Dagstuhl 16162 menyatukan definisi risetnya: utang teknis = artefak desain/implementasi yang menguntungkan
+jangka pendek tapi memajaki evolusi. Sinyal arsitektur yang paling prediktif adalah *amplifikasi perubahan*
+(satu kebutuhan menyentuh banyak modul) — persis kelemahan layering teknis murni (lihat Layered di
+Catalog), dan alasan mengapa modular monolith dengan batas yang ditegakkan sering menjadi pelunasan pertama
+terbaik.
+:::
+
+## Coba di Advisor
+
+Peringatan **anti-pattern** dan kartu **risiko** Advisor adalah radar utang: kombinasi seperti microservices
++ basis data bersama justru adalah utang berbunga-tinggi yang sudah diidentifikasi literatur.

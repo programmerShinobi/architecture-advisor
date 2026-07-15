@@ -37,14 +37,14 @@ export default function LabView({ onRun, onOpenArch }: Props) {
         <button type="button" onClick={() => setExpId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.lab.allExperiments')}
         </button>
-        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '10px' }}>{exp.title}</h2>
-        <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)', marginBottom: '14px' }}>{exp.brief}</p>
+        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '10px' }}>{tr(exp.title)}</h2>
+        <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)', marginBottom: '14px' }}>{tr(exp.brief)}</p>
         <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 700, color: 'var(--color-text-info)', marginBottom: '4px', letterSpacing: '.04em' }}>
             <IconFlask size={14} aria-hidden />
             {t('learn.lab.hypothesis')}
           </div>
-          <p style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{exp.hypothesis}</p>
+          <p style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{tr(exp.hypothesis)}</p>
         </div>
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--color-text-info)', margin: '0 0 8px' }}>
           <IconEye size={15} aria-hidden />
@@ -52,7 +52,7 @@ export default function LabView({ onRun, onOpenArch }: Props) {
         </h3>
         <ol style={{ display: 'grid', gap: '6px', margin: '0 0 16px', paddingLeft: '22px', fontSize: '13px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>
           {exp.watch.map((w) => (
-            <li key={w}>{w}</li>
+            <li key={w.en}>{tr(w)}</li>
           ))}
         </ol>
         <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--color-text-tertiary)', margin: '0 0 8px' }}>{t('learn.lab.focus')}</h3>
@@ -85,7 +85,7 @@ export default function LabView({ onRun, onOpenArch }: Props) {
             <IconBulb size={14} aria-hidden />
             {t('learn.lab.takeaway')}
           </div>
-          <p style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{exp.takeaway}</p>
+          <p style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{tr(exp.takeaway)}</p>
         </div>
         <button type="button" className="f-btn" onClick={() => onRun(exp.levels)} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
           {t('learn.lab.run')}
@@ -100,10 +100,10 @@ export default function LabView({ onRun, onOpenArch }: Props) {
       {LAB_EXPERIMENTS.map((e) => (
         <button key={e.id} type="button" className="learn-card" style={cardBase} onClick={() => setExpId(e.id)}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '5px' }}>
-            <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{e.title}</span>
+            <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{tr(e.title)}</span>
             <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '3px' }} />
           </div>
-          <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{e.hypothesis}</div>
+          <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{tr(e.hypothesis)}</div>
           <div style={{ fontSize: '10.5px', color: 'var(--color-text-info)', marginTop: '8px', fontWeight: 500 }}>{t('learn.lab.runShort')}</div>
         </button>
       ))}

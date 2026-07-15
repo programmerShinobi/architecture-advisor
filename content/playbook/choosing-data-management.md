@@ -9,7 +9,7 @@ summary_tldr_en: "Data is the hardest decision to reverse. A single shared datab
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D3]
   options: [single-db, db-per-service, cqrs, event-sourcing, polyglot]
@@ -59,3 +59,41 @@ over-applied** — use them selectively on the parts that truly demand them. The
 
 Factors such as *dataVolume* and *consistency* shift the **D3** recommendation in the Advisor —
 check the radar and the anti-pattern warnings (e.g. microservices on top of one shared database).
+
+<!-- lang:id -->
+
+## Mengapa data adalah keputusan kritis
+
+Kamu bisa mengganti bahasa atau framework, tapi mengubah cara data dimiliki dan dijaga konsisten jauh
+lebih mahal. Itulah sebabnya D3 layak mendapat perhatian paling besar.
+
+:::guided
+- **Basis data tunggal bersama:** setiap bagian membaca/menulis ke satu tempat. Paling sederhana, dan
+  "langsung benar" didapat gratis — tapi semuanya terkopling.
+- **Database-per-service:** tiap layanan memiliki datanya. Independen, tapi menjaga data konsisten
+  antar-layanan menjadi tugas aplikasi.
+- **CQRS:** pisahkan model *tulis* dari model *baca* saat bebannya berbeda tajam.
+- **Event sourcing:** simpan riwayat sebagai daftar event — jejak audit lengkap, tapi kompleks.
+- **Polyglot:** pakai jenis basis data yang tepat untuk tiap kebutuhan.
+:::
+
+## Panduan singkat
+
+- Sistem kecil / satu tim → **basis data tunggal** (jangan memecah tanpa alasan).
+- Layanan yang benar-benar butuh kemandirian → **database-per-service** (+ saga/outbox).
+- Baca dan tulis menskala sangat berbeda → **CQRS** hanya pada irisan itu.
+- Riwayat *adalah* domainnya (keuangan, audit) → **event sourcing**.
+- Pola akses yang sangat berbeda → **polyglot** (ketahui biaya operasionalnya).
+
+:::expert
+**Lebih dalam.** Kleppmann adalah rujukan untuk replikasi, partisi, dan model konsistensi. Dalam dunia
+microservices, ganti transaksi lintas-layanan dengan **saga** + **transactional outbox** dan rangkul
+konsistensi eventual secara sengaja. CQRS dan event sourcing **umum diterapkan berlebihan** — pakai
+secara selektif pada bagian yang benar-benar menuntutnya. Studi empiris (Laigner dkk.) menegaskan data
+per-layanan adalah bagian tersulit microservices dalam praktik.
+:::
+
+## Coba di Advisor
+
+Faktor seperti *dataVolume* dan *consistency* menggeser rekomendasi **D3** di Advisor — periksa radar dan
+peringatan anti-pattern (mis. microservices di atas satu basis data bersama).

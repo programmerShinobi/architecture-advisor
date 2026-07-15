@@ -9,7 +9,7 @@ summary_tldr_en: "Don't rewrite the whole system at once. The Strangler Fig patt
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices]
@@ -54,3 +54,39 @@ shows incremental approaches are far safer than rewrites.
 Run the **Advisor** for your existing system (pick the "existing system" profile) — look at the D1
 recommendation and the **migration-path card**, which suggests a gradual route rather than a big
 leap.
+
+<!-- lang:id -->
+
+## Masalahnya
+
+Menulis ulang sistem besar sekaligus ("big bang rewrite") adalah salah satu cara gagal yang paling
+terkenal: mahal, lambat, dan berisiko tinggi, karena tak ada nilai yang terkirim sampai semuanya
+selesai.
+
+:::guided
+**Ide sederhananya:** bayangkan strangler fig (pohon ara pencekik) yang perlahan tumbuh mengelilingi
+pohon inangnya. Alih-alih menebang pohon lama, kita menumbuhkan yang baru **sepotong demi sepotong**
+di sekitarnya, sampai pohon lama tak lagi dibutuhkan.
+:::
+
+## Langkah-langkah Strangler Fig
+
+1. **Pasang facade/proxy** di depan monolith agar trafik bisa dialihkan rute demi rute.
+2. **Pilih satu kapabilitas** yang bernilai dan berbatas jelas untuk diekstrak lebih dulu.
+3. **Bangun layanan baru** untuk kapabilitas itu; arahkan trafiknya lewat facade.
+4. **Ulangi**, kapabilitas demi kapabilitas — selalu bisa dibatalkan jika ada yang salah.
+5. **Pensiunkan** bagian monolith yang sudah tergantikan.
+
+:::expert
+**Lebih dalam.** Prasyaratnya adalah **batas yang benar** — ekstrak sepanjang *bounded context*, bukan
+sepanjang lapisan teknis; keluar dari basis data bersama biasanya bagian tersulit (butuh pola seperti
+*transactional outbox* dan *saga*). Sering kali **modular monolith** adalah langkah antara yang bijak:
+tegakkan batas modul di dalam satu proses dulu, buktikan, lalu ekstrak hanya yang benar-benar butuh
+penskalaan atau deployment independen. Studi klasifikasi refaktor (Fritzsch dkk.) menunjukkan
+pendekatan bertahap jauh lebih aman daripada penulisan ulang.
+:::
+
+## Coba di Advisor
+
+Jalankan **Advisor** untuk sistem yang sudah ada (pilih profil "sistem yang sudah ada") — lihat
+rekomendasi D1 dan **kartu jalur migrasi**, yang menyarankan rute bertahap alih-alih lompatan besar.

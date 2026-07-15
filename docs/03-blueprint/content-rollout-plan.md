@@ -8,8 +8,9 @@
 > structured home for the plan itself.
 >
 > **Status:** *client-rendered first (no SSG)* — **Wave A + pipeline and Wave B (Library) implemented**.
-> **Language:** this plan and all code/docs are English; article content + UI strings are bilingual
-> (ID default), per the repo convention.
+> **Language:** this plan and all code/docs are English; article content + UI strings are **fully
+> bilingual EN/ID** (EN default since 2026-07-06; article bodies bilingual since 2026-07-15), per the
+> repo convention.
 
 ## 1. Mission & audience
 
@@ -87,7 +88,7 @@ summary_tldr_id / summary_tldr_en: string
 evidence_strength: strong | moderate | emerging
 last_reviewed: YYYY-MM-DD
 review_due: YYYY-MM-DD        # = last_reviewed + 12 months (validated)
-translation_status: id | en | id+en
+translation_status: id+en        # required for every published article (2026-07-15)
 related_advisor: { dimensions: [D1..D5], options: [<option-id>] }   # must exist in the model
 sources: [ { label, venue, year, url } ]
 status: draft | published
@@ -136,9 +137,21 @@ wired into `ci.yml` (`docs-integrity.yml` untouched); `LearnView` (lazy) + `Cred
   reference) with its own structured layout; a per-page **LensNav** walks one architecture through
   the Catalog → Playbook → Review → Library knowledge journey. The Library section carries the
   reference grid **and** its evergreen articles as "Further reading".
-- **English consistency:** the default language is EN, all 18 Markdown articles ship English bodies
-  (`translation_status: en`; ID titles/summaries kept in frontmatter), and `check-content.mjs` now
-  requires at least the `en` version.
+- **English consistency (superseded — see below):** the default language is EN; at this wave all 18
+  Markdown articles shipped English-only bodies and `check-content.mjs` required at least the `en`
+  version.
+
+**Full bilingualisation — delivered (2026-07-15, English-first reversed):**
+- **Every Insights surface now responds to the language toggle down to the deepest sub-level.** All
+  six datasets (`insightPlaybooks`, `insightReviews`, `insightLibrary`, `insightRoadmaps`,
+  `academyQuizzes`, `labExperiments`) became `Bilingual {en,id}` rendered via `tr()`; in the Library
+  lens, prose is translated while pattern names / glossary terms stay canonical (English) proper
+  nouns.
+- **All 18 articles are bilingual:** each body carries English, then a `<!-- lang:id -->` delimiter,
+  then Indonesian; `translation_status` is `id+en`. The pipeline splits the body per language
+  (`docBody(doc, lang)`); the SEO snapshot keeps the English canonical (body above the delimiter).
+- **The gate now enforces it:** `check-content.mjs` requires `translation_status: id+en` **and** the
+  `<!-- lang:id -->` delimiter on every article.
 
 **Wave C — delivered (2026-07-06):** the last three sections are live, each built ON TOP of the
 lens content (curate / exercise — never duplicate) and each carrying the same **21-architecture
@@ -163,8 +176,9 @@ lens coverage):
 snapshots of all 18 articles (`dist/insights/<section>/<slug>/`, self-canonical, JSON-LD
 `TechArticle`, linking into the app); `public/robots.txt` + canonical/OG/JSON-LD on the app shell;
 a build guard fails if the canonical/robots URLs drift from `SITE_URL`. Pure HTML — zero impact on
-the JS budgets. `hreflang` is `en` + `x-default` only (the content layer is English-first; UI
-chrome bilingualism is client-side state, not separate URLs).
+the JS budgets. `hreflang` is `en` + `x-default` only: the app serves both languages from **one
+URL** via the client-side toggle (bilingual bodies are not separate pages), so English stays the
+crawlable canonical and the snapshot takes the body above the `<!-- lang:id -->` delimiter.
 
 **Deferred (own future proposals):** full SSG/hydration of the app itself, Academy progress persistence, additional Lab experiment packs.
 

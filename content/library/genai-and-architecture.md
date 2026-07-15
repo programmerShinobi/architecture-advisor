@@ -9,7 +9,7 @@ summary_tldr_en: "Generative AI speeds up writing code, but it doesn't change ar
 evidence_strength: emerging
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1, D4]
   options: [hexagonal, clean, modular-monolith]
@@ -63,3 +63,46 @@ hypotheses to measure in your context, not universal facts.
 
 In the **Advisor**, raise the *maintainability/testability* factors and watch D4 point towards
 Hexagonal/Clean — the most "AI-friendly" structures, because their changes are easy to test.
+
+<!-- lang:id -->
+
+## Pertanyaan sesungguhnya
+
+Bukan *"apakah AI akan menulis arsitektur kita?"* tapi *"desain jenis apa yang tetap sehat saat sebagian
+besar kode ditulis (atau diubah) dengan bantuan AI?"*
+
+:::guided
+**Sebuah analogi:** AI seperti tukang bangunan super-cepat. Kecepatan itu berkah saat denah rumah jelas —
+dan bencana saat denahnya berantakan, karena dinding yang salah pun berdiri lebih cepat.
+:::
+
+## Apa yang berubah — dan apa yang tidak
+
+- **Berubah:** kecepatan menulis/mengubah kode; eksperimen jadi lebih murah; studi terkontrol awal
+  (Copilot) mencatat penyelesaian ~55% lebih cepat pada tugas tertentu.
+- **Tak berubah:** biaya *memahami* sistem. Lebih banyak kode, diproduksi lebih cepat, berarti batas modul,
+  konvensi, dan tes menjadi rem pengaman utama.
+- **Risiko baru:** perubahan besar yang "tampak benar" — tanpa arsitektur yang menegakkan batas (batas
+  modul, dependency rule), erosi terjadi lebih cepat dari sebelumnya.
+
+## Implikasi praktis untuk keputusan Advisor
+
+- **D4 (struktur kode)** bertambah nilainya: inti yang teruji dan bebas-framework (Hexagonal/Clean)
+  membuat perubahan berbantuan-AI lebih aman diverifikasi.
+- **Modular monolith** (D1) menyediakan "pagar" murah: batas modul yang ditegakkan CI membatasi blast
+  radius perubahan otomatis.
+- **Fitness function** menjadi lebih relevan: properti arsitektur dijaga mesin, bukan kewaspadaan manusia.
+
+:::expert
+**Lebih dalam.** Bukti kuantitatifnya masih *muncul*: studi Copilot (Peng dkk.) mengukur tugas yang
+sempit; DORA 2024 mencatat adopsi AI yang luas tapi dampak beragam pada *delivery performance*, bergantung
+pada praktik yang mendasari (ukuran batch kecil, tes otomatis). Memo Thoughtworks/Fowler menekankan pola
+yang sama: AI memperkuat kecepatan umpan balik di dalam *rambu* yang baik — dan memperkuat kekacauan pada
+sistem tanpa batas yang jelas. Perlakukan klaim produktivitas sebagai hipotesis untuk diukur dalam
+konteksmu, bukan fakta universal.
+:::
+
+## Coba di Advisor
+
+Di **Advisor**, naikkan faktor *maintainability/testability* dan lihat D4 mengarah ke Hexagonal/Clean —
+struktur paling "ramah-AI", karena perubahannya mudah diuji.

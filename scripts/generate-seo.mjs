@@ -187,7 +187,11 @@ let n = 0;
 for (const rel of files) {
   const parsed = splitFrontmatter(read(`content/${rel}`));
   if (!parsed) { console.error(`✗ SEO: malformed frontmatter in content/${rel}`); process.exit(1); }
-  const { fm, body } = parsed;
+  const { fm, body: rawBody } = parsed;
+  // Bodies are bilingual (English above a `<!-- lang:id -->` line, Indonesian below). The crawlable
+  // snapshot is the English canonical (title_en/summary_tldr_en, JSON-LD lang en), so take the part
+  // before the delimiter; the Indonesian body is served to real readers via the in-app toggle.
+  const body = rawBody.split(/^<!--\s*lang:id\s*-->\s*$/m)[0].trimEnd();
   const section = fmValue(fm, 'section');
   const slug = fmValue(fm, 'slug');
   const title = fmValue(fm, 'title_en');

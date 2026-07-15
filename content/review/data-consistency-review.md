@@ -9,7 +9,7 @@ summary_tldr_en: "Once data is split across services, you lose the single transa
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D3]
   options: [db-per-service, single-db, event-sourcing]
@@ -55,3 +55,38 @@ truth, at the cost of schema evolution.
 
 The *consistency* factor and the **D3** choice light up anti-pattern warnings in the Advisor when a
 data combination is risky — use them as the trigger for this review.
+
+<!-- lang:id -->
+
+## Kapan tinjauan ini dibutuhkan
+
+Setiap kali sebuah alur menyentuh data di **lebih dari satu layanan/basis data**. Di sinilah banyak
+sistem terdistribusi diam-diam menjadi tidak benar.
+
+:::guided
+**Sebuah analogi:** memesan tiket + kursi + pembayaran di tiga loket terpisah. Tak ada "batalkan
+semuanya" secara ajaib — jika satu langkah gagal, kamu harus **membatalkan langkah yang sudah terjadi**.
+Itulah inti sebuah saga.
+:::
+
+## Checklist tinjauan
+
+- [ ] Alur lintas-layanan memakai **saga** (koreografi atau orkestrasi), bukan transaksi terdistribusi.
+- [ ] Setiap langkah punya **kompensasi** jika langkah berikutnya gagal.
+- [ ] "Simpan data + publikasikan event" memakai **transactional outbox** (tak pernah bisa menyimpang).
+- [ ] Konsumer **idempoten** (aman diproses ulang; pengiriman biasanya at-least-once).
+- [ ] **Jendela konsistensi eventual** dipahami dan dapat diterima bisnis.
+- [ ] Tak ada **basis data bersama** yang diam-diam memunculkan kembali kopling (lihat distributed monolith).
+
+:::expert
+**Lebih dalam.** Richardson mengkatalogkan saga + outbox + komposisi API; Kleppmann menyediakan fondasi
+konsistensi/pengurutan. Orkestrasi (satu koordinator) lebih mudah dinalar tapi memusatkan logika;
+koreografi (berbasis event) lebih longgar tapi alurnya menjadi muncul-sendiri dan lebih sulit di-debug
+— investasikan pada tracing dan skema event. Event sourcing bisa menjadikan "event" sebagai sumber
+kebenaran, dengan biaya evolusi skema.
+:::
+
+## Coba di Advisor
+
+Faktor *consistency* dan pilihan **D3** memunculkan peringatan anti-pattern di Advisor saat kombinasi
+data berisiko — gunakan itu sebagai pemicu tinjauan ini.

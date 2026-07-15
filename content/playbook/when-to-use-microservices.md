@@ -9,7 +9,7 @@ summary_tldr_en: "Microservices pay off for large organisations with parts that 
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices, serverless]
@@ -56,3 +56,38 @@ both together.
 
 The *scale*, *team*, and *devops* factors shift D1 in the Advisor — see whether microservices truly
 win for your scenario, or whether a modular monolith does.
+
+<!-- lang:id -->
+
+## Godaan dan jebakannya
+
+Microservices sering dipilih karena tren, bukan kebutuhan. Padahal manfaatnya **bersyarat** — dan
+biayanya nyata sejak hari pertama.
+
+:::guided
+**Kapan cocok:** organisasi besar atau terdistribusi; bagian sistem yang benar-benar perlu diskalakan
+berbeda; tim yang sudah punya otomasi, observabilitas, dan DevOps yang matang.
+
+**Kapan menahan diri:** produk awal, tim kecil, domain yang belum stabil. Di situ, monolith atau
+**modular monolith** biasanya lebih cepat dan lebih murah.
+:::
+
+## Aturan praktis
+
+1. **Mulai monolitik.** Buktikan produk dan temukan batas domain lebih dulu.
+2. **Tegakkan batas modul** (modular monolith) di dalam satu proses.
+3. **Ekstrak layanan** hanya saat ada kebutuhan nyata: penskalaan independen, deploy independen, atau
+   tim independen — sepanjang *bounded context*, memakai Strangler Fig.
+4. **Ukur biayanya:** hop jaringan, konsistensi eventual, tracing, dan operasi.
+
+:::expert
+**Lebih dalam.** Survei (Dragoni dkk.) dan tinjauan sistematis (Soldani dkk.) menunjukkan manfaat
+microservice bergantung pada kematangan organisasi; keluhan teratas konsisten: kompleksitas operasional
+dan konsistensi data. Studi industri (Bogner dkk.) mencatat efek campuran pada maintainability. Hukum
+Conway berlaku: batas layanan cenderung mengikuti batas tim — rancang keduanya bersamaan.
+:::
+
+## Coba di Advisor
+
+Faktor *scale*, *team*, dan *devops* menggeser D1 di Advisor — lihat apakah microservices benar-benar
+menang untuk skenariomu, atau justru modular monolith.
