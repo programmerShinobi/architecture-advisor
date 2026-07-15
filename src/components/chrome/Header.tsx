@@ -48,19 +48,9 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <div
-          style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: 'var(--border-radius-md)',
-            background: 'var(--aa-grad-accent)',
-            boxShadow: '0 0 16px -4px rgba(56, 225, 255, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <BrandMark size={22} />
+        {/* BrandMark v2 is self-contained (own dark tile + gradient glyph) — no chip behind it. */}
+        <div style={{ borderRadius: '9px', boxShadow: '0 0 16px -4px rgba(56, 225, 255, 0.5)' }}>
+          <BrandMark size={36} />
         </div>
         <div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.25 }}>{t('app.title')}</div>

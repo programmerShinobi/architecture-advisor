@@ -1500,12 +1500,16 @@ svg {
 }
 
 /* Top tab nav (desktop) — display via a class (NOT inline) so the phone-hide wins over it.
-   Borderless: a floating glass pill of tabs instead of an underlined bar. */
+   Borderless: a CENTERED glass pill that STAYS FLOATING over content while scrolling
+   (sticky; the glass blur keeps it readable over anything beneath). */
 .aa-topnav {
-  display: inline-flex;
+  position: sticky;
+  top: var(--aa-space-3);
+  z-index: 40;
+  display: flex;
   gap: 4px;
   padding: var(--aa-space-1);
-  margin: var(--aa-space-4) var(--aa-panel-pad) var(--aa-space-2);
+  margin: var(--aa-space-4) auto var(--aa-space-2);
   border-radius: 999px;
   width: fit-content;
 }
