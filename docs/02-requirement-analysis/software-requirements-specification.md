@@ -33,6 +33,7 @@
 | 1.4 | 2026-07-06 | **Insights Wave C + SEO**: added FR-LEARN-8 (Roadmap — guided learning paths), FR-LEARN-9 (Academy — client-side quiz modules), FR-LEARN-10 (Lab — hypothesis experiments that load prepared scenarios into the live engine), and FR-SEO-1 (build-time sitemap/robots/JSON-LD + static crawlable article snapshots; SSG-lite — the SPA architecture is unchanged, superseding "SSG deferred" for discoverability). §3.10 updated to seven sections. No requirements removed |
 | 1.5 | 2026-07-06 | **Wave C holistic parity**: FR-LEARN-8/9/10 strengthened — the Roadmap, Academy, and Lab must each cover **all 21 architectures** (every architecture in ≥1 learning path, reviewed by ≥1 quiz question, and in play in ≥1 experiment), matching the four lenses' 21×4 parity so Wave C can never mismatch the lens coverage; enforced by per-section unit tests. No requirements removed |
 | 1.6 | 2026-07-13 | **Home landing page** (FR-SHELL-11): added a default Home view mirroring the approved prototype composition (hero + real Pattern Library + how-it-works), bilingual/responsive, CTAs into the Advisor and deep-links into Insights; top nav becomes Home · Advisor · Insights. Part of the "Aurora Slate" visual programme (ADR-009). No requirements removed |
+| 1.7 | 2026-07-15 | **Full Insights bilingualisation (English-first reversed)**: FR-LEARN-2 gate now requires **`translation_status: id+en`** + a `<!-- lang:id -->` body delimiter (was "at least `en`"). All six Insights datasets became `Bilingual {en,id}` (rendered via `tr()`) and all 18 articles gained Indonesian bodies, so the language toggle reaches every Insights sub-level; Home gained Guided/Expert copy variants; the light theme was softened (AA-verified). SEO snapshots keep the English canonical (body above the delimiter). See [DECISIONS.md](../../DECISIONS.md). No requirements removed |
 
 ---
 
@@ -327,7 +328,7 @@ content about the architectures the tool evaluates. **Catalog, Playbook, Review,
 render **every architecture** data-driven from the frozen model — four structured lenses on the same
 21 options (discover / implement / evaluate / reference), joined by a per-page lens navigation — and
 the sections additionally list Markdown + frontmatter guides & methods under `content/` (git-as-CMS;
-English-first). Wave C adds three sections **on top of** the lenses: **Roadmap** (guided learning
+**fully bilingual EN/ID**). Wave C adds three sections **on top of** the lenses: **Roadmap** (guided learning
 paths), **Academy** (client-side quiz modules), and **Lab** (hypothesis experiments on the live
 engine) — they curate and exercise the lens content, never duplicate it. The app stays
 **client-rendered** (no router/SSG); discoverability comes from a **build-time SEO layer**
@@ -337,7 +338,7 @@ engine) — they curate and exercise the lens content, never duplicate it. The a
 | ID | The system shall… | Priority | Trace | Verify |
 |---|---|---|---|---|
 | FR-LEARN-1 | Provide a **Insights** area, reachable from a top nav, that lists content **sections** and their entries; the **Advisor stays the default view** and is not regressed. | Should | v1.1 enhancement | T |
-| FR-LEARN-2 | Author Markdown articles validated by a **"Minimum Viable Article" gate** (`content:validate`): schema, ≥1 primary source with a well-formed URL, honest `evidence_strength`, `last_reviewed` + `review_due = +12 months`, at least the `en` version (English-first content, decision 2026-07), unique slug/meta. | Must | Charter Section 21 (R2) | T |
+| FR-LEARN-2 | Author Markdown articles validated by a **"Minimum Viable Article" gate** (`content:validate`): schema, ≥1 primary source with a well-formed URL, honest `evidence_strength`, `last_reviewed` + `review_due = +12 months`, **fully bilingual EN/ID** (`translation_status: id+en` + a `<!-- lang:id -->` body delimiter — English-first reversed 2026-07-15), unique slug/meta. | Must | Charter Section 21 (R2) | T |
 | FR-LEARN-3 | **Bind content to the frozen model:** every `related_advisor` dimension/option must resolve to a canonical id in `src/config` — enforced by the gate so content can never reference a non-existent style/QA or drift from the engine. | Must | ADR-0001; model guards | T |
 | FR-LEARN-4 | Render each entry as a **layered template** (TL;DR → what/when-fits/what-costs → deeper → Advisor link → credibility block with **multiple** sources, evidence, and "last reviewed"); flag **"needs review"** once `review_due` passes. | Should | v1.1 enhancement | D |
 | FR-LEARN-5 | Render Markdown **safely** (no raw-HTML/script injection) and be **bilingual EN/ID**, **WCAG AA** in both themes, keyboard-navigable — with the whole Insights area **lazy-loaded** so it does not grow first-load JS. | Must | FR-SHELL-2/3; NFR a11y; NFR performance | T |

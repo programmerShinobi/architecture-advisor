@@ -24,7 +24,16 @@ The decision **model** carries its own version, recorded in the
   (`insightRoadmaps.ts`), **Playbook** (`insightPlaybooks.ts`), **Review** (`insightReviews.ts`),
   **Library** (`insightLibrary.ts`, prose translated; pattern/term proper-nouns kept canonical), and
   **Academy** quizzes (`academyQuizzes.ts`) — with their renderers (`LabView`, `RoadmapView`,
-  `LearnView`, `AcademyView`) reading through `tr()`. *In progress:* the 18 Markdown articles.
+  `LearnView`, `AcademyView`) reading through `tr()`.
+- **All 18 Markdown articles are now bilingual** — each body carries the English text, a
+  `<!-- lang:id -->` delimiter, then the Indonesian translation (`docBody(doc, lang)` splits per
+  language; markdown structure, `:::guided`/`:::expert` fences, tables, and the decision-map code
+  block preserved). `translation_status` is `id+en` and the content gate **requires** both languages
+  plus the delimiter. SEO snapshots keep the English canonical (body above the delimiter).
+- **Docs reconciled** — the *English-first content* decision is reversed to *fully bilingual* across
+  DECISIONS.md, the SRS (v1.7 + FR-LEARN-2), the design spec, and the content-rollout plan.
+- **Budget:** total-JS gzip budget raised 200→260 kB (the EN+ID content lives in the lazy Insights
+  chunk; initial-load JS untouched at ~114 kB, NFR cap 300). Now ~114 initial / ~237 total / ~23 CSS.
 
 ### Added (Genuinely-mobile experience — 2026-07-14)
 

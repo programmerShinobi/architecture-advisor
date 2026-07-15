@@ -59,13 +59,20 @@ few notable interpretations. The model values themselves are canonical — see t
 - **Canonical bilingual content** (factor labels/levels/help, option names, anti-pattern messages,
   fitness templates, risks) is reproduced verbatim from the Model Data Sheet and Option Content
   Sheet — see [EXTENDING.md](EXTENDING.md) for where each lives.
-- **English-first (2026-07).** The **default language is English** (`aa.lang` defaults to `'en'`;
-  the ID toggle stays fully functional for UI chrome) and the **Insights content layer is
-  English-only**: all 18 Markdown articles ship `translation_status: en` (ID titles/summaries stay
-  in frontmatter for the toggle-happy reader), the three lens datasets are plain English strings,
-  and the content gate now requires **at least the `en` version**. Rationale: one consistent
-  reading experience — mixing English UI copy with Indonesian article bodies read as unfinished,
-  and the model's canonical vocabulary (pattern names, QA terms) is English anyway.
+- **English-first (2026-07) → fully bilingual (reversed 2026-07-15).** The **default language is
+  English** (`aa.lang` defaults to `'en'`; the toggle stays fully functional). The earlier
+  English-only decision for the Insights *content layer* is **reversed**: the language toggle now
+  reaches **every** Insights surface down to the deepest sub-level. All six Insights datasets
+  (`insightPlaybooks`, `insightReviews`, `insightLibrary`, `insightRoadmaps`, `academyQuizzes`,
+  `labExperiments`) are `Bilingual { en, id }` rendered via `tr()`; all 18 Markdown articles carry
+  both bodies (English above, Indonesian below a `<!-- lang:id -->` delimiter) and ship
+  `translation_status: id+en`; the content gate now **requires** `id+en` + the delimiter. In the
+  Library lens, translated prose (definition/concepts/glossary explanations) sits alongside
+  **canonical proper nouns kept in English** (pattern names, glossary terms) — standard i18n, not a
+  gap. Rationale (superseding the old one): the user asked for no EN/ID mismatch anywhere; the
+  model's canonical vocabulary stays English *within* Indonesian prose, which reads as correct
+  localisation rather than an unfinished mix. Indonesian copy is **interim** — a professional
+  translator review is welcome (charter Section 14.2).
 
 ## Content & features rollout (the "Insights" layer)
 
@@ -133,11 +140,13 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   the Advisor keeps sole ownership of the URL hash; no hydration risk; budgets untouched). A
   build-time script (`scripts/generate-seo.mjs`, dependency-free like the guards) emits
   `sitemap.xml` and **static crawlable HTML snapshots** of every article under
-  `dist/insights/<section>/<slug>/` (self-canonical, JSON-LD `TechArticle`, English), plus
-  canonical/OG/JSON-LD on the app shell and `public/robots.txt`. It doubles as a **guard**: the
-  build fails if the canonical or robots URLs drift from `SITE_URL` (`src/config/site.ts`).
-  `hreflang` is `en` + `x-default` only — the content layer is English-first and UI-chrome
-  bilingualism is client-side state, not separate URLs. Full SSG of the app stays deferred.
+  `dist/insights/<section>/<slug>/` (self-canonical, JSON-LD `TechArticle`, English — the crawlable
+  snapshot takes the English body above the `<!-- lang:id -->` delimiter), plus canonical/OG/JSON-LD
+  on the app shell and `public/robots.txt`. It doubles as a **guard**: the build fails if the
+  canonical or robots URLs drift from `SITE_URL` (`src/config/site.ts`). `hreflang` is `en` +
+  `x-default` only — the app serves both languages from **one URL** via the client-side toggle (the
+  bilingual bodies are not separate pages), so English stays the crawlable canonical. Full SSG of
+  the app stays deferred.
 - **The reading-mode toggle lives in one place** (the header's Guided/Expert); the Insights area shows
   a one-line hint, not a second toggle — removing an earlier redundant control.
 - **Guided / Expert in Insights reuses the Advisor's `mode`** and the existing `.guided-only` /
