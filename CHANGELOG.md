@@ -20,10 +20,13 @@ The decision **model** carries its own version, recorded in the
   translucent `color-mix` fill + `backdrop-filter` blur, with opaque fallbacks via `@supports` and
   on low-core `aurora-static` devices); the mobile tab bar separates by shadow, not stroke. Chart
   grids keep their own `--aa-grid-line` token so data lines never fade with the chrome.
-- **Hero radar badges fixed + model-true** — the Home radar chips no longer hang outside the card
-  (no clipping at any breakpoint), and their copy is **computed from the frozen engine** (the D2
-  recommendation + fit score for the *busy online shop* preset) instead of mockup text — the badge
-  can never drift from what the Advisor actually recommends.
+- **Hero radar badges fixed + inviting; modern badge system everywhere** — the Home radar chips no
+  longer hang outside the card (no clipping at any breakpoint) and now carry general, inviting
+  copy that teases real feature areas (free instant analysis · 21 explained architectures). All
+  complementary labels share one modern recipe (`.aa-badge` glass pills, `.aa-kbd` key caps):
+  the guided "New here?" banner became a floating glass card with badge + ⌘K key cap, the header
+  save indicator is a soft badge, landing eyebrow/tags and preset chips get accent-tinted glass,
+  and step numbers are gradient coins.
 - **New brand mark** — a 5-dimension radar pentagon with one lit decision apex ("five dimensions,
   one recommendation"): `public/favicon.svg` + `BrandMark` header glyph + regenerated PWA icons
   (192/512/maskable/apple-touch, headless render, no new deps).

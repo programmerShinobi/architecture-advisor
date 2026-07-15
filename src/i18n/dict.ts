@@ -57,8 +57,13 @@ export const DICT = {
   'step4.e': { en: 'Export', id: 'Ekspor' },
   'banner.new': { en: 'New here?', id: 'Baru di sini?' },
   'banner.body': {
-    en: 'Tell the tool about your project. It works out what matters, suggests how to build, and shows why. Power user? Press ⌘K for the command palette, or switch to Expert mode.',
-    id: 'Ceritakan proyek Anda ke alat ini. Ia menentukan apa yang penting, menyarankan cara membangun, dan menunjukkan alasannya. Pengguna mahir? Tekan ⌘K untuk command palette, atau beralih ke mode Ahli.',
+    en: 'Tell the tool about your project — it works out what matters, suggests how to build, and shows why.',
+    id: 'Ceritakan proyek Anda — alat ini menentukan apa yang penting, menyarankan cara membangun, dan menunjukkan alasannya.',
+  },
+  'banner.power': { en: 'Power user?', id: 'Pengguna mahir?' },
+  'banner.power.body': {
+    en: 'for the command palette, or switch to Expert mode.',
+    id: 'untuk command palette, atau beralih ke mode Ahli.',
   },
   'disclaimer': {
     en: 'Decision support, not an oracle. The encoded weights are defensible expert defaults, not validated facts — every value is editable. Always apply team judgment and context this tool cannot capture.',
@@ -389,11 +394,10 @@ export const DICT = {
   'lp.meta.iso': { en: 'ISO/IEC 2023', id: 'ISO/IEC 2023' },
   'lp.meta.client': { en: 'client-side', id: 'client-side' },
   'lp.radar.aria': { en: 'Trade-off radar across five architecture dimensions', id: 'Radar trade-off lima dimensi arsitektur' },
-  /* Hero radar chips — the words are dict strings; the pattern name and score are COMPUTED live
-     from the frozen engine for the "busy online shop" preset (see HeroRadar.tsx), so the badge can
-     never drift from what the Advisor actually recommends. */
-  'lp.chip.fit': { en: 'Fit score', id: 'Skor kecocokan' },
-  'lp.chip.rec': { en: 'recommended', id: 'direkomendasikan' },
+  /* Hero radar chips — short, elegant one-liners that tease the product's two hooks:
+     instant explained analysis (Advisor) and the breadth of the library (Insights). */
+  'lp.chip.try': { en: 'Instant · free · explained', id: 'Instan · gratis · dijelaskan' },
+  'lp.chip.explore': { en: '21 architectures · 1 answer', id: '21 arsitektur · 1 jawaban' },
   'lp.patterns.kicker': { en: 'Pattern Library', id: 'Pustaka Pola' },
   'lp.patterns.h2': { en: 'Know the pattern before you pick it.', id: 'Kenali polanya sebelum memilihnya.' },
   'lp.patterns.sub': {

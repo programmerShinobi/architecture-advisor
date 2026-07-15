@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { IconBulb, IconCompass, IconHome } from '@tabler/icons-react';
 import { AuroraBackground } from './components/chrome/AuroraBackground';
 import { MobileChrome } from './components/chrome/MobileChrome';
 import { AdvisorMobileBar } from './components/chrome/AdvisorMobileBar';
@@ -228,7 +229,13 @@ export default function App() {
             />
 
             <nav aria-label={t('m.primaryNav')} className="screen-only aa-topnav aa-glass">
-              {(['home', 'advisor', 'learn'] as const).map((v) => {
+              {(
+                [
+                  { v: 'home', key: 'nav.home', Icon: IconHome },
+                  { v: 'advisor', key: 'nav.advisor', Icon: IconCompass },
+                  { v: 'learn', key: 'nav.learn', Icon: IconBulb },
+                ] as const
+              ).map(({ v, key, Icon }) => {
                 const active = mainView === v;
                 return (
                   <button
@@ -236,20 +243,10 @@ export default function App() {
                     type="button"
                     aria-current={active ? 'page' : undefined}
                     onClick={() => navigate(v)}
-                    style={{
-                      appearance: 'none',
-                      background: active ? 'var(--color-background-info)' : 'transparent',
-                      border: 'none',
-                      borderRadius: '999px',
-                      color: active ? 'var(--color-text-info)' : 'var(--color-text-secondary)',
-                      fontSize: '14px',
-                      fontWeight: active ? 600 : 500,
-                      padding: '8px 18px',
-                      cursor: 'pointer',
-                      transition: 'background 0.15s ease, color 0.15s ease',
-                    }}
+                    className={'aa-topnav-tab' + (active ? ' on' : '')}
                   >
-                    {t(v === 'home' ? 'nav.home' : v === 'advisor' ? 'nav.advisor' : 'nav.learn')}
+                    <Icon size={15} aria-hidden />
+                    {t(key)}
                   </button>
                 );
               })}

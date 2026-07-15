@@ -1,29 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Architecture Advisor">
-  <!-- Brand mark v2 (Fase 1): dark tile + aurora-gradient radar pentagon with a lit decision
-       apex — "five dimensions, one recommendation", drawn as a modern constellation.
+  <!-- Brand mark v4 (Fase 1): the "neural radar" — a luminous decision core linked to five
+       glowing dimension nodes (5 dimensions → 1 recommendation), drawn as thin neon lines
+       with real glow: modern, futuristic, unmistakably this project.
        Single source for header (BrandMark.tsx mirrors this), favicon and PWA icons. -->
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="ln" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#8b7cff"/>
       <stop offset="0.55" stop-color="#38e1ff"/>
       <stop offset="1" stop-color="#7cf5c8"/>
     </linearGradient>
-    <radialGradient id="halo" cx="0.5" cy="0.26" r="0.55">
-      <stop offset="0" stop-color="#8b7cff" stop-opacity="0.4"/>
-      <stop offset="1" stop-color="#8b7cff" stop-opacity="0"/>
+    <radialGradient id="tile" cx="0.5" cy="0.32" r="0.9">
+      <stop offset="0" stop-color="#151a33"/>
+      <stop offset="1" stop-color="#05060f"/>
     </radialGradient>
+    <radialGradient id="core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.5" stop-color="#c9d4ff"/>
+      <stop offset="1" stop-color="#8b7cff"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect width="100" height="100" rx="23" fill="#0a0c1a"/>
-  <rect width="100" height="100" rx="23" fill="url(#halo)"/>
-  <!-- radar pentagon, gradient line -->
-  <polygon points="50,25 76.6,44.3 66.4,75.6 33.6,75.6 23.4,44.3" fill="none" stroke="url(#g)" stroke-width="5" stroke-linejoin="round"/>
-  <!-- data points on the four base vertices -->
-  <circle cx="76.6" cy="44.3" r="3.4" fill="#38e1ff"/>
-  <circle cx="66.4" cy="75.6" r="3.4" fill="#7cf5c8"/>
-  <circle cx="33.6" cy="75.6" r="3.4" fill="#38e1ff"/>
-  <circle cx="23.4" cy="44.3" r="3.4" fill="#8b7cff"/>
-  <!-- the decision: one lit apex -->
-  <circle cx="50" cy="25" r="9.5" fill="#0a0c1a"/>
-  <circle cx="50" cy="25" r="7" fill="url(#g)"/>
-  <circle cx="50" cy="25" r="2.8" fill="#ffffff"/>
+  <rect width="100" height="100" rx="23" fill="url(#tile)"/>
+  <g filter="url(#glow)">
+    <!-- faint outer ring: the radar perimeter -->
+    <polygon points="50,20 81.4,42.8 69.4,79.7 30.6,79.7 18.6,42.8" fill="none" stroke="url(#ln)" stroke-width="1.6" stroke-linejoin="round" opacity="0.5"/>
+    <!-- spokes: five dimensions feeding the decision core -->
+    <g stroke="url(#ln)" stroke-width="2" stroke-linecap="round" opacity="0.9">
+      <line x1="50" y1="53" x2="50" y2="20"/>
+      <line x1="50" y1="53" x2="81.4" y2="42.8"/>
+      <line x1="50" y1="53" x2="69.4" y2="79.7"/>
+      <line x1="50" y1="53" x2="30.6" y2="79.7"/>
+      <line x1="50" y1="53" x2="18.6" y2="42.8"/>
+    </g>
+    <!-- dimension nodes -->
+    <circle cx="50" cy="20" r="4.2" fill="#38e1ff"/>
+    <circle cx="81.4" cy="42.8" r="3.4" fill="#7cf5c8"/>
+    <circle cx="69.4" cy="79.7" r="3.4" fill="#8b7cff"/>
+    <circle cx="30.6" cy="79.7" r="3.4" fill="#ff7ac3"/>
+    <circle cx="18.6" cy="42.8" r="3.4" fill="#a99bff"/>
+    <!-- the decision core -->
+    <circle cx="50" cy="53" r="9" fill="url(#core)"/>
+  </g>
 </svg>

@@ -262,11 +262,14 @@ commitment the code must match (cross-checked by review, gates, and tests).
      contrast stays AA (axe gate), `backdrop-filter` has an opaque fallback via `@supports`, and
      blur is dropped under `prefers-reduced-transparency`-like constraints (low-core devices reuse
      the existing `aurora-static` freeze).
-- **Hero radar badges must never clip.** The floating chips on the Home hero
-  (`landing/HeroRadar`) get layout room (no absolute overflow past the card edge at any
-  breakpoint) and their copy changes from mockup text ("Fit score · 8.4/10") to **model-true**
-  labels driven by the dict — e.g. the real top pattern for the default scenario and the real
-  fit-score concept (bilingual EN/ID).
+- **Hero radar badges must never clip — and invite, not spec.** The floating chips on the Home
+  hero (`landing/HeroRadar`) get layout room (no absolute overflow past the card edge at any
+  breakpoint). Copy: after trying model-computed values ("Fit score · 68/100"), the owner chose
+  **general, inviting copy** instead — each badge teases a real feature area (the Advisor's free
+  instant analysis · the 21-architecture Insights library) to make visitors curious (bilingual,
+  dict-driven). Complementary labels across the app share one **modern badge system** (`.aa-badge`
+  glass pills + `.aa-kbd` key caps): the guided "New here?" banner, the header save indicator,
+  landing eyebrow/tags, preset chips, and gradient step-number coins.
 - **Logo: one brand glyph everywhere.** A new simple, unique SVG mark — a pentagon radar +
   decision-node motif on the Aurora gradient (the project's own iconography: 5 dimensions, one
   recommendation). Single source (`public/favicon.svg` + a `BrandMark` component), reused for

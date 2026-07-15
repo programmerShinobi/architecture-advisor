@@ -47,33 +47,31 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
         gap: '10px',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        {/* BrandMark v2 is self-contained (own dark tile + gradient glyph) — no chip behind it. */}
-        <div style={{ borderRadius: '9px', boxShadow: '0 0 16px -4px rgba(56, 225, 255, 0.5)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: '0 1 auto' }}>
+        {/* BrandMark is self-contained (own dark tile + neon glyph) — no chip behind it. */}
+        <div style={{ borderRadius: '9px', boxShadow: '0 0 16px -4px rgba(56, 225, 255, 0.5)', flex: 'none' }}>
           <BrandMark size={36} />
         </div>
-        <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.25 }}>{t('app.title')}</div>
-          <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)' }}>{t('app.tagline')}</div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.25, whiteSpace: 'nowrap' }}>{t('app.title')}</div>
+          {/* The tagline shrinks with ellipsis instead of pushing the controls to wrap. */}
+          <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('app.tagline')}</div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-        {/* Layout via .aa-wrap (class), NOT an inline display — an inline `display:flex` would
-            defeat .aa-hide-phone's display:none on the phone tier (no !important allowed). */}
-        <span className="aa-hide-phone aa-wrap" style={{ fontSize: 'var(--aa-fs-2xs)', color: 'var(--color-text-tertiary)' }}>
-          {saving ? (
-            <>
-              <span className="spin" />
-              {t('save.saving')}
-            </>
-          ) : (
-            <>
-              <IconCircleCheck size={13} style={{ color: 'var(--color-text-success)' }} aria-hidden />
-              {t('save.saved')}
-            </>
-          )}
-        </span>
+      {/* Controls cluster: ONE horizontal row, right-aligned — never stacks. Compact pieces
+          (icon-only save status, segmented toggles) keep it narrow enough for laptops; on
+          mid widths the whole row drops under the title as a single tidy line. */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap', flex: '0 0 auto', marginLeft: 'auto' }}>
+        {/* Save status: compact icon-only badge — the full text lives in title/aria-label. */}
+        <output
+          className="aa-hide-phone aa-badge aa-badge-soft"
+          aria-label={saving ? t('save.saving') : t('save.saved')}
+          title={saving ? t('save.saving') : t('save.saved')}
+          style={{ padding: '6px', borderRadius: '50%' }}
+        >
+          {saving ? <span className="spin" /> : <IconCircleCheck size={15} style={{ color: 'var(--color-text-success)' }} aria-hidden />}
+        </output>
 
         <button type="button" className="f-btn" onClick={onManual}>
           <IconBook2 size={13} aria-hidden />
@@ -98,13 +96,16 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
           </button>
         </div>
 
+        {/* Language: the same segmented pill as the mode toggle (one visual system). */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-          <button type="button" className={'f-chip' + (lang === 'en' ? ' on' : '')} style={{ padding: '4px 11px' }} onClick={() => setLang('en')}>
-            EN
-          </button>
-          <button type="button" className={'f-chip' + (lang === 'id' ? ' on' : '')} style={{ padding: '4px 11px' }} onClick={() => setLang('id')}>
-            ID
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'var(--color-background-secondary)', borderRadius: '99px', padding: '2px' }}>
+            <button type="button" className={'f-mode' + (lang === 'en' ? ' on' : '')} onClick={() => setLang('en')}>
+              EN
+            </button>
+            <button type="button" className={'f-mode' + (lang === 'id' ? ' on' : '')} onClick={() => setLang('id')}>
+              ID
+            </button>
+          </div>
           <button
             type="button"
             onClick={toggleTheme}
