@@ -33,7 +33,7 @@ import { LEARNING_PATHS } from '../config/insightRoadmaps';
 import { ACADEMY_QUIZZES } from '../config/academyQuizzes';
 import { LAB_EXPERIMENTS } from '../config/labExperiments';
 import type { SectionId, ContentDoc } from '../config/contentSchema';
-import type { DimensionId, Levels } from '../types';
+import type { Bilingual, DimensionId, Levels } from '../types';
 
 // The "Insights" content area — a lazy-loaded island implementing HOLISTIC ARCHITECTURE COVERAGE:
 // every architecture the Advisor evaluates (all 21 D1–D5 options) appears in ALL FOUR lens
@@ -126,13 +126,14 @@ function InfoBlock({ icon, label, text, color }: { icon: React.ReactNode; label:
   );
 }
 
-function Bullets({ items, marker = '›', color = 'var(--color-text-tertiary)' }: { items: string[]; marker?: string; color?: string }) {
+function Bullets({ items, marker = '›', color = 'var(--color-text-tertiary)' }: { items: Bilingual[]; marker?: string; color?: string }) {
+  const { tr } = useI18n();
   return (
     <ul style={{ display: 'grid', gap: '6px', margin: 0, padding: 0, listStyle: 'none', fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>
       {items.map((it) => (
-        <li key={it} style={{ display: 'flex', gap: '8px' }}>
+        <li key={it.en} style={{ display: 'flex', gap: '8px' }}>
           <span style={{ color, flexShrink: 0 }}>{marker}</span>
-          <span>{it}</span>
+          <span>{tr(it)}</span>
         </li>
       ))}
     </ul>
@@ -233,13 +234,13 @@ function ArchitectureArticle({
     return (
       <article className="learn-article">
         {header}
-        {lead(playbook.goal, t('learn.pb.goal'))}
+        {lead(tr(playbook.goal), t('learn.pb.goal'))}
         <LensHeading icon={<IconChecklist size={15} aria-hidden />} label={t('learn.pb.prereqs')} />
         <Bullets items={playbook.prerequisites} />
         <LensHeading icon={<IconListNumbers size={15} aria-hidden />} label={t('learn.pb.steps')} />
         <ol style={{ display: 'grid', gap: '7px', margin: 0, paddingLeft: '22px', fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>
           {playbook.steps.map((s) => (
-            <li key={s}>{s}</li>
+            <li key={s.en}>{tr(s)}</li>
           ))}
         </ol>
         <LensHeading icon={<IconShieldCheck size={15} aria-hidden />} label={t('learn.pb.practices')} color="var(--color-text-success)" />
@@ -266,7 +267,7 @@ function ArchitectureArticle({
     return (
       <article className="learn-article">
         {header}
-        {lead(review.overview, t('learn.rv.overview'))}
+        {lead(tr(review.overview), t('learn.rv.overview'))}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '12px', marginBottom: '4px' }}>
           <div>
             <LensHeading icon={<IconThumbUp size={15} aria-hidden />} label={t('learn.rv.pros')} color="var(--color-text-success)" />
@@ -278,9 +279,9 @@ function ArchitectureArticle({
           </div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '10px', margin: '14px 0' }}>
-          {metric(t('learn.rv.performance'), <IconGauge size={13} aria-hidden />, review.performance)}
-          {metric(t('learn.rv.scalability'), <IconTargetArrow size={13} aria-hidden />, review.scalability)}
-          {metric(t('learn.rv.dx'), <IconUsers size={13} aria-hidden />, review.dx)}
+          {metric(t('learn.rv.performance'), <IconGauge size={13} aria-hidden />, tr(review.performance))}
+          {metric(t('learn.rv.scalability'), <IconTargetArrow size={13} aria-hidden />, tr(review.scalability))}
+          {metric(t('learn.rv.dx'), <IconUsers size={13} aria-hidden />, tr(review.dx))}
         </div>
         <LensHeading icon={<IconChecklist size={15} aria-hidden />} label={t('learn.rv.useCases')} />
         <Bullets items={review.useCases} />
@@ -289,7 +290,7 @@ function ArchitectureArticle({
             <IconScale size={14} aria-hidden />
             {t('learn.rv.verdict')}
           </div>
-          <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{review.verdict}</p>
+          <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{tr(review.verdict)}</p>
         </div>
         {tryAdvisor}
         <Sources cites={entry.cites} />
@@ -302,7 +303,7 @@ function ArchitectureArticle({
     return (
       <article className="learn-article">
         {header}
-        {lead(libraryRef.definition, t('learn.lb.definition'))}
+        {lead(tr(libraryRef.definition), t('learn.lb.definition'))}
         <LensHeading icon={<IconBook2 size={15} aria-hidden />} label={t('learn.lb.concepts')} />
         <Bullets items={libraryRef.concepts} />
         <LensHeading icon={<IconPuzzle size={15} aria-hidden />} label={t('learn.lb.patterns')} />
@@ -318,7 +319,7 @@ function ArchitectureArticle({
           {libraryRef.terms.map(({ term, def }) => (
             <div key={term}>
               <dt style={{ display: 'inline', fontWeight: 600, color: 'var(--color-text-primary)' }}>{term}</dt>
-              <dd style={{ display: 'inline', margin: 0, color: 'var(--color-text-secondary)' }}> — {def}</dd>
+              <dd style={{ display: 'inline', margin: 0, color: 'var(--color-text-secondary)' }}> — {tr(def)}</dd>
             </div>
           ))}
         </dl>
@@ -415,9 +416,12 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
   // The one-line card blurb differs per lens so each section reads distinctly.
   const cardBlurb = (dim: DimensionId, optId: string, angle: Angle): string => {
     const key = angleKey(dim, optId);
-    if (angle === 'playbook') return INSIGHT_PLAYBOOKS[key]?.goal ?? '';
-    if (angle === 'review') return INSIGHT_REVIEWS[key]?.overview ?? '';
-    if (angle === 'library') return INSIGHT_LIBRARY[key]?.definition ?? '';
+    const pb = INSIGHT_PLAYBOOKS[key];
+    if (angle === 'playbook') return pb ? tr(pb.goal) : '';
+    const rv = INSIGHT_REVIEWS[key];
+    if (angle === 'review') return rv ? tr(rv.overview) : '';
+    const lib = INSIGHT_LIBRARY[key];
+    if (angle === 'library') return lib ? tr(lib.definition) : '';
     const entry = READER_SECTIONS.find((s) => s.dim === dim)?.entries.find((e) => e.optionId === optId);
     return entry ? tr(entry.what) : '';
   };

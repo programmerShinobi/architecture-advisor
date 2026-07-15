@@ -20,9 +20,11 @@ The decision **model** carries its own version, recorded in the
 - **Insights content going fully bilingual (EN/ID)** — reversing the earlier *English-first content*
   decision so **every** Insights surface responds to the language toggle down to the deepest
   sub-level. Datasets are being converted from `string` to `Bilingual { en, id }` and rendered via
-  `tr()`. **Done so far:** the **Lab** experiments (`labExperiments.ts` + `LabView`) and the
-  **Roadmap** learning paths (`insightRoadmaps.ts` + `RoadmapView`). *In progress:* Playbooks,
-  Reviews, Library, Academy quizzes, and the 18 Markdown articles.
+  `tr()`. **Done so far:** all six Insights datasets — **Lab** (`labExperiments.ts`), **Roadmap**
+  (`insightRoadmaps.ts`), **Playbook** (`insightPlaybooks.ts`), **Review** (`insightReviews.ts`),
+  **Library** (`insightLibrary.ts`, prose translated; pattern/term proper-nouns kept canonical), and
+  **Academy** quizzes (`academyQuizzes.ts`) — with their renderers (`LabView`, `RoadmapView`,
+  `LearnView`, `AcademyView`) reading through `tr()`. *In progress:* the 18 Markdown articles.
 
 ### Added (Genuinely-mobile experience — 2026-07-14)
 

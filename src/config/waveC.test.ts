@@ -51,11 +51,11 @@ describe('Academy quizzes (academyQuizzes)', () => {
     for (const mod of ACADEMY_QUIZZES) {
       expect(mod.questions.length, mod.id).toBeGreaterThanOrEqual(3);
       for (const q of mod.questions) {
-        expect(q.choices.length, q.q).toBeGreaterThanOrEqual(2);
-        expect(q.answer, q.q).toBeGreaterThanOrEqual(0);
-        expect(q.answer, q.q).toBeLessThan(q.choices.length);
+        expect(q.choices.length, q.q.en).toBeGreaterThanOrEqual(2);
+        expect(q.answer, q.q.en).toBeGreaterThanOrEqual(0);
+        expect(q.answer, q.q.en).toBeLessThan(q.choices.length);
         if (q.review.kind === 'arch') {
-          expect(archExists(q.review.dim, q.review.optionId), `${mod.id}: ${q.q}`).toBe(true);
+          expect(archExists(q.review.dim, q.review.optionId), `${mod.id}: ${q.q.en}`).toBe(true);
         } else {
           expect(contentBySlug(q.review.slug), `${mod.id}: article ${q.review.slug}`).toBeDefined();
         }

@@ -25,7 +25,7 @@ const cardBase: React.CSSProperties = {
 };
 
 export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const [moduleId, setModuleId] = useState<string | null>(null);
   const [qIndex, setQIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -53,7 +53,7 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
         <button type="button" onClick={() => setModuleId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.ac.allModules')}
         </button>
-        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '10px' }}>{mod.title}</h2>
+        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '10px' }}>{tr(mod.title)}</h2>
         <div style={{ background: 'var(--color-background-success)', border: '1px solid var(--color-text-success)', borderRadius: 'var(--border-radius-md)', padding: '14px 16px', marginBottom: '16px' }}>
           <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-success)', letterSpacing: '.04em', marginBottom: '4px' }}>{t('learn.ac.results')}</div>
           <p style={{ fontSize: '15px', fontWeight: 600 }}>
@@ -77,11 +77,11 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
         <button type="button" onClick={() => setModuleId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.ac.allModules')}
         </button>
-        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '4px' }}>{mod.title}</h2>
+        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '4px' }}>{tr(mod.title)}</h2>
         <p style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', marginBottom: '14px' }}>
           {t('learn.ac.question')} {qIndex + 1} / {mod.questions.length}
         </p>
-        <p style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.5, marginBottom: '12px' }}>{q.q}</p>
+        <p style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.5, marginBottom: '12px' }}>{tr(q.q)}</p>
         <div style={{ display: 'grid', gap: '8px', marginBottom: '14px' }}>
           {q.choices.map((choice, i) => {
             const isAnswer = i === q.answer;
@@ -95,11 +95,11 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
               style.background = 'var(--color-background-error, var(--color-background-secondary))';
             }
             return (
-              <button key={choice} type="button" disabled={answered} onClick={() => { setPicked(i); if (i === q.answer) setScore((s) => s + 1); }} style={style}>
+              <button key={choice.en} type="button" disabled={answered} onClick={() => { setPicked(i); if (i === q.answer) setScore((s) => s + 1); }} style={style}>
                 <span style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                   {answered && isAnswer && <IconCheck size={15} aria-hidden style={{ color: 'var(--color-text-success)', flexShrink: 0, marginTop: '2px' }} />}
                   {answered && isPicked && !isAnswer && <IconX size={15} aria-hidden style={{ color: 'var(--color-text-cost)', flexShrink: 0, marginTop: '2px' }} />}
-                  <span>{choice}</span>
+                  <span>{tr(choice)}</span>
                 </span>
               </button>
             );
@@ -110,7 +110,7 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
             <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.04em', marginBottom: '4px', color: correct ? 'var(--color-text-success)' : 'var(--color-text-cost)' }}>
               {correct ? t('learn.ac.correct') : t('learn.ac.incorrect')}
             </div>
-            <p style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--color-text-secondary)', marginBottom: '8px' }}>{q.explain}</p>
+            <p style={{ fontSize: '13px', lineHeight: 1.55, color: 'var(--color-text-secondary)', marginBottom: '8px' }}>{tr(q.explain)}</p>
             <button type="button" onClick={() => review(q.review)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '12.5px', fontWeight: 600, padding: 0, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
               {t('learn.ac.review')}
               <IconArrowRight size={13} aria-hidden />
@@ -132,10 +132,10 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
       {ACADEMY_QUIZZES.map((m) => (
         <button key={m.id} type="button" className="learn-card" style={cardBase} onClick={() => openModule(m.id)}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '5px' }}>
-            <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{m.title}</span>
+            <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{tr(m.title)}</span>
             <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '3px' }} />
           </div>
-          <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{m.description}</div>
+          <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{tr(m.description)}</div>
           <div style={{ fontSize: '10.5px', color: 'var(--color-text-info)', marginTop: '8px', fontWeight: 500 }}>
             {m.questions.length} {t('learn.ac.questionsWord')}
           </div>
