@@ -237,3 +237,45 @@ Appendix A). Direction chosen with the maintainer: **client-rendered first, Wave
   dev and the Playwright suite never fight a cache.
 - **Icons** are generated from a single node-tree brand glyph on the Aurora gradient (`public/favicon.svg`
   → 192/512/maskable PNGs), rendered headlessly — no image-processing dependency added.
+
+## Fase 1 — "Aurora Glass" borderless evolution + identity (2026-07)
+
+Documented **before** implementation per the project's docs-first rule; each point below is a
+commitment the code must match (cross-checked by review, gates, and tests).
+
+- **Component tree grouped by feature area, guards untouched.** `src/components/` (40 flat files)
+  is reorganised into `chrome/ · landing/ · advisor/ · insights/ · overlays/` (see
+  [design-specification §3](docs/03-blueprint/design-specification.md)). `src/config/`, `src/lib/`
+  and every frozen artifact keep their exact paths — the frozen guard scripts reference
+  `src/config/*` only, so the restructure cannot touch the model. Tests move *with* their
+  components; no test was weakened.
+- **Borderless design language ("Aurora Glass"), applied via tokens again — not a second reskin.**
+  Three characteristics, mirroring the modern full-bleed idiom:
+  1. **Full-bleed canvas** — the aurora background already spans the viewport; the app frame drops
+     its hard outer border/box so content sits directly on the canvas.
+  2. **Whitespace as the separator** — visible hairline dividers (`.f-div`, hard card borders)
+     are replaced by spacing rhythm; cards keep elevation via translucent fills + shadow, not
+     stroke. Implemented by retuning `--color-border-*` token *values* toward transparency and a
+     spacing bump — not by per-component surgery.
+  3. **Glassmorphism** — the top nav + mobile tab bar float as translucent, `backdrop-blur` glass
+     panels over the canvas; overlays (palette, modals) share the same glass recipe. Guards:
+     contrast stays AA (axe gate), `backdrop-filter` has an opaque fallback via `@supports`, and
+     blur is dropped under `prefers-reduced-transparency`-like constraints (low-core devices reuse
+     the existing `aurora-static` freeze).
+- **Hero radar badges must never clip — and invite, not spec.** The floating chips on the Home
+  hero (`landing/HeroRadar`) get layout room (no absolute overflow past the card edge at any
+  breakpoint). Copy: after trying model-computed values ("Fit score · 68/100"), the owner chose
+  **general, inviting copy** instead — each badge teases a real feature area (the Advisor's free
+  instant analysis · the 21-architecture Insights library) to make visitors curious (bilingual,
+  dict-driven). Complementary labels across the app share one **modern badge system** (`.aa-badge`
+  glass pills + `.aa-kbd` key caps): the guided "New here?" banner, the header save indicator,
+  landing eyebrow/tags, preset chips, and gradient step-number coins.
+- **Logo: one brand glyph everywhere.** A new simple, unique SVG mark — a pentagon radar +
+  decision-node motif on the Aurora gradient (the project's own iconography: 5 dimensions, one
+  recommendation). Single source (`public/favicon.svg` + a `BrandMark` component), reused for
+  header wordmark, favicon and regenerated PWA icons (192/512/maskable) via the existing headless
+  render script — no image dependency added.
+- **Copyright & identity.** A footer identity line — `© 2026 Faqih Pratama Muhti (programmerShinobi).
+  All rights reserved.` — plus the same notice in `site.ts` config, the SEO snapshots, the README
+  and the print report. **Scope note:** code stays MIT and docs CC BY 4.0 (unchanged LICENSE
+  files); the copyright line asserts *identity/attribution* of the work, it does not re-license it.

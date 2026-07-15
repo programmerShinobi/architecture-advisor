@@ -122,12 +122,19 @@ src/
 │                   insightRoadmaps · academyQuizzes · labExperiments   (Wave C: paths · quizzes · sandboxes)
 ├── lib/            scoring · sensitivity · antiPatternEngine · adr · report
 │                   c4 · urlState · customConfig · content · frontmatter · markdown
-├── hooks/          usePersistedState · useUrlSyncedState
-└── components/     Header · LandingView + HeroRadar (Home landing, default) · AuroraBackground · ManualBook (Guide, lazy) · Disclaimer · ModeToggle · PresetBar · FactorGroup …
-                    QaWeightChart · DimensionResults · RadarTradeoff · ContributionTable
-                    ComparisonMode · SensitivityCard · RiskRegister · AntiPatternAlerts
-                    FitnessFunctions · MigrationPath · MethodologyPanel · ReportPreview …
-                    LearnView (lazy) · CredibilityBlock
+├── hooks/          usePersistedState · useTheme · useExportActions
+└── components/     grouped by feature area (2026-07 restructure — clean & clear):
+    ├── chrome/     app shell — Header · MobileChrome · AdvisorMobileBar · Toolbar
+    │               CommandPalette · AuroraBackground · StepTracker · GuidedBanner
+    ├── landing/    LandingView · HeroRadar            (Home, default view)
+    ├── advisor/    FactorInputs · FactorField · PresetBar · PrioritiesCard · QaOverridePanel
+    │               DimensionCards · DimensionDetail · RadarPanel · SensitivityCard
+    │               ScenarioCompare · WhyNotRunnerUp · AntiPatternWarning · MigrationCard
+    │               RiskRegister · FitnessFunctions · CostOpsBadges · C4Preview
+    │               HowItDecides · LevelBadge · Collapsible
+    ├── insights/   LearnView (lazy) · AcademyView · LabView · RoadmapView · CredibilityBlock
+    └── overlays/   ManualBook (Guide, lazy) · Glossary · ShortcutsModal
+                    MethodologyPanel · PrintReport
 
 content/            playbook/ · review/   (Markdown + frontmatter articles; git-as-CMS)
                     (Catalog needs no files — it is data-driven from src/config/readerContent.ts)

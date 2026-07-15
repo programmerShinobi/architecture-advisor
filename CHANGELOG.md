@@ -9,6 +9,31 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed (Fase 1 — "Aurora Glass" borderless evolution + identity — 2026-07-16)
+
+- **Component tree grouped by feature area** — `src/components/` reorganised into
+  `chrome/ · landing/ · advisor/ · insights/ · overlays/` (tests move with their components; the
+  frozen model guards pin `src/config/*` only and are untouched).
+- **Borderless design language** — the framed app box is gone: content sits full-bleed on the
+  aurora canvas; sections separate by whitespace (`.f-div` is now pure spacing); hairline border
+  tokens softened; the header and top nav float as **glassmorphism** panels (`.aa-glass`:
+  translucent `color-mix` fill + `backdrop-filter` blur, with opaque fallbacks via `@supports` and
+  on low-core `aurora-static` devices); the mobile tab bar separates by shadow, not stroke. Chart
+  grids keep their own `--aa-grid-line` token so data lines never fade with the chrome.
+- **Hero radar badges fixed + inviting; modern badge system everywhere** — the Home radar chips no
+  longer hang outside the card (no clipping at any breakpoint) and now carry general, inviting
+  copy that teases real feature areas (free instant analysis · 21 explained architectures). All
+  complementary labels share one modern recipe (`.aa-badge` glass pills, `.aa-kbd` key caps):
+  the guided "New here?" banner became a floating glass card with badge + ⌘K key cap, the header
+  save indicator is a soft badge, landing eyebrow/tags and preset chips get accent-tinted glass,
+  and step numbers are gradient coins.
+- **New brand mark** — a 5-dimension radar pentagon with one lit decision apex ("five dimensions,
+  one recommendation"): `public/favicon.svg` + `BrandMark` header glyph + regenerated PWA icons
+  (192/512/maskable/apple-touch, headless render, no new deps).
+- **Copyright & identity** — `© 2026 Faqih Pratama Muhti (programmerShinobi)` in the global
+  footer, `<meta author/copyright>`, and the print report; brand & identity exclusive, code stays
+  MIT and content CC BY 4.0 (single-sourced in `src/config/site.ts`).
+
 ### Changed (Full bilingualisation + light-theme polish — 2026-07-15)
 
 - **Light theme softened** — the page background is now an off-white slate (`#e8ecf4`) instead of
