@@ -78,7 +78,10 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
             <span className="lp-grad">{t('lp.h1.grad')}</span>
             {t('lp.h1.post')}
           </h1>
-          <p className="lp-lede">{t('lp.lede')}</p>
+          <p className="lp-lede">
+            <span className="guided-only">{t('lp.lede')}</span>
+            <span className="expert-only">{t('lp.lede.x')}</span>
+          </p>
           <div className="lp-actions">
             <button type="button" className="lp-btn lp-btn-primary" onClick={onStart}>
               {t('lp.cta.start')}
@@ -186,7 +189,10 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
           {(['s1', 's2', 's3'] as const).map((s) => (
             <div key={s} className="lp-step aa-reveal">
               <h3>{t(`lp.how.${s}.h`)}</h3>
-              <p>{t(`lp.how.${s}.p`)}</p>
+              <p>
+                <span className="guided-only">{t(`lp.how.${s}.p`)}</span>
+                <span className="expert-only">{t(`lp.how.${s}.px`)}</span>
+              </p>
             </div>
           ))}
         </div>

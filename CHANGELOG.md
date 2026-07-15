@@ -9,6 +9,21 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Changed (Full bilingualisation + light-theme polish — 2026-07-15)
+
+- **Light theme softened** — the page background is now an off-white slate (`#e8ecf4`) instead of
+  stark white, cards read as lighter/elevated, fills/tracks are deeper, and the info-violet was
+  deepened (`#5733c6`) to keep every combination ≥ WCAG AA on the softer background (a11y gate 7/7).
+- **Mode-aware Home** — the landing lede and the three "how it works" steps now have distinct
+  **Guided** vs **Expert** copy (`.guided-only` / `.expert-only`), so selecting a reading mode
+  changes the Home page too, not just the Advisor/Insights.
+- **Insights content going fully bilingual (EN/ID)** — reversing the earlier *English-first content*
+  decision so **every** Insights surface responds to the language toggle down to the deepest
+  sub-level. Datasets are being converted from `string` to `Bilingual { en, id }` and rendered via
+  `tr()`. **Done so far:** the **Lab** experiments (`labExperiments.ts` + `LabView`) and the
+  **Roadmap** learning paths (`insightRoadmaps.ts` + `RoadmapView`). *In progress:* Playbooks,
+  Reviews, Library, Academy quizzes, and the 18 Markdown articles.
+
 ### Added (Genuinely-mobile experience — 2026-07-14)
 
 - **A real mobile UI for the whole app** (plan: [mobile-experience-plan.md](docs/03-blueprint/mobile-experience-plan.md),

@@ -43,7 +43,7 @@ function stepKindLabel(step: RoadmapStep, t: ReturnType<typeof useI18n>['t']): s
 }
 
 export default function RoadmapView({ onOpenArch, onOpenArticle, onOpenAdvisor }: Props) {
-  const { t, lang } = useI18n();
+  const { t, tr, lang } = useI18n();
   const [pathId, setPathId] = useState<string | null>(null);
   const path: LearningPath | undefined = LEARNING_PATHS.find((p) => p.id === pathId);
 
@@ -59,14 +59,14 @@ export default function RoadmapView({ onOpenArch, onOpenArticle, onOpenAdvisor }
         <button type="button" onClick={() => setPathId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.road.allPaths')}
         </button>
-        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '6px' }}>{path.title}</h2>
-        <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)', maxWidth: '72ch', marginBottom: '12px' }}>{path.description}</p>
+        <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '6px' }}>{tr(path.title)}</h2>
+        <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)', maxWidth: '72ch', marginBottom: '12px' }}>{tr(path.description)}</p>
         <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginBottom: '18px', maxWidth: '72ch' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 700, color: 'var(--color-text-info)', marginBottom: '4px', letterSpacing: '.04em' }}>
             <IconTargetArrow size={14} aria-hidden />
             {t('learn.road.outcome')}
           </div>
-          <p style={{ fontSize: '13px', lineHeight: 1.5, color: 'var(--color-text-secondary)' }}>{path.outcome}</p>
+          <p style={{ fontSize: '13px', lineHeight: 1.5, color: 'var(--color-text-secondary)' }}>{tr(path.outcome)}</p>
         </div>
         <ol style={{ display: 'grid', gap: '10px', margin: 0, padding: 0, listStyle: 'none', maxWidth: '72ch' }}>
           {path.steps.map((step, i) => (
@@ -80,7 +80,7 @@ export default function RoadmapView({ onOpenArch, onOpenArticle, onOpenAdvisor }
                     {stepTitle(step, lang)}
                     <span style={{ fontWeight: 500, fontSize: '10.5px', color: 'var(--color-text-info)', marginLeft: '8px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{stepKindLabel(step, t)}</span>
                   </span>
-                  <span style={{ display: 'block', fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{step.note}</span>
+                  <span style={{ display: 'block', fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{tr(step.note)}</span>
                 </span>
                 <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '4px' }} />
               </button>
@@ -96,10 +96,10 @@ export default function RoadmapView({ onOpenArch, onOpenArticle, onOpenAdvisor }
       {LEARNING_PATHS.map((p) => (
         <button key={p.id} type="button" className="learn-card" style={cardBase} onClick={() => setPathId(p.id)}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '5px' }}>
-            <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{p.title}</span>
+            <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{tr(p.title)}</span>
             <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '3px' }} />
           </div>
-          <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{p.description}</div>
+          <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{tr(p.description)}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '10.5px', color: 'var(--color-text-info)', marginTop: '8px', fontWeight: 500 }}>
             {t(`learn.road.${p.audience}`)} · {p.steps.length} {t('learn.road.stepsWord')}
             <IconArrowRight size={12} aria-hidden />
