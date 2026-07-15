@@ -1,34 +1,34 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { AuroraBackground } from './components/AuroraBackground';
-import { MobileChrome } from './components/MobileChrome';
-import { AdvisorMobileBar } from './components/AdvisorMobileBar';
-import { LandingView } from './components/LandingView';
-import { Header, type Mode } from './components/Header';
-import { CommandPalette, type Command } from './components/CommandPalette';
-import { ShortcutsModal } from './components/ShortcutsModal';
-import { ScenarioCompare } from './components/ScenarioCompare';
-import { PrintReport } from './components/PrintReport';
-import { Collapsible } from './components/Collapsible';
-import { GuidedBanner } from './components/GuidedBanner';
-import { StepTracker } from './components/StepTracker';
-import { PresetBar } from './components/PresetBar';
-import { Toolbar } from './components/Toolbar';
-import { C4Preview } from './components/C4Preview';
-import { FactorInputs } from './components/FactorInputs';
-import { PrioritiesCard } from './components/PrioritiesCard';
-import { DimensionCards } from './components/DimensionCards';
-import { DimensionDetail } from './components/DimensionDetail';
-import { RadarPanel } from './components/RadarPanel';
-import { SensitivityCard } from './components/SensitivityCard';
-import { MigrationCard } from './components/MigrationCard';
-import { AntiPatternWarning } from './components/AntiPatternWarning';
-import { HowItDecides } from './components/HowItDecides';
-import { QaOverridePanel } from './components/QaOverridePanel';
-import { RiskRegister } from './components/RiskRegister';
-import { FitnessFunctions } from './components/FitnessFunctions';
-import { CostOpsBadges } from './components/CostOpsBadges';
-import { MethodologyPanel } from './components/MethodologyPanel';
-import { Glossary } from './components/Glossary';
+import { AuroraBackground } from './components/chrome/AuroraBackground';
+import { MobileChrome } from './components/chrome/MobileChrome';
+import { AdvisorMobileBar } from './components/chrome/AdvisorMobileBar';
+import { LandingView } from './components/landing/LandingView';
+import { Header, type Mode } from './components/chrome/Header';
+import { CommandPalette, type Command } from './components/chrome/CommandPalette';
+import { ShortcutsModal } from './components/overlays/ShortcutsModal';
+import { ScenarioCompare } from './components/advisor/ScenarioCompare';
+import { PrintReport } from './components/overlays/PrintReport';
+import { Collapsible } from './components/advisor/Collapsible';
+import { GuidedBanner } from './components/chrome/GuidedBanner';
+import { StepTracker } from './components/chrome/StepTracker';
+import { PresetBar } from './components/advisor/PresetBar';
+import { Toolbar } from './components/chrome/Toolbar';
+import { C4Preview } from './components/advisor/C4Preview';
+import { FactorInputs } from './components/advisor/FactorInputs';
+import { PrioritiesCard } from './components/advisor/PrioritiesCard';
+import { DimensionCards } from './components/advisor/DimensionCards';
+import { DimensionDetail } from './components/advisor/DimensionDetail';
+import { RadarPanel } from './components/advisor/RadarPanel';
+import { SensitivityCard } from './components/advisor/SensitivityCard';
+import { MigrationCard } from './components/advisor/MigrationCard';
+import { AntiPatternWarning } from './components/advisor/AntiPatternWarning';
+import { HowItDecides } from './components/advisor/HowItDecides';
+import { QaOverridePanel } from './components/advisor/QaOverridePanel';
+import { RiskRegister } from './components/advisor/RiskRegister';
+import { FitnessFunctions } from './components/advisor/FitnessFunctions';
+import { CostOpsBadges } from './components/advisor/CostOpsBadges';
+import { MethodologyPanel } from './components/overlays/MethodologyPanel';
+import { Glossary } from './components/overlays/Glossary';
 import { useI18n } from './i18n/I18nContext';
 import { usePersistedState } from './hooks/usePersistedState';
 import { useTheme } from './hooks/useTheme';
@@ -46,11 +46,11 @@ import type { DimensionId, Levels, RankedOption } from './types';
 // The Manual/Guide is lazy-loaded: it is an on-demand modal and now carries the detailed,
 // evidence-grounded architecture explanations (readerContent), so keeping it out of the initial
 // bundle preserves the first-load perf budget.
-const ManualBook = lazy(() => import('./components/ManualBook'));
+const ManualBook = lazy(() => import('./components/overlays/ManualBook'));
 
 // The "Learn" content area is a lazy-loaded island: its articles + markdown renderer stay out of
 // the Advisor's initial bundle. The Advisor remains the default view.
-const LearnView = lazy(() => import('./components/LearnView'));
+const LearnView = lazy(() => import('./components/insights/LearnView'));
 
 type Selections = Partial<Record<DimensionId, string>>;
 
