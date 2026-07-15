@@ -172,8 +172,10 @@ for (const file of files) {
     for (const a of fm.audience) if (!AUDIENCES.includes(a)) bad(`invalid audience "${a}"`);
   } else if (fm.audience !== undefined) bad('audience must be a list');
 
-  // English-first content (product decision 2026-07): every article ships in English
-  if (fm.translation_status && !['en', 'id+en'].includes(fm.translation_status)) bad('must have at least the en version (translation_status en or id+en)');
+  // Full bilingualisation (decision reversed 2026-07-15): every article ships EN *and* ID. The body
+  // carries both languages split by a `<!-- lang:id -->` line (English above, Indonesian below).
+  if (fm.translation_status !== 'id+en') bad('must be fully bilingual (translation_status must be id+en)');
+  if (!/^<!--\s*lang:id\s*-->\s*$/m.test(raw)) bad('missing the `<!-- lang:id -->` body delimiter — the Indonesian body is required');
 
   // review dates
   if (fm.last_reviewed && !isDate(fm.last_reviewed)) bad(`last_reviewed not YYYY-MM-DD: "${fm.last_reviewed}"`);

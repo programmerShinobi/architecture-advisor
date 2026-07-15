@@ -9,7 +9,7 @@ summary_tldr_en: "Independent of deployment, internal structure governs how easi
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D4]
   options: [hexagonal, clean, vertical-slice, layered]
@@ -56,3 +56,38 @@ exceed the benefit.
 
 In the Advisor, D4 is scored independently of D1 — see how factors such as *maintainability* and
 *testability* boost the options that keep the core clean.
+
+<!-- lang:id -->
+
+## Apa yang sebenarnya diatur D4
+
+D4 bukan tentang berapa banyak aplikasi yang kamu deploy — ia tentang **bagaimana kode diorganisasi di
+dalam** satu aplikasi, dan itu menentukan biaya perubahan serta kemampuan uji.
+
+:::guided
+- **Hexagonal (Ports & Adapters):** pagari logika inti; framework & basis data menjadi "colokan" di
+  tepian. Intinya sangat mudah diuji.
+- **Clean Architecture:** lapisan konsentris dengan aturan "dependensi mengarah ke dalam". Maksud yang
+  sama dengan hexagonal, lebih preskriptif.
+- **Vertical Slice:** susun berdasarkan **fitur**, bukan lapisan teknis — satu fitur berada di satu tempat.
+- **Layered:** klasik dan familiar; bisa kusut saat domain tumbuh.
+:::
+
+## Panduan singkat
+
+- Butuh inti yang berumur panjang, bebas-framework, teruji baik → **Hexagonal** atau **Clean**.
+- Tim kecil, ingin perubahan terlokalisasi per fitur → **Vertical Slice**.
+- Domain kecil/stabil, ingin kecepatan → **Layered** (waspadai erosi).
+
+:::expert
+**Lebih dalam.** Hexagonal dan Clean sama-sama menegakkan bahwa **aturan bisnis tak bergantung pada
+IO/framework** — itulah yang membuat inti dapat di-unit-test dan tahan lama; DDD menyuplai *bounded
+context* yang dilindungi struktur ini. Vertical Slice mengoptimalkan cara perangkat lunak sebenarnya
+berubah (per fitur), kebalikan dari kelemahan layered. Jangan paksakan seremoni Clean pada aplikasi
+kecil — biayanya bisa melebihi manfaatnya.
+:::
+
+## Coba di Advisor
+
+Di Advisor, D4 dinilai secara independen dari D1 — lihat bagaimana faktor seperti *maintainability* dan
+*testability* mengangkat opsi yang menjaga inti tetap bersih.

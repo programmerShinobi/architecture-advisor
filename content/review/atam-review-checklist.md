@@ -9,7 +9,7 @@ summary_tldr_en: "ATAM (Architecture Tradeoff Analysis Method) evaluates an arch
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1, D2, D3, D4, D5]
   options: []
@@ -61,3 +61,48 @@ questions*, not false certainty. For small systems, a light version (Lightweight
 The **Advisor** derives quality-attribute priorities from your project factors (much like a utility
 tree), then shows the **trade-off radar**, **sensitivity cards**, and **anti-pattern warnings** —
 useful raw material for an ATAM-style review session.
+
+<!-- lang:id -->
+
+## Untuk siapa halaman ini
+
+Untuk **siapa pun yang hendak mengevaluasi arsitektur** — dari pemula yang butuh langkah jelas sampai
+arsitek yang menginginkan tinjauan yang terstruktur dan jujur. Advisor memakai ide inti ATAM: **utility
+tree** dan **analisis trade-off**.
+
+## Ide inti ATAM
+
+ATAM tidak menanyakan *"apakah arsitektur ini bagus?"* melainkan *"seberapa baik ia memenuhi quality
+attribute yang paling penting bagi pemangku kepentingan — dan apa yang dikorbankan untuk itu?"* Keputusan
+yang menaikkan satu kualitas hampir selalu menurunkan yang lain; tugas tinjauan adalah **membuat trade-off
+itu terlihat**, bukan menyembunyikannya.
+
+## Checklist, secara ringkas
+
+1. **Sepakati quality attribute yang diprioritaskan** (mis. performa, skalabilitas, keamanan,
+   ketersediaan) — pakai kosakata bersama seperti ISO/IEC 25010.
+2. **Bangun utility tree**: pecah tiap atribut menjadi skenario konkret yang dapat diuji, lalu bobotkan
+   berdasarkan *kepentingan* dan *kesulitan*.
+3. **Sajikan pendekatan arsitektur** yang dipakai untuk memenuhi skenario tersebut.
+4. **Analisis tiap skenario** dan tandai tiga hal: *risiko*, *titik sensitivitas* (keputusan yang sangat
+   memengaruhi satu atribut), dan *titik trade-off* (keputusan yang mendorong beberapa atribut ke arah
+   berlawanan).
+5. **Kelompokkan risiko menjadi tema** (mis. "semua risiko konsistensi data bersumber dari satu basis data
+   bersama").
+6. **Rangkum**: bukan skor lulus/gagal, tapi daftar risiko plus pemahaman bersama untuk ditindaklanjuti.
+
+## Menyelam lebih dalam
+
+:::expert
+Kekuatan ATAM adalah **menemukan risiko lebih awal**, saat mengubah arsitektur masih murah. Titik
+sensitivitas layak mendapat *fitness function* agar tetap terlindungi seiring sistem berevolusi. Waspadai
+**non-risiko** yang menyamar sebagai keputusan — dan ingat bahwa tinjauan yang baik menghasilkan
+*pertanyaan yang lebih tajam*, bukan kepastian palsu. Untuk sistem kecil, versi ringan (Lightweight ATAM)
+sudah cukup.
+:::
+
+## Coba di Advisor
+
+**Advisor** menurunkan prioritas quality attribute dari faktor proyekmu (mirip utility tree), lalu
+menampilkan **radar trade-off**, **kartu sensitivitas**, dan **peringatan anti-pattern** — bahan mentah
+yang berguna untuk sesi tinjauan gaya ATAM.

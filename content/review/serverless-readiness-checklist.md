@@ -9,7 +9,7 @@ summary_tldr_en: "Serverless shines for spiky, event-driven workloads and teams 
 evidence_strength: moderate
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1]
   options: [serverless]
@@ -53,3 +53,38 @@ with a more stable core in other services.
 
 The *scale*, *realtime*, and *budget* factors shift where **Serverless** lands in D1 — compare it
 with monolith/microservices on the Advisor's radar.
+
+<!-- lang:id -->
+
+## Kapan serverless masuk akal
+
+Serverless bukan "microservices yang lebih kecil" — ia model eksekusi yang berbeda dengan trade-off-nya
+sendiri.
+
+:::guided
+**Cocok untuk:** beban yang berfluktuasi tajam atau tak terduga, perekat event-driven (mis. memproses
+gambar saat diunggah), dan tim kecil yang ingin fokus pada kode, bukan server.
+
+**Kurang cocok untuk:** beban kerja yang berjalan-lama, kritis-latensi, atau sangat stateful.
+:::
+
+## Checklist kesiapan
+
+- [ ] Beban kerjanya **berlonjak / event-driven** (scale-to-zero benar-benar menguntungkan).
+- [ ] Fungsinya **pendek & sestateless mungkin**; state hidup di layanan terkelola.
+- [ ] **Cold start** dapat ditoleransi pada jalur sensitif-latensi (atau dimitigasi).
+- [ ] Ada strategi untuk **pengujian lokal & observabilitas** (distributed tracing).
+- [ ] **Vendor lock-in** dipahami dan dapat diterima; batasan eksekusi diperiksa.
+- [ ] **Model biaya** diproyeksikan pada volume tinggi berkelanjutan (bisa berbalik jadi lebih mahal).
+
+:::expert
+**Lebih dalam.** *Berkeley View* membingkai serverless sebagai pemrograman cloud yang disederhanakan
+dengan masalah terbuka: state, latensi, dan portabilitas. Castro dkk. (CACM) memberi tinjauan yang
+berimbang; Baldini dkk. memetakan tren & isu terbuka. Pola umumnya: gunakan FaaS untuk tepian yang
+berlonjak dan event-driven, dengan inti yang lebih stabil di layanan lain.
+:::
+
+## Coba di Advisor
+
+Faktor *scale*, *realtime*, dan *budget* menggeser posisi **Serverless** di D1 — bandingkan dengan
+monolith/microservices pada radar Advisor.

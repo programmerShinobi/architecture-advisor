@@ -9,7 +9,7 @@ summary_tldr_en: "An ADR (Architecture Decision Record) captures an important de
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1, D2, D3, D4, D5]
   options: []
@@ -60,3 +60,43 @@ repo**, close to the code, so they are reviewed through pull requests.
 After running the **Advisor**, export the result as an **ADR (MADR)** from the toolbar — complete
 with your factors, quality priorities, and the five-dimension recommendation as the context of your
 decision.
+
+<!-- lang:id -->
+
+## Untuk siapa halaman ini
+
+Untuk **pembaca yang baru mengenal ADR** maupun **arsitek** yang ingin menstandarkan cara timnya mencatat
+keputusan. Advisor sendiri mengekspor rekomendasinya sebagai **ADR berformat MADR**.
+
+## Apa itu ADR
+
+**Architecture Decision Record** adalah catatan singkat tentang satu keputusan arsitektur: *apa konteksnya,
+opsi apa yang dipertimbangkan, apa yang diputuskan, dan apa konsekuensinya.* Nilainya bukan dokumen tebal —
+melainkan **jejak penalaran**, agar tim di masa depan tahu *mengapa* sesuatu dipilih, bukan sekadar *apa*
+yang dipilih.
+
+## Empat format, secara ringkas
+
+- **Nygard (2011)** — format asli yang sangat ringan: *Judul, Status, Konteks, Keputusan, Konsekuensi*.
+  Bagus untuk memulai; nyaris tanpa hambatan.
+- **MADR** — *Markdown Architectural Decision Records*. Menambahkan **daftar opsi yang dipertimbangkan**
+  secara eksplisit dengan pro/kontra, sehingga trade-off-nya tercatat. Ini format yang diekspor Advisor.
+- **Y-statement** — satu kalimat terstruktur: *"Dalam konteks X, menghadapi Y, kami memutuskan Z, untuk
+  mencapai A, menerima konsekuensi B."* Sangat ringkas; bagus untuk keputusan kecil.
+- **arc42 (Bagian 9)** — bukan format ADR mandiri, tapi tempat menyimpan koleksi ADR-mu di dalam template
+  dokumentasi arsitektur yang lebih besar.
+
+## Menyelam lebih dalam
+
+:::expert
+Pilih **format teringan yang tetap mencatat konsekuensi**. Kegagalan umum bukanlah memilih format yang
+salah — melainkan **tidak mencatat sama sekali**, atau mencatat keputusan tanpa *rasional* dan *opsi yang
+ditolak*. ADR bersifat **tak-berubah**: saat keputusan berubah, tulis ADR baru yang *menggantikan* (bukan
+menyunting) yang lama — statusnya menjadi *superseded*. Simpan ADR **di dalam repo**, dekat dengan kode,
+agar ditinjau lewat pull request.
+:::
+
+## Coba di Advisor
+
+Setelah menjalankan **Advisor**, ekspor hasilnya sebagai **ADR (MADR)** dari toolbar — lengkap dengan
+faktormu, prioritas kualitas, dan rekomendasi lima-dimensi sebagai konteks keputusanmu.

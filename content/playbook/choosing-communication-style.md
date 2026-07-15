@@ -9,7 +9,7 @@ summary_tldr_en: "Synchronous is simple but ties the caller to the callee's fate
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D2]
   options: [synchronous, async-messaging, event-driven, streaming]
@@ -53,3 +53,38 @@ foundations. Design for **eventual consistency** deliberately, not as a surprise
 
 In the **Advisor**, factors such as *real-time* and *async* shift the **D2** recommendation — check
 the trade-off radar to compare communication styles for your scenario.
+
+<!-- lang:id -->
+
+## Pertanyaan intinya
+
+Apakah pemanggil **harus menunggu** jawaban sekarang juga, atau cukup **memberi tahu** lalu lanjut?
+
+:::guided
+- **Sinkron (request–response):** seperti menelepon seseorang dan menunggu di saluran. Sederhana,
+  tapi jika orang yang kamu telepon lambat atau tak terjangkau, kamu ikut tertahan.
+- **Asinkron (messaging):** seperti mengirim pesan teks — penerima membalas saat siap. Lebih tahan
+  banting, tapi alurnya lebih sulit dilacak.
+- **Event-driven:** kamu mengumumkan "ini telah terjadi", dan siapa pun yang peduli bereaksi. Sangat
+  longgar koplingnya dan mudah diperluas.
+:::
+
+## Kapan memakai yang mana
+
+- Kamu butuh jawaban seketika untuk melanjutkan → **sinkron**.
+- Menyangga lonjakan beban, kerja latar, integrasi lintas-sistem → **async messaging**.
+- Banyak konsumer bereaksi terhadap fakta yang sama, mudah diperluas → **event-driven**.
+- Aliran data kontinu dan real-time (log, telemetri) → **streaming**.
+
+:::expert
+**Lebih dalam.** Kopling sinkron bersifat *temporal*: latensi dan kegagalan menumpuk di sepanjang
+rantai panggilan — tambahkan timeout, retry idempoten, dan circuit breaker. Gaya asinkron memaksamu
+memikirkan semantik pengiriman (at-least-once), idempotensi, dan pengurutan; *Enterprise Integration
+Patterns* adalah katalog kanoniknya, sementara Kleppmann menyediakan fondasi konsistensi/pengurutan.
+Rancang untuk **konsistensi eventual** secara sengaja, bukan sebagai kejutan.
+:::
+
+## Coba di Advisor
+
+Di **Advisor**, faktor seperti *real-time* dan *async* menggeser rekomendasi **D2** — periksa radar
+trade-off untuk membandingkan gaya komunikasi bagi skenariomu.

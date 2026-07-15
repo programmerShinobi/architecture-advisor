@@ -9,7 +9,7 @@ summary_tldr_en: "Software consumes electricity, and electricity has a carbon fo
 evidence_strength: moderate
 last_reviewed: 2026-07-05
 review_due: 2027-07-05
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1]
   options: [serverless, monolith, microservices]
@@ -61,3 +61,45 @@ workloads.
 
 The *scale* and *budget* factors shift D1 between a dense monolith, microservices, and serverless in
 the **Advisor** — treat utilization as the "green" lens when reading the cost trade-offs.
+
+<!-- lang:id -->
+
+## Mengapa arsitek perlu peduli
+
+Server yang menganggur pun tetap menyedot listrik. Keputusan arsitektur — berapa banyak layanan, kapan
+berjalan, di mana — menentukan berapa banyak energi terpakai per unit kerja.
+
+:::guided
+**Sebuah analogi:** lampu di rumah. Menghemat energi bukan berarti duduk dalam gelap; artinya mematikan
+lampu di ruangan kosong. *Scale-to-zero* = lampu sensor gerak untuk perangkat lunakmu.
+:::
+
+## Tuas arsitektur yang terbukti
+
+- **Utilisasi > jumlah mesin.** Banyak layanan kecil pada utilisasi 5% lebih boros daripada satu layanan
+  pada 60%. Monolith yang terkemas rapat bisa lebih "hijau" daripada microservices yang jarang dipakai.
+- **Scale-to-zero** untuk beban kerja langka/berlonjak (serverless) — tak ada kerja, tak ada watt.
+- **Penyesuaian ukuran & memilih region/jam** dengan listrik yang lebih bersih (penjadwalan sadar-karbon
+  untuk kerja batch yang bisa digeser).
+- **Efisiensi kode & data**: makin sedikit byte yang dipindah dan disimpan = makin sedikit energi.
+
+## Ukur (jangan menebak)
+
+**SCI = ((E × I) + M) / R** — energi (E) × intensitas karbon listrik (I) + emisi *terkandung* perangkat
+keras (M), dibagi unit fungsional (R, mis. per permintaan). Kini menjadi standar **ISO/IEC 21031:2024** —
+sehingga target "hijau" bisa menjadi *fitness function*.
+
+:::expert
+**Lebih dalam.** SCI adalah *laju*, bukan total — ia menghargai desain yang efisien per unit kerja, bukan
+sekadar membeli offset. Pilihan **D1** paling berpengaruh: serverless menang untuk trafik berlonjak
+(utilisasi ~0 saat menganggur), tapi pada volume tinggi dan mantap, layanan padat yang tepat-ukuran
+biasanya menang. Perhatikan juga *karbon terkandung* (M): memperpanjang umur perangkat keras dan mengurangi
+over-provisioning sering menjadi tuas terbesar. Untuk beban kerja AI, Patterson dkk. menunjukkan pilihan
+region + arsitektur model bisa mengubah emisi sebesar satu orde besaran — pola pikir yang sama berlaku
+untuk beban kerja aplikasi biasa.
+:::
+
+## Coba di Advisor
+
+Faktor *scale* dan *budget* menggeser D1 antara monolith padat, microservices, dan serverless di
+**Advisor** — perlakukan utilisasi sebagai lensa "hijau" saat membaca trade-off biaya.

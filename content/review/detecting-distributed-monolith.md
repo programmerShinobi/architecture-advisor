@@ -9,7 +9,7 @@ summary_tldr_en: "A distributed monolith is microservices' most classic failure:
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1, D3]
   options: [microservices, single-db]
@@ -55,3 +55,39 @@ top anti-pattern.
 
 The **Advisor** flags this combination through its **anti-pattern warnings** (e.g. microservices on
 top of one shared database). Test your scenario and see whether the warning appears.
+
+<!-- lang:id -->
+
+## Mengapa ini penting
+
+Banyak tim memecah monolith mereka menjadi "microservices" lalu bertanya-tanya mengapa segalanya jadi
+lebih sulit, bukan lebih mudah. Penyebabnya biasanya sama: mereka membangun **distributed monolith**.
+
+:::guided
+**Analogi sederhana:** kamu memindahkan dapur, ruang tamu, dan kamar tidur ke gedung terpisah — tapi
+mereka masih berbagi satu saklar lampu dan satu pintu. Kini kamu punya semua kerumitan gedung terpisah,
+tanpa kebebasannya.
+:::
+
+## Checklist tanda peringatan
+
+- [ ] Beberapa layanan **berbagi satu basis data** (atau tabel yang sama).
+- [ ] Satu perubahan rutin **memaksa beberapa layanan di-deploy bersama**.
+- [ ] Alur umum berupa **rantai panggilan sinkron yang panjang** antar-layanan.
+- [ ] Layanan **tak bisa dirilis atau diskalakan secara independen**.
+- [ ] Tim harus berkoordinasi ketat untuk hampir setiap perubahan.
+
+Makin banyak kotak yang tercentang, makin besar kemungkinan kamu punya distributed monolith.
+
+:::expert
+**Lebih dalam.** Akar penyebab tersembunyi yang paling umum adalah **basis data bersama** — ia diam-diam
+mengkopling ulang layanan yang seharusnya independen. Perbaikannya: pisahkan kepemilikan data
+(*database-per-service*), ganti transaksi lintas-layanan dengan **saga** + **transactional outbox**, dan
+kurangi rantai sinkron dengan event asinkron. Taibi & Lenarduzzi memberi definisi *bad-smell* yang dapat
+diuji; secara empiris, distributed monolith konsisten menempati peringkat anti-pattern teratas.
+:::
+
+## Coba di Advisor
+
+**Advisor** menandai kombinasi ini lewat **peringatan anti-pattern**-nya (mis. microservices di atas satu
+basis data bersama). Uji skenariomu dan lihat apakah peringatannya muncul.

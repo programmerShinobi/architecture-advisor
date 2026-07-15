@@ -9,7 +9,7 @@ summary_tldr_en: "Splitting into microservices too early — before the domain a
 evidence_strength: strong
 last_reviewed: 2026-07-02
 review_due: 2027-07-02
-translation_status: en
+translation_status: id+en
 related_advisor:
   dimensions: [D1]
   options: [monolith, modular-monolith, microservices]
@@ -59,3 +59,43 @@ approaches are safer than splitting outright.
 
 The Advisor raises a **"premature microservices"** warning when the team/scale/DevOps factors don't
 support the split — use it as a sanity check before you distribute.
+
+<!-- lang:id -->
+
+## Mengapa ini terus terjadi
+
+Microservices dipandang sebagai "cara profesional membangun". Padahal memecah **sebelum** memahami domain
+dan menyiapkan operasinya justru memperlambat tim.
+
+:::guided
+**Sebuah analogi:** memecah satu tim menjadi banyak departemen kecil sebelum ada yang tahu siapa
+mengerjakan apa — semua orang akhirnya menghabiskan waktu di rapat koordinasi alih-alih bekerja.
+:::
+
+## Checklist: tanda kamu memecah terlalu dini
+
+- [ ] **Batas layanan terus berubah** (domainnya belum stabil).
+- [ ] Perubahan kecil mengharuskan **menyentuh banyak layanan** sekaligus.
+- [ ] **Koordinasi lintas-tim** yang berat untuk hampir setiap fitur.
+- [ ] **"Nano-service"** — layanan yang begitu halus sampai overhead-nya melebihi nilainya.
+- [ ] Operasi (CI/CD, observabilitas, tracing) **belum matang**.
+- [ ] Muncul **basis data bersama** (gejala distributed monolith).
+
+## Jalur yang lebih aman
+
+1. **Monolith / modular monolith** dulu; tegakkan batas modul di CI.
+2. Temukan *bounded context* yang stabil.
+3. **Ekstrak** hanya bagian dengan kebutuhan terbukti untuk penskalaan/deploy/tim independen
+   (Strangler Fig).
+
+:::expert
+**Lebih dalam.** Fowler ("MonolithFirst") dan Newman menyarankan menunda distribusi sampai batasnya
+terbukti; Taibi & Lenarduzzi mendefinisikan *bad smell* yang dapat diuji (termasuk distributed monolith
+dan nano-service). Studi klasifikasi refaktor (Fritzsch dkk.) menegaskan pendekatan bertahap lebih aman
+daripada memecah langsung.
+:::
+
+## Coba di Advisor
+
+Advisor memunculkan peringatan **"microservices prematur"** saat faktor tim/skala/DevOps tak mendukung
+pemecahan — pakai sebagai pemeriksaan kewarasan sebelum kamu mendistribusikan.
