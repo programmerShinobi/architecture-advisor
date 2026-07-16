@@ -15,7 +15,9 @@ async function english(page: Page) {
 test('the four-step flow loads and the recommendation recomputes on a preset', async ({ page }) => {
   await english(page);
 
-  await expect(page.getByText('Architecture Advisor')).toBeVisible();
+  // Two wordmarks exist in the DOM (phone brand left, desktop brand right); the desktop one
+  // renders last and is the visible one at this viewport.
+  await expect(page.getByText('Architecture Advisor').last()).toBeVisible();
   const verdict = page.getByText(VERDICT);
   await expect(verdict).toBeVisible();
   const before = (await verdict.textContent())?.trim();

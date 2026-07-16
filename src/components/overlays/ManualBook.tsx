@@ -84,16 +84,20 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           {/* 1. Overview */}
           {h(L('1 · What this tool is', '1 · Apa itu alat ini'))}
           {p(
-            'Architecture Advisor turns a few questions about your project into a recommended software architecture across five independent dimensions — and shows the full reasoning. It is decision support, not an oracle: every weight is a defensible default you can edit, and every score is traceable.',
-            'Architecture Advisor mengubah beberapa pertanyaan tentang proyek Anda menjadi rekomendasi arsitektur perangkat lunak pada lima dimensi independen — dan menunjukkan seluruh penalarannya. Ini alat bantu keputusan, bukan ramalan: tiap bobot adalah default yang bisa Anda ubah, dan tiap skor dapat ditelusuri.',
+            'Architecture Advisor turns a few questions about your project into a recommended software architecture across five independent dimensions — and shows the full reasoning. It is decision support, not an oracle: every weight is a defensible default you can edit, and every score is traceable. Everything runs 100% in your browser — free, no account, no server, installable, and it keeps working offline.',
+            'Architecture Advisor mengubah beberapa pertanyaan tentang proyek Anda menjadi rekomendasi arsitektur perangkat lunak pada lima dimensi independen — dan menunjukkan seluruh penalarannya. Ini alat bantu keputusan, bukan ramalan: tiap bobot adalah default yang bisa Anda ubah, dan tiap skor dapat ditelusuri. Semuanya berjalan 100% di browser Anda — gratis, tanpa akun, tanpa server, dapat dipasang, dan tetap bekerja offline.',
+          )}
+          {p(
+            'The app has three areas: Home (the landing you saw first), the Advisor (the analysis itself), and Insights (a bilingual learning library over the same 21 architectures — catalog, playbooks, reviews, reference, learning paths, quizzes, and a lab). Section 7 maps every feature.',
+            'Aplikasi punya tiga area: Beranda (halaman depan), Advisor (analisisnya sendiri), dan Wawasan (pustaka belajar dwibahasa atas 21 arsitektur yang sama — katalog, playbook, review, referensi, jalur belajar, kuis, dan lab). Bagian 7 memetakan semua fiturnya.',
           )}
           <span style={code}>{L('PROJECT FACTORS → QUALITY-ATTRIBUTE PRIORITIES → ARCHITECTURE FIT → ANALYSIS', 'FAKTOR PROYEK → PRIORITAS ATRIBUT KUALITAS → KECOCOKAN ARSITEKTUR → ANALISIS')}</span>
 
           {/* 2. The four steps */}
           {h(L('2 · The four steps', '2 · Empat langkah'))}
           {p(
-            '(1) Describe your project with the factors. (2) See the quality-attribute priorities the tool derives. (3) Get the recommendation across all five dimensions, with the trade-off radar and the reasoning. (4) Save or share — export an ADR, a full report, CSV/JSON, or a link.',
-            '(1) Jelaskan proyek Anda lewat faktor. (2) Lihat prioritas atribut kualitas yang diturunkan alat. (3) Dapatkan rekomendasi di kelima dimensi, dengan radar trade-off dan alasannya. (4) Simpan atau bagikan — ekspor ADR, laporan lengkap, CSV/JSON, atau tautan.',
+            '(1) Describe your project with the 14 factors — start from one of the 10 scenario presets if one is close, and use the real-world example shown under each answer. (2) See the quality-attribute priorities the tool derives. (3) Get the recommendation across all five dimensions, with the trade-off radar and the reasoning. (4) Save or share — export an ADR, a full report, CSV/JSON, or a link that reproduces your exact scenario.',
+            '(1) Jelaskan proyek Anda lewat 14 faktor — mulai dari salah satu dari 10 preset skenario bila ada yang mirip, dan manfaatkan contoh nyata di bawah tiap jawaban. (2) Lihat prioritas atribut kualitas yang diturunkan alat. (3) Dapatkan rekomendasi di kelima dimensi, dengan radar trade-off dan alasannya. (4) Simpan atau bagikan — ekspor ADR, laporan lengkap, CSV/JSON, atau tautan yang mereproduksi skenario Anda persis.',
           )}
 
           {/* 3. THE CALCULATION */}

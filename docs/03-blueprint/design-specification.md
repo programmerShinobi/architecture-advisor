@@ -279,7 +279,7 @@ utilities via `tailwind.config.js`); view code references these instead of hardc
 | **Type** | `--aa-fs-2xs..2xl` = 11/12/12.5/13.5/15 px + fluid lg/xl/2xl via `clamp()`; `--aa-lh` 1.6 |
 | **Elevation** | `--aa-shadow-sm/md/lg` over a theme-aware `--aa-shadow-color` |
 | **Touch & focus** | `--aa-touch` 44 px (coarse pointers); `--aa-focus-ring` 2 px info, global `:focus-visible` |
-| **Breakpoints** | canonical (cannot be `var()` in `@media`): **phone ≤ 640 px · tablet 641–1024 px · laptop ≥ 1025 px** |
+| **Breakpoints** | canonical (cannot be `var()` in `@media`): **phone ≤ 640 px · tablet 641–1024 px · laptop ≥ 1025 px**. **Navigation chrome switches at ≤ 1024 px** (Fase 2b): phones AND tablets share the compact mobile chrome (bottom tab bar, action bar, settings sheet, compact top bar — brand left + Guide) so the app bar never wraps; content-density rules (`.f-div`, overlay padding, grid columns) keep the 640 px phone tier. Historical `-phone` class names mean "compact tier". |
 
 Base classes: `.aa-page` / `.aa-frame` / `.aa-surface` / `.aa-panel` / `.aa-card` / `.aa-wrap` /
 `.aa-touch`. New classes are namespaced `aa-`; no `!important`.
