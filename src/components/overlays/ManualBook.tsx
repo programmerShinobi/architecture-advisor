@@ -267,11 +267,41 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
             'Radar menumpuk opsi pada seluruh 12 atribut agar trade-off terlihat. Pemeriksaan anti-pattern menandai kombinasi yang dikenal buruk (mis. microservices pada satu database bersama — distributed monolith). Kartu sensitivitas menunjukkan seberapa rapuh pilihan; jalur migrasi memberi rute bertahap yang aman (Strangler Fig) bila Anda sudah punya sistem.',
           )}
 
-          {/* 7. Modes & outputs */}
-          {h(L('7 · Modes, presets, sharing', '7 · Mode, preset, berbagi'))}
+          {/* 7. Feature map — everything in the app (Fase 2: the Guide covers ALL features) */}
+          {h(L('7 · Everything in the app — the feature map', '7 · Semua yang ada di aplikasi — peta fitur'))}
+
+          <strong style={{ fontSize: '13px' }}>{L('Home', 'Beranda')}</strong>
           {p(
-            'Guided mode uses plain language; Expert mode shows the technical names, editable weights, the data grid, and CSV/JSON. Presets fill a calibrated scenario in one click. The full state lives in the URL hash, so a shared link reproduces it exactly; you can also import/export it as JSON. Press ⌘K for the command palette.',
-            'Mode Terpandu memakai bahasa awam; mode Ahli menampilkan nama teknis, bobot yang dapat diedit, tabel data, dan CSV/JSON. Preset mengisi skenario terkalibrasi dalam satu klik. Seluruh state ada di URL hash, jadi tautan yang dibagikan mereproduksinya persis; Anda juga bisa impor/ekspor sebagai JSON. Tekan ⌘K untuk command palette.',
+            'The landing page introduces the idea, shows the five-dimension radar motif, and deep-links into featured architectures. "Start free analysis" jumps straight into the Advisor.',
+            'Halaman depan memperkenalkan idenya, menampilkan motif radar lima dimensi, dan menaut langsung ke arsitektur unggulan. "Mulai analisis gratis" langsung membuka Advisor.',
+          )}
+
+          <strong style={{ fontSize: '13px' }}>{L('Advisor — guided or expert', 'Advisor — terpandu atau ahli')}</strong>
+          {p(
+            'Guided mode asks plain-language questions — every factor now shows a real-world example for the level you picked. Expert mode adds technical names, editable ISO/IEC 25010 weights (lock any attribute), per-option overrides, the data grid, and CSV/JSON export. Ten scenario presets fill all 14 factors in one click: five calibrated (machine-verified against the model’s outcome targets) and five helper scenarios (B2B SaaS, consumer mobile, data platform, legacy modernization, real-time collaboration).',
+            'Mode Terpandu bertanya dengan bahasa awam — tiap faktor kini menampilkan contoh nyata untuk level yang Anda pilih. Mode Ahli menambah nama teknis, bobot ISO/IEC 25010 yang dapat diedit (kunci atribut mana pun), override per opsi, tabel data, dan ekspor CSV/JSON. Sepuluh preset skenario mengisi 14 faktor dalam satu klik: lima terkalibrasi (terverifikasi mesin terhadap target hasil model) dan lima skenario bantuan (SaaS B2B, mobile konsumen, platform data, modernisasi legacy, kolaborasi real-time).',
+          )}
+          {p(
+            'The analysis section adds the trade-off radar, sensitivity ("what single change flips this pick?"), pin-A/B scenario compare, anti-pattern warnings, migration paths, a risk register, fitness functions, cost/ops indicators, and a C4 sketch.',
+            'Bagian analisis menambah radar trade-off, sensitivitas ("perubahan tunggal apa yang membalik pilihan?"), pembanding skenario pin-A/B, peringatan anti-pattern, jalur migrasi, daftar risiko, fitness function, indikator biaya/operasional, dan sketsa C4.',
+          )}
+
+          <strong style={{ fontSize: '13px' }}>{L('Insights — seven ways into the same knowledge', 'Insights — tujuh pintu ke pengetahuan yang sama')}</strong>
+          {p(
+            'Catalog (discover each of the 21 architectures), Playbook (step-by-step implementation), Review (structured evaluation with a verdict), Library (reference: concepts & terminology + evergreen articles), Roadmap (learning paths), Academy (quizzes with explanations), and Lab (experiments that load a prepared scenario into the real engine). Everything is bilingual and cross-linked.',
+            'Katalog (kenali 21 arsitektur), Playbook (implementasi langkah demi langkah), Review (evaluasi terstruktur dengan verdict), Pustaka (referensi: konsep & terminologi + artikel evergreen), Peta Belajar (jalur belajar), Akademi (kuis dengan penjelasan), dan Lab (eksperimen yang memuat skenario siap pakai ke mesin sungguhan). Semuanya dwibahasa dan saling bertaut.',
+          )}
+
+          <strong style={{ fontSize: '13px' }}>{L('Save, export & share', 'Simpan, ekspor & bagikan')}</strong>
+          {p(
+            'Your scenario saves locally as you type. Export an ADR (MADR markdown), a print-ready report, or CSV/JSON (expert); the full state also lives in the share link, so a URL reproduces your exact scenario on any device. Import a saved JSON to continue where you left off.',
+            'Skenario Anda tersimpan lokal saat mengetik. Ekspor ADR (markdown MADR), laporan siap cetak, atau CSV/JSON (ahli); seluruh state juga ada di tautan berbagi, sehingga sebuah URL mereproduksi skenario Anda persis di perangkat mana pun. Impor JSON tersimpan untuk melanjutkan.',
+          )}
+
+          <strong style={{ fontSize: '13px' }}>{L('Chrome: palette, language, themes, mobile & offline', 'Antarmuka: palette, bahasa, tema, mobile & offline')}</strong>
+          {p(
+            'Press ⌘K for the command palette (every action, searchable) and ? for keyboard shortcuts. The header switches Guided/Expert, EN/ID (the whole app is bilingual to the deepest level), and dark/light themes. On phones, a bottom tab bar and action bar take over. The app installs as a PWA and keeps working offline.',
+            'Tekan ⌘K untuk command palette (semua aksi, dapat dicari) dan ? untuk pintasan keyboard. Header mengganti Terpandu/Ahli, EN/ID (seluruh aplikasi dwibahasa sampai level terdalam), dan tema gelap/terang. Di ponsel, tab bar bawah dan action bar mengambil alih. Aplikasi dapat dipasang sebagai PWA dan tetap bekerja offline.',
           )}
 
           {/* 8. Honesty */}
