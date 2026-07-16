@@ -217,40 +217,44 @@ export default function App() {
             canvas; the header/nav are glass. The extra wrapper div is gone with the frame. */}
         <div>
           <div id="f-app" className={mode} style={{ position: 'relative' }}>
-            <Header
-              mode={mode}
-              onToggleMode={setMode}
-              onCmdK={() => setOverlay('palette')}
-              onHelp={() => setOverlay('shortcuts')}
-              onManual={() => setOverlay('manual')}
-              theme={theme}
-              onToggleTheme={toggleTheme}
-              saveSig={saveSig}
-            />
-
-            <nav aria-label={t('m.primaryNav')} className="screen-only aa-topnav aa-glass">
-              {(
-                [
-                  { v: 'home', key: 'nav.home', Icon: IconHome },
-                  { v: 'advisor', key: 'nav.advisor', Icon: IconCompass },
-                  { v: 'learn', key: 'nav.learn', Icon: IconBulb },
-                ] as const
-              ).map(({ v, key, Icon }) => {
-                const active = mainView === v;
-                return (
-                  <button
-                    key={v}
-                    type="button"
-                    aria-current={active ? 'page' : undefined}
-                    onClick={() => navigate(v)}
-                    className={'aa-topnav-tab' + (active ? ' on' : '')}
-                  >
-                    <Icon size={15} aria-hidden />
-                    {t(key)}
-                  </button>
-                );
-              })}
-            </nav>
+            {/* Modern app bar (Fase 2, DECISIONS.md): ONE sticky glass bar — nav tabs in the
+                top-LEFT corner, controls + brand docked RIGHT. The app title lives on the Home
+                hero and the document title, keeping the bar a single calm row. */}
+            <div className="aa-appbar aa-glass">
+              <nav aria-label={t('m.primaryNav')} className="screen-only aa-topnav">
+                {(
+                  [
+                    { v: 'home', key: 'nav.home', Icon: IconHome },
+                    { v: 'advisor', key: 'nav.advisor', Icon: IconCompass },
+                    { v: 'learn', key: 'nav.learn', Icon: IconBulb },
+                  ] as const
+                ).map(({ v, key, Icon }) => {
+                  const active = mainView === v;
+                  return (
+                    <button
+                      key={v}
+                      type="button"
+                      aria-current={active ? 'page' : undefined}
+                      onClick={() => navigate(v)}
+                      className={'aa-topnav-tab' + (active ? ' on' : '')}
+                    >
+                      <Icon size={15} aria-hidden />
+                      {t(key)}
+                    </button>
+                  );
+                })}
+              </nav>
+              <Header
+                mode={mode}
+                onToggleMode={setMode}
+                onCmdK={() => setOverlay('palette')}
+                onHelp={() => setOverlay('shortcuts')}
+                onManual={() => setOverlay('manual')}
+                theme={theme}
+                onToggleTheme={toggleTheme}
+                saveSig={saveSig}
+              />
+            </div>
 
             {mainView === 'home' ? (
               <div className="aa-panel">

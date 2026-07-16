@@ -69,6 +69,11 @@ export interface Factor {
   gloss: Bilingual;
   /** Exactly three level labels, for indices 0/1/2. */
   levels: [Bilingual, Bilingual, Bilingual];
+  /**
+   * Optional real-world example per level (Fase 2, DECISIONS.md) — shown as a hint under the
+   * selected level in guided mode. Pure UI copy: never a model input.
+   */
+  examples?: [Bilingual, Bilingual, Bilingual];
   help: Bilingual;
   group: Bilingual;
   /** Shown by default (the prototype surfaces 3); the rest sit behind "show other factors". */

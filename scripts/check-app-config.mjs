@@ -129,11 +129,26 @@ function mjsPresets() {
   return out;
 }
 {
+  // Fase 2 (DECISIONS.md): the app may ship extra HELPER presets beyond the five calibrated
+  // ones. The calibrated five must still match verify-model.mjs bit-exactly; helpers are
+  // validated structurally (14 factors, levels 0–2) and must be marked `calibrated: false`.
   const app = appPresets(), mjs = mjsPresets();
+  const calibratedIds = Object.keys(mjs);
+  const flags = {};
+  for (const m of noComments(read('src/config/presets.ts')).matchAll(/id:\s*'([a-z-]+)',[\s\S]*?calibrated:\s*(true|false)/g))
+    flags[m[1]] = m[2] === 'true';
   const diff = [];
-  for (const k of new Set([...Object.keys(app), ...Object.keys(mjs)]))
+  for (const k of calibratedIds)
     for (const f of FACT) if (app[k]?.[f] !== mjs[k]?.[f]) diff.push(`${k}.${f}`);
-  diff.length === 0 && Object.keys(app).length === 5 ? ok('preset levels match verify-model.mjs (5 presets × 14)') : bad(`preset levels differ at: ${diff.join(', ') || 'count'}`);
+  const helpers = Object.keys(app).filter((k) => !calibratedIds.includes(k));
+  const badHelpers = helpers.filter((k) => FACT.some((f) => ![0, 1, 2].includes(app[k][f])));
+  const badFlags = [
+    ...calibratedIds.filter((k) => flags[k] !== true).map((k) => `${k} (expect calibrated: true)`),
+    ...helpers.filter((k) => flags[k] !== false).map((k) => `${k} (expect calibrated: false)`),
+  ];
+  diff.length === 0 && badHelpers.length === 0 && badFlags.length === 0
+    ? ok(`preset levels: 5 calibrated match verify-model.mjs exactly; ${helpers.length} helper preset(s) structurally valid (14 × 0–2, flagged)`)
+    : bad(`presets: calibrated diff at [${diff.join(', ')}]; invalid helpers: [${badHelpers.join(', ')}]; wrong flags: [${badFlags.join(', ')}]`);
 }
 
 // ---- 8. anti-pattern ids + severities vs Model Data Sheet Section 5 ----

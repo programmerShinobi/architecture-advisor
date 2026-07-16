@@ -279,3 +279,41 @@ commitment the code must match (cross-checked by review, gates, and tests).
   All rights reserved.` — plus the same notice in `site.ts` config, the SEO snapshots, the README
   and the print report. **Scope note:** code stays MIT and docs CC BY 4.0 (unchanged LICENSE
   files); the copyright line asserts *identity/attribution* of the work, it does not re-license it.
+
+## Fase 2 — richer scenarios & factor guidance, full-feature Guide, calm futuristic chrome (2026-07)
+
+Documented **before** implementation (docs-first). The frozen model stays frozen — every point
+below is content or presentation, never scoring.
+
+- **Presets grow 5 → 10; the calibrated five stay bit-exact.** The five ADR-0002 presets are
+  pinned by the frozen guards (`verify-model.mjs` fixtures + `cross-check-docs.mjs`, which assert
+  exactly those five against the Model Data Sheet Section 6) and are NOT touched. Five new
+  **helper scenarios** (B2B SaaS · consumer mobile backend · data/analytics platform · legacy
+  modernization · real-time collaboration) live only in `src/config/presets.ts`, marked
+  `calibrated: false` — they are conveniences that pre-fill the 14 factors, not part of the
+  ratified model. `check-app-config.mjs` (not frozen) is extended: the calibrated five must still
+  match `verify-model.mjs` exactly; helper presets are validated structurally (14 factors, levels
+  0–2). A unit test pins each helper's top pick per dimension so any future drift fails the build.
+- **Factors stay 14 — enriched, not extended.** Adding a scoring factor would change the frozen
+  model (influence matrix, MDS, SRS cross-checks — all guard-pinned), so instead every factor
+  gains bilingual **per-level real-world examples** (`examples`) shown as a hint under the
+  selected level in the Advisor: more relevant guidance per question with zero model impact.
+- **The Guide becomes a full-feature manual.** `ManualBook` gains a "what's in the app" feature
+  map covering everything shipped since it was written: Home landing, Advisor guided/expert flow
+  (presets, priorities/overrides, radar, sensitivity, A/B compare, anti-patterns, migration,
+  risks, fitness functions, C4, exports, share links), Insights' seven lenses, command palette &
+  shortcuts, EN/ID, themes, install/offline (PWA), and the copyright/identity line.
+- **Calm gradients (owner feedback: "terlalu mencolok").** Gradient-filled text (`.lp-grad`
+  "evidence", the eyebrow's "Always explains why", and any sibling accent text) switches to a
+  **muted, theme-tuned** two-stop gradient — deeper/desaturated on light, softer pastel on dark —
+  tuned separately per theme so neither glares.
+- **Modern app bar: nav left, controls right.** The centered nav pill moves to the **top-left
+  corner** as futuristic segmented badges; the header controls (save status, Guide, ⌘K, ?, mode,
+  language, theme) dock to the **right** of the same bar with the brand mark; the title/tagline
+  live on the Home hero + document title (the bar stays one row). The guided "New here?" strip
+  becomes a slimmer, calmer inline hint.
+- **Brand mark v5: monochrome compass.** Per owner direction the glyph becomes a minimal modern
+  **compass** (ring + needle + hub) in a single color on a **transparent** background — black in
+  the light theme (elegant), automatically light in dark contexts via `currentColor` (in-app) and
+  an SVG-embedded `prefers-color-scheme` rule (favicon), so it is never invisible. PWA PNG icons
+  keep a solid tile (maskable requirement): black compass on a soft white tile.

@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import {
   IconBuildingBank,
+  IconChartDots,
   IconCircleCheck,
+  IconCloudComputing,
   IconCpu,
+  IconDeviceMobile,
+  IconMessages,
+  IconRefreshAlert,
   IconRocket,
   IconRotate,
   IconShoppingCart,
@@ -19,6 +24,11 @@ const ICONS: Record<string, Icon> = {
   'high-traffic-ecommerce': IconShoppingCart,
   'iot-streaming': IconCpu,
   'internal-tool': IconTool,
+  'saas-b2b': IconCloudComputing,
+  'mobile-consumer': IconDeviceMobile,
+  'data-platform': IconChartDots,
+  'legacy-modernization': IconRefreshAlert,
+  'realtime-collab': IconMessages,
 };
 
 interface Props {

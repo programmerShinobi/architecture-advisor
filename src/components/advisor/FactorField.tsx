@@ -47,6 +47,12 @@ export function FactorField({ factor, level, onChange }: Props) {
           </span>
         ))}
       </div>
+      {/* Real-world example for the SELECTED level (Fase 2) — guided-mode guidance only. */}
+      {factor.examples && (
+        <div className="f-gloss guided-only" style={{ marginTop: '6px' }}>
+          {tr(factor.examples[level] ?? factor.examples[0])}
+        </div>
+      )}
     </div>
   );
 }

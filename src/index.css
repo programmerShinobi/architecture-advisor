@@ -47,6 +47,10 @@
   --aa-accent-2: #38e1ff;
   --aa-accent-3: #ff7ac3;
   --aa-grad-accent: linear-gradient(120deg, #8b7cff 0%, #38e1ff 55%, #7cf5c8 100%);
+  /* Calm TEXT gradient (Fase 2, owner feedback "terlalu mencolok"): a muted two-stop
+     violet→cyan, tuned per theme — decorative fills keep --aa-grad-accent, but gradient
+     TEXT must never glare. */
+  --aa-grad-text: linear-gradient(120deg, #a89ee9 0%, #6fb6d6 100%);
   --aa-ease: cubic-bezier(0.16, 1, 0.3, 1);
   /* Radar comparison series — theme-aware so up to 5 overlaid options stay distinct AND legible;
      vibrant aurora hues on dark, deeper versions on light (html.light below). */
@@ -117,6 +121,7 @@ html.light {
   --color-border-warning: rgba(181, 121, 14, 0.45);
   --color-border-danger: rgba(196, 57, 46, 0.45);
   --aa-shadow-color: rgba(16, 24, 40, 0.1);
+  --aa-grad-text: linear-gradient(120deg, #52439f 0%, #1f6a87 100%);
   --radar-1: #6d4ef0;
   --radar-2: #0e8aa8;
   --radar-3: #c03d86;
@@ -961,11 +966,11 @@ svg {
   }
 }
 .lp-eyebrow b {
-  background: var(--aa-grad-accent);
+  background: var(--aa-grad-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-weight: 700;
+  font-weight: 600;
 }
 .lp-h1 {
   font-family: var(--font-display);
@@ -976,7 +981,7 @@ svg {
   margin: 20px 0 18px;
 }
 .lp-grad {
-  background: var(--aa-grad-accent);
+  background: var(--aa-grad-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1585,19 +1590,34 @@ svg {
   }
 }
 
-/* Top tab nav (desktop) — display via a class (NOT inline) so the phone-hide wins over it.
-   Borderless: a CENTERED glass pill that STAYS FLOATING over content while scrolling
-   (sticky; the glass blur keeps it readable over anything beneath). */
-.aa-topnav {
+/* Modern app bar (Fase 2): ONE sticky glass bar — nav tabs at the top-left corner,
+   controls + brand docked right. Stays floating over content while scrolling. */
+.aa-appbar {
   position: sticky;
-  top: var(--aa-space-3);
+  top: var(--aa-space-2);
   z-index: 40;
   display: flex;
+  align-items: center;
+  /* Wraps on mid widths: nav stays top-left, the controls row drops beneath right-aligned —
+     each cluster remains a single horizontal line, and the page never scrolls sideways. */
+  flex-wrap: wrap;
+  gap: var(--aa-space-2) var(--aa-space-3);
+  padding: var(--aa-space-2) var(--aa-space-3);
+  margin-bottom: var(--aa-space-2);
+  border-radius: var(--border-radius-xl);
+}
+@media (max-width: 640px) {
+  /* Phones: MobileChrome owns navigation; the bar is a compact row (brand + Guide). */
+  .aa-appbar {
+    border-radius: var(--border-radius-lg);
+  }
+}
+/* Top tab nav (desktop) — display via a class (NOT inline) so the phone-hide wins over it. */
+.aa-topnav {
+  display: flex;
   gap: 4px;
-  padding: var(--aa-space-1);
-  margin: var(--aa-space-4) auto var(--aa-space-2);
-  border-radius: 999px;
   width: fit-content;
+  flex: none;
 }
 /* Modern segmented tabs: icon + label, FIXED segment width so the pill's size and position
    are identical in English and Indonesian; the active segment is an accent glass pill with

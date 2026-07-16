@@ -9,6 +9,27 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Added / Changed (Fase 2 — richer scenarios & guidance, full-feature Guide, calm chrome — 2026-07-16)
+
+- **10 scenario presets** — five new helper scenarios (B2B SaaS, consumer mobile, data platform,
+  legacy modernization, real-time collaboration) marked `calibrated: false`; the five ADR-0002
+  presets stay bit-exact and guard-pinned. `check-app-config.mjs` extended accordingly; a new
+  unit test pins each helper's engine outcome per dimension (drift guard).
+- **Per-level factor examples** — every one of the 14 factors shows a bilingual real-world
+  example for the selected level in guided mode (pure UI copy; the frozen model is untouched).
+- **Guide = full feature map** — section 7 now covers Home, the guided/expert Advisor toolset,
+  all seven Insights lenses, save/export/share, the command palette & shortcuts, EN/ID, themes,
+  mobile chrome, and PWA install/offline.
+- **Calm text gradients** — gradient text ("evidence", "Always explains why") moved to a muted,
+  theme-tuned `--aa-grad-text` (deeper on light, pastel on dark) — decorative fills keep the
+  vivid accent, text never glares.
+- **Modern app bar** — one sticky glass bar: nav tabs (futuristic segmented badges) in the
+  top-left corner, compact controls + brand mark docked right; the app title lives on the Home
+  hero. The guided "New here?" strip is now a slim, calm inline hint with a ⌘K key cap.
+- **Brand mark v5 "compass"** — a minimal monochrome compass on a transparent background:
+  black in the light theme, auto-inverting via `currentColor` (app) and `prefers-color-scheme`
+  (favicon); PWA icons regenerated as a black compass on a soft-white tile.
+
 ### Changed (Fase 1 — "Aurora Glass" borderless evolution + identity — 2026-07-16)
 
 - **Component tree grouped by feature area** — `src/components/` reorganised into
