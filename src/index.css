@@ -778,11 +778,18 @@ svg {
 }
 
 /* ---- Phone tier (≤640px — canonical breakpoint, design-spec §6.1) ---- */
-@media (max-width: 640px) {
-  /* Keyboard-centric chrome adds noise on touch phones. */
+/* ---- Compact-nav tier (≤1024px — phones AND tablets, Fase 2b) ----------------
+   Owner feedback: the app bar must NEVER wrap. Below the laptop tier the mobile
+   chrome takes over entirely (bottom tab bar + compact top bar), so tablets get
+   the same elegant single-row experience as phones. The historical class names
+   keep the -phone suffix; they now mean "compact tier". */
+@media (max-width: 1024px) {
+  /* Keyboard-centric chrome adds noise on touch devices. */
   .aa-hide-phone {
     display: none;
   }
+}
+@media (max-width: 640px) {
   /* Tighter vertical rhythm on small screens. */
   .f-div {
     margin: var(--aa-space-4) 0;
@@ -1429,7 +1436,7 @@ svg {
 .aa-tabbar {
   display: none;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .aa-tabbar {
     position: fixed;
     inset-inline: 0;
@@ -1562,7 +1569,7 @@ svg {
 .aa-mobile-actionbar {
   display: none;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .aa-mobile-actionbar {
     position: fixed;
     inset-inline: 0;
@@ -1607,8 +1614,8 @@ svg {
   margin-bottom: var(--aa-space-2);
   border-radius: var(--border-radius-xl);
 }
-@media (max-width: 640px) {
-  /* Phones: MobileChrome owns navigation; the bar is a compact row (brand left + Guide right). */
+@media (max-width: 1024px) {
+  /* Compact tier: MobileChrome owns navigation; the bar is a compact row (brand left + Guide right). */
   .aa-appbar {
     border-radius: var(--border-radius-lg);
   }
@@ -1618,7 +1625,7 @@ svg {
 .aa-brand-phone {
   display: none;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .aa-brand-phone {
     display: inline-flex;
     align-items: center;
@@ -1686,7 +1693,7 @@ svg {
     background: var(--color-background-info);
   }
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .aa-topnav {
     display: none;
   }
@@ -1698,7 +1705,7 @@ svg {
   align-items: center;
   gap: 10px;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .aa-desktop-controls {
     display: none;
   }

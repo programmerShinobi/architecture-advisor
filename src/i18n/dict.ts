@@ -321,10 +321,10 @@ export const DICT = {
   'lp.meta.iso': { en: 'ISO/IEC 2023', id: 'ISO/IEC 2023' },
   'lp.meta.client': { en: 'client-side', id: 'client-side' },
   'lp.radar.aria': { en: 'Trade-off radar across five architecture dimensions', id: 'Radar trade-off lima dimensi arsitektur' },
-  /* Hero radar chips — short, elegant one-liners that tease the product's two hooks:
-     instant explained analysis (Advisor) and the breadth of the library (Insights). */
+  /* Hero radar chips — short, GENERAL one-liners that invite trying the product (owner
+     feedback: no detailed numbers — just the promise). */
   'lp.chip.try': { en: 'Instant · free · explained', id: 'Instan · gratis · dijelaskan' },
-  'lp.chip.explore': { en: '21 architectures · 1 answer', id: '21 arsitektur · 1 jawaban' },
+  'lp.chip.explore': { en: 'Decide with confidence', id: 'Putuskan dengan yakin' },
   'lp.patterns.kicker': { en: 'Pattern Library', id: 'Pustaka Pola' },
   'lp.patterns.h2': { en: 'Know the pattern before you pick it.', id: 'Kenali polanya sebelum memilihnya.' },
   'lp.patterns.sub': {
