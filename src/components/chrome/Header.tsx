@@ -35,34 +35,9 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
   }, [saveSig]);
 
   return (
-    <div
-      className="aa-glass"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 'var(--aa-space-4) var(--aa-panel-pad)',
-        borderRadius: 'var(--border-radius-xl)',
-        flexWrap: 'wrap',
-        gap: '10px',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: '0 1 auto' }}>
-        {/* BrandMark is self-contained (own dark tile + neon glyph) — no chip behind it. */}
-        <div style={{ borderRadius: '9px', boxShadow: '0 0 16px -4px rgba(56, 225, 255, 0.5)', flex: 'none' }}>
-          <BrandMark size={36} />
-        </div>
-        <div style={{ minWidth: 0 }}>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.25, whiteSpace: 'nowrap' }}>{t('app.title')}</div>
-          {/* The tagline shrinks with ellipsis instead of pushing the controls to wrap. */}
-          <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('app.tagline')}</div>
-        </div>
-      </div>
-
-      {/* Controls cluster: ONE horizontal row, right-aligned — never stacks. Compact pieces
-          (icon-only save status, segmented toggles) keep it narrow enough for laptops; on
-          mid widths the whole row drops under the title as a single tidy line. */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap', flex: '0 0 auto', marginLeft: 'auto' }}>
+    // The RIGHT side of the app bar (Fase 2): one horizontal row of compact controls with the
+    // brand mark docked at the far right. The app title lives on the Home hero + document title.
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap', marginLeft: 'auto', minWidth: 0 }}>
         {/* Save status: compact icon-only badge — the full text lives in title/aria-label. */}
         <output
           className="aa-hide-phone aa-badge aa-badge-soft"
@@ -130,7 +105,15 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
           </button>
         </div>
         </div>
-      </div>
+
+      {/* Brand — far right: monochrome compass (transparent, theme-aware) + wordmark.
+          The wordmark hides on phones (MobileChrome carries navigation labels there). */}
+      <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 'none', color: 'var(--color-text-primary)' }}>
+        <BrandMark size={30} />
+        <span className="aa-hide-phone" style={{ fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 600, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
+          {t('app.title')}
+        </span>
+      </span>
     </div>
   );
 }
