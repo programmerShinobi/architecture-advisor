@@ -1201,7 +1201,7 @@ svg {
 }
 .lp-kicker::before {
   content: '◆ ';
-  background: var(--aa-grad-accent);
+  background: var(--aa-grad-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1374,7 +1374,8 @@ svg {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.1em;
-  background: var(--aa-grad-accent);
+  /* Muted, theme-tuned gradient (Fase 2b): the vivid accent glared in light mode. */
+  background: var(--aa-grad-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1607,9 +1608,37 @@ svg {
   border-radius: var(--border-radius-xl);
 }
 @media (max-width: 640px) {
-  /* Phones: MobileChrome owns navigation; the bar is a compact row (brand + Guide). */
+  /* Phones: MobileChrome owns navigation; the bar is a compact row (brand left + Guide right). */
   .aa-appbar {
     border-radius: var(--border-radius-lg);
+  }
+}
+/* Phone-only brand in the app bar (Fase 2b): compass + wordmark, calm-futuristic — the
+   wordmark carries the muted text gradient (never glares in either theme). */
+.aa-brand-phone {
+  display: none;
+}
+@media (max-width: 640px) {
+  .aa-brand-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    min-width: 0;
+    color: var(--color-text-primary);
+  }
+  .aa-brand-word {
+    font-family: var(--font-display);
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: var(--aa-grad-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }
 /* Top tab nav (desktop) — display via a class (NOT inline) so the phone-hide wins over it. */

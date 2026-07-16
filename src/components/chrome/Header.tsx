@@ -106,11 +106,12 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
         </div>
         </div>
 
-      {/* Brand — far right: monochrome compass (transparent, theme-aware) + wordmark.
-          The wordmark hides on phones (MobileChrome carries navigation labels there). */}
-      <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 'none', color: 'var(--color-text-primary)' }}>
+      {/* Brand — far right on DESKTOP: monochrome compass (transparent, theme-aware) + wordmark.
+          Hidden on phones (the app bar shows the phone brand on the LEFT instead). Layout via
+          .aa-wrap (class, NOT an inline display) so .aa-hide-phone can win on the phone tier. */}
+      <span className="aa-wrap aa-hide-phone" style={{ flex: 'none', color: 'var(--color-text-primary)' }}>
         <BrandMark size={30} />
-        <span className="aa-hide-phone" style={{ fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 600, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
+        <span style={{ fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 600, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
           {t('app.title')}
         </span>
       </span>

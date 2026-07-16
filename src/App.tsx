@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { IconBulb, IconCompass, IconHome } from '@tabler/icons-react';
+import { BrandMark } from './components/chrome/BrandMark';
 import { AuroraBackground } from './components/chrome/AuroraBackground';
 import { MobileChrome } from './components/chrome/MobileChrome';
 import { AdvisorMobileBar } from './components/chrome/AdvisorMobileBar';
@@ -221,6 +222,12 @@ export default function App() {
                 top-LEFT corner, controls + brand docked RIGHT. The app title lives on the Home
                 hero and the document title, keeping the bar a single calm row. */}
             <div className="aa-appbar aa-glass">
+              {/* Phone-only brand (Fase 2b): compass + wordmark on the LEFT — desktop keeps the
+                  brand docked right inside Header; MobileChrome still owns phone navigation. */}
+              <span className="aa-brand-phone" title={t('app.title')}>
+                <BrandMark size={24} />
+                <span className="aa-brand-word">{t('app.title')}</span>
+              </span>
               <nav aria-label={t('m.primaryNav')} className="screen-only aa-topnav">
                 {(
                   [
