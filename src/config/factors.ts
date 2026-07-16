@@ -41,6 +41,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Medium (6–20)', id: 'Sedang (6–20)' },
       { en: 'Large / multiple teams', id: 'Besar / banyak tim' },
     ],
+    examples: [
+      { en: 'e.g. a founding duo or one squad owning everything', id: 'mis. duo founder atau satu squad memegang semuanya' },
+      { en: 'e.g. 2–3 squads sharing one codebase', id: 'mis. 2–3 squad berbagi satu codebase' },
+      { en: 'e.g. several squads needing independent releases', id: 'mis. banyak squad yang butuh rilis independen' },
+    ],
     help: {
       en: 'How many people build and maintain the system. Larger or multiple teams make independent releases and clear module boundaries more valuable (deployability, maintainability).',
       id: 'Berapa banyak orang yang membangun dan merawat sistem. Tim besar atau banyak tim membuat rilis mandiri dan batas modul yang jelas semakin penting (kemudahan rilis, kemudahan pemeliharaan).',
@@ -59,6 +64,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Co-located', id: 'Satu lokasi' },
       { en: 'Partly remote', id: 'Sebagian remote' },
       { en: 'Fully distributed / global', id: 'Terdistribusi penuh / global' },
+    ],
+    examples: [
+      { en: 'e.g. everyone in one office, same hours', id: 'mis. semua di satu kantor, jam kerja sama' },
+      { en: 'e.g. hybrid — a core office plus remote engineers', id: 'mis. hibrida — kantor inti plus engineer remote' },
+      { en: 'e.g. contributors across time zones, async-first', id: 'mis. kontributor lintas zona waktu, async-first' },
     ],
     help: {
       en: 'Where the team works from. Distributed teams coordinate less easily, so architectures that let each group ship independently matter more (deployability, maintainability).',
@@ -79,6 +89,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Moderate', id: 'Sedang' },
       { en: 'Very urgent', id: 'Sangat mendesak' },
     ],
+    examples: [
+      { en: 'e.g. an internal replatform with no fixed date', id: 'mis. replatform internal tanpa tanggal pasti' },
+      { en: 'e.g. a quarterly roadmap with a target release', id: 'mis. roadmap kuartalan dengan target rilis' },
+      { en: 'e.g. a demo day, regulation deadline, or funding milestone', id: 'mis. demo day, tenggat regulasi, atau milestone pendanaan' },
+    ],
     help: {
       en: 'How urgently the first version must ship. High pressure favors simple options that deliver fast (time-to-market), at a small cost to long-term structure (maintainability).',
       id: 'Seberapa mendesak versi pertama harus dirilis. Tekanan tinggi mengutamakan opsi sederhana yang cepat jadi (waktu rilis), dengan sedikit mengorbankan struktur jangka panjang (kemudahan pemeliharaan).',
@@ -97,6 +112,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Tight', id: 'Ketat' },
       { en: 'Moderate', id: 'Sedang' },
       { en: 'Flexible', id: 'Longgar' },
+    ],
+    examples: [
+      { en: 'e.g. bootstrap/pre-seed — every server counts', id: 'mis. bootstrap/pra-seed — tiap server berarti' },
+      { en: 'e.g. a funded team with a monthly cloud cap', id: 'mis. tim didanai dengan plafon cloud bulanan' },
+      { en: 'e.g. enterprise budget — spend to move faster', id: 'mis. anggaran enterprise — belanja demi kecepatan' },
     ],
     help: {
       en: 'How much money is available to run the system. A tight budget raises the weight of cost efficiency — this factor is inverted: level 0 (Tight) is the strongest signal.',
@@ -118,6 +138,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Medium-term', id: 'Jangka menengah' },
       { en: 'Long-lived / strategic', id: 'Jangka panjang / strategis' },
     ],
+    examples: [
+      { en: 'e.g. a hackathon build or campaign microsite', id: 'mis. proyek hackathon atau microsite kampanye' },
+      { en: 'e.g. a product for the next 1–3 years', id: 'mis. produk untuk 1–3 tahun ke depan' },
+      { en: 'e.g. a core system you will run for 5–10+ years', id: 'mis. sistem inti yang dijalankan 5–10+ tahun' },
+    ],
     help: {
       en: 'How long the system is expected to live. Long-lived systems repay investment in clean structure, tests, and monitoring (maintainability, testability, observability).',
       id: 'Berapa lama sistem diperkirakan dipakai. Sistem berumur panjang layak diberi investasi struktur yang rapi, pengujian, dan pemantauan (kemudahan pemeliharaan, kemudahan pengujian, observabilitas).',
@@ -138,6 +163,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Medium', id: 'Sedang' },
       { en: 'High / extreme spikes', id: 'Tinggi / lonjakan ekstrem' },
     ],
+    examples: [
+      { en: 'e.g. hundreds of users, predictable load', id: 'mis. ratusan pengguna, beban bisa diprediksi' },
+      { en: 'e.g. tens of thousands of users, business-hour peaks', id: 'mis. puluhan ribu pengguna, puncak jam kerja' },
+      { en: 'e.g. millions of users or flash-sale spikes', id: 'mis. jutaan pengguna atau lonjakan flash sale' },
+    ],
     help: {
       en: 'How much traffic the system must handle. High scale raises scalability, performance, and availability — and cost efficiency, because waste multiplies at scale.',
       id: 'Seberapa besar trafik yang harus ditangani. Skala tinggi menaikkan bobot skalabilitas, performa, dan ketersediaan — juga efisiensi biaya, karena pemborosan ikut berlipat pada skala besar.',
@@ -156,6 +186,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Low', id: 'Rendah' },
       { en: 'Moderate', id: 'Sedang' },
       { en: 'Very large / big data', id: 'Sangat besar / big data' },
+    ],
+    examples: [
+      { en: 'e.g. a few GB — one database handles it', id: 'mis. beberapa GB — satu basis data cukup' },
+      { en: 'e.g. hundreds of GB, growing steadily', id: 'mis. ratusan GB, tumbuh stabil' },
+      { en: 'e.g. TB+ event streams, logs, or telemetry', id: 'mis. TB+ aliran event, log, atau telemetri' },
     ],
     help: {
       en: 'How much data is stored and processed. Very large data raises scalability and performance needs, and storage cost matters more (cost efficiency).',
@@ -176,6 +211,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Some', id: 'Sebagian' },
       { en: 'Heavy / many integrations', id: 'Berat / banyak integrasi' },
     ],
+    examples: [
+      { en: 'e.g. plain request → response CRUD', id: 'mis. CRUD request → response biasa' },
+      { en: 'e.g. emails, exports, or payments in background jobs', id: 'mis. email, ekspor, atau pembayaran lewat job latar' },
+      { en: 'e.g. many integrations reacting to each other\'s events', id: 'mis. banyak integrasi saling bereaksi lewat event' },
+    ],
     help: {
       en: 'How much work happens in the background or reacts to events. Heavy async workloads favor architectures that absorb bursts and keep running when one part is busy (scalability, availability, performance).',
       id: 'Seberapa banyak pekerjaan berjalan di latar belakang atau bereaksi terhadap event. Beban asinkron yang berat cocok dengan arsitektur yang mampu menyerap lonjakan dan tetap berjalan saat satu bagian sibuk (skalabilitas, ketersediaan, performa).',
@@ -195,6 +235,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Somewhat', id: 'Cukup penting' },
       { en: 'Critical (sub-second)', id: 'Kritis (sub-detik)' },
     ],
+    examples: [
+      { en: 'e.g. dashboards can refresh on reload', id: 'mis. dasbor cukup segar saat dimuat ulang' },
+      { en: 'e.g. near-live notifications and status updates', id: 'mis. notifikasi & status mendekati langsung' },
+      { en: 'e.g. chat, trading, tracking, or multiplayer', id: 'mis. chat, trading, pelacakan, atau multiplayer' },
+    ],
     help: {
       en: 'How fast responses must be. Sub-second requirements push performance to the top, with availability close behind.',
       id: 'Seberapa cepat respons harus diberikan. Kebutuhan sub-detik menempatkan performa di prioritas teratas, disusul ketersediaan.',
@@ -213,6 +258,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Simple', id: 'Sederhana' },
       { en: 'Moderate', id: 'Sedang' },
       { en: 'Complex', id: 'Kompleks' },
+    ],
+    examples: [
+      { en: 'e.g. forms, lists, and simple workflows', id: 'mis. formulir, daftar, dan alur sederhana' },
+      { en: 'e.g. some business rules and integrations', id: 'mis. ada aturan bisnis dan integrasi' },
+      { en: 'e.g. pricing engines, logistics, clinical or tax rules', id: 'mis. mesin harga, logistik, aturan klinis atau pajak' },
     ],
     help: {
       en: 'How intricate the business rules are. Complex domains repay structures that isolate and test business logic (maintainability, testability).',
@@ -234,6 +284,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Mixed', id: 'Campuran' },
       { en: 'Strong consistency required', id: 'Wajib konsistensi kuat' },
     ],
+    examples: [
+      { en: 'e.g. feeds and counters may lag a few seconds', id: 'mis. feed dan penghitung boleh telat beberapa detik' },
+      { en: 'e.g. money strict, analytics relaxed', id: 'mis. uang ketat, analitik longgar' },
+      { en: 'e.g. balances, inventory, bookings must never disagree', id: 'mis. saldo, stok, booking tak boleh berbeda' },
+    ],
     help: {
       en: 'How strictly data must agree at all times. A strong-consistency requirement dominates the data-management choice (data consistency).',
       id: 'Seberapa ketat data harus selalu sinkron. Kebutuhan konsistensi kuat sangat menentukan pilihan pengelolaan data (konsistensi data).',
@@ -252,6 +307,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Standard', id: 'Standar' },
       { en: 'Elevated', id: 'Lebih tinggi' },
       { en: 'Strict (regulated data)', id: 'Ketat (data teregulasi)' },
+    ],
+    examples: [
+      { en: 'e.g. no sensitive data beyond user accounts', id: 'mis. tak ada data sensitif selain akun pengguna' },
+      { en: 'e.g. personal data (PII), payments via a provider', id: 'mis. data pribadi (PII), pembayaran via penyedia' },
+      { en: 'e.g. health/financial records, audits, compliance', id: 'mis. rekam kesehatan/keuangan, audit, kepatuhan' },
     ],
     help: {
       en: 'How sensitive the data and rules are. Regulated data (finance, health) raises the security weight sharply.',
@@ -272,6 +332,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Some', id: 'Sebagian' },
       { en: 'Heavy legacy coupling', id: 'Keterikatan legacy berat' },
     ],
+    examples: [
+      { en: 'e.g. brand-new build, no old systems to talk to', id: 'mis. proyek baru, tanpa sistem lama' },
+      { en: 'e.g. a few integrations with an existing ERP/DB', id: 'mis. beberapa integrasi dengan ERP/DB lama' },
+      { en: 'e.g. the old system is still the source of truth', id: 'mis. sistem lama masih jadi sumber kebenaran' },
+    ],
     help: {
       en: 'How much the system must connect to older systems. Heavy legacy coupling raises interoperability and rewards architectures with clean integration seams (maintainability).',
       id: 'Seberapa besar sistem harus terhubung ke sistem lama. Keterikatan legacy yang berat menaikkan bobot interoperabilitas dan menghargai arsitektur dengan titik integrasi yang rapi (kemudahan pemeliharaan).',
@@ -290,6 +355,11 @@ export const FACTORS: Record<FactorId, Factor> = {
       { en: 'Low', id: 'Rendah' },
       { en: 'Medium', id: 'Sedang' },
       { en: 'Mature (CI/CD, monitoring)', id: 'Matang (CI/CD, pemantauan)' },
+    ],
+    examples: [
+      { en: 'e.g. manual deploys, little monitoring', id: 'mis. deploy manual, monitoring minim' },
+      { en: 'e.g. CI + basic pipelines, some on-call', id: 'mis. CI + pipeline dasar, ada on-call' },
+      { en: 'e.g. automated deploys, observability, SRE practice', id: 'mis. deploy otomatis, observability, praktik SRE' },
     ],
     help: {
       en: "How strong the team's automation and operations are. Mature platforms can safely run more independently deployed parts (deployability, observability).",

@@ -149,7 +149,9 @@ describe('preset regression — all 25 targets hold (SRS Section 5.3 / ADR-0002)
     'iot-streaming': [['Microservices', 'Serverless (FaaS)'], ['Streaming'], ['CQRS', 'Event Sourcing'], ['Hexagonal (Ports & Adapters)', 'Clean Architecture'], ['Single-page app (SPA)', 'Server-rendered (SSR/SSG)']],
     'internal-tool': [['Modular Monolith'], ['Synchronous (request/response)'], ['Single shared database'], ['Layered'], ['Single-page app (SPA)']],
   };
-  for (const preset of PRESETS) {
+  // Only the CALIBRATED five carry SRS Section 5.3 targets; helper presets (Fase 2) are
+  // outcome-pinned separately in src/config/presets.test.ts.
+  for (const preset of PRESETS.filter((p) => p.calibrated)) {
     it(`${preset.id} hits its target in every dimension`, () => {
       DIMENSION_ORDER.forEach((dim: DimensionId, i) => {
         const top = rank(preset.levels, dim)[0].name;
