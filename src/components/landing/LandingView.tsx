@@ -315,6 +315,8 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
             <h2>{t('lp.how.h2')}</h2>
           </div>
         </div>
+        {/* Grid on desktop; becomes a swipe slider (no arrows) on phones & tablets —
+            Fase 2d rev.3, owner request. */}
         <div className="lp-steps">
           {(['s1', 's2', 's3'] as const).map((s) => (
             <div key={s} className="lp-step aa-reveal">

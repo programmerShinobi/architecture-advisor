@@ -296,16 +296,21 @@ export default function App() {
 
         <div className="f-div" />
 
-        {/* Step 1 — project factors + derived priorities (collapsible card, Fase 2d). */}
+        {/* Step 1 — project factors (its own dropdown section; owner feedback: factors and
+            priorities must be SEPARATE so nobody gets confused). */}
         <StepSection id="aa-sec-1" n="1" titleG="step1.g" titleE="step1.e">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '18px' }}>
-            <FactorInputs levels={levels} onChange={setLevels} />
-            {/* Step 2 anchor: the derived priorities live here; the adjust editor opens RIGHT
-                under the card (owner feedback: it used to land far below the factor column). */}
-            <div id="aa-sec-2" style={{ display: 'grid', gap: '14px', alignContent: 'start', scrollMarginTop: '132px' }}>
-              <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={mode === 'expert' && editWeights} />
-              {mode === 'expert' && editWeights && <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />}
-            </div>
+          <FactorInputs levels={levels} onChange={setLevels} />
+        </StepSection>
+
+        <div className="f-div" />
+
+        {/* Step 2 — derived quality priorities; the adjust editor opens right underneath.
+            Ungated (Fase 2d rev.3, owner): guided users can customise weights too — the
+            plain-language adjuster is newcomer-safe. */}
+        <StepSection id="aa-sec-2" n="2" titleG="step2.g" titleE="step2.e">
+          <div style={{ display: 'grid', gap: '14px' }}>
+            <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={editWeights} />
+            {editWeights && <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />}
           </div>
         </StepSection>
 
@@ -397,29 +402,27 @@ export default function App() {
               }}
             />
 
-            {/* Global footer (Fase 2d: simple & professional) — one calm identity line with the
-                brand glyph; browser guidance (FR-EDGE-4) folded into a hover title. */}
+            {/* Global footer (Fase 2d rev.2 — owner: "rapi & simple"): a tidy two-line centered
+                stack — brand line, then one short legal line. Browser guidance (FR-EDGE-4)
+                lives in the hover title. */}
             <footer
               className="screen-only"
               title={t('footer.browsers')}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-                flexWrap: 'wrap',
+                display: 'grid',
+                justifyItems: 'center',
+                gap: '6px',
                 padding: 'var(--aa-space-7) var(--aa-panel-pad) var(--aa-space-5)',
-                fontSize: 'var(--aa-fs-2xs)',
-                color: 'var(--color-text-tertiary)',
                 textAlign: 'center',
               }}
             >
-              <span style={{ display: 'inline-flex', color: 'var(--color-text-secondary)' }} aria-hidden>
-                <BrandMark size={16} />
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-display)', fontSize: '12.5px', fontWeight: 600, letterSpacing: '-0.01em' }}>
+                <BrandMark size={15} />
+                {t('app.title')}
               </span>
-              <span>{SITE_COPYRIGHT}</span>
-              <span aria-hidden>·</span>
-              <span>{t('footer.rights')}</span>
+              <span style={{ fontSize: 'var(--aa-fs-2xs)', color: 'var(--color-text-tertiary)' }}>
+                {SITE_COPYRIGHT} · {t('footer.rights')}
+              </span>
             </footer>
           </div>
         </div>

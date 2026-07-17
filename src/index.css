@@ -911,12 +911,12 @@ svg {
 }
 
 /* ---- Phone tier (≤640px — canonical breakpoint, design-spec §6.1) ---- */
-/* ---- Compact-nav tier (≤1024px — phones AND tablets, Fase 2b) ----------------
+/* ---- Compact-nav tier (≤1180px — any width where the app bar would wrap, Fase 2d) ---
    Owner feedback: the app bar must NEVER wrap. Below the laptop tier the mobile
    chrome takes over entirely (bottom tab bar + compact top bar), so tablets get
    the same elegant single-row experience as phones. The historical class names
    keep the -phone suffix; they now mean "compact tier". */
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   /* Keyboard-centric chrome adds noise on touch devices. */
   .aa-hide-phone {
     display: none;
@@ -1431,10 +1431,18 @@ svg {
     border-color: var(--color-border-secondary);
   }
 }
-/* Touch devices swipe — the arrows would only cover content. */
-@media (pointer: coarse) {
+/* Arrows show on EVERY device (Fase 2d, owner request) — swipe still works on touch;
+   they just shrink on phones so they never cover content. */
+@media (max-width: 640px) {
   .lp-slider-btn {
-    display: none;
+    width: 32px;
+    height: 32px;
+  }
+  .lp-slider-btn.prev {
+    left: -4px;
+  }
+  .lp-slider-btn.next {
+    right: -4px;
   }
 }
 .lp-card {
@@ -1685,7 +1693,7 @@ svg {
 .learn-art-hero {
   display: grid;
   place-items: center;
-  height: 150px;
+  height: clamp(180px, 26vw, 230px);
   margin: 4px 0 16px;
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--color-border-tertiary);
@@ -1693,8 +1701,8 @@ svg {
   overflow: hidden;
 }
 .learn-art-hero .lp-art {
-  width: min(92%, 420px);
-  height: 88%;
+  width: min(96%, 560px);
+  height: 94%;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1751,6 +1759,25 @@ svg {
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   counter-reset: lp-s;
+}
+/* How-it-works (Fase 2d rev.3): grid on desktop, a swipe slider WITHOUT arrows on
+   phones & tablets. */
+@media (max-width: 1024px) {
+  .lp-steps {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 4px 14px;
+    scrollbar-width: none;
+  }
+  .lp-steps::-webkit-scrollbar {
+    display: none;
+  }
+  .lp-steps .lp-step {
+    flex: 0 0 min(340px, 84%);
+    scroll-snap-align: start;
+  }
 }
 .lp-step {
   position: relative;
@@ -1823,7 +1850,7 @@ svg {
 .aa-tabbar {
   display: none;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .aa-tabbar {
     position: fixed;
     inset-inline: 0;
@@ -1956,7 +1983,7 @@ svg {
 .aa-mobile-actionbar {
   display: none;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .aa-mobile-actionbar {
     position: fixed;
     inset-inline: 0;
@@ -2001,7 +2028,7 @@ svg {
   margin-bottom: var(--aa-space-2);
   border-radius: var(--border-radius-xl);
 }
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   /* Compact tier: MobileChrome owns navigation; the bar is a compact row (brand left + Guide right). */
   .aa-appbar {
     border-radius: var(--border-radius-lg);
@@ -2012,7 +2039,7 @@ svg {
 .aa-brand-phone {
   display: none;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .aa-brand-phone {
     display: inline-flex;
     align-items: center;
@@ -2080,7 +2107,7 @@ svg {
     background: var(--color-background-info);
   }
 }
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .aa-topnav {
     display: none;
   }
@@ -2092,7 +2119,7 @@ svg {
   align-items: center;
   gap: 10px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .aa-desktop-controls {
     display: none;
   }

@@ -56,14 +56,8 @@ export function Toolbar({ run, status, setStatus, mode, onImport }: Props) {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '11px' }}>
-        <span className="f-num">4</span>
-        <span style={{ fontSize: '15px', fontWeight: 500 }}>
-          <span className="guided-only">{t('export.title.g')}</span>
-          <span className="expert-only">{t('step4.e')}</span>
-        </span>
-      </div>
-
+      {/* No internal heading — the StepSection card already shows "4 · Save & share"
+          (owner feedback: the number was doubled). */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '9px' }}>
         <button
           type="button"
