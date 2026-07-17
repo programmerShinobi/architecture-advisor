@@ -305,13 +305,13 @@ export default function App() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '18px' }}>
           <FactorInputs levels={levels} onChange={setLevels} />
-          <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={mode === 'expert' && editWeights} />
-        </div>
-        {mode === 'expert' && editWeights && (
-          <div style={{ marginTop: '14px' }}>
-            <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />
+          {/* The adjust editor opens RIGHT under the priorities card (owner feedback: it used to
+              land far below the tall factor column, so nobody connected it to "Adjust"). */}
+          <div style={{ display: 'grid', gap: '14px', alignContent: 'start' }}>
+            <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={mode === 'expert' && editWeights} />
+            {mode === 'expert' && editWeights && <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />}
           </div>
-        )}
+        </div>
 
         <div className="f-div" />
 

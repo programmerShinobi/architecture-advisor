@@ -218,10 +218,11 @@ export const DICT = {
   'prio.adjustDone': { en: 'Done adjusting', id: 'Selesai menyesuaikan' },
   'mode.guided': { en: 'Guided', id: 'Terpandu' },
   'mode.expert': { en: 'Expert', id: 'Ahli' },
-  'override.heading': { en: 'Expert: QA weight overrides', id: 'Ahli: override bobot QA' },
+  /* Plain-language adjuster copy (Fase 2c): newcomers must read this as "the adjustment". */
+  'override.heading': { en: 'Adjust what matters most', id: 'Atur yang paling penting' },
   'override.intro': {
-    en: 'Set a weight directly to lock it (ATAM stakeholder prioritization). Unlocked weights share the remainder, proportional to the factor-derived values.',
-    id: 'Tetapkan bobot langsung untuk menguncinya (prioritisasi pemangku kepentingan ATAM). Bobot tak terkunci berbagi sisanya, proporsional terhadap nilai turunan faktor.',
+    en: 'Drag a slider (or type a %) to pin how much an attribute matters — pinned values lock, the rest re-balance automatically around them.',
+    id: 'Geser slider (atau ketik %) untuk mematok seberapa penting sebuah atribut — nilai yang dipatok terkunci, sisanya menyeimbang otomatis di sekitarnya.',
   },
   'override.unlock': { en: 'Unlock', id: 'Buka kunci' },
   'override.clear': { en: 'Clear all overrides', id: 'Hapus semua override' },
@@ -350,6 +351,16 @@ export const DICT = {
     en: 'Separate the read and write paths, store history as events. Strong for audit & replay — costly to learn.',
     id: 'Pisahkan jalur baca dan tulis, simpan sejarah sebagai event. Kuat untuk audit & replay — mahal untuk dipelajari.',
   },
+  'lp.blurb.microservices': {
+    en: 'Independently deployable services for many autonomous teams — organisational scale at operational cost.',
+    id: 'Layanan yang dirilis independen untuk banyak tim otonom — skala organisasi dengan biaya operasional.',
+  },
+  'lp.blurb.hexagonal': {
+    en: 'Ports & adapters keep the domain core free of frameworks — testable, with swappable edges.',
+    id: 'Ports & adapters menjaga inti domain bebas framework — mudah diuji, tepiannya bisa ditukar.',
+  },
+  'lp.slider.prev': { en: 'Previous patterns', id: 'Pola sebelumnya' },
+  'lp.slider.next': { en: 'Next patterns', id: 'Pola berikutnya' },
   'lp.how.kicker': { en: 'How it works', id: 'Cara kerja' },
   'lp.how.h2': { en: 'Three steps. Every number is open.', id: 'Tiga langkah. Semua angkanya terbuka.' },
   'lp.how.s1.h': { en: 'Tell us about your project', id: 'Ceritakan proyekmu' },

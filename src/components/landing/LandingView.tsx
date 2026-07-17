@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { IconArrowRight } from '@tabler/icons-react';
+import { IconArrowRight, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
 import type { DictKey } from '../../i18n/dict';
 import { HeroRadar } from './HeroRadar';
@@ -17,28 +17,173 @@ interface Props {
   onOpenArch: (dim: DimensionId, optId: string) => void;
 }
 
-// Four real architectures featured on the landing (names come from the frozen model; the short
-// blurb is a bilingual dict string), matching the prototype's four showcase cards.
+// Real architectures featured on the landing SLIDER (names come from the frozen model; the short
+// blurb is a bilingual dict string). Six uniform slides — snap-scrolled, arrow-navigable.
+type ArtKind = 'spark' | 'nodes' | 'modules' | 'bolt' | 'mesh' | 'hex';
+
 const FEATURED: {
   dim: DimensionId;
   optId: string;
   tag: string;
-  span: 4 | 2;
   blurbKey: DictKey;
-  art?: 'spark' | 'nodes';
+  art: ArtKind;
   popular?: boolean;
 }[] = [
-  { dim: 'D2', optId: 'event-driven', tag: 'SYS-01', span: 4, art: 'spark', popular: true, blurbKey: 'lp.blurb.event-driven' },
-  { dim: 'D1', optId: 'modular-monolith', tag: 'SYS-02', span: 2, blurbKey: 'lp.blurb.modular-monolith' },
-  { dim: 'D1', optId: 'serverless', tag: 'SYS-03', span: 2, blurbKey: 'lp.blurb.serverless' },
-  { dim: 'D3', optId: 'cqrs', tag: 'SYS-04', span: 4, art: 'nodes', blurbKey: 'lp.blurb.cqrs' },
+  { dim: 'D2', optId: 'event-driven', tag: 'SYS-01', art: 'spark', popular: true, blurbKey: 'lp.blurb.event-driven' },
+  { dim: 'D1', optId: 'modular-monolith', tag: 'SYS-02', art: 'modules', blurbKey: 'lp.blurb.modular-monolith' },
+  { dim: 'D1', optId: 'serverless', tag: 'SYS-03', art: 'bolt', blurbKey: 'lp.blurb.serverless' },
+  { dim: 'D3', optId: 'cqrs', tag: 'SYS-04', art: 'nodes', blurbKey: 'lp.blurb.cqrs' },
+  { dim: 'D1', optId: 'microservices', tag: 'SYS-05', art: 'mesh', blurbKey: 'lp.blurb.microservices' },
+  { dim: 'D4', optId: 'hexagonal', tag: 'SYS-06', art: 'hex', blurbKey: 'lp.blurb.hexagonal' },
 ];
 
 const nameOf = (dim: DimensionId, optId: string) => DIMENSIONS[dim].options.find((o) => o.id === optId)?.name;
 
+// Symbolic art per pattern (owner request: every card gets an image that REPRESENTS its title,
+// like the event-driven bars). Calm theme-aware colors — never louder than the copy.
+function CardArt({ kind }: Readonly<{ kind: ArtKind }>) {
+  const S = { stroke: 'var(--color-text-info)', strokeWidth: 1.6, fill: 'none', opacity: 0.75 } as const;
+  const F = { fill: 'var(--color-background-info)', stroke: 'var(--color-text-info)', strokeWidth: 1.4, opacity: 0.8 } as const;
+  if (kind === 'spark') {
+    return (
+      <span className="lp-spark">
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+      </span>
+    );
+  }
+  if (kind === 'nodes') {
+    // CQRS: a write path splitting into read replicas (data flows along the lines).
+    return (
+      <svg className="lp-art lp-art-nodes" viewBox="0 0 300 90" aria-hidden>
+        <line x1="40" y1="45" x2="120" y2="20" {...S} />
+        <line x1="40" y1="45" x2="120" y2="70" {...S} />
+        <line x1="120" y1="20" x2="200" y2="45" {...S} />
+        <line x1="120" y1="70" x2="200" y2="45" {...S} />
+        <line x1="200" y1="45" x2="266" y2="45" {...S} />
+        {[[40, 45], [120, 20], [120, 70], [200, 45], [266, 45]].map(([cx, cy]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="9" {...F} />
+        ))}
+      </svg>
+    );
+  }
+  if (kind === 'modules') {
+    // Modular monolith: one container, firm module boundaries inside (the active module glows).
+    return (
+      <svg className="lp-art lp-art-modules" viewBox="0 0 300 90" aria-hidden>
+        <rect x="70" y="10" width="160" height="70" rx="12" {...S} />
+        {[0, 1, 2].map((c) =>
+          [0, 1].map((r) => (
+            <rect key={`${c}-${r}`} className={c === 1 && r === 0 ? 'hl' : undefined} x={84 + c * 46} y={20 + r * 28} width="38" height="22" rx="6" {...(c === 1 && r === 0 ? F : S)} />
+          )),
+        )}
+      </svg>
+    );
+  }
+  if (kind === 'bolt') {
+    // Serverless: functions firing on demand (staggered flicker).
+    return (
+      <svg className="lp-art lp-art-bolt" viewBox="0 0 300 90" aria-hidden>
+        {[110, 150, 190].map((x, i) => (
+          <polygon key={x} points={`${x},14 ${x - 14},50 ${x - 2},50 ${x - 10},76 ${x + 12},40 ${x},40`} {...F} transform={i === 1 ? '' : 'translate(0 4) scale(0.96)'} />
+        ))}
+      </svg>
+    );
+  }
+  if (kind === 'mesh') {
+    // Microservices: small autonomous services, loosely meshed (nodes breathe).
+    const pts: [number, number][] = [[90, 26], [150, 16], [210, 30], [110, 66], [178, 62], [242, 58]];
+    const links = [[0, 1], [1, 2], [0, 3], [1, 4], [2, 5], [3, 4], [4, 5]];
+    return (
+      <svg className="lp-art lp-art-mesh" viewBox="0 0 300 90" aria-hidden>
+        {links.map(([a, b]) => (
+          <line key={`${a}-${b}`} x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} {...S} opacity={0.45} />
+        ))}
+        {pts.map(([cx, cy], i) => (
+          <circle key={cx} cx={cx} cy={cy} r={i === 1 ? 9 : 7} {...F} />
+        ))}
+      </svg>
+    );
+  }
+  // hex — Hexagonal: ports & adapters around a protected core (the ring slowly turns).
+  return (
+    <svg className="lp-art lp-art-hex" viewBox="0 0 300 90" aria-hidden>
+      <g className="ring">
+        <polygon points={hexPts(150, 45, 36)} {...S} />
+        {[0, 1, 2, 3, 4, 5].map((i) => {
+          const a = (Math.PI / 3) * i - Math.PI / 2;
+          return <circle key={i} cx={150 + 36 * Math.cos(a)} cy={45 + 36 * Math.sin(a)} r="3.4" fill="var(--color-text-info)" opacity="0.55" />;
+        })}
+      </g>
+      <polygon points={hexPts(150, 45, 22)} {...F} />
+      <circle className="core" cx="150" cy="45" r="5" fill="var(--color-text-info)" opacity="0.85" />
+    </svg>
+  );
+}
+
+// Shared pentagon/hexagon point helper.
+const hexPts = (cx: number, cy: number, r: number, sides = 6) =>
+  Array.from({ length: sides }, (_, i) => {
+    const a = ((Math.PI * 2) / sides) * i - Math.PI / 2;
+    return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`;
+  }).join(' ');
+
+// Symbolic art for the three "how it works" steps (owner request: same visual language as the
+// Pattern Library cards) — 1 answer the questions · 2 weights derive · 3 the recommendation.
+function StepArt({ step }: Readonly<{ step: 's1' | 's2' | 's3' }>) {
+  const S = { stroke: 'var(--color-text-info)', strokeWidth: 1.6, fill: 'none', opacity: 0.75 } as const;
+  const F = { fill: 'var(--color-background-info)', stroke: 'var(--color-text-info)', strokeWidth: 1.4, opacity: 0.8 } as const;
+  if (step === 's1') {
+    // A factor question: label + 3-level segmented control (the chosen level glows).
+    return (
+      <svg className="lp-art lp-art-form" viewBox="0 0 300 90" aria-hidden>
+        <rect x="70" y="16" width="92" height="7" rx="3.5" fill="var(--color-text-info)" opacity="0.35" />
+        <rect x="70" y="36" width="160" height="26" rx="8" {...S} />
+        <rect className="hl" x="124" y="40" width="50" height="18" rx="6" {...F} />
+        <rect x="70" y="72" width="60" height="7" rx="3.5" fill="var(--color-text-info)" opacity="0.22" />
+      </svg>
+    );
+  }
+  if (step === 's2') {
+    // Derived priorities: weight bars settling into place.
+    return (
+      <svg className="lp-art lp-art-weights" viewBox="0 0 300 90" aria-hidden>
+        {[[16, 150], [36, 108], [56, 72], [76, 44]].map(([y, w], i) => (
+          <g key={y}>
+            <rect x="70" y={y} width="160" height="10" rx="5" fill="var(--color-text-info)" opacity="0.12" />
+            <rect className={`bar b${i}`} x="70" y={y} width={w} height="10" rx="5" fill="var(--color-text-info)" opacity="0.55" />
+          </g>
+        ))}
+      </svg>
+    );
+  }
+  // s3: the recommendation — a mini radar with one lit pick.
+  return (
+    <svg className="lp-art lp-art-pick" viewBox="0 0 300 90" aria-hidden>
+      <polygon points={hexPts(150, 47, 34, 5)} {...S} />
+      <polygon points={hexPts(150, 47, 20, 5)} {...F} />
+      <circle className="core" cx="150" cy="13" r="5.5" fill="var(--color-text-info)" opacity="0.85" />
+      <line x1="150" y1="47" x2="150" y2="13" {...S} opacity={0.5} />
+    </svg>
+  );
+}
+
 export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Props>) {
   const { t } = useI18n();
   const howRef = useRef<HTMLElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  // Scroll the pattern slider by one card (width + gap); snap handles the final alignment.
+  const slide = (dir: 1 | -1) => {
+    const el = sliderRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>('.lp-card');
+    const step = card ? card.offsetWidth + 16 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
 
   // Reveal-on-scroll for the landing sections (shares the app's `.aa-reveal` utility). Instant under
   // reduced-motion / without IntersectionObserver, so content is never left hidden.
@@ -123,7 +268,15 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
           </button>
         </div>
 
-        <div className="lp-bento">
+        {/* Modern snap slider (Fase 2c): swipe on touch, arrows on fine pointers, edge fades. */}
+        <div className="lp-slider-wrap">
+          <button type="button" className="lp-slider-btn prev" onClick={() => slide(-1)} aria-label={t('lp.slider.prev')}>
+            <IconChevronLeft size={18} aria-hidden />
+          </button>
+          <button type="button" className="lp-slider-btn next" onClick={() => slide(1)} aria-label={t('lp.slider.next')}>
+            <IconChevronRight size={18} aria-hidden />
+          </button>
+          <div className="lp-slider" ref={sliderRef} aria-label={t('lp.patterns.h2')}>
           {FEATURED.map((f) => {
             const name = nameOf(f.dim, f.optId);
             if (!name) return null;
@@ -131,36 +284,12 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
               <button
                 key={`${f.dim}:${f.optId}`}
                 type="button"
-                className={`lp-card aa-reveal lp-c-${f.span}`}
+                className="lp-card aa-reveal"
                 onClick={() => onOpenArch(f.dim, f.optId)}
               >
-                {f.art === 'spark' && (
-                  <span className="lp-card-art" aria-hidden>
-                    <span className="lp-spark">
-                      <i />
-                      <i />
-                      <i />
-                      <i />
-                      <i />
-                    </span>
-                  </span>
-                )}
-                {f.art === 'nodes' && (
-                  <span className="lp-card-art" aria-hidden>
-                    <svg className="lp-nodes" viewBox="0 0 300 90">
-                      <line x1="40" y1="45" x2="120" y2="20" />
-                      <line x1="40" y1="45" x2="120" y2="70" />
-                      <line x1="120" y1="20" x2="200" y2="45" />
-                      <line x1="120" y1="70" x2="200" y2="45" />
-                      <line x1="200" y1="45" x2="266" y2="45" />
-                      <circle cx="40" cy="45" r="9" />
-                      <circle cx="120" cy="20" r="9" />
-                      <circle cx="120" cy="70" r="9" />
-                      <circle cx="200" cy="45" r="9" />
-                      <circle cx="266" cy="45" r="9" />
-                    </svg>
-                  </span>
-                )}
+                <span className="lp-card-art" aria-hidden>
+                  <CardArt kind={f.art} />
+                </span>
                 <span className="lp-tag">
                   {f.tag}
                   {f.popular ? ` · ${t('lp.tag.popular')}` : ''}
@@ -174,6 +303,7 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
               </button>
             );
           })}
+          </div>
         </div>
       </section>
 
@@ -188,6 +318,9 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
         <div className="lp-steps">
           {(['s1', 's2', 's3'] as const).map((s) => (
             <div key={s} className="lp-step aa-reveal">
+              <span className="lp-card-art lp-step-art" aria-hidden>
+                <StepArt step={s} />
+              </span>
               <h3>{t(`lp.how.${s}.h`)}</h3>
               <p>
                 <span className="guided-only">{t(`lp.how.${s}.p`)}</span>

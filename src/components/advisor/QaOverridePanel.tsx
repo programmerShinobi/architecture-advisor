@@ -1,3 +1,4 @@
+import { IconAdjustmentsHorizontal, IconLock, IconWand } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
 import { QUALITY_ATTRIBUTES, QA_ORDER } from '../../config/qualityAttributes';
 import { roundWeights, type Overrides } from '../../lib/scoring';
@@ -11,7 +12,10 @@ interface Props {
 
 // Expert mode: override any QA weight directly (which locks it); unlocked weights share the
 // remainder, proportional to the factor-derived values (ATAM-style stakeholder prioritization).
-export function QaOverridePanel({ weights, overrides, onChange }: Props) {
+// Fase 2c redesign (owner feedback): plain-language header + modern sliders synced with the
+// number inputs, so even newcomers read it as "the adjuster" — and it opens directly under the
+// priorities card. Test contract preserved: spinbutton per QA name, "Unlock", "Clear all overrides".
+export function QaOverridePanel({ weights, overrides, onChange }: Readonly<Props>) {
   const { t, tr } = useI18n();
   const rounded = roundWeights(weights);
 
@@ -28,61 +32,90 @@ export function QaOverridePanel({ weights, overrides, onChange }: Props) {
   const hasLocks = Object.keys(overrides).length > 0;
 
   return (
-    <section aria-labelledby="override-heading" className="rounded-xl border border-line bg-surface p-4">
-      <div className="flex items-baseline justify-between gap-2">
-        <h2 id="override-heading" className="text-base font-semibold">
+    <section aria-labelledby="override-heading" className="aa-card">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+        <h2 id="override-heading" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', fontSize: '14.5px', fontWeight: 600, margin: 0 }}>
+          <IconAdjustmentsHorizontal size={16} style={{ color: 'var(--color-text-info)' }} aria-hidden />
           {t('override.heading')}
         </h2>
         {hasLocks && (
-          <button
-            type="button"
-            onClick={() => onChange({})}
-            className="text-xs font-medium text-brand hover:underline"
-          >
+          <button type="button" onClick={() => onChange({})} className="f-chip" style={{ color: 'var(--color-text-info)', fontSize: '11.5px' }}>
             {t('override.clear')}
           </button>
         )}
       </div>
-      <p className="mt-1 text-sm text-ink-soft">{t('override.intro')}</p>
+      <p style={{ margin: '6px 0 10px', fontSize: '12.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>{t('override.intro')}</p>
 
-      <ul className="mt-3 divide-y divide-line">
+      <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: '4px' }}>
         {QA_ORDER.map((q) => {
           const locked = overrides[q] !== undefined;
           const value = locked ? (overrides[q] as number) : rounded[q];
+          const name = tr(QUALITY_ATTRIBUTES[q].name);
           return (
-            <li key={q} className="flex items-center gap-3 py-2">
-              <span className="min-w-0 flex-1 truncate text-sm">{tr(QUALITY_ATTRIBUTES[q].name)}</span>
-              <div className="flex items-center gap-1">
+            <li
+              key={q}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'minmax(0,1fr) auto auto',
+                alignItems: 'center',
+                gap: '4px 10px',
+                padding: '7px 10px',
+                borderRadius: 'var(--border-radius-md)',
+                background: locked ? 'var(--color-background-info)' : 'transparent',
+              }}
+            >
+              <span style={{ fontSize: '12.5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: locked ? 600 : 400 }}>
+                {name}
+              </span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                 <input
                   type="number"
                   min={0}
                   max={100}
                   value={value}
-                  aria-label={tr(QUALITY_ATTRIBUTES[q].name)}
+                  aria-label={name}
                   onChange={(e) => setOverride(q, e.target.value)}
-                  className="no-spin w-14 rounded-md border px-2 py-1 text-right text-sm tabular-nums outline-none"
+                  className="no-spin"
                   style={{
-                    borderColor: locked ? 'var(--color-text-info)' : 'var(--color-border-secondary)',
-                    background: locked ? 'var(--color-background-info)' : 'var(--color-background-primary)',
+                    width: '46px',
+                    textAlign: 'right',
+                    fontSize: '12.5px',
+                    fontVariantNumeric: 'tabular-nums',
+                    padding: '3px 6px',
+                    borderRadius: 'var(--border-radius-md)',
+                    outline: 'none',
+                    border: `1px solid ${locked ? 'var(--color-border-info)' : 'var(--color-border-secondary)'}`,
+                    background: 'transparent',
                     color: locked ? 'var(--color-text-info)' : 'var(--color-text-primary)',
                     fontWeight: locked ? 600 : 400,
                   }}
                 />
-                <span className="text-xs text-ink-faint">%</span>
-              </div>
-              <div className="w-16 text-right">
+                <span style={{ fontSize: '11px', color: 'var(--color-text-tertiary)' }}>%</span>
+              </span>
+              <span style={{ width: '70px', textAlign: 'right' }}>
                 {locked ? (
-                  <button
-                    type="button"
-                    onClick={() => unlock(q)}
-                    className="rounded-md border border-line px-2 py-1 text-[11px] hover:bg-surface-2"
-                  >
+                  <button type="button" onClick={() => unlock(q)} className="f-chip" style={{ fontSize: '10.5px', padding: '3px 9px', display: 'inline-flex', gap: '4px' }}>
+                    <IconLock size={11} aria-hidden />
                     {t('override.unlock')}
                   </button>
                 ) : (
-                  <span className="text-[11px] text-ink-faint">{t('override.auto')}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10.5px', color: 'var(--color-text-tertiary)' }}>
+                    <IconWand size={11} aria-hidden />
+                    {t('override.auto')}
+                  </span>
                 )}
-              </div>
+              </span>
+              {/* Modern slider — the same value, draggable; calm accent via accent-color. */}
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={value}
+                aria-label={`${name} — slider`}
+                onChange={(e) => setOverride(q, e.target.value)}
+                className="aa-range"
+                style={{ gridColumn: '1 / -1' }}
+              />
             </li>
           );
         })}
