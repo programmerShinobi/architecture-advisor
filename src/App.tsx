@@ -13,6 +13,7 @@ import { PrintReport } from './components/overlays/PrintReport';
 import { Collapsible } from './components/advisor/Collapsible';
 import { GuidedBanner } from './components/chrome/GuidedBanner';
 import { StepTracker } from './components/chrome/StepTracker';
+import { StepSection } from './components/chrome/StepSection';
 import { PresetBar } from './components/advisor/PresetBar';
 import { Toolbar } from './components/chrome/Toolbar';
 import { C4Preview } from './components/advisor/C4Preview';
@@ -295,45 +296,41 @@ export default function App() {
 
         <div className="f-div" />
 
-        {/* Step 1 — project factors + derived priorities */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-          <span className="f-num">1</span>
-          <span style={{ fontSize: '15px', fontWeight: 500 }}>
-            <span className="guided-only">{t('step1.g')}</span>
-            <span className="expert-only">{t('step1.e')}</span>
-          </span>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '18px' }}>
+        {/* Step 1 — project factors (its own dropdown section; owner feedback: factors and
+            priorities must be SEPARATE so nobody gets confused). */}
+        <StepSection id="aa-sec-1" n="1" titleG="step1.g" titleE="step1.e">
           <FactorInputs levels={levels} onChange={setLevels} />
-          {/* The adjust editor opens RIGHT under the priorities card (owner feedback: it used to
-              land far below the tall factor column, so nobody connected it to "Adjust"). */}
-          <div style={{ display: 'grid', gap: '14px', alignContent: 'start' }}>
-            <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={mode === 'expert' && editWeights} />
-            {mode === 'expert' && editWeights && <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />}
-          </div>
-        </div>
+        </StepSection>
 
         <div className="f-div" />
 
-        {/* Step 3 — recommendation across dimensions */}
-        <div id="adv-plan" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '13px', scrollMarginTop: '12px' }}>
-          <span className="f-num">3</span>
-          <span style={{ fontSize: '15px', fontWeight: 500 }}>
-            <span className="guided-only">{t('results.title.g')}</span>
-            <span className="expert-only">{t('results.title.e')}</span>
-          </span>
-        </div>
-        <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
-        <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
-        <RadarPanel weights={weights} mode={mode} />
+        {/* Step 2 — derived quality priorities; the adjust editor opens right underneath.
+            Ungated (Fase 2d rev.3, owner): guided users can customise weights too — the
+            plain-language adjuster is newcomer-safe. */}
+        <StepSection id="aa-sec-2" n="2" titleG="step2.g" titleE="step2.e">
+          <div style={{ display: 'grid', gap: '14px' }}>
+            <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={editWeights} />
+            {editWeights && <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />}
+          </div>
+        </StepSection>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '14px', marginTop: '16px' }}>
-          <SensitivityCard flips={flips} levels={levels} />
-          <MigrationCard value={migKey} onChange={setMigKey} />
-        </div>
+        <div className="f-div" />
 
-        <AntiPatternWarning rules={antiPatterns} mode={mode} />
-        <HowItDecides />
+        {/* Step 3 — recommendation across dimensions (collapsible card, Fase 2d). */}
+        <div id="adv-plan" style={{ scrollMarginTop: '132px' }} />
+        <StepSection id="aa-sec-3" n="3" titleG="results.title.g" titleE="results.title.e">
+          <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
+          <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
+          <RadarPanel weights={weights} mode={mode} />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '14px', marginTop: '16px' }}>
+            <SensitivityCard flips={flips} levels={levels} />
+            <MigrationCard value={migKey} onChange={setMigKey} />
+          </div>
+
+          <AntiPatternWarning rules={antiPatterns} mode={mode} />
+          <HowItDecides />
+        </StepSection>
 
         {/* Expert-only depth (build-spec features beyond the prototype mockup). Guided mode
             stays faithful to the prototype; experts get the extra analysis. */}
@@ -364,8 +361,11 @@ export default function App() {
           </div>
         </section>
 
-        <div id="adv-save" className="f-div" style={{ scrollMarginTop: '12px' }} />
-        <Toolbar run={run} status={exportStatus} setStatus={setExportStatus} mode={mode} onImport={importScenario} />
+        <div id="adv-save" className="f-div" style={{ scrollMarginTop: '132px' }} />
+        {/* Step 4 — save & share (collapsible card, Fase 2d). */}
+        <StepSection id="aa-sec-4" n="4" titleG="step4.g" titleE="step4.e">
+          <Toolbar run={run} status={exportStatus} setStatus={setExportStatus} mode={mode} onImport={importScenario} />
+        </StepSection>
 
               <p
                 className="f-gloss"
@@ -402,21 +402,27 @@ export default function App() {
               }}
             />
 
-            {/* Global footer — always visible (both Advisor & Insights); browser guidance (FR-EDGE-4 / SRS §2.3)
-                + copyright & identity (Fase 1, DECISIONS.md). Borderless: whitespace, no hairline. */}
+            {/* Global footer (Fase 2d rev.2 — owner: "rapi & simple"): a tidy two-line centered
+                stack — brand line, then one short legal line. Browser guidance (FR-EDGE-4)
+                lives in the hover title. */}
             <footer
               className="screen-only"
+              title={t('footer.browsers')}
               style={{
-                padding: 'var(--aa-space-6) var(--aa-panel-pad) var(--aa-space-4)',
-                fontSize: 'var(--aa-fs-2xs)',
-                color: 'var(--color-text-tertiary)',
+                display: 'grid',
+                justifyItems: 'center',
+                gap: '6px',
+                padding: 'var(--aa-space-7) var(--aa-panel-pad) var(--aa-space-5)',
                 textAlign: 'center',
               }}
             >
-              <div>{t('footer.browsers')}</div>
-              <div style={{ marginTop: 'var(--aa-space-2)' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-display)', fontSize: '12.5px', fontWeight: 600, letterSpacing: '-0.01em' }}>
+                <BrandMark size={15} />
+                {t('app.title')}
+              </span>
+              <span style={{ fontSize: 'var(--aa-fs-2xs)', color: 'var(--color-text-tertiary)' }}>
                 {SITE_COPYRIGHT} · {t('footer.rights')}
-              </div>
+              </span>
             </footer>
           </div>
         </div>

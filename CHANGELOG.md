@@ -9,6 +9,23 @@ The decision **model** carries its own version, recorded in the
 
 ## [Unreleased]
 
+### Added / Changed (Fase 2d — guided Advisor flow + visual Insights — 2026-07-17)
+
+- **Advisor journey rail is now interactive** — sticky under the app bar, each step (1–4) is a
+  button that scrolls to its section, and a scroll-spy highlights the step you are on.
+- **Advisor sections are modern collapsible cards** — coin + title + chevron on native
+  `<details>` (`StepSection`), open by default so the guided flow still reads top-to-bottom.
+- **Footer simplified** — one professional identity line (brand glyph + copyright + licenses);
+  browser guidance folded into a hover title (FR-EDGE-4 preserved).
+- **How-it-works step numbers** get breathing room above the art.
+- **Catalog: all 21 architectures now have living symbolic art** (`ArchArt`) — on every Catalog
+  card AND a larger labelled diagram on the detail page (universal mono captions like
+  "EVENT BUS · PUB/SUB"), so newcomers can SEE each idea. Same calm animation utilities as the
+  landing (`aa-anim-*`, frozen under reduced-motion / aurora-static).
+- **Playbook / Review / Library each open with a static explanatory visual** (`LensBanner`)
+  showing what the lens itself is: steps → build, evidence → verdict, the reference shelf.
+
+
 ### Added / Changed (Fase 2 — richer scenarios & guidance, full-feature Guide, calm chrome — 2026-07-16)
 
 - **10 scenario presets** — five new helper scenarios (B2B SaaS, consumer mobile, data platform,

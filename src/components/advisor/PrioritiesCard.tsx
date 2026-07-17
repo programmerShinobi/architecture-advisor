@@ -18,17 +18,12 @@ export function PrioritiesCard({ weights, onAdjust, editing = false }: Props) {
 
   return (
     <div style={{ border: '0.5px solid var(--color-border-tertiary)', borderRadius: 'var(--border-radius-lg)', padding: '15px 16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className="f-num">2</span>
-          <span style={{ fontSize: '14px', fontWeight: 500 }}>
-            <span className="guided-only">{t('prio.title.g')}</span>
-            <span className="expert-only">{t('step2.e')}</span>
-          </span>
-        </div>
+      {/* No internal number/title — the StepSection card already shows "2 · …" (owner
+          feedback: factors and priorities are now SEPARATE dropdown sections). */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: '3px' }}>
         <button
           type="button"
-          className="expert-only f-btn"
+          className="f-btn"
           onClick={onAdjust}
           aria-pressed={editing}
           style={

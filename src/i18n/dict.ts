@@ -42,6 +42,7 @@ export const DICT = {
   'sc.save': { en: 'Save as document', id: 'Simpan sebagai dokumen' },
   'sc.close': { en: 'Close / cancel', id: 'Tutup / batal' },
   'sc.confirm': { en: 'Confirm', id: 'Konfirmasi' },
+  'steps.aria': { en: 'Your progress through the four steps', id: 'Kemajuan Anda melewati empat langkah' },
   'step1.g': { en: 'Tell us about your project', id: 'Ceritakan tentang proyek Anda' },
   'step1.e': { en: 'Project factors', id: 'Faktor proyek' },
   'step2.g': { en: 'See what matters most', id: 'Lihat yang paling penting' },
@@ -208,7 +209,6 @@ export const DICT = {
   'reset.cancel': { en: 'Cancel', id: 'Batal' },
   'reset.done': { en: 'Answers reset.', id: 'Jawaban diatur ulang.' },
   'reset.undo': { en: 'Undo', id: 'Urungkan' },
-  'prio.title.g': { en: 'What matters most', id: 'Yang paling penting' },
   'prio.derived.g': { en: 'Worked out from your answers:', id: 'Dihitung dari jawaban Anda:' },
   'prio.derived.e': {
     en: 'Derived from factors · normalized to 100%',
@@ -230,7 +230,6 @@ export const DICT = {
   'glossary.heading': { en: 'Glossary', id: 'Glosarium' },
   'glossary.qa': { en: 'Quality attributes (ISO/IEC 25010:2023)', id: 'Atribut kualitas (ISO/IEC 25010:2023)' },
   'glossary.terms': { en: 'Key terms', id: 'Istilah kunci' },
-  'export.title.g': { en: 'Save it or share it', id: 'Simpan atau bagikan' },
   'action.saveDoc.g': { en: 'Save as a document', id: 'Simpan sebagai dokumen' },
   'action.saveDoc.e': { en: 'Export ADR', id: 'Ekspor ADR' },
   'action.fullReport': { en: 'Full report', id: 'Laporan lengkap' },
@@ -267,10 +266,11 @@ export const DICT = {
     en: 'Best viewed in the latest Chrome, Edge, Firefox, or Safari (desktop or mobile).',
     id: 'Ditampilkan terbaik di Chrome, Edge, Firefox, atau Safari versi terbaru (desktop atau mobile).',
   },
-  /* Copyright scope (Fase 1, DECISIONS.md): identity/brand is exclusive; licenses unchanged. */
+  /* Copyright scope (Fase 1, DECISIONS.md): identity/brand exclusive; licenses unchanged.
+     Footer keeps it SHORT (owner: "rapi & simple") — the full notice lives in LICENSE + meta. */
   'footer.rights': {
-    en: 'Brand & identity — all rights reserved · Code MIT · Content CC BY 4.0',
-    id: 'Merek & identitas — hak eksklusif dilindungi · Kode MIT · Konten CC BY 4.0',
+    en: 'Code MIT · Content CC BY 4.0',
+    id: 'Kode MIT · Konten CC BY 4.0',
   },
 
   // Detailed architecture explanations folded into the Manual/Guide (Section 5) — see

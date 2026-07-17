@@ -62,7 +62,7 @@ Desktop (≥641px) is unchanged (top nav + header controls as today).
 
 - ~~Phone tier: **≤640px** (canonical, design-spec §6.1). Bottom nav + action bar + settings sheet are
   phone-only; ≥641px keeps the current top-nav desktop layout.~~ **Updated (Fase 2b, 2026-07-16):**
-  the navigation chrome now switches at **≤1024px** — tablets share the phone's bottom nav /
+  the navigation chrome now switches at **≤1180px** (raised Fase 2d) — tablets share the phone's bottom nav /
   action bar / settings sheet / compact top bar so the app bar never wraps; only content-density
   rules stay on the 640px phone tier (design-spec §6.1).
 - Safe area: `padding-bottom: env(safe-area-inset-bottom)` on the fixed bars; the viewport already
