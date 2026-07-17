@@ -42,6 +42,7 @@ export const DICT = {
   'sc.save': { en: 'Save as document', id: 'Simpan sebagai dokumen' },
   'sc.close': { en: 'Close / cancel', id: 'Tutup / batal' },
   'sc.confirm': { en: 'Confirm', id: 'Konfirmasi' },
+  'steps.aria': { en: 'Your progress through the four steps', id: 'Kemajuan Anda melewati empat langkah' },
   'step1.g': { en: 'Tell us about your project', id: 'Ceritakan tentang proyek Anda' },
   'step1.e': { en: 'Project factors', id: 'Faktor proyek' },
   'step2.g': { en: 'See what matters most', id: 'Lihat yang paling penting' },

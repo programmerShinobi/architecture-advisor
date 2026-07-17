@@ -719,27 +719,56 @@ html.light .aa-aurora {
     border-color: var(--color-border-info);
   }
 }
-/* The Advisor's 4-step journey rail (Fase 2c): coins + soft connector lines. */
+/* The Advisor's 4-step journey rail (Fase 2d): FLOATS under the app bar, each step is a
+   clickable button, and the scroll-spy lights up the step you are on right now. */
 .aa-steps {
+  position: sticky;
+  top: 70px;
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: var(--aa-space-3) var(--aa-panel-pad);
+  padding: var(--aa-space-2) var(--aa-space-3);
+  margin: 0 var(--aa-panel-pad);
+  border-radius: 999px;
   flex-wrap: wrap;
 }
 .aa-step {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 6px 12px 6px 7px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-background-secondary) 62%, transparent);
-  border: 1px solid color-mix(in srgb, var(--aa-accent) 14%, transparent);
+  background: transparent;
+  border: 1px solid transparent;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.aa-step:hover {
+  border-color: color-mix(in srgb, var(--aa-accent) 24%, transparent);
+}
+.aa-step.on {
+  background: color-mix(in srgb, var(--aa-accent) 16%, transparent);
+  border-color: color-mix(in srgb, var(--aa-accent) 34%, transparent);
+  box-shadow: 0 2px 10px -4px rgba(139, 124, 255, 0.5);
+}
+.aa-step.on .aa-step-label {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+.aa-step:not(.on) .f-num {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-secondary);
+  box-shadow: none;
 }
 @supports not (background: color-mix(in srgb, red, blue)) {
-  .aa-step {
-    background: var(--color-background-secondary);
-    border-color: var(--color-border-tertiary);
+  .aa-step.on {
+    background: var(--color-background-info);
+    border-color: var(--color-border-info);
   }
 }
 .aa-step-label {
@@ -764,6 +793,53 @@ html.light .aa-aurora {
   .aa-step-line {
     display: none;
   }
+}
+
+/* Advisor step sections (Fase 2d): numbered collapsible cards — coin + title + chevron on a
+   native <details>, so the flow is scannable AND skippable. */
+.aa-sec {
+  border: none;
+  border-radius: var(--border-radius-lg);
+  background: color-mix(in srgb, var(--color-background-secondary) 55%, transparent);
+  scroll-margin-top: 132px; /* clears the sticky app bar + step rail when jumped to */
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-sec {
+    background: var(--color-background-secondary);
+  }
+}
+.aa-sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--aa-space-3) var(--aa-space-4);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--border-radius-lg);
+  transition: background 0.15s ease;
+}
+.aa-sec-head::-webkit-details-marker {
+  display: none;
+}
+.aa-sec-head:hover {
+  background: color-mix(in srgb, var(--aa-accent) 7%, transparent);
+}
+.aa-sec-title {
+  font-size: 15px;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+}
+.aa-sec-chev {
+  color: var(--color-text-tertiary);
+  transition: transform 0.2s var(--aa-ease);
+  flex: none;
+}
+.aa-sec[open] > .aa-sec-head .aa-sec-chev {
+  transform: rotate(180deg);
+}
+.aa-sec-body {
+  padding: 0 var(--aa-space-4) var(--aa-space-4);
 }
 
 /* Modern range slider (Fase 2c — the priorities adjuster): calm accent, thin track. */
@@ -1578,6 +1654,49 @@ svg {
 .lp-art-weights .b3 {
   animation-delay: -2.1s;
 }
+/* Generic art-animation utilities (Fase 2d — the 21 Catalog symbols reuse the same calm
+   keyframes as the landing patterns). */
+.aa-anim-dash {
+  stroke-dasharray: 5 8;
+  animation: lp-dash 3.6s linear infinite;
+}
+.aa-anim-breathe {
+  animation: lp-breathe 2.6s var(--aa-ease) infinite alternate;
+}
+.aa-anim-flicker {
+  animation: lp-flicker 2.4s ease-in-out infinite;
+}
+.aa-anim-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lp-spin 18s linear infinite;
+}
+/* Catalog card art frame + the larger detail-page hero. */
+.learn-art {
+  display: grid;
+  place-items: center;
+  height: 84px;
+  margin-bottom: 8px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  background: linear-gradient(140deg, rgba(139, 124, 255, 0.12), rgba(56, 225, 255, 0.06));
+  overflow: hidden;
+}
+.learn-art-hero {
+  display: grid;
+  place-items: center;
+  height: 150px;
+  margin: 4px 0 16px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border-tertiary);
+  background: linear-gradient(140deg, rgba(139, 124, 255, 0.12), rgba(56, 225, 255, 0.06));
+  overflow: hidden;
+}
+.learn-art-hero .lp-art {
+  width: min(92%, 420px);
+  height: 88%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lp-art-nodes line,
   .lp-art-mesh line,
@@ -1589,9 +1708,19 @@ svg {
   .lp-art-hex .core,
   .lp-art-pick .core,
   .lp-art-hex .ring,
-  .lp-art-weights .bar {
+  .lp-art-weights .bar,
+  .aa-anim-dash,
+  .aa-anim-breathe,
+  .aa-anim-flicker,
+  .aa-anim-spin {
     animation: none;
   }
+}
+:root.aurora-static .aa-anim-dash,
+:root.aurora-static .aa-anim-breathe,
+:root.aurora-static .aa-anim-flicker,
+:root.aurora-static .aa-anim-spin {
+  animation: none;
 }
 :root.aurora-static .lp-art-nodes line,
 :root.aurora-static .lp-art-mesh line,
@@ -1633,6 +1762,9 @@ svg {
 .lp-step::before {
   counter-increment: lp-s;
   content: counter(lp-s, decimal-leading-zero);
+  display: block;
+  /* Breathing room between the number and the art below (Fase 2d, owner feedback). */
+  margin-bottom: 14px;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.1em;

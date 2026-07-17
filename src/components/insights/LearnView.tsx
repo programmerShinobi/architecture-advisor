@@ -33,6 +33,8 @@ import { LEARNING_PATHS } from '../../config/insightRoadmaps';
 import { ACADEMY_QUIZZES } from '../../config/academyQuizzes';
 import { LAB_EXPERIMENTS } from '../../config/labExperiments';
 import type { SectionId, ContentDoc } from '../../config/contentSchema';
+import { ArchArt } from './ArchArt';
+import { LensBanner } from './LensBanner';
 import type { Bilingual, DimensionId, Levels } from '../../types';
 
 // The "Insights" content area — a lazy-loaded island implementing HOLISTIC ARCHITECTURE COVERAGE:
@@ -333,6 +335,10 @@ function ArchitectureArticle({
   return (
     <article className="learn-article">
       {header}
+      {/* A larger, labelled symbol so newcomers SEE the shape of the idea (Fase 2d). */}
+      <div className="learn-art-hero" aria-hidden>
+        <ArchArt dim={dim} optId={optId} detailed />
+      </div>
       {lead(tr(entry.what), t('learn.tldr'))}
       <div style={{ display: 'grid', gap: '14px' }}>
         <InfoBlock icon={<IconThumbUp size={18} aria-hidden />} label={t('learn.whenFits')} text={tr(entry.fits)} color="var(--color-text-success)" />
@@ -443,6 +449,12 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
               const blurb = cardBlurb(dim, opt.id, angle);
               return (
                 <button key={opt.id} type="button" className="learn-card" style={cardBase} onClick={() => setArch({ dim, optId: opt.id, angle })}>
+                  {/* Catalog cards carry a living symbol of the architecture (Fase 2d). */}
+                  {angle === 'catalog' && (
+                    <span className="learn-art" aria-hidden>
+                      <ArchArt dim={dim} optId={opt.id} />
+                    </span>
+                  )}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '14px', fontWeight: 600 }}>{opt.name}</span>
                     <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0 }} />
@@ -514,6 +526,9 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '18px', maxWidth: '72ch' }}>
           {countLine}{intro}
         </p>
+
+        {/* What this lens IS, at a glance (Fase 2d): a static explanatory visual. */}
+        {(section === 'playbook' || section === 'review' || section === 'library') && <LensBanner lens={section} />}
 
         {/* Wave C sections: curated journeys, quizzes, and live-engine experiments. */}
         {section === 'roadmap' && (
