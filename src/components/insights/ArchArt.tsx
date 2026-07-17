@@ -64,8 +64,9 @@ const Browser = ({ x, y, w = 84, h = 56, children }: Readonly<{ x: number; y: nu
   </g>
 );
 
+// Keyed by position — safe inside .map() lists (positions are unique per drawing).
 const box = (x: number, y: number, w: number, h: number, hl = false, extra?: string) => (
-  <rect className={extra} x={x} y={y} width={w} height={h} rx={6} {...(hl ? F : S)} />
+  <rect key={`${x}-${y}`} className={extra} x={x} y={y} width={w} height={h} rx={6} {...(hl ? F : S)} />
 );
 
 interface Props {
