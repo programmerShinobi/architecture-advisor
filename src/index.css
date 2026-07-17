@@ -251,15 +251,16 @@ html.light {
     color: var(--color-text-tertiary);
     line-height: 1.45;
   }
-  /* Step numbers: gradient coin with a soft glow (modern badge language, Fase 1 polish). */
+  /* Step numbers: gradient coin — MUTED theme-tuned gradient (owner: the vivid coin glared in
+     light mode; matches the calm "evidence" text gradient). Text adapts per theme. */
   .f-num {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: var(--aa-grad-accent);
-    color: #05060f;
+    background: var(--aa-grad-text);
+    color: var(--color-background-primary);
     font-weight: 700;
-    box-shadow: 0 0 10px -2px rgba(139, 124, 255, 0.6);
+    box-shadow: 0 0 8px -2px rgba(139, 124, 255, 0.35);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -708,8 +709,8 @@ html.light .aa-aurora {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--aa-grad-accent);
-  box-shadow: 0 0 8px rgba(139, 124, 255, 0.7);
+  background: var(--aa-grad-text);
+  box-shadow: 0 0 6px rgba(139, 124, 255, 0.4);
   flex: none;
 }
 @supports not (background: color-mix(in srgb, red, blue)) {
@@ -718,6 +719,62 @@ html.light .aa-aurora {
     border-color: var(--color-border-info);
   }
 }
+/* The Advisor's 4-step journey rail (Fase 2c): coins + soft connector lines. */
+.aa-steps {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--aa-space-3) var(--aa-panel-pad);
+  flex-wrap: wrap;
+}
+.aa-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-background-secondary) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 14%, transparent);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-step {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-tertiary);
+  }
+}
+.aa-step-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+.aa-step-line {
+  flex: 1 1 12px;
+  min-width: 12px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--aa-accent) 35%, transparent), color-mix(in srgb, var(--aa-accent) 10%, transparent));
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-step-line {
+    background: var(--color-border-secondary);
+  }
+}
+@media (max-width: 640px) {
+  .aa-step-line {
+    display: none;
+  }
+}
+
+/* Modern range slider (Fase 2c — the priorities adjuster): calm accent, thin track. */
+.aa-range {
+  width: 100%;
+  height: 18px;
+  accent-color: var(--color-text-info);
+  cursor: pointer;
+  background: transparent;
+}
+
 /* Inline keyboard hint rendered as a modern key cap. */
 .aa-kbd {
   display: inline-flex;
@@ -1040,13 +1097,28 @@ svg {
 .lp-btn-ghost:hover {
   background: var(--color-background-tertiary);
 }
+/* Hero stats as calm glass chips (Fase 2c — modern & aesthetic, never loud). */
 .lp-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 12px;
   margin-top: 32px;
   color: var(--color-text-tertiary);
   font-size: 0.85rem;
+}
+.lp-meta > div {
+  padding: 10px 16px;
+  border-radius: var(--border-radius-lg);
+  background: color-mix(in srgb, var(--color-background-secondary) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 16%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .lp-meta > div {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-tertiary);
+  }
 }
 .lp-meta b {
   display: block;
@@ -1054,6 +1126,15 @@ svg {
   font-size: 1.3rem;
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
+}
+/* CTA micro-interaction: the arrow leans forward on hover (fine pointers). */
+.lp-btn svg {
+  transition: transform 0.2s var(--aa-ease);
+}
+@media (hover: hover) {
+  .lp-btn-primary:hover svg {
+    transform: translateX(3px);
+  }
 }
 
 /* ---- HERO RADAR (decorative motif) ---- */
@@ -1215,16 +1296,70 @@ svg {
 }
 
 /* ---- BENTO ---- */
-.lp-bento {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+/* ---- Pattern SLIDER (Fase 2c — replaces the bento grid): modern snap carousel.
+   Swipe on touch, glass arrows on fine pointers, soft edge fades; the page itself
+   never scrolls sideways (overflow is contained here). */
+.lp-slider-wrap {
+  position: relative;
+}
+.lp-slider {
+  display: flex;
   gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 4px 14px;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26px, #000 calc(100% - 26px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 26px, #000 calc(100% - 26px), transparent 100%);
 }
-.lp-c-4 {
-  grid-column: span 4;
+.lp-slider::-webkit-scrollbar {
+  display: none;
 }
-.lp-c-2 {
-  grid-column: span 2;
+.lp-slider .lp-card {
+  flex: 0 0 min(380px, 82%);
+  scroll-snap-align: start;
+}
+.lp-slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 26%, transparent);
+  background: color-mix(in srgb, var(--color-background-secondary) 78%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--aa-shadow-md);
+  transition: transform 0.15s var(--aa-ease), border-color 0.15s ease;
+}
+.lp-slider-btn:hover {
+  transform: translateY(-50%) scale(1.06);
+  border-color: color-mix(in srgb, var(--aa-accent) 45%, transparent);
+}
+.lp-slider-btn.prev {
+  left: -8px;
+}
+.lp-slider-btn.next {
+  right: -8px;
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .lp-slider-btn {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-secondary);
+  }
+}
+/* Touch devices swipe — the arrows would only cover content. */
+@media (pointer: coarse) {
+  .lp-slider-btn {
+    display: none;
+  }
 }
 .lp-card {
   position: relative;
@@ -1319,8 +1454,8 @@ svg {
 .lp-spark i {
   width: 10px;
   border-radius: 4px;
-  background: var(--aa-grad-accent);
-  opacity: 0.85;
+  background: var(--aa-grad-text);
+  opacity: 0.8;
   animation: lp-eq 2.6s var(--aa-ease) infinite alternate;
 }
 .lp-spark i:nth-child(1) {
@@ -1347,9 +1482,129 @@ svg {
     transform: scaleY(0.55);
   }
 }
-.lp-nodes {
+.lp-nodes,
+.lp-art {
   width: 82%;
   height: 70%;
+}
+/* How-it-works cards reuse the pattern-card art frame, slightly shorter. */
+.lp-step-art {
+  display: grid;
+  place-items: center;
+  height: 92px;
+  margin: 0 0 14px;
+}
+
+/* ---- Living pattern symbols (Fase 2c: "buat simbol gambarnya bergerak"). Gentle,
+   transform/opacity-only; frozen under reduced-motion and on low-core devices. ---- */
+@keyframes lp-dash {
+  to {
+    stroke-dashoffset: -56;
+  }
+}
+@keyframes lp-breathe {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0.95;
+  }
+}
+@keyframes lp-flicker {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes lp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes lp-grow {
+  from {
+    transform: scaleX(0.55);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.lp-art-nodes line,
+.lp-art-mesh line {
+  stroke-dasharray: 5 8;
+  animation: lp-dash 3.6s linear infinite;
+}
+.lp-art-nodes circle,
+.lp-art-mesh circle {
+  animation: lp-breathe 2.6s var(--aa-ease) infinite alternate;
+}
+.lp-art-mesh circle:nth-of-type(2n) {
+  animation-delay: -1.3s;
+}
+.lp-art-bolt polygon {
+  animation: lp-flicker 2.4s ease-in-out infinite;
+}
+.lp-art-bolt polygon:nth-of-type(2) {
+  animation-delay: 0.5s;
+}
+.lp-art-bolt polygon:nth-of-type(3) {
+  animation-delay: 1s;
+}
+.lp-art-modules .hl,
+.lp-art-form .hl,
+.lp-art-hex .core,
+.lp-art-pick .core {
+  animation: lp-breathe 2.2s var(--aa-ease) infinite alternate;
+}
+.lp-art-hex .ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lp-spin 18s linear infinite;
+}
+.lp-art-weights .bar {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: lp-grow 3s var(--aa-ease) infinite alternate;
+}
+.lp-art-weights .b1 {
+  animation-delay: -0.7s;
+}
+.lp-art-weights .b2 {
+  animation-delay: -1.4s;
+}
+.lp-art-weights .b3 {
+  animation-delay: -2.1s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-art-nodes line,
+  .lp-art-mesh line,
+  .lp-art-nodes circle,
+  .lp-art-mesh circle,
+  .lp-art-bolt polygon,
+  .lp-art-modules .hl,
+  .lp-art-form .hl,
+  .lp-art-hex .core,
+  .lp-art-pick .core,
+  .lp-art-hex .ring,
+  .lp-art-weights .bar {
+    animation: none;
+  }
+}
+:root.aurora-static .lp-art-nodes line,
+:root.aurora-static .lp-art-mesh line,
+:root.aurora-static .lp-art-nodes circle,
+:root.aurora-static .lp-art-mesh circle,
+:root.aurora-static .lp-art-bolt polygon,
+:root.aurora-static .lp-art-modules .hl,
+:root.aurora-static .lp-art-form .hl,
+:root.aurora-static .lp-art-hex .core,
+:root.aurora-static .lp-art-pick .core,
+:root.aurora-static .lp-art-hex .ring,
+:root.aurora-static .lp-art-weights .bar {
+  animation: none;
 }
 .lp-nodes circle {
   fill: var(--color-background-primary);
