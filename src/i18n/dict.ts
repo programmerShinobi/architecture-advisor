@@ -100,7 +100,6 @@ export const DICT = {
     en: 'All five build styles are compared in the radar below.',
     id: 'Kelima gaya build dibandingkan pada radar di bawah.',
   },
-  'dim.recommended': { en: 'recommended', id: 'rekomendasi' },
   'analysis.heading': { en: 'Professional analysis', id: 'Analisis profesional' },
   'radar.title.g': { en: 'See exactly why — compare the options', id: 'Lihat persis alasannya — bandingkan opsinya' },
   'radar.title.e': {

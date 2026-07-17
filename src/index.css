@@ -1760,9 +1760,17 @@ svg {
   gap: 16px;
   counter-reset: lp-s;
 }
-/* How-it-works (Fase 2d rev.3): grid on desktop, a swipe slider WITHOUT arrows on
-   phones & tablets. */
+/* How-it-works (Fase 2d rev.3 + 2e): grid on desktop; a swipe slider on phones & tablets,
+   WITH arrow hints so users know the cards slide (arrows exist only in slider mode). */
+.lp-steps-btn {
+  display: none;
+}
 @media (max-width: 1024px) {
+  .lp-steps-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .lp-steps {
     display: flex;
     gap: 16px;

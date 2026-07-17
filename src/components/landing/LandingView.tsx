@@ -175,15 +175,17 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
   const { t } = useI18n();
   const howRef = useRef<HTMLElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const stepsRef = useRef<HTMLDivElement>(null);
 
-  // Scroll the pattern slider by one card (width + gap); snap handles the final alignment.
-  const slide = (dir: 1 | -1) => {
-    const el = sliderRef.current;
+  // Scroll a snap slider by one card (width + gap); snap handles the final alignment.
+  const slideEl = (el: HTMLDivElement | null, dir: 1 | -1) => {
     if (!el) return;
-    const card = el.querySelector<HTMLElement>('.lp-card');
+    const card = el.querySelector<HTMLElement>('.lp-card, .lp-step');
     const step = card ? card.offsetWidth + 16 : el.clientWidth * 0.8;
     el.scrollBy({ left: dir * step, behavior: 'smooth' });
   };
+  const slide = (dir: 1 | -1) => slideEl(sliderRef.current, dir);
+  const slideSteps = (dir: 1 | -1) => slideEl(stepsRef.current, dir);
 
   // Reveal-on-scroll for the landing sections (shares the app's `.aa-reveal` utility). Instant under
   // reduced-motion / without IntersectionObserver, so content is never left hidden.
@@ -315,21 +317,30 @@ export function LandingView({ onStart, onOpenInsights, onOpenArch }: Readonly<Pr
             <h2>{t('lp.how.h2')}</h2>
           </div>
         </div>
-        {/* Grid on desktop; becomes a swipe slider (no arrows) on phones & tablets —
-            Fase 2d rev.3, owner request. */}
-        <div className="lp-steps">
-          {(['s1', 's2', 's3'] as const).map((s) => (
-            <div key={s} className="lp-step aa-reveal">
-              <span className="lp-card-art lp-step-art" aria-hidden>
-                <StepArt step={s} />
-              </span>
-              <h3>{t(`lp.how.${s}.h`)}</h3>
-              <p>
-                <span className="guided-only">{t(`lp.how.${s}.p`)}</span>
-                <span className="expert-only">{t(`lp.how.${s}.px`)}</span>
-              </p>
-            </div>
-          ))}
+        {/* Grid on desktop; a swipe slider on phones & tablets WITH arrow hints (Fase 2e,
+            owner: the arrows tell users the cards can be swiped). The arrows only exist in
+            slider mode (hidden ≥1025px via .lp-steps-btn). */}
+        <div className="lp-slider-wrap">
+          <button type="button" className="lp-slider-btn lp-steps-btn prev" onClick={() => slideSteps(-1)} aria-label={t('lp.slider.prev')}>
+            <IconChevronLeft size={18} aria-hidden />
+          </button>
+          <button type="button" className="lp-slider-btn lp-steps-btn next" onClick={() => slideSteps(1)} aria-label={t('lp.slider.next')}>
+            <IconChevronRight size={18} aria-hidden />
+          </button>
+          <div className="lp-steps" ref={stepsRef}>
+            {(['s1', 's2', 's3'] as const).map((s) => (
+              <div key={s} className="lp-step aa-reveal">
+                <span className="lp-card-art lp-step-art" aria-hidden>
+                  <StepArt step={s} />
+                </span>
+                <h3>{t(`lp.how.${s}.h`)}</h3>
+                <p>
+                  <span className="guided-only">{t(`lp.how.${s}.p`)}</span>
+                  <span className="expert-only">{t(`lp.how.${s}.px`)}</span>
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
