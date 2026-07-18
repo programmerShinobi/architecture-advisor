@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { IconArrowRight, IconChevronRight, IconEye, IconFlask, IconBulb } from '@tabler/icons-react';
+import { MotifArt } from './MotifArt';
+import { MOTIF_FOR } from './motifMap';
 import { useI18n } from '../../i18n/I18nContext';
 import { LAB_EXPERIMENTS, type LabExperiment } from '../../config/labExperiments';
 import { FACTORS } from '../../config/factors';
@@ -37,6 +39,9 @@ export default function LabView({ onRun, onOpenArch }: Props) {
         <button type="button" onClick={() => setExpId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.lab.allExperiments')}
         </button>
+        <div className="learn-art-hero" aria-hidden>
+          <MotifArt kind={MOTIF_FOR[exp.id] ?? 'wave'} detailed />
+        </div>
         <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '10px' }}>{tr(exp.title)}</h2>
         <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)', marginBottom: '14px' }}>{tr(exp.brief)}</p>
         <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginBottom: '16px' }}>
@@ -99,6 +104,9 @@ export default function LabView({ onRun, onOpenArch }: Props) {
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
       {LAB_EXPERIMENTS.map((e) => (
         <button key={e.id} type="button" className="learn-card" style={cardBase} onClick={() => setExpId(e.id)}>
+          <span className="learn-art" aria-hidden>
+            <MotifArt kind={MOTIF_FOR[e.id] ?? 'wave'} />
+          </span>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '5px' }}>
             <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{tr(e.title)}</span>
             <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '3px' }} />

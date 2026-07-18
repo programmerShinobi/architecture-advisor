@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { IconArrowRight, IconChevronRight, IconTargetArrow } from '@tabler/icons-react';
+import { MotifArt } from './MotifArt';
+import { MOTIF_FOR } from './motifMap';
 import { useI18n } from '../../i18n/I18nContext';
 import { LEARNING_PATHS, type LearningPath, type RoadmapStep, type LensId } from '../../config/insightRoadmaps';
 import { DIMENSIONS } from '../../config/dimensions';
@@ -59,6 +61,9 @@ export default function RoadmapView({ onOpenArch, onOpenArticle, onOpenAdvisor }
         <button type="button" onClick={() => setPathId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.road.allPaths')}
         </button>
+        <div className="learn-art-hero" aria-hidden>
+          <MotifArt kind={MOTIF_FOR[path.id] ?? 'article'} detailed />
+        </div>
         <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '6px' }}>{tr(path.title)}</h2>
         <p style={{ fontSize: '13.5px', lineHeight: 1.55, color: 'var(--color-text-secondary)', maxWidth: '72ch', marginBottom: '12px' }}>{tr(path.description)}</p>
         <div style={{ background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginBottom: '18px', maxWidth: '72ch' }}>
@@ -95,6 +100,9 @@ export default function RoadmapView({ onOpenArch, onOpenArticle, onOpenAdvisor }
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
       {LEARNING_PATHS.map((p) => (
         <button key={p.id} type="button" className="learn-card" style={cardBase} onClick={() => setPathId(p.id)}>
+          <span className="learn-art" aria-hidden>
+            <MotifArt kind={MOTIF_FOR[p.id] ?? 'article'} />
+          </span>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '5px' }}>
             <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{tr(p.title)}</span>
             <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '3px' }} />

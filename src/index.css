@@ -2042,34 +2042,82 @@ svg {
     border-radius: var(--border-radius-lg);
   }
 }
-/* Phone-only brand in the app bar (Fase 2b): compass + wordmark, calm-futuristic — the
-   wordmark carries the muted text gradient (never glares in either theme). */
-.aa-brand-phone {
-  display: none;
+/* Brand in the app bar — LEFT on every width (Fase 2f, owner: one identity, matching the
+   mobile layout): compass + calm gradient wordmark (never glares in either theme). */
+.aa-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  min-width: 0;
+  color: var(--color-text-primary);
 }
-@media (max-width: 1180px) {
-  .aa-brand-phone {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    flex: none;
-    min-width: 0;
-    color: var(--color-text-primary);
-  }
-  .aa-brand-word {
-    font-family: var(--font-display);
-    font-size: 14.5px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background: var(--aa-grad-text);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+.aa-brand-word {
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--aa-grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* ---- Modern app-bar controls (Fase 2f): ONE consistent glass-chip language for every
+   button/toggle in the bar — professional, calm, obvious for experts and newcomers. ---- */
+.aa-appbar .f-btn {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 18%, transparent);
+  background: color-mix(in srgb, var(--color-background-tertiary) 40%, transparent);
+  padding: 7px 13px;
+  font-weight: 600;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s var(--aa-ease);
+}
+.aa-appbar .f-btn:hover {
+  border-color: color-mix(in srgb, var(--aa-accent) 40%, transparent);
+  transform: translateY(-1px);
+}
+.aa-seg {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 99px;
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 14%, transparent);
+  background: color-mix(in srgb, var(--color-background-tertiary) 40%, transparent);
+}
+.aa-ctl-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 18%, transparent);
+  background: color-mix(in srgb, var(--color-background-tertiary) 40%, transparent);
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s var(--aa-ease);
+}
+.aa-ctl-icon:hover {
+  border-color: color-mix(in srgb, var(--aa-accent) 40%, transparent);
+  transform: translateY(-1px);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-appbar .f-btn,
+  .aa-seg,
+  .aa-ctl-icon {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-secondary);
   }
 }
+
 /* Top tab nav (desktop) — display via a class (NOT inline) so the phone-hide wins over it. */
 .aa-topnav {
   display: flex;

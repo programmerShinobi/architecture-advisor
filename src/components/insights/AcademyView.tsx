@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { IconArrowRight, IconCheck, IconChevronRight, IconRefresh, IconX } from '@tabler/icons-react';
+import { MotifArt } from './MotifArt';
+import { MOTIF_FOR } from './motifMap';
 import { useI18n } from '../../i18n/I18nContext';
 import { ACADEMY_QUIZZES, type QuizModule, type QuizRef } from '../../config/academyQuizzes';
 import type { DimensionId } from '../../types';
@@ -53,6 +55,9 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
         <button type="button" onClick={() => setModuleId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.ac.allModules')}
         </button>
+        <div className="learn-art-hero" aria-hidden>
+          <MotifArt kind={MOTIF_FOR[mod.id] ?? 'radar'} detailed />
+        </div>
         <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '10px' }}>{tr(mod.title)}</h2>
         <div style={{ background: 'var(--color-background-success)', border: '1px solid var(--color-text-success)', borderRadius: 'var(--border-radius-md)', padding: '14px 16px', marginBottom: '16px' }}>
           <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-success)', letterSpacing: '.04em', marginBottom: '4px' }}>{t('learn.ac.results')}</div>
@@ -77,6 +82,9 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
         <button type="button" onClick={() => setModuleId(null)} style={{ background: 'none', border: 'none', color: 'var(--color-text-info)', cursor: 'pointer', fontSize: '13px', marginBottom: '14px', padding: 0 }}>
           {t('learn.ac.allModules')}
         </button>
+        <div className="learn-art-hero" aria-hidden>
+          <MotifArt kind={MOTIF_FOR[mod.id] ?? 'radar'} detailed />
+        </div>
         <h2 style={{ fontSize: 'var(--aa-fs-2xl)', fontWeight: 600, marginBottom: '4px' }}>{tr(mod.title)}</h2>
         <p style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', marginBottom: '14px' }}>
           {t('learn.ac.question')} {qIndex + 1} / {mod.questions.length}
@@ -131,6 +139,9 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
       {ACADEMY_QUIZZES.map((m) => (
         <button key={m.id} type="button" className="learn-card" style={cardBase} onClick={() => openModule(m.id)}>
+          <span className="learn-art" aria-hidden>
+            <MotifArt kind={MOTIF_FOR[m.id] ?? 'radar'} />
+          </span>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '5px' }}>
             <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{tr(m.title)}</span>
             <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '3px' }} />

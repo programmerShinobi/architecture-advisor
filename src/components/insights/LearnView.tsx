@@ -34,6 +34,7 @@ import { ACADEMY_QUIZZES } from '../../config/academyQuizzes';
 import { LAB_EXPERIMENTS } from '../../config/labExperiments';
 import type { SectionId, ContentDoc } from '../../config/contentSchema';
 import { ArchArt } from './ArchArt';
+import { MotifArt } from './MotifArt';
 import { LensBanner } from './LensBanner';
 import type { Bilingual, DimensionId, Levels } from '../../types';
 
@@ -236,6 +237,10 @@ function ArchitectureArticle({
     return (
       <article className="learn-article">
         {header}
+        {/* Living labelled symbol — every lens detail carries it (Fase 2e). */}
+        <div className="learn-art-hero" aria-hidden>
+          <ArchArt dim={dim} optId={optId} detailed />
+        </div>
         {lead(tr(playbook.goal), t('learn.pb.goal'))}
         <LensHeading icon={<IconChecklist size={15} aria-hidden />} label={t('learn.pb.prereqs')} />
         <Bullets items={playbook.prerequisites} />
@@ -269,6 +274,10 @@ function ArchitectureArticle({
     return (
       <article className="learn-article">
         {header}
+        {/* Living labelled symbol — every lens detail carries it (Fase 2e). */}
+        <div className="learn-art-hero" aria-hidden>
+          <ArchArt dim={dim} optId={optId} detailed />
+        </div>
         {lead(tr(review.overview), t('learn.rv.overview'))}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '12px', marginBottom: '4px' }}>
           <div>
@@ -305,6 +314,10 @@ function ArchitectureArticle({
     return (
       <article className="learn-article">
         {header}
+        {/* Living labelled symbol — every lens detail carries it (Fase 2e). */}
+        <div className="learn-art-hero" aria-hidden>
+          <ArchArt dim={dim} optId={optId} detailed />
+        </div>
         {lead(tr(libraryRef.definition), t('learn.lb.definition'))}
         <LensHeading icon={<IconBook2 size={15} aria-hidden />} label={t('learn.lb.concepts')} />
         <Bullets items={libraryRef.concepts} />
@@ -449,12 +462,10 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
               const blurb = cardBlurb(dim, opt.id, angle);
               return (
                 <button key={opt.id} type="button" className="learn-card" style={cardBase} onClick={() => setArch({ dim, optId: opt.id, angle })}>
-                  {/* Catalog cards carry a living symbol of the architecture (Fase 2d). */}
-                  {angle === 'catalog' && (
-                    <span className="learn-art" aria-hidden>
-                      <ArchArt dim={dim} optId={opt.id} />
-                    </span>
-                  )}
+                  {/* EVERY lens card carries the living symbol of its architecture (Fase 2e). */}
+                  <span className="learn-art" aria-hidden>
+                    <ArchArt dim={dim} optId={opt.id} />
+                  </span>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '14px', fontWeight: 600 }}>{opt.name}</span>
                     <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0 }} />
@@ -527,8 +538,9 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
           {countLine}{intro}
         </p>
 
-        {/* What this lens IS, at a glance (Fase 2d): a static explanatory visual. */}
-        {(section === 'playbook' || section === 'review' || section === 'library') && <LensBanner lens={section} />}
+        {/* What this lens IS, at a glance — a LIVING explanatory visual on every section,
+            including the outermost Catalog (Fase 2e, owner request). */}
+        <LensBanner lens={section} />
 
         {/* Wave C sections: curated journeys, quizzes, and live-engine experiments. */}
         {section === 'roadmap' && (
@@ -563,6 +575,9 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
               {guides.map((d) => (
                 <button key={d.slug} type="button" className="learn-card" style={cardBase} onClick={() => setSlug(d.slug)}>
+                  <span className="learn-art" aria-hidden>
+                    <MotifArt kind="article" />
+                  </span>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '5px' }}>
                     <span style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.3 }}>{docTitle(d, lang)}</span>
                     <IconChevronRight size={15} aria-hidden style={{ color: 'var(--color-text-tertiary)', flexShrink: 0, marginTop: '3px' }} />
