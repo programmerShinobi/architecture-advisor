@@ -733,6 +733,32 @@ html.light .aa-aurora {
   border-radius: 999px;
   flex-wrap: wrap;
 }
+/* Wrap tier (Fase 2g): a single pill row gets ugly once it breaks, so below the width where it
+   fits, switch to a clean, perfectly-aligned 2×2 grid of full-width steps (connectors hidden). */
+@media (max-width: 720px) {
+  .aa-steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    border-radius: var(--border-radius-lg);
+  }
+  .aa-step {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+  }
+  /* Long guided labels must wrap inside the cell, never overflow it. */
+  .aa-steps .aa-step-label {
+    white-space: normal;
+    min-width: 0;
+  }
+  .aa-step .f-num {
+    flex: none;
+  }
+  .aa-step-line {
+    display: none;
+  }
+}
 .aa-step {
   appearance: none;
   cursor: pointer;
@@ -2115,6 +2141,193 @@ svg {
   .aa-ctl-icon {
     background: var(--color-background-secondary);
     border-color: var(--color-border-secondary);
+  }
+}
+
+/* ---- Scenario preset dropdown (Fase 2g): a tidy disclosure list instead of a chip wall ---- */
+.aa-preset {
+  border-radius: var(--border-radius-md);
+}
+.aa-preset-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 13px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 22%, transparent);
+  background: color-mix(in srgb, var(--color-background-tertiary) 40%, transparent);
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+.aa-preset-summary::-webkit-details-marker {
+  display: none;
+}
+.aa-preset-summary:hover {
+  border-color: color-mix(in srgb, var(--aa-accent) 42%, transparent);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-preset-summary {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-secondary);
+  }
+}
+.aa-preset-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.aa-preset-caret {
+  flex: none;
+  color: var(--color-text-tertiary);
+  transition: transform 0.2s var(--aa-ease);
+}
+.aa-preset[open] .aa-preset-caret {
+  transform: rotate(180deg);
+}
+.aa-preset-list {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 5px;
+  display: grid;
+  gap: 2px;
+  max-height: 340px;
+  overflow-y: auto;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  box-shadow: var(--aa-shadow-md);
+}
+.aa-preset-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 11px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.aa-preset-item:hover {
+  background: color-mix(in srgb, var(--aa-accent) 10%, transparent);
+}
+.aa-preset-item.on {
+  background: var(--color-background-info);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-preset-item:hover {
+    background: var(--color-background-tertiary);
+  }
+}
+.aa-preset-item-icon {
+  flex: none;
+  color: var(--color-text-info);
+}
+.aa-preset-item-text {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+.aa-preset-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.aa-preset-item-desc {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Export actions (Fase 2g): uniform professional buttons; a clean full-width list on wrap ---- */
+.aa-export {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.aa-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 18%, transparent);
+  background: color-mix(in srgb, var(--color-background-tertiary) 40%, transparent);
+  border-radius: var(--border-radius-md);
+  padding: 10px 15px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s var(--aa-ease);
+}
+.aa-export-btn:hover {
+  border-color: color-mix(in srgb, var(--aa-accent) 42%, transparent);
+  transform: translateY(-1px);
+}
+.aa-export-btn.primary {
+  color: #05060f;
+  font-weight: 600;
+  background: var(--aa-grad-accent);
+  border-color: transparent;
+  box-shadow: 0 3px 14px -6px rgba(139, 124, 255, 0.7);
+}
+.aa-export-btn.primary .aa-kbd {
+  color: #05060f;
+  background: rgba(5, 6, 15, 0.12);
+  border-color: rgba(5, 6, 15, 0.18);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-export-btn {
+    background: transparent;
+    border-color: var(--color-border-secondary);
+  }
+}
+/* Wrap tier: stack as a full-width list (like the factor sections) — one action per row. */
+@media (max-width: 720px) {
+  .aa-export {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .aa-export-btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* ---- Footer legal line (Fase 2g): inline · separated on wide; 3 centered lines on narrow ---- */
+.aa-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px 8px;
+  font-size: var(--aa-fs-2xs);
+  color: var(--color-text-tertiary);
+  text-align: center;
+}
+.aa-footer-sep {
+  color: var(--color-text-tertiary);
+  opacity: 0.6;
+}
+@media (max-width: 560px) {
+  .aa-footer-sep {
+    display: none;
+  }
+  .aa-footer-legal > span:not(.aa-footer-sep) {
+    flex: 0 0 100%;
   }
 }
 

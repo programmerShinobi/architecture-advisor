@@ -80,5 +80,6 @@ test('controls are keyboard-operable', async ({ page }) => {
   await page.getByRole('button', { name: 'EN', exact: true }).focus();
   await page.keyboard.press('Enter');
   await page.getByRole('button', { name: 'Advisor', exact: true }).click(); // default view is now Home
-  await expect(page.getByRole('button', { name: 'Busy online shop' })).toBeVisible();
+  await page.getByText('Choose a starting scenario').click();
+  await expect(page.getByRole('button', { name: /Busy online shop/ })).toBeVisible();
 });

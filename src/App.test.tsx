@@ -19,7 +19,9 @@ describe('App integration', () => {
   it('AC-2: applying a preset instantly recomputes the recommendation', () => {
     renderWithI18n(<App />, 'en');
     const before = screen.getByText(VERDICT).textContent;
-    fireEvent.click(screen.getByRole('button', { name: 'Busy online shop' }));
+    // Presets live in a disclosure dropdown (Fase 2g) — open it, then pick a scenario.
+    fireEvent.click(screen.getByText('Choose a starting scenario'));
+    fireEvent.click(screen.getByRole('button', { name: /Busy online shop/ }));
     expect(screen.getByText(VERDICT).textContent).not.toBe(before);
   });
 

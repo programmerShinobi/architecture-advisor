@@ -202,6 +202,7 @@ export const DICT = {
     en: 'These fill in the answers for you — change anything afterward.',
     id: 'Ini mengisikan jawaban untuk Anda — ubah apa saja setelahnya.',
   },
+  'presets.choose': { en: 'Choose a starting scenario', id: 'Pilih skenario awal' },
   'action.resetAnswers': { en: 'Reset answers', id: 'Atur ulang jawaban' },
   'reset.confirm': { en: 'Reset all your answers?', id: 'Atur ulang semua jawaban?' },
   'reset.yes': { en: 'Yes, reset', id: 'Ya, atur ulang' },
@@ -266,11 +267,10 @@ export const DICT = {
     id: 'Ditampilkan terbaik di Chrome, Edge, Firefox, atau Safari versi terbaru (desktop atau mobile).',
   },
   /* Copyright scope (Fase 1, DECISIONS.md): identity/brand exclusive; licenses unchanged.
-     Footer keeps it SHORT (owner: "rapi & simple") — the full notice lives in LICENSE + meta. */
-  'footer.rights': {
-    en: 'Code MIT · Content CC BY 4.0',
-    id: 'Kode MIT · Konten CC BY 4.0',
-  },
+     Footer keeps it SHORT (owner: "rapi & simple") — the full notice lives in LICENSE + meta.
+     Split into per-item keys (Fase 2g) so they stack cleanly, one per line, when wrapped. */
+  'footer.code': { en: 'Code MIT', id: 'Kode MIT' },
+  'footer.content': { en: 'Content CC BY 4.0', id: 'Konten CC BY 4.0' },
 
   // Detailed architecture explanations folded into the Manual/Guide (Section 5) — see
   // src/config/readerContent.ts / docs/03-blueprint/architecture-reader.md

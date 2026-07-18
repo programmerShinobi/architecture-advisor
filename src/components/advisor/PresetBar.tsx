@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   IconBuildingBank,
   IconChartDots,
+  IconCheck,
   IconCircleCheck,
+  IconChevronDown,
   IconCloudComputing,
   IconCpu,
   IconDeviceMobile,
@@ -11,6 +13,7 @@ import {
   IconRocket,
   IconRotate,
   IconShoppingCart,
+  IconSparkles,
   IconTool,
   type Icon,
 } from '@tabler/icons-react';
@@ -41,9 +44,14 @@ interface Props {
 type ResetState = 'idle' | 'confirming' | 'done';
 
 // Scenario presets + reset (with confirm + undo) — matches the prototype's Step-1 header block.
-export function PresetBar({ activeId, onApply, onReset, onUndo }: Props) {
+// Fase 2g (owner): the 10 scenarios collapse into a tidy DROPDOWN LIST (icon + name + one-line
+// description, a check on the active one) instead of a wall of chips.
+export function PresetBar({ activeId, onApply, onReset, onUndo }: Readonly<Props>) {
   const { t, tr } = useI18n();
   const [reset, setReset] = useState<ResetState>('idle');
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const active = PRESETS.find((p) => p.id === activeId);
+  const ActiveIcon = active ? (ICONS[active.id] ?? IconTool) : IconSparkles;
 
   return (
     <div>
@@ -58,26 +66,44 @@ export function PresetBar({ activeId, onApply, onReset, onUndo }: Props) {
         {t('presets.fill')}
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-        {PRESETS.map((p) => {
-          const Ic = ICONS[p.id] ?? IconTool;
-          return (
-            <button
-              key={p.id}
-              type="button"
-              className={'f-chip' + (activeId === p.id ? ' on' : '')}
-              title={tr(p.description)}
-              onClick={() => {
-                onApply(p.levels);
-                setReset('idle');
-              }}
-            >
-              <Ic size={14} aria-hidden />
-              {tr(p.label)}
-            </button>
-          );
-        })}
-      </div>
+      <details ref={detailsRef} className="aa-preset">
+        <summary className="aa-preset-summary">
+          <span className="aa-preset-current">
+            <ActiveIcon size={16} aria-hidden style={{ color: 'var(--color-text-info)', flex: 'none' }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {active ? tr(active.label) : t('presets.choose')}
+            </span>
+          </span>
+          <IconChevronDown size={16} aria-hidden className="aa-preset-caret" />
+        </summary>
+        <ul className="aa-preset-list" aria-label={t('presets.choose')}>
+          {PRESETS.map((p) => {
+            const Ic = ICONS[p.id] ?? IconTool;
+            const on = activeId === p.id;
+            return (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  aria-pressed={on}
+                  className={'aa-preset-item' + (on ? ' on' : '')}
+                  onClick={() => {
+                    onApply(p.levels);
+                    setReset('idle');
+                    if (detailsRef.current) detailsRef.current.open = false;
+                  }}
+                >
+                  <Ic size={16} aria-hidden className="aa-preset-item-icon" />
+                  <span className="aa-preset-item-text">
+                    <span className="aa-preset-item-name">{tr(p.label)}</span>
+                    <span className="aa-preset-item-desc">{tr(p.description)}</span>
+                  </span>
+                  {on && <IconCheck size={15} aria-hidden style={{ color: 'var(--color-text-info)', flex: 'none' }} />}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </details>
 
       {reset === 'confirming' && (
         <div style={{ marginTop: '10px' }}>
