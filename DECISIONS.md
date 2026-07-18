@@ -363,3 +363,20 @@ Both are chosen precisely to preserve the Zero-Mismatch invariant.
   is dismissed via ✕/backdrop) — the single `navigate()` guard fixes both surfaces because the
   desktop top nav and the mobile tab bar both route through it. Regression-locked by an App
   integration test (open Guide → tap a tab → dialog gone) + browser-verified on mobile.
+
+## Tailwind CSS 4 — deferred (2026-07-18, supersedes the #52 auto-bump)
+
+- **Decision: stay on Tailwind 3.4.x; do not adopt Tailwind 4 now.** Dependabot #52 (3.4.19 → 4.3.3)
+  fails CI because a naive version bump can't carry Tailwind 4's breaking config model. Closed —
+  matching the earlier #33 closure.
+- **Why defer, not migrate:** Tailwind is used *lightly* here — the base reset (`@tailwind
+  base/components/utilities`) plus a handful of utility classes in ~8 components. The real styling
+  system is **custom CSS tokens** (`--color-*`, `--aa-*`) inside hand-written `@layer base` /
+  `@layer components` blocks in `src/index.css`. Tailwind 4 is **CSS-first** (`@import "tailwindcss"`,
+  `@theme`, a new `@tailwindcss/postcss` plugin, autoprefixer dropped) and changes layer semantics —
+  precisely the machinery our custom cascade depends on. That's a large regression surface for
+  near-zero benefit and **no security driver** (3.4.x is maintained).
+- **Not ignored in `dependabot.yml` (deliberate).** The maintenance policy there is that MAJOR bumps
+  keep surfacing as individual PRs to be evaluated one at a time. This decision is the *evaluation
+  outcome* ("not yet"); if Tailwind's footprint grows or a security need appears, revisit as a
+  scoped migration (CSS-first config + a full visual/e2e/gate pass) rather than an auto-merge.
