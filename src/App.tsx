@@ -69,6 +69,10 @@ export default function App() {
   // Top nav + mobile bottom bar share this: a plain Insights visit clears any landing deep-link.
   const navigate = (v: 'home' | 'advisor' | 'learn') => {
     if (v === 'learn') setLearnTarget(null);
+    // Global UI-state sync (Blueprint Phase 2.3): switching primary tab (Home / Advisor / Insights)
+    // always dismisses any open overlay — most importantly the "Panduan" (Guide) modal, whose
+    // backdrop (z-50) sits UNDER the mobile tab bar (z-60), so a tab tap must not leave it hanging.
+    setOverlay(null);
     setMainView(v);
   };
   const [levels, setLevels] = usePersistedState<Levels>('aa.levels', DEFAULT_LEVELS);

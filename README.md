@@ -11,32 +11,6 @@
 
 ---
 
-## Preview
-
-The **same project, two audiences.** *Guided* mode gives newcomers plain-language explanations
-("Speed & quick response", a "what this means for you" narrative); *Expert* mode gives architects
-the technical attribute names, editable weights, per-attribute contribution bars, and a
-**Professional analysis** section (cost & ops, fitness functions, risk register, methodology, a C4
-stub, glossary). Both run from the same engine — toggle with one click.
-
-▶ **Try it live: [programmershinobi.github.io/architecture-advisor](https://programmershinobi.github.io/architecture-advisor/)** — or run it with `npm run dev`.
-
-<table>
-  <tr>
-    <th align="center" width="50%">Guided mode (newcomers)</th>
-    <th align="center" width="50%">Expert mode (architects)</th>
-  </tr>
-  <tr valign="top">
-    <td width="50%"><a href="docs/03-blueprint/prototype/index.html"><img alt="Architecture Advisor — Guided mode" src="docs/03-blueprint/prototype/preview-guided.png" /></a></td>
-    <td width="50%"><a href="docs/03-blueprint/prototype/index.html"><img alt="Architecture Advisor — Expert mode" src="docs/03-blueprint/prototype/preview-expert.png" /></a></td>
-  </tr>
-</table>
-
-> Prefer no build step? Open the static [UI prototype](docs/03-blueprint/prototype/index.html) — it
-> mirrors the app and opens in Expert mode (switch to Guided with the header toggle).
-
----
-
 ## What is this?
 
 Choosing how to build a system — the deployment model, how services talk, how data is
@@ -81,7 +55,7 @@ Deeper* per option — backed by a cited bibliography (Bass, Newman, Kleppmann, 
 Ford, SEI, and peer-reviewed surveys). Canonical source:
 [`docs/03-blueprint/architecture-reader.md`](docs/03-blueprint/architecture-reader.md).
 
-An **Insights** area (top nav: *Advisor · Insights*) covers **every architecture the Advisor
+An **Insights** area (top nav: *Home · Advisor · Insights*) covers **every architecture the Advisor
 evaluates** through four lenses — **Catalog** (discover it), **Playbook** (implement it, step by
 step), **Review** (evaluate it: pros/cons, performance, scalability, DX, verdict), and **Library**
 (reference: definition, concepts, patterns, terminology) — data-driven from the frozen model, so
