@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { IconBook2, IconCircleCheck, IconCommand, IconMoon, IconSun } from '@tabler/icons-react';
-import { BrandMark } from './BrandMark';
+import { IconBook2, IconCircleCheck, IconCommand, IconMoon, IconSearch, IconSun } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
 
 export type Mode = 'guided' | 'expert';
@@ -52,17 +51,21 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
           <IconBook2 size={13} aria-hidden />
           {t('manual.open')}
         </button>
-        <button type="button" className="f-btn aa-hide-phone" onClick={onCmdK} aria-label={t('cmd.open')}>
-          <IconCommand size={13} aria-hidden />
-          <span className="kbd">⌘K</span>
+        {/* Command palette — a compact modern "search" pill (icon + key cap). */}
+        <button type="button" className="f-btn aa-hide-phone aa-ctl" onClick={onCmdK} aria-label={t('cmd.open')} title={t('cmd.open')}>
+          <IconSearch size={13} aria-hidden />
+          <span className="aa-kbd" style={{ padding: '1px 5px', fontSize: '10px' }}>
+            <IconCommand size={10} aria-hidden />K
+          </span>
         </button>
-        <button type="button" className="f-btn aa-hide-phone" onClick={onHelp} title={t('shortcuts.title')}>
+        <button type="button" className="f-btn aa-hide-phone aa-ctl" onClick={onHelp} title={t('shortcuts.title')} aria-label={t('shortcuts.title')}>
           ?
         </button>
 
-        {/* Theme / language / mode live in the mobile settings sheet on phones (MobileChrome). */}
+        {/* Theme / language / mode live in the mobile settings sheet on phones (MobileChrome).
+            One consistent segmented-glass language (Fase 2f). */}
         <div className="aa-desktop-controls">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'var(--color-background-secondary)', borderRadius: '99px', padding: '2px' }}>
+        <div className="aa-seg">
           <button type="button" className={'f-mode' + (mode === 'guided' ? ' on' : '')} onClick={() => onToggleMode('guided')}>
             {t('mode.guided')}
           </button>
@@ -71,9 +74,8 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
           </button>
         </div>
 
-        {/* Language: the same segmented pill as the mode toggle (one visual system). */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'var(--color-background-secondary)', borderRadius: '99px', padding: '2px' }}>
+          <div className="aa-seg">
             <button type="button" className={'f-mode' + (lang === 'en' ? ' on' : '')} onClick={() => setLang('en')}>
               EN
             </button>
@@ -81,22 +83,7 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
               ID
             </button>
           </div>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={t('action.theme')}
-            style={{
-              width: '28px',
-              height: '28px',
-              border: '0.5px solid var(--color-border-secondary)',
-              borderRadius: 'var(--border-radius-md)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              background: 'transparent',
-            }}
-          >
+          <button type="button" className="aa-ctl-icon" onClick={toggleTheme} aria-label={t('action.theme')} title={t('action.theme')}>
             {theme === 'light' ? (
               <IconSun size={16} style={{ color: 'var(--color-text-secondary)' }} aria-hidden />
             ) : (
@@ -106,15 +93,6 @@ export function Header({ mode, onToggleMode, onCmdK, onHelp, onManual, theme, on
         </div>
         </div>
 
-      {/* Brand — far right on DESKTOP: monochrome compass (transparent, theme-aware) + wordmark.
-          Hidden on phones (the app bar shows the phone brand on the LEFT instead). Layout via
-          .aa-wrap (class, NOT an inline display) so .aa-hide-phone can win on the phone tier. */}
-      <span className="aa-wrap aa-hide-phone" style={{ flex: 'none', color: 'var(--color-text-primary)' }}>
-        <BrandMark size={30} />
-        <span style={{ fontFamily: 'var(--font-display)', fontSize: '14px', fontWeight: 600, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
-          {t('app.title')}
-        </span>
-      </span>
     </div>
   );
 }

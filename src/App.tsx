@@ -223,9 +223,9 @@ export default function App() {
                 top-LEFT corner, controls + brand docked RIGHT. The app title lives on the Home
                 hero and the document title, keeping the bar a single calm row. */}
             <div className="aa-appbar aa-glass">
-              {/* Phone-only brand (Fase 2b): compass + wordmark on the LEFT — desktop keeps the
-                  brand docked right inside Header; MobileChrome still owns phone navigation. */}
-              <span className="aa-brand-phone" title={t('app.title')}>
+              {/* Brand LEFT on every width (Fase 2f, owner: match the mobile layout everywhere —
+                  compass + gradient wordmark, one consistent identity). */}
+              <span className="aa-brand" title={t('app.title')}>
                 <BrandMark size={24} />
                 <span className="aa-brand-word">{t('app.title')}</span>
               </span>
