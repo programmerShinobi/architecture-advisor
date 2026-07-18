@@ -350,3 +350,16 @@ Both are chosen precisely to preserve the Zero-Mismatch invariant.
   Preset tags (`src/config/presetTags.ts`) are **pure UI metadata** kept out of `presets.ts`, so the
   frozen preset-level guards are untouched. The wizard modal is **lazy-loaded**, keeping the initial
   Advisor bundle under budget.
+
+## Header ↔ overlay auto-close (Master Blueprint Phase 2.3, 2026-07-18)
+
+- **Switching primary tab dismisses any open overlay.** `navigate()` (App.tsx) now calls
+  `setOverlay(null)` before `setMainView(v)`, so tapping **Home / Advisor / Insights** always
+  closes the "Panduan"/Guide modal (and palette/shortcuts/compare) rather than leaving it hanging.
+- **Why it was a real bug, not just polish:** the Guide overlay backdrop (`.f-ov`, z-index 50)
+  sits **under** the mobile bottom tab bar (`.aa-tabbar`, z-index 60). On phones/tablets the tab
+  bar is therefore clickable *over* the open Guide — without the auto-close, a tab tap navigated
+  underneath the still-open modal (UI overlap). On desktop the backdrop covers the top nav (so it
+  is dismissed via ✕/backdrop) — the single `navigate()` guard fixes both surfaces because the
+  desktop top nav and the mobile tab bar both route through it. Regression-locked by an App
+  integration test (open Guide → tap a tab → dialog gone) + browser-verified on mobile.

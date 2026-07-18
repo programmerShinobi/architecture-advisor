@@ -42,6 +42,18 @@ describe('App integration', () => {
     expect(screen.queryByText('Rekomendasi di 5 dimensi')).not.toBeInTheDocument();
   });
 
+  it('opening the Guide then tapping a primary nav tab auto-closes it (Blueprint Phase 2.3)', async () => {
+    renderWithI18n(<App />, 'en');
+    // Open the "Panduan"/Guide modal from the header (ManualBook is lazy — await its mount).
+    fireEvent.click(screen.getAllByRole('button', { name: 'Guide' })[0]);
+    // ManualBook is a lazy chunk; under full-suite load the dynamic import can exceed the default
+    // 1s findBy timeout, so give it room (isolation-fast, contention-tolerant).
+    expect(await screen.findByRole('dialog', { name: /Manual/ }, { timeout: 5000 })).toBeInTheDocument();
+    // Tapping a primary tab (Home/Advisor/Insights) must dismiss the overlay, never leave it hanging.
+    fireEvent.click(screen.getAllByRole('button', { name: 'Insights' })[0]);
+    expect(screen.queryByRole('dialog', { name: /Manual/ })).not.toBeInTheDocument();
+  });
+
   it('locking one QA weight in the override panel redistributes the others', () => {
     renderWithI18n(<App />, 'en');
     fireEvent.click(screen.getByRole('button', { name: 'Expert' }));
