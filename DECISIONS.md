@@ -380,3 +380,35 @@ Both are chosen precisely to preserve the Zero-Mismatch invariant.
   keep surfacing as individual PRs to be evaluated one at a time. This decision is the *evaluation
   outcome* ("not yet"); if Tailwind's footprint grows or a security need appears, revisit as a
   scoped migration (CSS-first config + a full visual/e2e/gate pass) rather than an auto-merge.
+
+## Phase 3 — "AI Advisor" chat (Context-Aware, Client-Side), 2026-07-19
+
+Implements the Phase-3 blueprint while honoring two enforced invariants (building it literally
+would have tripped both — the very regressions the mandate forbids):
+
+- **LLM-agnostic adapter, local implementation (no external API).** The `ChatService` is the
+  Adapter Pattern (`src/lib/chat/`): `getChatAdapter()` is the single swap-point. Today it returns
+  the **local, offline, rule-based `localAdvisorAdapter`** — grounded in the *frozen engine* + the
+  same config the app renders (`answerText()` is pure + unit-tested), so the chat can never
+  contradict the model or fabricate a fact. Keeps the product's core promise (100% client-side,
+  free, offline, no keys, no telemetry) intact. A network LLM is a drop-in: implement `ChatAdapter`
+  and return it from that one function — **zero** UI/hook/state changes. "AI Advisor" is the
+  product name; the UI says "computed from the model, not a language model."
+- **Dependency-free rich rendering (no react-markdown / DOMPurify / Mermaid / Zod).** Bubbles use
+  the existing `lib/markdown.tsx` (React elements, **never** `dangerouslySetInnerHTML`) — XSS-safe
+  *by construction*, a stronger guarantee than sanitizing an HTML string, and adds no dep. A
+  per-bubble `ChatErrorBoundary` is the belt-and-braces. Context is validated by a small runtime
+  guard (the repo's no-Zod stance), not a schema library.
+- **Bundle: initial budget UNTOUCHED.** The FAB **and** everything behind it are `lazy()` — initial
+  JS stays 119.9 kB / 120 kB. Only the lazy chunk grew the total; budget raised 260 → 268
+  (documented in `check-bundle-size.mjs`), well under the 300 kB NFR cap.
+- **State safety (Phase 3.1).** `buildChatContext()` **deep-clones** (`structuredClone`) the live
+  pipeline payload so chat can never mutate app state, and falls back to a complete moderate
+  baseline on invalid/partial input (no `undefined`/null-pointer). `useChat` **throttles** submits +
+  ignores sends while streaming (no compute/API spam), streams via an `AbortSignal`
+  (stop/regenerate/unmount cancel cleanly), and persists messages (hydration-safe: pure client SPA,
+  no SSR step to mismatch).
+- **Anti-contamination + harmony (Phase 2.2/3.1).** "Start Over" wipes chat state + persistence and
+  **BroadcastChannels a reset** so other tabs clear silently. The FAB mounts **globally** (never
+  per-view), so switching tabs closes the Guide but **never** unmounts the chat or disrupts an
+  active stream. Verified in-browser: reply grounded to `/100`, survives nav, reset wipes, EN/ID.

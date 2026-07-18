@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { IconBulb, IconCompass, IconHome } from '@tabler/icons-react';
 import { BrandMark } from './components/chrome/BrandMark';
 import { AuroraBackground } from './components/chrome/AuroraBackground';
+import { resetChatPersistence } from './lib/chat/persist';
 import { MobileChrome } from './components/chrome/MobileChrome';
 import { AdvisorMobileBar } from './components/chrome/AdvisorMobileBar';
 import { LandingView } from './components/landing/LandingView';
@@ -57,6 +58,11 @@ const ManualBook = lazy(() => import('./components/overlays/ManualBook'));
 // the Advisor's initial bundle. The Advisor remains the default view.
 const LearnView = lazy(() => import('./components/insights/LearnView'));
 
+// AI Advisor chat (Phase 3) — lazy so NOTHING chat-related (FAB, panel, hook, adapter, renderer)
+// touches the initial bundle; it loads on first idle. Only `resetChatPersistence` (tiny, engine-free)
+// is imported eagerly, for "Start Over".
+const ChatFab = lazy(() => import('./components/chat/ChatFab'));
+
 type Selections = Partial<Record<DimensionId, string>>;
 
 export default function App() {
@@ -111,6 +117,8 @@ export default function App() {
   const [currentDim, setCurrentDim] = useState<DimensionId>('D1');
   const [migKey, setMigKey] = useState<MigrationKey>('big');
   const undoRef = useRef<{ levels: Levels; selections: Selections; overrides: Overrides } | null>(null);
+  // Registered by the chat panel when open, so "Start Over" can reset it in the same tab.
+  const chatResetRef = useRef<(() => void) | null>(null);
 
   const scenario: ScenarioState = { v: 1, mode, lang, levels, selections, overrides };
   const exportInput: ExportInput = { levels, overrides, selections: effective, lang };
@@ -129,6 +137,10 @@ export default function App() {
   const resetAll = () => {
     undoRef.current = { levels, selections, overrides };
     applyPreset(DEFAULT_LEVELS);
+    // "Start Over" wipes the chat too (anti-contamination, Phase 3.1): in-tab via the registered
+    // reset if the panel was opened, else just the persistence + cross-tab broadcast.
+    if (chatResetRef.current) chatResetRef.current();
+    else resetChatPersistence();
   };
   const undoReset = () => {
     const snap = undoRef.current;
@@ -220,6 +232,11 @@ export default function App() {
   return (
     <>
     <AuroraBackground />
+    {/* AI Advisor chat (Phase 3) — mounted GLOBALLY (never per-view) so navigating tabs closes the
+        Guide but never unmounts the chat or disrupts an active stream (Phase 2.2 harmony). */}
+    <Suspense fallback={null}>
+      <ChatFab contextInput={{ levels, overrides, mode, lang }} registerReset={(fn) => (chatResetRef.current = fn)} />
+    </Suspense>
     <MobileChrome mainView={mainView} onNavigate={navigate} theme={theme} onToggleTheme={toggleTheme} mode={mode} onSetMode={setMode} />
     {mainView === 'advisor' && <AdvisorMobileBar />}
     <div className={'screen-only aa-page' + (mainView === 'advisor' ? ' has-actionbar' : '')}>

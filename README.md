@@ -120,6 +120,40 @@ flowchart LR
 - **④ Strategic output** — the recommendation with a trade-off radar, sensitivity, anti-pattern
   warnings and migration paths; export an ADR (MADR), a full report, CSV/JSON, or a share link.
 
+## AI Advisor chat (Phase 3)
+
+A floating **AI Advisor** (bottom-right) answers questions grounded in *your* scenario —
+"what do you recommend?", "what is microservices?", "monolith vs microservices", "why?". It is a
+**client-side, offline, rule-based** assistant computed from the frozen engine + the same config
+the app renders, so it can never contradict the model or fabricate a fact (the UI says
+*"computed from the model, not a language model"*). It is built on the **Adapter Pattern**, so a
+network LLM is a drop-in later with zero UI changes.
+
+```mermaid
+flowchart LR
+  U["User message"] --> H["useChat hook<br/>(throttle · abort · persist)"]
+  CTX["Live pipeline state"] -->|"buildChatContext()<br/>deep-clone + validate"| H
+  H --> A["getChatAdapter()<br/><b>ChatService (Adapter)</b>"]
+  A --> L["localAdvisorAdapter<br/>(offline, rule-based)"]
+  L -->|"reads"| E["Frozen engine<br/>rank() · contributions()"]
+  L -->|"async stream"| H
+  H --> V["ChatPanel<br/>(memoized bubbles · smart-scroll · a11y)"]
+  R["Start Over"] -.->|"reset + BroadcastChannel"| H
+  A -. "future" .-> N["networkLlmAdapter<br/>(drop-in, same contract)"]
+```
+
+- **Zero-Mismatch handoff** — `buildChatContext()` deep-clones (`structuredClone`) the pipeline
+  payload, so the chat can never mutate the app's scenario; invalid input degrades to a moderate
+  baseline (no `undefined`/crash).
+- **No spam, clean cancel** — submissions are throttled and ignored while streaming; every turn
+  streams under an `AbortSignal` (stop / regenerate / unmount all cancel cleanly).
+- **Anti-contamination** — "Start Over" wipes chat state + persistence and broadcasts a reset so
+  other tabs clear silently. The launcher is mounted **globally**, so switching tabs closes the
+  Guide but never disrupts an active chat stream.
+- **Lean & safe** — the launcher **and** everything behind it are lazy-loaded (initial JS budget
+  untouched); bubbles render with the dependency-free, XSS-safe-by-construction Markdown renderer
+  (React elements, never `dangerouslySetInnerHTML`), each wrapped in a per-bubble error boundary.
+
 ## Run it locally
 
 > **Prerequisite:** Node **24** (LTS) — the version is pinned in [`.nvmrc`](.nvmrc) and used by all
@@ -251,11 +285,37 @@ real pipeline steps) and the total duration short; the component already renders
 `prefers-reduced-motion`. It is triggered by `analysisRun` in `App.tsx`, which increments on an
 explicit analyze action (preset/wizard apply) — never on a live factor edit.
 
+### Swap the chat AI backend (ChatService adapter)
+
+The chat depends only on the `ChatAdapter` contract, so the whole UI/state layer is backend-agnostic.
+`getChatAdapter()` in [`src/lib/chat/index.ts`](src/lib/chat/index.ts) is the **single** swap-point —
+return a different adapter and nothing else changes:
+
+```ts
+// src/lib/chat/types.ts (the contract every backend implements)
+export interface ChatAdapter {
+  readonly id: string;
+  readonly network: boolean; // drives offline UX + resiliency paths
+  reply(history: readonly ChatMessage[], context: ChatContext, signal: AbortSignal): AsyncIterable<ChatChunk>;
+}
+
+// src/lib/chat/index.ts — swap here, zero UI/hook changes:
+export function getChatAdapter(): ChatAdapter {
+  return localAdvisorAdapter;        // today: offline, rule-based, grounded in the frozen engine
+  // return networkLlmAdapter;       // future: a streaming LLM — same contract, drop-in
+}
+```
+
+`buildChatContext()` deep-clones + validates the pipeline payload before it reaches any adapter, so
+a new backend can never mutate app state or receive an `undefined`.
+
 ### Component map (Advisor tab)
 
 | Area | Component | Notes |
 |---|---|---|
 | Scenario gallery + wizard entry | [`components/advisor/PresetBar.tsx`](src/components/advisor/PresetBar.tsx) | search, tag filters, dominant custom card |
+| AI Advisor chat (lazy) | [`components/chat/ChatFab.tsx`](src/components/chat/ChatFab.tsx) · `ChatPanel.tsx` · [`hooks/useChat.ts`](src/hooks/useChat.ts) | launcher + panel + state bridge |
+| Chat service (Adapter) | [`lib/chat/`](src/lib/chat/) | `getChatAdapter()` · `localAdvisorAdapter` · `buildChatContext()` |
 | Custom wizard (lazy modal) | [`components/advisor/CustomWizard.tsx`](src/components/advisor/CustomWizard.tsx) | iterates the wizard config |
 | Wizard → engine bridge (pure) | [`lib/customWizard.ts`](src/lib/customWizard.ts) | `wizardToLevels()` — the only mapping |
 | ① Project factors | [`components/advisor/FactorInputs.tsx`](src/components/advisor/FactorInputs.tsx) · `FactorField.tsx` | 14 factors, per-level examples |
