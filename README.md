@@ -44,21 +44,31 @@ managed — is decided early, hard to reverse, and disproportionately shapes the
 quality. In practice these decisions are too often made by trend rather than by an explicit
 trade-off analysis.
 
-**Architecture Advisor** is a planned, fully client-side web app that turns that decision into
-a transparent pipeline:
+**Architecture Advisor** is a fully client-side web app that turns that decision into a
+transparent pipeline:
 
-```
-PROJECT FACTORS  ─►  QUALITY-ATTRIBUTE PRIORITIES  ─►  ARCHITECTURE FIT  ─►  ANALYSIS
-(drivers &           (a weighted "utility tree" of      (how well each option   (trade-offs, risks,
- constraints)         quality attributes, grounded       satisfies the           sensitivity, fitness
-                      in ISO/IEC 25010:2023)             prioritized QAs across   functions, ADR/report)
-                                                         5 orthogonal dimensions)
+```mermaid
+flowchart LR
+  F["PROJECT FACTORS<br/><i>drivers &amp; constraints</i>"]
+  --> Q["QUALITY-ATTRIBUTE PRIORITIES<br/><i>weighted utility tree,<br/>ISO/IEC 25010:2023</i>"]
+  --> A["ARCHITECTURE FIT<br/><i>how well each option satisfies<br/>the priorities, across 5 dimensions</i>"]
+  --> O["ANALYSIS &amp; OUTPUT<br/><i>trade-offs, risks, sensitivity,<br/>fitness functions, ADR / report</i>"]
 ```
 
 You answer a handful of questions about your project; the tool recommends an architecture
 across five dimensions, ranks the alternatives, and — critically — **shows the full
 calculation**: which factor raised which quality attribute, and how that produced the score.
 Experts get auditable numbers and editable weights; newcomers get plain-language explanations.
+
+**Two ways in.** Start from a **Scenario Card Gallery** — searchable, tag-filterable cards for
+ten pre-built scenarios (startup MVP, regulated fintech, high-traffic e-commerce, IoT streaming,
+legacy modernization, …) — or open the **Custom Architecture Wizard** (the dominant dashed
+"Build custom system" card): a foolproof guided builder that captures four universal variables
+(Primary System Goal · Domain/Industry · Hard Constraints · prioritized NFRs) and maps them onto
+the **same frozen scoring engine** — there is exactly one scoring model, never a parallel one.
+Running a scenario briefly surfaces the engine's **real** analysis stages as a developer terminal
+readout (weights → score 21 options → anti-patterns → rank), then reveals the result — no fake
+latency, and instant under `prefers-reduced-motion`.
 
 It adapts established methods — **ISO/IEC 25010:2023**, **ATAM**, **Attribute-Driven Design**,
 and **evolutionary-architecture fitness functions** — into an interactive tool, and is honest
@@ -100,6 +110,42 @@ see the [content rollout plan](docs/03-blueprint/content-rollout-plan.md).
 > [evolution roadmap](docs/01-discovery-and-planning/discovery-and-planning.md#15-versioning-policy--evolution-roadmap)
 > for what's deferred beyond v1.0.
 
+## Workflow — the immutable four-step journey
+
+Every scenario flows through the same four steps; **Step 3 is the engine** (the "professional
+analysis"). The flow never changes — only the inputs do.
+
+```mermaid
+flowchart LR
+  subgraph S1["① Scenario &amp; factors"]
+    G["Scenario Card Gallery<br/>(search · tags)"]
+    W["Custom Wizard<br/>(4 variables)"]
+    F["14 project factors"]
+    G --> F
+    W -->|"wizardToLevels()"| F
+  end
+  subgraph S2["② Quality priorities"]
+    QA["Derived ISO/IEC 25010<br/>weights (editable)"]
+  end
+  subgraph S3["③ Professional analysis"]
+    E["Frozen scoring engine<br/>+ honest analysis stepper"]
+  end
+  subgraph S4["④ Strategic output"]
+    R["Recommendation · radar ·<br/>sensitivity · ADR / report / share"]
+  end
+  S1 --> S2 --> S3 --> S4
+```
+
+- **① Scenario & factors** — pick a preset card, build a custom system with the wizard, or set the
+  14 factors directly. The wizard and presets both resolve to the same 14 factor levels.
+- **② Quality priorities** — the engine derives the twelve ISO/IEC 25010 quality-attribute weights;
+  experts can pin/override any weight (the rest re-balance around it).
+- **③ Professional analysis** — the frozen engine scores all 21 architectures across the five
+  dimensions. A brief, skippable terminal stepper surfaces the real pipeline stages, then the
+  ranked result appears. **Live factor edits recompute instantly** (no stepper).
+- **④ Strategic output** — the recommendation with a trade-off radar, sensitivity, anti-pattern
+  warnings and migration paths; export an ADR (MADR), a full report, CSV/JSON, or a share link.
+
 ## Run it locally
 
 > **Prerequisite:** Node **24** (LTS) — the version is pinned in [`.nvmrc`](.nvmrc) and used by all
@@ -128,7 +174,7 @@ traceable:
 | 2 | [Requirement Analysis](docs/02-requirement-analysis/) | [SRS](docs/02-requirement-analysis/software-requirements-specification.md) | 🔬 In progress |
 | 3 | [Blueprint (Design)](docs/03-blueprint/) | [Design spec](docs/03-blueprint/design-specification.md) + [Model Data Sheet](docs/03-blueprint/model-data-sheet.md) + [Architecture Reader](docs/03-blueprint/architecture-reader.md) + [Content Rollout Plan](docs/03-blueprint/content-rollout-plan.md) + [UI prototype](docs/03-blueprint/prototype/index.html) | 🔬 In progress |
 | 4 | [Development](docs/04-development/) | Source code (`src/`, scoring engine, components) | ✅ v1.0 implemented |
-| 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 99 Vitest + Playwright E2E + 3 model guards + content guard; CI gates size/audit; 14/16 AC automated | 🔬 In progress |
+| 5 | [Testing / QA](docs/05-testing-qa/) | [Test plan](docs/05-testing-qa/test-plan.md) — 127 Vitest + 14 Playwright E2E + 6 guards (model / docs / app-config / content / bundle-size / SEO); CI gates size/axe; 14/16 AC automated | 🔬 In progress |
 | 6 | [Deployment / Release](docs/06-deployment/) | [Live on GitHub Pages](https://programmershinobi.github.io/architecture-advisor/) via `deploy.yml` (CI/CD) | ✅ Live |
 | 7 | [Maintenance & Iteration](docs/07-maintenance/) | [Changelog](CHANGELOG.md), Dependabot, issue/PR templates, [security policy](SECURITY.md) | 🔄 Ongoing |
 
@@ -168,6 +214,82 @@ The canonical statement is [SRS §2.3 — Operating Environment](docs/02-require
 4. **Approachable yet deep** — guided mode for newcomers, expert mode for architects.
 5. **Actionable & shareable** — export an ADR (MADR) and a full report; share via URL.
 6. **Open & evolving** — community-built, improving across versions.
+
+## Extending — scenarios, the Custom Wizard & the Step-3 UI
+
+Everything below is **typed, injectable config** — you add data, not logic. The frozen scoring
+model (`src/config/{factors,dimensions,qualityAttributes,factorQaMatrix}.ts`) is verified by
+`npm run verify:model` and must not change; new *scenarios* never touch it.
+
+### Add a preset scenario
+
+Presets are strictly-typed `Preset[]`. Append one to [`src/config/presets.ts`](src/config/presets.ts)
+and give it filter tags in [`src/config/presetTags.ts`](src/config/presetTags.ts) — the Card Gallery
+picks it up automatically. Helper presets are `calibrated: false`; the five ratified ones stay
+`true` and are bit-pinned by the guards.
+
+```ts
+// src/config/presets.ts
+{
+  id: 'edge-cdn',
+  label: { en: 'Edge / CDN app', id: 'Aplikasi edge / CDN' },
+  description: { en: 'Globally distributed, latency-critical, cache-heavy.', id: '…' },
+  levels: levels([1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 0, 1, 0, 2]), // 14 factors, values 0–2
+  calibrated: false,
+},
+
+// src/config/presetTags.ts
+export const PRESET_TAGS = { /* … */ 'edge-cdn': ['high-scale', 'realtime'] };
+```
+
+A unit test (`src/config/presets.test.ts`) pins each helper preset's engine outcome, so a bad
+scenario fails the build rather than silently drifting.
+
+### Add / modify a Custom Wizard question
+
+The wizard is driven entirely by [`src/config/customWizard.ts`](src/config/customWizard.ts). Each
+option declares the factor **nudges** it applies; the pure bridge
+[`src/lib/customWizard.ts`](src/lib/customWizard.ts) combines them (ordered override from a moderate
+baseline, hard constraints last) into the 14 factor levels the frozen engine scores. **No component
+edits are needed** — `CustomWizard.tsx` iterates this config.
+
+```ts
+// src/config/customWizard.ts → add an option to the "goal" question
+{
+  id: 'batch-etl',
+  label: { en: 'Run heavy batch / ETL', id: 'Jalankan batch / ETL berat' },
+  hint:  { en: 'Scheduled data pipelines at volume', id: '…' },
+  levels: { dataVolume: 2, async: 2, scale: 2, realtime: 0 }, // only real factor ids, 0–2
+},
+```
+
+`wizardToLevels()` is unit-tested (`src/lib/customWizard.test.ts`): every nudge must reference a
+real factor id at a valid level, and the output is always a complete, valid `Levels` object — even
+when the user answers nothing (it falls back to a balanced baseline; the engine can never crash).
+
+### Modify the Step-3 terminal UI (analysis stepper)
+
+The developer-centric readout lives in
+[`src/components/advisor/AnalysisStepper.tsx`](src/components/advisor/AnalysisStepper.tsx). The
+stages are dict keys — edit the `STAGES` array and their strings in
+[`src/i18n/dict.ts`](src/i18n/dict.ts) (`analysis.run.*`). Keep the stages **honest** (they name
+real pipeline steps) and the total duration short; the component already renders nothing under
+`prefers-reduced-motion`. It is triggered by `analysisRun` in `App.tsx`, which increments on an
+explicit analyze action (preset/wizard apply) — never on a live factor edit.
+
+### Component map (Advisor tab)
+
+| Area | Component | Notes |
+|---|---|---|
+| Scenario gallery + wizard entry | [`components/advisor/PresetBar.tsx`](src/components/advisor/PresetBar.tsx) | search, tag filters, dominant custom card |
+| Custom wizard (lazy modal) | [`components/advisor/CustomWizard.tsx`](src/components/advisor/CustomWizard.tsx) | iterates the wizard config |
+| Wizard → engine bridge (pure) | [`lib/customWizard.ts`](src/lib/customWizard.ts) | `wizardToLevels()` — the only mapping |
+| ① Project factors | [`components/advisor/FactorInputs.tsx`](src/components/advisor/FactorInputs.tsx) · `FactorField.tsx` | 14 factors, per-level examples |
+| ② Quality priorities + adjuster | [`components/advisor/PrioritiesCard.tsx`](src/components/advisor/PrioritiesCard.tsx) · `QaOverridePanel.tsx` | derived + editable weights |
+| ③ Analysis stepper | [`components/advisor/AnalysisStepper.tsx`](src/components/advisor/AnalysisStepper.tsx) | honest terminal readout |
+| ③ Recommendation | `DimensionCards.tsx` · `DimensionDetail.tsx` · `RadarPanel.tsx` | ranked result + radar |
+| ④ Export / share | [`components/chrome/Toolbar.tsx`](src/components/chrome/Toolbar.tsx) | ADR / report / CSV / JSON / share |
+| Pure scoring engine (frozen) | [`lib/scoring.ts`](src/lib/scoring.ts) | `rank()` — the single source of truth |
 
 ## Contributing
 

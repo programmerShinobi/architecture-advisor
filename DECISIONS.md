@@ -317,3 +317,36 @@ below is content or presentation, never scoring.
   the light theme (elegant), automatically light in dark contexts via `currentColor` (in-app) and
   an SVG-embedded `prefers-color-scheme` rule (favicon), so it is never invisible. PWA PNG icons
   keep a solid tile (maskable requirement): black compass on a soft white tile.
+
+## Custom Architecture Wizard + honest Step-3 analysis stepper (Master Blueprint, 2026-07-18)
+
+Two decisions taken with the owner (AskUserQuestion) while executing the "Master Blueprint" overhaul.
+Both are chosen precisely to preserve the Zero-Mismatch invariant.
+
+- **The Custom Wizard maps onto the FROZEN engine — one scoring model, not two.** The guided builder
+  captures four universal variables (Primary System Goal · Domain/Industry · Hard Constraints
+  [budget/team/timeline] · prioritized NFRs) but does **not** score them itself. A pure, unit-tested
+  bridge (`src/lib/customWizard.ts` → `wizardToLevels`) derives the frozen model's 14 factor levels
+  from the answers; the same `rank()` does the scoring. A **parallel 4-variable model was rejected**
+  — it would duplicate decision logic, sit outside the frozen guards, and create two sources of truth
+  to keep in sync (the exact long-term debt the blueprint forbids). The wizard **schema is typed,
+  injectable config** (`src/config/customWizard.ts`): new options/questions inject there and the UI
+  + mapping iterate it — no component edits (Blueprint Phase 1.1). Combine rule: ordered override
+  from a **moderate baseline** (all factors = 1), Goal → Domain → NFRs → Constraints, so an explicit
+  hard constraint always wins and a vague/empty wizard still yields a valid, balanced recommendation
+  (Phase 3.2 resilience). Every nudge is validated against the model by a unit test.
+- **The Step-3 "processing" state is HONEST — it never fakes latency.** The blueprint asked for a
+  "Progressive Terminal Readout"; the engine computes in <1 ms, and this file already records that
+  the prototype's *artificial* skeleton-on-recompute was omitted as misleading. Reconciliation
+  (`AnalysisStepper.tsx`): on an **explicit analyze action** (applying a preset card or the wizard)
+  it briefly surfaces the **real** pipeline stages the engine actually runs — *derive QA weights →
+  score 21 options → check anti-patterns → rank dimensions* — as a developer-centric terminal
+  readout, then reveals the result. It is **skippable**, and under `prefers-reduced-motion` it
+  renders nothing (instant). **Live factor edits stay instant** (no stepper) — the reveal is reserved
+  for the "run a scenario" gesture. So this *extends* the honesty stance (real stages, real values)
+  rather than reversing it; a full theatrical delay was explicitly declined.
+- **The Scenario Card Gallery supersedes the preset dropdown** (Blueprint Phase 1.3): searchable,
+  tag-filterable cards with a **dominant, dashed, terminal-styled "Build custom system"** card.
+  Preset tags (`src/config/presetTags.ts`) are **pure UI metadata** kept out of `presets.ts`, so the
+  frozen preset-level guards are untouched. The wizard modal is **lazy-loaded**, keeping the initial
+  Advisor bundle under budget.
