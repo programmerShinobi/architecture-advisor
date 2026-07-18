@@ -23,8 +23,7 @@ test('the four-step flow loads and the recommendation recomputes on a preset', a
   const before = (await verdict.textContent())?.trim();
 
   // applying a preset instantly recomputes the recommendation (AC-2, real browser).
-  // Presets live in a disclosure dropdown (Fase 2g) — open it, then pick a scenario.
-  await page.getByText('Choose a starting scenario').click();
+  // Presets are cards in the Scenario Card Gallery (Blueprint Phase 1.3) — clicked directly.
   await page.getByRole('button', { name: /Busy online shop/ }).click();
   await expect(page.getByText(VERDICT)).not.toHaveText(before ?? '');
 });

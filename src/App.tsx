@@ -19,6 +19,7 @@ import { Toolbar } from './components/chrome/Toolbar';
 import { C4Preview } from './components/advisor/C4Preview';
 import { FactorInputs } from './components/advisor/FactorInputs';
 import { PrioritiesCard } from './components/advisor/PrioritiesCard';
+import { AnalysisStepper } from './components/advisor/AnalysisStepper';
 import { DimensionCards } from './components/advisor/DimensionCards';
 import { DimensionDetail } from './components/advisor/DimensionDetail';
 import { RadarPanel } from './components/advisor/RadarPanel';
@@ -102,6 +103,7 @@ export default function App() {
   const flips = useMemo(() => sensitivity(levels, 'D1', overrides), [levels, overrides]);
 
   const [editWeights, setEditWeights] = useState(false);
+  const [analysisRun, setAnalysisRun] = useState(0);
   const [currentDim, setCurrentDim] = useState<DimensionId>('D1');
   const [migKey, setMigKey] = useState<MigrationKey>('big');
   const undoRef = useRef<{ levels: Levels; selections: Selections; overrides: Overrides } | null>(null);
@@ -116,6 +118,9 @@ export default function App() {
     setLevels(next);
     setSelections({});
     setOverrides({});
+    // Trigger the honest Step-3 analysis reveal (Blueprint Phase 2.2) on an explicit "analyze"
+    // action (preset card or Custom Wizard) — NOT on live factor edits, which stay instant.
+    setAnalysisRun((n) => n + 1);
   };
   const resetAll = () => {
     undoRef.current = { levels, selections, overrides };
@@ -319,6 +324,7 @@ export default function App() {
         {/* Step 3 — recommendation across dimensions (collapsible card, Fase 2d). */}
         <div id="adv-plan" style={{ scrollMarginTop: '132px' }} />
         <StepSection id="aa-sec-3" n="3" titleG="results.title.g" titleE="results.title.e">
+          <AnalysisStepper runKey={analysisRun} />
           <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
           <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
           <RadarPanel weights={weights} mode={mode} />

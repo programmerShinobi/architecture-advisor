@@ -1,10 +1,8 @@
-import { useRef, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import {
   IconBuildingBank,
   IconChartDots,
-  IconCheck,
   IconCircleCheck,
-  IconChevronDown,
   IconCloudComputing,
   IconCpu,
   IconDeviceMobile,
@@ -12,14 +10,20 @@ import {
   IconRefreshAlert,
   IconRocket,
   IconRotate,
+  IconSearch,
   IconShoppingCart,
-  IconSparkles,
+  IconTerminal2,
   IconTool,
   type Icon,
 } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
 import { PRESETS } from '../../config/presets';
+import { PRESET_TAGS, PRESET_FILTERS } from '../../config/presetTags';
 import type { Levels } from '../../types';
+
+// The wizard (modal, its config + mapping) loads only when the user opens it — keeps it out of the
+// initial Advisor bundle (Blueprint Phase 3: future-proof, lean first load).
+const CustomWizard = lazy(() => import('./CustomWizard').then((m) => ({ default: m.CustomWizard })));
 
 const ICONS: Record<string, Icon> = {
   'startup-mvp': IconRocket,
@@ -43,15 +47,26 @@ interface Props {
 
 type ResetState = 'idle' | 'confirming' | 'done';
 
-// Scenario presets + reset (with confirm + undo) — matches the prototype's Step-1 header block.
-// Fase 2g (owner): the 10 scenarios collapse into a tidy DROPDOWN LIST (icon + name + one-line
-// description, a check on the active one) instead of a wall of chips.
+// Scenario Card Gallery + reset + Custom Architecture Wizard (Master Blueprint Phase 1.2/1.3).
+// Presets are searchable/filterable cards; the dominant dashed "Build custom system" card opens
+// the guided builder, which maps its four variables onto the SAME frozen engine (one model).
 export function PresetBar({ activeId, onApply, onReset, onUndo }: Readonly<Props>) {
   const { t, tr } = useI18n();
   const [reset, setReset] = useState<ResetState>('idle');
-  const detailsRef = useRef<HTMLDetailsElement>(null);
-  const active = PRESETS.find((p) => p.id === activeId);
-  const ActiveIcon = active ? (ICONS[active.id] ?? IconTool) : IconSparkles;
+  const [query, setQuery] = useState('');
+  const [tag, setTag] = useState<string | null>(null);
+  const [wizardOpen, setWizardOpen] = useState(false);
+
+  const q = query.trim().toLowerCase();
+  const shown = useMemo(
+    () =>
+      PRESETS.filter((p) => {
+        const tagOk = !tag || (PRESET_TAGS[p.id] ?? []).includes(tag);
+        const textOk = !q || `${tr(p.label)} ${tr(p.description)}`.toLowerCase().includes(q);
+        return tagOk && textOk;
+      }),
+    [q, tag, tr],
+  );
 
   return (
     <div>
@@ -66,44 +81,81 @@ export function PresetBar({ activeId, onApply, onReset, onUndo }: Readonly<Props
         {t('presets.fill')}
       </div>
 
-      <details ref={detailsRef} className="aa-preset">
-        <summary className="aa-preset-summary">
-          <span className="aa-preset-current">
-            <ActiveIcon size={16} aria-hidden style={{ color: 'var(--color-text-info)', flex: 'none' }} />
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {active ? tr(active.label) : t('presets.choose')}
-            </span>
+      {/* Search + tag filters */}
+      <div className="aa-gallery-tools">
+        <label className="aa-gallery-search">
+          <IconSearch size={14} aria-hidden style={{ color: 'var(--color-text-tertiary)', flex: 'none' }} />
+          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('gallery.search')} aria-label={t('gallery.search')} />
+        </label>
+        <div className="aa-gallery-tags">
+          {PRESET_FILTERS.map((f) => (
+            <button key={f.id} type="button" className={'f-chip' + (tag === f.id ? ' on' : '')} aria-pressed={tag === f.id} onClick={() => setTag(tag === f.id ? null : f.id)}>
+              {tr(f.label)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Card gallery — dominant custom card first, then matching presets */}
+      <div className="aa-gallery-grid">
+        <button type="button" className="aa-scard aa-scard-custom" onClick={() => setWizardOpen(true)}>
+          <span className="aa-scard-head">
+            <IconTerminal2 size={16} aria-hidden />
+            {t('wizard.open')}
           </span>
-          <IconChevronDown size={16} aria-hidden className="aa-preset-caret" />
-        </summary>
-        <ul className="aa-preset-list" aria-label={t('presets.choose')}>
-          {PRESETS.map((p) => {
-            const Ic = ICONS[p.id] ?? IconTool;
-            const on = activeId === p.id;
-            return (
-              <li key={p.id}>
-                <button
-                  type="button"
-                  aria-pressed={on}
-                  className={'aa-preset-item' + (on ? ' on' : '')}
-                  onClick={() => {
-                    onApply(p.levels);
-                    setReset('idle');
-                    if (detailsRef.current) detailsRef.current.open = false;
-                  }}
-                >
-                  <Ic size={16} aria-hidden className="aa-preset-item-icon" />
-                  <span className="aa-preset-item-text">
-                    <span className="aa-preset-item-name">{tr(p.label)}</span>
-                    <span className="aa-preset-item-desc">{tr(p.description)}</span>
+          <span className="aa-scard-desc">{t('wizard.openHint')}</span>
+          <span className="aa-scard-tags">
+            <span className="aa-scard-tag">$ custom</span>
+          </span>
+        </button>
+
+        {shown.map((p) => {
+          const Ic = ICONS[p.id] ?? IconTool;
+          return (
+            <button
+              key={p.id}
+              type="button"
+              aria-pressed={activeId === p.id}
+              className={'aa-scard' + (activeId === p.id ? ' on' : '')}
+              onClick={() => {
+                onApply(p.levels);
+                setReset('idle');
+              }}
+            >
+              <span className="aa-scard-head">
+                <Ic size={16} aria-hidden />
+                {tr(p.label)}
+              </span>
+              <span className="aa-scard-desc">{tr(p.description)}</span>
+              <span className="aa-scard-tags">
+                {(PRESET_TAGS[p.id] ?? []).map((tg) => (
+                  <span key={tg} className="aa-scard-tag">
+                    {tg}
                   </span>
-                  {on && <IconCheck size={15} aria-hidden style={{ color: 'var(--color-text-info)', flex: 'none' }} />}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </details>
+                ))}
+              </span>
+            </button>
+          );
+        })}
+        {shown.length === 0 && (
+          <div className="f-gloss" style={{ gridColumn: '1 / -1', padding: '10px 2px' }}>
+            {t('gallery.empty')}
+          </div>
+        )}
+      </div>
+
+      {wizardOpen && (
+        <Suspense fallback={null}>
+          <CustomWizard
+            open
+            onClose={() => setWizardOpen(false)}
+            onApply={(levels) => {
+              onApply(levels);
+              setReset('idle');
+            }}
+          />
+        </Suspense>
+      )}
 
       {reset === 'confirming' && (
         <div style={{ marginTop: '10px' }}>

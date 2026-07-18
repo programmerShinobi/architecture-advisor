@@ -11,7 +11,6 @@ test('share link round-trips the scenario via a deep link', async ({ page, conte
   await page.goto(APP);
   await page.getByRole('button', { name: 'EN', exact: true }).click();
   await page.getByRole('button', { name: 'Advisor', exact: true }).click(); // default view is now Home
-  await page.getByText('Choose a starting scenario').click();
   await page.getByRole('button', { name: /Busy online shop/ }).click();
   const shared = (await page.getByText(VERDICT).textContent())?.trim();
 
