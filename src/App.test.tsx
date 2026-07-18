@@ -19,7 +19,8 @@ describe('App integration', () => {
   it('AC-2: applying a preset instantly recomputes the recommendation', () => {
     renderWithI18n(<App />, 'en');
     const before = screen.getByText(VERDICT).textContent;
-    fireEvent.click(screen.getByRole('button', { name: 'Busy online shop' }));
+    // Presets are cards in the Scenario Card Gallery (Blueprint Phase 1.3) — clicked directly.
+    fireEvent.click(screen.getByRole('button', { name: /Busy online shop/ }));
     expect(screen.getByText(VERDICT).textContent).not.toBe(before);
   });
 

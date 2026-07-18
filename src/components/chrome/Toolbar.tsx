@@ -28,20 +28,7 @@ interface Props {
   onImport: (state: ScenarioState) => void;
 }
 
-const secondary: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '7px',
-  fontSize: '12px',
-  color: 'var(--color-text-secondary)',
-  border: '0.5px solid var(--color-border-secondary)',
-  borderRadius: 'var(--border-radius-md)',
-  padding: '10px 15px',
-  cursor: 'pointer',
-  background: 'transparent',
-};
-
-export function Toolbar({ run, status, setStatus, mode, onImport }: Props) {
+export function Toolbar({ run, status, setStatus, mode, onImport }: Readonly<Props>) {
   const { t } = useI18n();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -56,51 +43,47 @@ export function Toolbar({ run, status, setStatus, mode, onImport }: Props) {
 
   return (
     <div>
-      {/* No internal heading — the StepSection card already shows "4 · Save & share"
-          (owner feedback: the number was doubled). */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '9px' }}>
-        <button
-          type="button"
-          onClick={run.adr}
-          style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12px', color: 'var(--color-background-primary)', background: 'var(--color-text-info)', borderRadius: 'var(--border-radius-md)', padding: '10px 16px', cursor: 'pointer', fontWeight: 500, border: 'none' }}
-        >
+      {/* No internal heading — the StepSection card already shows "4 · Save & share".
+          Fase 2g: professional uniform buttons; becomes a clean full-width list when wrapped. */}
+      <div className="aa-export">
+        <button type="button" className="aa-export-btn primary" onClick={run.adr}>
           <IconFileText size={16} aria-hidden />
           <span className="guided-only">{t('action.saveDoc.g')}</span>
           <span className="expert-only">{t('action.saveDoc.e')}</span>
-          <span className="kbd" style={{ marginLeft: '2px' }}>⌘S</span>
+          <span className="aa-kbd" style={{ marginLeft: 'auto' }}>⌘S</span>
         </button>
 
-        <button type="button" style={secondary} onClick={run.report}>
+        <button type="button" className="aa-export-btn" onClick={run.report}>
           <IconReportAnalytics size={16} aria-hidden />
           {t('action.fullReport')}
         </button>
 
-        <button type="button" style={secondary} onClick={() => window.print()}>
+        <button type="button" className="aa-export-btn" onClick={() => window.print()}>
           <IconPrinter size={16} aria-hidden />
           {t('action.print')}
         </button>
 
         {mode === 'expert' && (
           <>
-            <button type="button" style={secondary} onClick={run.csv}>
+            <button type="button" className="aa-export-btn" onClick={run.csv}>
               <IconFileSpreadsheet size={16} aria-hidden />
               {t('action.csv')}
             </button>
-            <button type="button" style={secondary} onClick={run.json}>
+            <button type="button" className="aa-export-btn" onClick={run.json}>
               <IconCode size={16} aria-hidden />
               {t('action.json')}
             </button>
           </>
         )}
 
-        <button type="button" style={secondary} onClick={() => void run.share()}>
+        <button type="button" className="aa-export-btn" onClick={() => void run.share()}>
           <IconShare2 size={16} aria-hidden />
           <span className="guided-only">{t('action.share.g')}</span>
           <span className="expert-only">{t('action.share.e')}</span>
         </button>
 
         {mode === 'expert' && (
-          <button type="button" style={secondary} onClick={() => fileRef.current?.click()}>
+          <button type="button" className="aa-export-btn" onClick={() => fileRef.current?.click()}>
             <IconUpload size={16} aria-hidden />
             {t('action.importSetup')}
           </button>

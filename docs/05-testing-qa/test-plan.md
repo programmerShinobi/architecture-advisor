@@ -241,8 +241,8 @@ Pure client-side, no backend/accounts/secrets — the surface is the browser and
 ## 9. Performance verification (L7)
 
 - [x] **Bundle budget:** **CI-gated** — `npm run size` ([`scripts/check-bundle-size.mjs`](../../scripts/check-bundle-size.mjs))
-      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤260kB** (raised 200→260 for full Insights bilingualisation 2026-07-15 — EN+ID content is lazy; NFR cap 300) / CSS ≤25kB (currently ~114 initial /
-      ~237 total / ~23 CSS with React 19 on Vite 8). The guard reads the **real initial set from `dist/index.html`** (entry
+      asserts gzip **initial JS ≤120kB** (first load) and **total JS ≤260kB** (raised 200→260 for full Insights bilingualisation 2026-07-15 — EN+ID content is lazy; NFR cap 300) / **CSS ≤27kB** (raised 25→27 for Fase 2g UI/UX polish 2026-07-18; NFR ceiling ~30kB) (currently ~117 initial /
+      ~250 total / ~25 CSS with React 19 on Vite 8). The guard reads the **real initial set from `dist/index.html`** (entry
       script + modulepreloads), so lazy views (Manual/Guide, Insights) **and their shared async chunks** (e.g.
       `readerContent`, which powers the data-driven Catalog) are correctly excluded from the first load — none can be
       silently mis-counted. No chart/diagram/markdown library ships — all visuals are hand-built SVG and Markdown is

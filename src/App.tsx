@@ -19,6 +19,7 @@ import { Toolbar } from './components/chrome/Toolbar';
 import { C4Preview } from './components/advisor/C4Preview';
 import { FactorInputs } from './components/advisor/FactorInputs';
 import { PrioritiesCard } from './components/advisor/PrioritiesCard';
+import { AnalysisStepper } from './components/advisor/AnalysisStepper';
 import { DimensionCards } from './components/advisor/DimensionCards';
 import { DimensionDetail } from './components/advisor/DimensionDetail';
 import { RadarPanel } from './components/advisor/RadarPanel';
@@ -102,6 +103,7 @@ export default function App() {
   const flips = useMemo(() => sensitivity(levels, 'D1', overrides), [levels, overrides]);
 
   const [editWeights, setEditWeights] = useState(false);
+  const [analysisRun, setAnalysisRun] = useState(0);
   const [currentDim, setCurrentDim] = useState<DimensionId>('D1');
   const [migKey, setMigKey] = useState<MigrationKey>('big');
   const undoRef = useRef<{ levels: Levels; selections: Selections; overrides: Overrides } | null>(null);
@@ -116,6 +118,9 @@ export default function App() {
     setLevels(next);
     setSelections({});
     setOverrides({});
+    // Trigger the honest Step-3 analysis reveal (Blueprint Phase 2.2) on an explicit "analyze"
+    // action (preset card or Custom Wizard) — NOT on live factor edits, which stay instant.
+    setAnalysisRun((n) => n + 1);
   };
   const resetAll = () => {
     undoRef.current = { levels, selections, overrides };
@@ -319,6 +324,7 @@ export default function App() {
         {/* Step 3 — recommendation across dimensions (collapsible card, Fase 2d). */}
         <div id="adv-plan" style={{ scrollMarginTop: '132px' }} />
         <StepSection id="aa-sec-3" n="3" titleG="results.title.g" titleE="results.title.e">
+          <AnalysisStepper runKey={analysisRun} />
           <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
           <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
           <RadarPanel weights={weights} mode={mode} />
@@ -332,40 +338,37 @@ export default function App() {
           <HowItDecides />
         </StepSection>
 
-        {/* Expert-only depth (build-spec features beyond the prototype mockup). Guided mode
-            stays faithful to the prototype; experts get the extra analysis. */}
-        <section className="expert-only" aria-labelledby="analysis-heading">
-          <div className="f-div" />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '13px' }}>
-            <span style={{ fontSize: '15px', fontWeight: 500 }} id="analysis-heading">
-              {t('analysis.heading')}
-            </span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <Collapsible title={t('costops.heading')}>
-              <CostOpsBadges bare />
-            </Collapsible>
-            <Collapsible title={t('fitness.heading')}>
-              <FitnessFunctions weights={weights} bare />
-            </Collapsible>
-            <Collapsible title={t('risk.heading')}>
-              <RiskRegister selections={effective} bare />
-            </Collapsible>
-            <Collapsible title={t('methodology.heading')}>
-              <MethodologyPanel bare />
-            </Collapsible>
-            <Collapsible title={t('c4.heading')}>
-              <C4Preview optionId={effective.D1} />
-            </Collapsible>
-            <Glossary />
-          </div>
-        </section>
-
         <div id="adv-save" className="f-div" style={{ scrollMarginTop: '132px' }} />
         {/* Step 4 — save & share (collapsible card, Fase 2d). */}
         <StepSection id="aa-sec-4" n="4" titleG="step4.g" titleE="step4.e">
           <Toolbar run={run} status={exportStatus} setStatus={setExportStatus} mode={mode} onImport={importScenario} />
         </StepSection>
+
+        {/* Expert-only depth (build-spec features beyond the prototype mockup) — Fase 2g: now a
+            single "Professional analysis" DROPDOWN placed BELOW the Export section, keeping the
+            main flow clean. Opening it reveals the detailed panels on demand. */}
+        <section className="expert-only" style={{ marginTop: '10px' }}>
+          <Collapsible title={t('analysis.heading')}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <Collapsible title={t('costops.heading')}>
+                <CostOpsBadges bare />
+              </Collapsible>
+              <Collapsible title={t('fitness.heading')}>
+                <FitnessFunctions weights={weights} bare />
+              </Collapsible>
+              <Collapsible title={t('risk.heading')}>
+                <RiskRegister selections={effective} bare />
+              </Collapsible>
+              <Collapsible title={t('methodology.heading')}>
+                <MethodologyPanel bare />
+              </Collapsible>
+              <Collapsible title={t('c4.heading')}>
+                <C4Preview optionId={effective.D1} />
+              </Collapsible>
+              <Glossary />
+            </div>
+          </Collapsible>
+        </section>
 
               <p
                 className="f-gloss"
@@ -420,8 +423,14 @@ export default function App() {
                 <BrandMark size={15} />
                 {t('app.title')}
               </span>
-              <span style={{ fontSize: 'var(--aa-fs-2xs)', color: 'var(--color-text-tertiary)' }}>
-                {SITE_COPYRIGHT} · {t('footer.rights')}
+              {/* Fase 2g: three legal items, inline on wide, cleanly stacked (3 centered lines)
+                  when the row would wrap on narrow screens. */}
+              <span className="aa-footer-legal">
+                <span>{SITE_COPYRIGHT}</span>
+                <span className="aa-footer-sep" aria-hidden>·</span>
+                <span>{t('footer.code')}</span>
+                <span className="aa-footer-sep" aria-hidden>·</span>
+                <span>{t('footer.content')}</span>
               </span>
             </footer>
           </div>
