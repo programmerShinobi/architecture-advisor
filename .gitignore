@@ -41,3 +41,8 @@ coverage/
 /blob-report/
 /playwright/.cache/
 *.report.html
+
+# Scratch/verification scripts (must never be committed)
+.*.tmp.mjs
+*.tmp.mjs
+.shot.tmp.mjs
