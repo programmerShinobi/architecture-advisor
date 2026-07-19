@@ -122,6 +122,12 @@ flowchart LR
 
 ## AI Advisor chat (Phase 3)
 
+> **Status: temporarily disabled.** The chat is gated **off** behind a single flag
+> (`FEATURES.chat` in [`src/config/features.ts`](src/config/features.ts)) while its UX is being
+> finalized, so the deployed build ships without it. The code is complete and code-split; flip the
+> flag to `true` to bring it back (the FAB mounts, "Start Over" resets it, and the Copilot tour
+> restores its chat step — no other change). The rest of this section describes it as designed.
+
 A floating **AI Advisor** (bottom-right) answers questions grounded in *your* scenario —
 "what do you recommend?", "what is microservices?", "monolith vs microservices", "why?". It is a
 **client-side, offline, rule-based** assistant computed from the frozen engine + the same config
@@ -153,6 +159,44 @@ flowchart LR
 - **Lean & safe** — the launcher **and** everything behind it are lazy-loaded (initial JS budget
   untouched); bubbles render with the dependency-free, XSS-safe-by-construction Markdown renderer
   (React elements, never `dangerouslySetInnerHTML`), each wrapped in a per-bubble error boundary.
+
+## Interactive Copilot & guided tour (Phase 3)
+
+A **"Guide me" launcher** (bottom-right, Advisor tab) starts a step-by-step walkthrough of the
+four-step journey. Each step **navigates to the right view, scrolls its target into the upper
+third, and rings it with a spotlight** while a card explains what the step does — with concrete
+**Do / Don't** guidance. Like the chat, it is **100% client-side, offline, and dependency-free**:
+no external tour library, no `dangerouslySetInnerHTML`, and targets are addressed through a
+**closed `data-tour-id` whitelist** (a command can never point the overlay at an arbitrary
+selector). It ships as a **pluggable `src/features/copilot/` module** behind a service adapter, so
+a smarter (even LLM-driven) guide is a drop-in later with zero UI changes.
+
+```mermaid
+flowchart LR
+  B["Guide me"] --> HK["useCopilot engine<br/>(step index · run token)"]
+  HK -->|"describe(step, ctx)"| SVC["getCopilotService()<br/><b>CopilotService (Adapter)</b>"]
+  SVC --> LOC["localCopilotService<br/>(bilingual · live top-pick)"]
+  HK -->|"nav to step.view"| NAV["App view"]
+  HK -->|"waitForTarget()<br/>MutationObserver + timeout"| DOM["data-tour-id target<br/>(closed whitelist)"]
+  HK -->|"highlight | dismiss | stop"| BUS["Event Bus<br/>(typed · leak-free)"]
+  BUS --> OV["CopilotOverlay (portal → body)"]
+  DOM -->|"ResizeObserver · MutationObserver<br/>scroll · resize · visualViewport"| OV
+  OV --> SPOT["Spotlight ring + Do/Don't card<br/>(pinned head/foot · scroll body)"]
+  SVC -. "future" .-> LLM["llmCopilotService<br/>(drop-in, same contract)"]
+```
+
+- **Goes to the location, never covers it** — a Pre-Flight Check scrolls the target to the upper
+  third and waits a paint before the first draw; the ring then tracks it live via
+  `ResizeObserver` + `MutationObserver` + `scroll`/`resize`/`visualViewport`. On phones the card is
+  a **bottom sheet** (pinned header/footer, only the body scrolls) so a full step — title, body,
+  **and** both Do/Don't cards — is always readable and **never clipped**.
+- **Safe by construction** — only whitelisted `data-tour-id`s can be highlighted; a missing target
+  degrades to a **silent fallback** (card centers, "this control isn't on screen" note) instead of
+  hanging or throwing. The overlay renders through a **React portal** to `document.body`, escaping
+  every `z-index` stacking context (primary `z10` < utility `z20` < copilot overlay `z9999`).
+- **Nav-harmony & clean teardown** — switching tabs mid-tour stops it; "Start Over" resets the tour
+  alongside the chat; every observer/listener/timer is cleaned up (zero leaks). The launcher and
+  the whole overlay are **lazy-loaded**, so the initial JS budget is untouched.
 
 ## Run it locally
 
@@ -309,13 +353,45 @@ export function getChatAdapter(): ChatAdapter {
 `buildChatContext()` deep-clones + validates the pipeline payload before it reaches any adapter, so
 a new backend can never mutate app state or receive an `undefined`.
 
+### Add a Copilot step (or swap the guide backend)
+
+The tour is data: add a step to `MAIN_TOUR` in
+[`src/features/copilot/tourConfig.ts`](src/features/copilot/tourConfig.ts). `target` must be one of
+the whitelisted `data-tour-id`s in [`dataTourId.ts`](src/features/copilot/dataTourId.ts) — tag the
+element with the type-safe `tourId()` helper and the test suite enforces the pairing:
+
+```ts
+// 1) tag the element (closed whitelist — the only ids the overlay can point at)
+<section {...tourId('recommendation')}> … </section>
+
+// 2) add a bilingual step with concrete Do / Don't guidance
+{ id: 'result', view: 'advisor', target: 'recommendation', placement: 'top',
+  title: { en: 'Your recommended plan', id: 'Rencana yang disarankan' },
+  body:  { en: 'Ranked per dimension…', id: 'Diperingkat per dimensi…' },
+  dos:   [{ en: 'Read the "why"', id: 'Baca alasannya' }],
+  donts: [{ en: 'Chase a single number', id: 'Mengejar satu angka' }] }
+```
+
+The overlay depends only on the `CopilotService` contract;
+`getCopilotService()` in [`copilotService.ts`](src/features/copilot/copilotService.ts) is the
+**single** swap-point — return a smarter (even LLM-driven) service and nothing else changes:
+
+```ts
+export function getCopilotService(): CopilotService {
+  return localCopilotService;   // today: offline, bilingual, weaves in your live top pick
+  // return llmCopilotService;  // future: a generated walkthrough — same contract, drop-in
+}
+```
+
 ### Component map (Advisor tab)
 
 | Area | Component | Notes |
 |---|---|---|
 | Scenario gallery + wizard entry | [`components/advisor/PresetBar.tsx`](src/components/advisor/PresetBar.tsx) | search, tag filters, dominant custom card |
-| AI Advisor chat (lazy) | [`components/chat/ChatFab.tsx`](src/components/chat/ChatFab.tsx) · `ChatPanel.tsx` · [`hooks/useChat.ts`](src/hooks/useChat.ts) | launcher + panel + state bridge |
+| AI Advisor chat (lazy, flag-gated) | [`components/chat/ChatFab.tsx`](src/components/chat/ChatFab.tsx) · `ChatPanel.tsx` · [`hooks/useChat.ts`](src/hooks/useChat.ts) | launcher + panel + state bridge — off via `FEATURES.chat` |
 | Chat service (Adapter) | [`lib/chat/`](src/lib/chat/) | `getChatAdapter()` · `localAdvisorAdapter` · `buildChatContext()` |
+| Copilot tour (lazy, pluggable) | [`features/copilot/Copilot.tsx`](src/features/copilot/Copilot.tsx) · `useCopilot.ts` · `components/CopilotOverlay.tsx` | launcher + engine + portal overlay |
+| Copilot service (Adapter) | [`features/copilot/`](src/features/copilot/) | `getCopilotService()` · `MAIN_TOUR` · `tourId()` whitelist · event bus |
 | Custom wizard (lazy modal) | [`components/advisor/CustomWizard.tsx`](src/components/advisor/CustomWizard.tsx) | iterates the wizard config |
 | Wizard → engine bridge (pure) | [`lib/customWizard.ts`](src/lib/customWizard.ts) | `wizardToLevels()` — the only mapping |
 | ① Project factors | [`components/advisor/FactorInputs.tsx`](src/components/advisor/FactorInputs.tsx) · `FactorField.tsx` | 14 factors, per-level examples |

@@ -383,6 +383,13 @@ Both are chosen precisely to preserve the Zero-Mismatch invariant.
 
 ## Phase 3 — "AI Advisor" chat (Context-Aware, Client-Side), 2026-07-19
 
+> **Update (2026-07-19): shipped OFF.** The chat is gated behind `FEATURES.chat`
+> (`src/config/features.ts`), currently `false`, while its UX is finalized — the deploy goes out
+> without it. Because the feature was already fully code-split, the gate is a single flag: `App`
+> skips mounting the FAB, and the Copilot tour filters out its chat step, so nothing points at a
+> control that isn't on screen. Flipping the flag to `true` restores everything with zero other
+> edits. The design below stands.
+
 Implements the Phase-3 blueprint while honoring two enforced invariants (building it literally
 would have tripped both — the very regressions the mandate forbids):
 
@@ -412,3 +419,36 @@ would have tripped both — the very regressions the mandate forbids):
   **BroadcastChannels a reset** so other tabs clear silently. The FAB mounts **globally** (never
   per-view), so switching tabs closes the Guide but **never** unmounts the chat or disrupts an
   active stream. Verified in-browser: reply grounded to `/100`, survives nav, reset wipes, EN/ID.
+
+## Phase 3 — Interactive Copilot & guided tour, 2026-07-19
+
+A pluggable **"Guide me" walkthrough** (`src/features/copilot/`) that spotlights each of the four
+steps with Do/Don't guidance. Built to the Copilot blueprint while honoring the same invariants the
+chat did — the maximalist form would have tripped them:
+
+- **Local structured-command service, Adapter Pattern (no external LLM).** `CopilotService` behind
+  `getCopilotService()` is the single swap-point. Today it returns the **offline `localCopilotService`**
+  — bilingual step content that weaves in the *live top pick* from the frozen engine (pure +
+  unit-tested). A generated/LLM guide is a drop-in with **zero** UI changes. Keeps the 100%
+  client-side / offline / no-keys / no-telemetry promise intact.
+- **Closed `data-tour-id` whitelist (no arbitrary selectors, no DOMPurify).** Targets are addressed
+  only through `TOUR_IDS` + the type-safe `tourId()` helper; `isTourId()` rejects anything else and
+  a unit test enforces every tour step maps to a whitelisted id. A missing target degrades to a
+  **silent fallback** (centered card + "not on screen" note) — never hangs or throws. No
+  `dangerouslySetInnerHTML`; step bodies use the same XSS-safe `lib/markdown.tsx` renderer.
+- **Portal overlay + live tracking (escapes every stacking context).** `CopilotOverlay` renders via
+  `createPortal` to `document.body`; a box-shadow spotlight rings the target, tracked by
+  `ResizeObserver` + `MutationObserver` + `scroll`/`resize`/`visualViewport` (all cleaned up — zero
+  leaks). Z-index strategy: primary `z10` < utility `z20` < copilot overlay `z9999`.
+- **Goes to the location, never covers it (Pre-Flight Check + responsive card).** `useCopilot`
+  navigates to the step's view, waits for the target to mount+paint (`waitForTarget` = MutationObserver
+  bounded by a timeout), scrolls it to the **upper third** (`scrollBy … − vh*0.20`) and waits a
+  paint before the first draw. On phones the card is a **bottom sheet** (`min(68vh, 100dvh−84px)`)
+  with **pinned header/footer + a scroll-only body**, so a full step — title, body, **and** both
+  Do/Don't cards — is always readable and **never clipped** (verified iPhone-SE 375×667: DON'T text
+  fully visible, spotlight above the sheet). Bottom controls (launcher · action bar · chat FAB) are
+  lifted on the Advisor view (`body.aa-view-advisor`) with `flex-shrink:0`/`nowrap` to prevent overlap.
+- **Nav-harmony, Start-Over, lean.** Switching tabs mid-tour stops it; "Start Over" resets the tour
+  next to the chat (`registerReset`); the launcher **and** the whole overlay are `lazy()` — initial
+  JS budget untouched. Engine (bus/whitelist/service/tour config) is unit-tested; the DOM overlay is
+  verified in-browser.

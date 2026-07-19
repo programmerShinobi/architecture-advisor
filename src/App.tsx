@@ -39,6 +39,7 @@ import { usePersistedState } from './hooks/usePersistedState';
 import { useTheme } from './hooks/useTheme';
 import { useExportActions } from './hooks/useExportActions';
 import { DEFAULT_LEVELS } from './config/defaults';
+import { FEATURES } from './config/features';
 import { PRESETS } from './config/presets';
 import type { MigrationKey } from './config/migrationPaths';
 import { DIMENSION_ORDER } from './config/dimensions';
@@ -62,6 +63,10 @@ const LearnView = lazy(() => import('./components/insights/LearnView'));
 // touches the initial bundle; it loads on first idle. Only `resetChatPersistence` (tiny, engine-free)
 // is imported eagerly, for "Start Over".
 const ChatFab = lazy(() => import('./components/chat/ChatFab'));
+
+// Interactive Copilot / guided tutorial (Phase 3) — the whole feature is a lazy plugin; only the
+// tiny `tourId()` helper is imported eagerly (to tag targets non-invasively).
+const Copilot = lazy(() => import('./features/copilot/Copilot'));
 
 type Selections = Partial<Record<DimensionId, string>>;
 
@@ -119,6 +124,8 @@ export default function App() {
   const undoRef = useRef<{ levels: Levels; selections: Selections; overrides: Overrides } | null>(null);
   // Registered by the chat panel when open, so "Start Over" can reset it in the same tab.
   const chatResetRef = useRef<(() => void) | null>(null);
+  // Registered by the Copilot so "Start Over" hard-resets the guided tour (anti-contamination).
+  const copilotResetRef = useRef<(() => void) | null>(null);
 
   const scenario: ScenarioState = { v: 1, mode, lang, levels, selections, overrides };
   const exportInput: ExportInput = { levels, overrides, selections: effective, lang };
@@ -141,6 +148,8 @@ export default function App() {
     // reset if the panel was opened, else just the persistence + cross-tab broadcast.
     if (chatResetRef.current) chatResetRef.current();
     else resetChatPersistence();
+    // ...and hard-resets the Copilot tour (anti-contamination, Phase 3.3).
+    copilotResetRef.current?.();
   };
   const undoReset = () => {
     const snap = undoRef.current;
@@ -229,13 +238,33 @@ export default function App() {
     };
   }, []);
 
+  // Flag the Advisor view on <body> so the floating controls (chat FAB + copilot launcher) can lift
+  // ABOVE the mobile action bar there — preventing the bottom-controls overlap (owner revision).
+  useEffect(() => {
+    document.body.classList.toggle('aa-view-advisor', mainView === 'advisor');
+    return () => document.body.classList.remove('aa-view-advisor');
+  }, [mainView]);
+
   return (
     <>
     <AuroraBackground />
-    {/* AI Advisor chat (Phase 3) — mounted GLOBALLY (never per-view) so navigating tabs closes the
-        Guide but never unmounts the chat or disrupts an active stream (Phase 2.2 harmony). */}
+    {/* AI Advisor chat (Phase 3) — gated behind FEATURES.chat (owner: disabled until finalized).
+        When on, it mounts GLOBALLY (never per-view) so navigating tabs closes the Guide but never
+        unmounts the chat or disrupts an active stream (Phase 2.2 harmony). */}
+    {FEATURES.chat && (
+      <Suspense fallback={null}>
+        <ChatFab contextInput={{ levels, overrides, mode, lang }} registerReset={(fn) => (chatResetRef.current = fn)} />
+      </Suspense>
+    )}
+    {/* Interactive Copilot / guided tutorial (Phase 3) — a lazy, pluggable feature module. */}
     <Suspense fallback={null}>
-      <ChatFab contextInput={{ levels, overrides, mode, lang }} registerReset={(fn) => (chatResetRef.current = fn)} />
+      <Copilot
+        currentView={mainView}
+        onRequestView={navigate}
+        lang={lang}
+        topPick={rankings.D1[0]?.name}
+        registerReset={(fn) => (copilotResetRef.current = fn)}
+      />
     </Suspense>
     <MobileChrome mainView={mainView} onNavigate={navigate} theme={theme} onToggleTheme={toggleTheme} mode={mode} onSetMode={setMode} />
     {mainView === 'advisor' && <AdvisorMobileBar />}
@@ -324,7 +353,7 @@ export default function App() {
 
         {/* Step 1 — project factors (its own dropdown section; owner feedback: factors and
             priorities must be SEPARATE so nobody gets confused). */}
-        <StepSection id="aa-sec-1" n="1" titleG="step1.g" titleE="step1.e">
+        <StepSection id="aa-sec-1" n="1" titleG="step1.g" titleE="step1.e" tourId="project-factors">
           <FactorInputs levels={levels} onChange={setLevels} />
         </StepSection>
 
@@ -333,7 +362,7 @@ export default function App() {
         {/* Step 2 — derived quality priorities; the adjust editor opens right underneath.
             Ungated (Fase 2d rev.3, owner): guided users can customise weights too — the
             plain-language adjuster is newcomer-safe. */}
-        <StepSection id="aa-sec-2" n="2" titleG="step2.g" titleE="step2.e">
+        <StepSection id="aa-sec-2" n="2" titleG="step2.g" titleE="step2.e" tourId="quality-priorities">
           <div style={{ display: 'grid', gap: '14px' }}>
             <PrioritiesCard weights={weights} onAdjust={() => setEditWeights((v) => !v)} editing={editWeights} />
             {editWeights && <QaOverridePanel weights={weights} overrides={overrides} onChange={setOverrides} />}
@@ -344,7 +373,7 @@ export default function App() {
 
         {/* Step 3 — recommendation across dimensions (collapsible card, Fase 2d). */}
         <div id="adv-plan" style={{ scrollMarginTop: '132px' }} />
-        <StepSection id="aa-sec-3" n="3" titleG="results.title.g" titleE="results.title.e">
+        <StepSection id="aa-sec-3" n="3" titleG="results.title.g" titleE="results.title.e" tourId="recommendation">
           <AnalysisStepper runKey={analysisRun} />
           <DimensionCards rankings={rankings} current={currentDim} onSelect={setCurrentDim} />
           <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
@@ -361,7 +390,7 @@ export default function App() {
 
         <div id="adv-save" className="f-div" style={{ scrollMarginTop: '132px' }} />
         {/* Step 4 — save & share (collapsible card, Fase 2d). */}
-        <StepSection id="aa-sec-4" n="4" titleG="step4.g" titleE="step4.e">
+        <StepSection id="aa-sec-4" n="4" titleG="step4.g" titleE="step4.e" tourId="strategic-output">
           <Toolbar run={run} status={exportStatus} setStatus={setExportStatus} mode={mode} onImport={importScenario} />
         </StepSection>
 

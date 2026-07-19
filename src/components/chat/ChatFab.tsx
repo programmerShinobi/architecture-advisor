@@ -49,6 +49,7 @@ export function ChatFab({ contextInput, registerReset }: Readonly<Props>) {
       <button
         ref={btnRef}
         type="button"
+        data-tour-id="ai-advisor"
         className={'aa-chat-fab' + (open ? ' open' : '')}
         onClick={toggle}
         aria-label={open ? t('chat.close') : t('chat.open')}

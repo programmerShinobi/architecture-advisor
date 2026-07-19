@@ -2798,6 +2798,221 @@ svg {
   }
 }
 
+/* ============================================================
+   Interactive Copilot / guided tutorial (Phase 3).
+   ============================================================ */
+/* During a tour the app's own sticky 4-step rail is redundant (the Copilot guides you) and, on
+   short viewports, it steals the band a spotlight needs — so hide it while the tour runs. */
+body.aa-cop-running .aa-steps {
+  display: none;
+}
+.aa-cop-launch-root {
+  position: fixed;
+  left: max(18px, env(safe-area-inset-left));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 70;
+}
+@media (max-width: 1180px) {
+  .aa-cop-launch-root {
+    bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+  /* Advisor view has the mobile action bar — lift the corner controls ABOVE it (no overlap). */
+  body.aa-view-advisor .aa-cop-launch-root,
+  body.aa-view-advisor .aa-chat-root {
+    bottom: calc(134px + env(safe-area-inset-bottom));
+  }
+}
+.aa-cop-offscreen {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+.aa-cop-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 15px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+  background: color-mix(in srgb, var(--color-background-tertiary) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aa-accent) 30%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--aa-shadow-md);
+  transition:
+    transform 0.15s var(--aa-ease),
+    border-color 0.15s ease;
+}
+.aa-cop-launch:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--aa-accent) 50%, transparent);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-cop-launch {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-secondary);
+  }
+}
+
+.aa-cop-portal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999; /* overlay tier (owner z-index strategy): above the primary action + utility FABs */
+  pointer-events: none;
+}
+/* Spotlight ring — a huge box-shadow dims everything except the target cut-out. */
+.aa-cop-spot {
+  position: fixed;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--aa-accent) 70%, transparent),
+    0 0 0 9999px rgba(3, 4, 12, 0.55);
+  transition:
+    top 0.18s var(--aa-ease),
+    left 0.18s var(--aa-ease),
+    width 0.18s var(--aa-ease),
+    height 0.18s var(--aa-ease);
+  pointer-events: none;
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aa-cop-spot {
+    box-shadow:
+      0 0 0 3px var(--color-text-info),
+      0 0 0 9999px rgba(3, 4, 12, 0.55);
+  }
+}
+/* Fallback scrim when there's no target (silent fallback → centered card). */
+.aa-cop-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 4, 12, 0.5);
+  pointer-events: none;
+}
+.aa-cop-card {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: auto;
+  padding: 12px 14px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.4);
+  outline: none;
+  /* Flex column: header + footer are pinned (flex:none), only the middle scrolls — no control or
+     text is ever clipped, on any viewport height. */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 24px);
+  overflow: hidden;
+}
+.aa-cop-head,
+.aa-cop-foot {
+  flex: none;
+}
+.aa-cop-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+/* Phones: a bottom sheet — always fully visible, full-width, never clipped by the target's edge. */
+.aa-cop-card.sheet {
+  left: 8px;
+  right: 8px;
+  top: auto;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  width: auto;
+  max-width: none;
+  transform: none;
+  /* Tall enough that a full step (title + body + Do/Don't) fits WITHOUT internal clipping; the
+     sheet still only grows to its content, and the target is scrolled above it. Header + Back/Next
+     stay pinned; the body scrolls only if content is unusually long. */
+  max-height: min(68vh, calc(100dvh - 84px));
+}
+.aa-cop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.aa-cop-step {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-info);
+}
+.aa-cop-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+.aa-cop-body {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.aa-cop-body > :first-child {
+  margin-top: 0;
+}
+.aa-cop-body > :last-child {
+  margin-bottom: 0;
+}
+.aa-cop-rules-wrap {
+  display: grid;
+  gap: 8px;
+  margin: 11px 0 4px;
+}
+.aa-cop-rules {
+  border-radius: var(--border-radius-md);
+  padding: 8px 11px;
+  border: 1px solid var(--color-border-tertiary);
+}
+.aa-cop-rules.do {
+  background: var(--color-background-success);
+}
+.aa-cop-rules.dont {
+  background: var(--color-background-danger);
+}
+.aa-cop-rules-h {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.aa-cop-rules.do .aa-cop-rules-h {
+  color: var(--color-text-success);
+}
+.aa-cop-rules.dont .aa-cop-rules-h {
+  color: var(--color-text-danger);
+}
+.aa-cop-rules ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+.aa-cop-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .aa-cop-spot,
+  .aa-cop-launch {
+    transition: none;
+  }
+}
+
 /* Top tab nav (desktop) — display via a class (NOT inline) so the phone-hide wins over it. */
 .aa-topnav {
   display: flex;
