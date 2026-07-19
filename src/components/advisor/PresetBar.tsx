@@ -81,7 +81,7 @@ export function PresetBar({ activeId, onApply, onReset, onUndo }: Readonly<Props
         {t('presets.fill')}
       </div>
 
-      {/* Search + tag filters */}
+      {/* Search + tag filters. */}
       <div className="aa-gallery-tools">
         <label className="aa-gallery-search">
           <IconSearch size={14} aria-hidden style={{ color: 'var(--color-text-tertiary)', flex: 'none' }} />
@@ -98,7 +98,9 @@ export function PresetBar({ activeId, onApply, onReset, onUndo }: Readonly<Props
 
       {/* Card gallery — dominant custom card first, then matching presets */}
       <div className="aa-gallery-grid">
-        <button type="button" className="aa-scard aa-scard-custom" onClick={() => setWizardOpen(true)}>
+        {/* Dominant "start here" card — also the compact Copilot anchor for the "pick a scenario"
+            step (a tight target that fits the spotlight band on small screens). */}
+        <button type="button" className="aa-scard aa-scard-custom" data-tour-id="scenario-gallery" onClick={() => setWizardOpen(true)}>
           <span className="aa-scard-head">
             <IconTerminal2 size={16} aria-hidden />
             {t('wizard.open')}
