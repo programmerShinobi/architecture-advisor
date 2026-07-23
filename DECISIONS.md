@@ -471,6 +471,18 @@ would have tripped both — the very regressions the mandate forbids):
   per-view), so switching tabs closes the Guide but **never** unmounts the chat or disrupts an
   active stream. Verified in-browser: reply grounded to `/100`, survives nav, reset wipes, EN/ID.
 
+> **Update (2026-07-23): confined to the Advisor tab (supersedes the "mounts globally" bullet
+> above).** Owner request: the chat should only appear where there's something to talk about — the
+> scenario being built on the Advisor tab — so it never shows as a confusing floating button on
+> Home/Insights. `App.tsx` now renders `<ChatFab>` only when `FEATURES.chat && mainView ===
+> 'advisor'`; leaving the tab unmounts it. This is a deliberate trade-off against the original
+> "never disrupts an active stream" guarantee: a stream in flight when the user navigates away IS
+> now cancelled (a clean abort via the existing `AbortSignal` plumbing, not a crash or leak) —
+> accepted because confining *visibility* to the relevant tab was judged more important than
+> surviving an in-flight reply across an unrelated tab switch. Conversation **history** is
+> unaffected either way (`localStorage`-persisted, same as before) and resumes the moment the user
+> returns to Advisor.
+
 ## Phase 3 — Interactive Copilot & guided tour, 2026-07-19
 
 A pluggable **"Guide me" walkthrough** (`src/features/copilot/`) that spotlights each of the four

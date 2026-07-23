@@ -157,6 +157,56 @@ describe('local advisor adapter — grounded, deterministic, bilingual', () => {
     expect(answerText('how do I compare two scenarios?', ctx())).toMatch(/Pin A/);
   });
 
+  // 5W1H completeness pass (owner: map coverage explicitly onto Who/What/When/Where/Why/How so no
+  // question leaves a user confused). What/Why/How were already broad; these close the Who/When/
+  // Where gaps and sharpen "why not X" — all still grounded, never invented.
+  it('Who/When: explains who a NAMED option fits, grounded in its real qaFit strengths', () => {
+    const a = answerText('who should use microservices?', ctx());
+    expect(a).toMatch(/Microservices fits best when you prioritize/);
+  });
+
+  it('Who/When: surfaces a REAL anti-pattern caution when the forced pick would actually trigger one', () => {
+    // Small team + low devops maturity is the real premature-microservices precondition.
+    const a = answerText('when should I use microservices?', ctx({ levels: { ...DEFAULT_LEVELS, team: 0, devops: 0 } }));
+    expect(a).toMatch(/But watch out/);
+    expect(a).toMatch(/distributed monolith|premature/i);
+  });
+
+  it('Why not: explains a non-top pick AND names the real gap to the current winner', () => {
+    const a = answerText('why not serverless?', ctx());
+    const ranked = rank(ctx().levels, 'D1');
+    const place = ranked.findIndex((r) => r.id === 'serverless') + 1;
+    if (place > 1) {
+      expect(a).toMatch(/points behind the current winner/);
+    } else {
+      expect(a).toMatch(/Serverless/);
+    }
+  });
+
+  it('Who (app-level): answers "who is this for" without needing a named architecture', () => {
+    const a = answerText('who is this app for?', ctx());
+    expect(a).toMatch(/students to senior architects|Guided mode/);
+  });
+
+  it('Where: "where is my data" reaches the same grounded privacy answer as "is this private"', () => {
+    expect(answerText('where is my data stored?', ctx())).toMatch(/100% in your browser/);
+  });
+
+  it('Where: points to the Insights tab for "where can I learn more"', () => {
+    const a = answerText('where can I learn more about architectures?', ctx());
+    expect(a).toMatch(/Insights/);
+  });
+
+  it('How: onboarding ("getting started") and honesty ("how accurate") FAQ', () => {
+    expect(answerText('how do I get started?', ctx())).toMatch(/Pick a scenario card/);
+    expect(answerText('how accurate is this?', ctx())).toMatch(/Decision support, not an oracle/);
+  });
+
+  it('5W1H additions are bilingual (ID)', () => {
+    expect(answerText('siapa yang cocok pakai microservices?', ctx({ lang: 'id' }))).toMatch(/cocok saat Anda memprioritaskan/);
+    expect(answerText('untuk siapa aplikasi ini?', ctx({ lang: 'id' }))).toMatch(/mahasiswa hingga arsitek senior/);
+  });
+
   it('adapter streams the full answer and is offline (network:false)', async () => {
     expect(localAdvisorAdapter.network).toBe(false);
     const history = [{ id: '1', role: 'user' as const, text: 'recommend', ts: 0 }];

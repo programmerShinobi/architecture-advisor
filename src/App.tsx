@@ -248,10 +248,11 @@ export default function App() {
   return (
     <>
     <AuroraBackground />
-    {/* Chat Advisor (Phase 3) — gated behind FEATURES.chat. When on, it mounts GLOBALLY (never
-        per-view) so navigating tabs closes the Guide but never unmounts the chat or disrupts an
-        active stream (Phase 2.2 harmony). */}
-    {FEATURES.chat && (
+    {/* Chat Advisor (Phase 3) — gated behind FEATURES.chat, and confined to the Advisor tab (owner
+        request): the chat is about the scenario being built there, so surfacing it on Home/Insights
+        would just be a confusing floating button with nothing to talk about. Leaving the tab
+        unmounts it; conversation history still persists (localStorage) and resumes on return. */}
+    {FEATURES.chat && mainView === 'advisor' && (
       <Suspense fallback={null}>
         <ChatFab contextInput={{ levels, overrides, mode, lang }} registerReset={(fn) => (chatResetRef.current = fn)} />
       </Suspense>

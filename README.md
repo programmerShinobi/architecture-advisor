@@ -122,7 +122,7 @@ flowchart LR
 
 ## Chat Advisor (Phase 3)
 
-A floating **Chat Advisor** (bottom-right) answers questions grounded in *your* scenario across a
+A floating **Chat Advisor** (bottom-right, **Advisor tab only**) answers questions grounded in *your* scenario across a
 deliberately broad range of angles, so a newcomer is never stuck wondering how the app — or the
 model behind it — actually behaves:
 
@@ -167,8 +167,11 @@ flowchart LR
 - **No spam, clean cancel** — submissions are throttled and ignored while streaming; every turn
   streams under an `AbortSignal` (stop / regenerate / unmount all cancel cleanly).
 - **Anti-contamination** — "Start Over" wipes chat state + persistence and broadcasts a reset so
-  other tabs clear silently. The launcher is mounted **globally**, so switching tabs closes the
-  Guide but never disrupts an active chat stream.
+  other browser tabs clear silently.
+- **Confined to the Advisor tab** — the launcher only renders there (owner request): the chat is
+  about the scenario being built on that tab, so it would just be a confusing floating button with
+  nothing to talk about on Home/Insights. Conversation history persists (`localStorage`) and picks
+  back up the moment you return to Advisor.
 - **Lean & safe** — the launcher **and** everything behind it are lazy-loaded (initial JS budget
   untouched); bubbles render with the dependency-free, XSS-safe-by-construction Markdown renderer
   (React elements, never `dangerouslySetInnerHTML`), each wrapped in a per-bubble error boundary.

@@ -73,12 +73,21 @@ function explain(optId: string, dim: DimensionId, ctx: ChatContext, lang: Lang):
   const body = blurb ? tr(ctx.mode === 'expert' ? blurb.expert : blurb.plain, lang) : '';
   const ranked = rank(ctx.levels, dim);
   const place = ranked.findIndex((r) => r.id === optId) + 1;
-  const score = displayScore((ranked.find((r) => r.id === optId) ?? ranked[0]).score);
+  const entry = ranked.find((r) => r.id === optId) ?? ranked[0];
+  const score = displayScore(entry.score);
   const ctxLine =
     lang === 'id'
       ? `\n\nPada skenario Anda, **${opt.name}** menempati peringkat #${place} di ${tr(DIMENSIONS[dim].name, lang)} (${score}/100).`
       : `\n\nIn your scenario, **${opt.name}** ranks #${place} in ${tr(DIMENSIONS[dim].name, lang)} (${score}/100).`;
-  return `**${opt.name}** — ${tr(DIMENSIONS[dim].name, lang)}\n\n${body}${ctxLine}`;
+  // "Why NOT this one" (owner request, 5W1H "Why"): when it's not the top pick, name the gap and the
+  // actual leader — answers "why not X" without inventing a reason beyond the real composite score.
+  const gapLine =
+    place > 1
+      ? lang === 'id'
+        ? `\n\n${displayScore(ranked[0].score) - score} poin di bawah pemenang saat ini, **${ranked[0].name}** (${displayScore(ranked[0].score)}/100).`
+        : `\n\n${displayScore(ranked[0].score) - score} points behind the current winner, **${ranked[0].name}** (${displayScore(ranked[0].score)}/100).`
+      : '';
+  return `**${opt.name}** — ${tr(DIMENSIONS[dim].name, lang)}\n\n${body}${ctxLine}${gapLine}`;
 }
 
 function compare(a: (typeof OPTIONS)[number], b: (typeof OPTIONS)[number], lang: Lang): string {
@@ -105,6 +114,27 @@ function why(ctx: ChatContext, lang: Lang): string {
   return lang === 'id'
     ? `**Kenapa ${top.name}?** Skor komposit dari atribut berbobot tertinggi Anda:\n\n${rows}`
     : `**Why ${top.name}?** Its composite comes from your highest-weighted attributes:\n\n${rows}`;
+}
+
+/** "Who should use X" / "when should I use X" (5W1H: Who + When) — grounded in the option's real
+ *  qaFit strengths, plus any real anti-pattern rule that would actually fire if it were chosen
+ *  (computed by forcing it as this dimension's pick and re-running the real detector — never a
+ *  fabricated caution). */
+function whenWhoInfo(optId: string, dim: DimensionId, ctx: ChatContext, lang: Lang): string {
+  const opt = DIMENSIONS[dim].options.find((o) => o.id === optId);
+  if (!opt) return fallback(lang);
+  const strengths = QA_ORDER.map((q, i) => ({ q, v: opt.qaFit[i] }))
+    .sort((x, y) => y.v - x.v)
+    .slice(0, 3)
+    .map((s) => tr(QUALITY_ATTRIBUTES[s.q].name, lang))
+    .join(', ');
+  const selections = Object.fromEntries(DIMENSION_ORDER.map((d) => [d, d === dim ? optId : rank(ctx.levels, d)[0].id])) as Record<DimensionId, string>;
+  const hits = detectAntiPatterns({ levels: ctx.levels, selections, migrationPathChosen: false });
+  const head = lang === 'id' ? `**${opt.name} cocok saat Anda memprioritaskan:** ${strengths}.` : `**${opt.name} fits best when you prioritize:** ${strengths}.`;
+  if (hits.length === 0) return head;
+  const caution = lang === 'id' ? '\n\nTapi hati-hati:' : '\n\nBut watch out:';
+  const rows = hits.map((h) => `- ${tr(h.message, lang)}`).join('\n\n');
+  return `${head}${caution}\n\n${rows}`;
 }
 
 // Broadened scenario coverage (Phase 3.4, owner request): app-usage FAQ + more analytical angles,
@@ -323,10 +353,41 @@ const FAQ: { keywords: string[]; answer: Bilingual }[] = [
     },
   },
   {
-    keywords: ['custom wizard', 'build custom system', 'wizard kustom', 'sistem kustom', 'bangun sistem sendiri'],
+    keywords: ['custom wizard', 'build custom system', 'where is the wizard', 'wizard kustom', 'sistem kustom', 'bangun sistem sendiri', 'di mana wizard'],
     answer: {
       en: 'The **Custom Wizard** (dashed card in the scenario gallery) asks 4 plain questions (goal, domain, priorities, constraints) and maps them onto the same 14 factors — one scoring model either way.',
       id: '**Wizard Kustom** (kartu bergaris putus di galeri skenario) menanyakan 4 pertanyaan sederhana (tujuan, domain, prioritas, batasan) dan memetakannya ke 14 faktor yang sama — satu model penilaian untuk keduanya.',
+    },
+  },
+  // 5W1H "Who": who the whole app (not a specific architecture) is for.
+  {
+    keywords: ['who is this for', 'who is this app for', 'who should use this app', 'siapa yang cocok pakai aplikasi', 'untuk siapa aplikasi ini'],
+    answer: {
+      en: 'Anyone making an architecture decision — from students to senior architects. Newcomers get plain-language guidance (Guided mode); experts get auditable numbers and editable weights (Expert mode) — the same underlying model either way, so a decision made by trend instead of trade-off analysis never has to happen.',
+      id: 'Siapa pun yang mengambil keputusan arsitektur — dari mahasiswa hingga arsitek senior. Pemula mendapat panduan berbahasa sederhana (mode Pemandu); ahli mendapat angka yang bisa diaudit dan bobot yang bisa disetel (mode Ahli) — model dasarnya sama, sehingga keputusan berdasar tren, bukan analisis trade-off, tak perlu terjadi.',
+    },
+  },
+  // 5W1H "Where": where to learn more (distinct from "where is my data", handled by privacyInfo).
+  {
+    keywords: ['where can i learn', 'where do i learn more', 'learn more about architecture', 'insights tab', 'di mana saya belajar', 'pelajari lebih lanjut', 'belajar lebih lanjut'],
+    answer: {
+      en: 'The **Insights** tab has evergreen, plain-language articles on every architecture the model scores (and general topics like ISO/IEC 25010), each with real cited sources — for beginners and experts alike.',
+      id: 'Tab **Insights** punya artikel evergreen berbahasa sederhana untuk setiap arsitektur yang dinilai model (dan topik umum seperti ISO/IEC 25010), masing-masing dengan sumber nyata yang dikutip — untuk pemula maupun ahli.',
+    },
+  },
+  // 5W1H "How": getting started, and whether the numbers can be trusted.
+  {
+    keywords: ['how do i get started', 'how does this app work', 'how do i use this app', 'getting started', 'bagaimana cara mulai', 'bagaimana cara pakai aplikasi', 'cara menggunakan aplikasi'],
+    answer: {
+      en: 'Pick a scenario card (or build a Custom one) → tune the 14 project factors if needed → see the ranked recommendation with the full calculation → export or share. Everything recomputes instantly as you go — there is no "submit" step.',
+      id: 'Pilih kartu skenario (atau bangun yang Kustom) → setel 14 faktor proyek bila perlu → lihat rekomendasi berperingkat dengan perhitungan lengkap → ekspor atau bagikan. Semua terhitung ulang seketika — tak ada langkah "kirim".',
+    },
+  },
+  {
+    keywords: ['how accurate', 'how reliable', 'can i trust this', 'trust the score', 'seberapa akurat', 'bisa dipercaya', 'apakah bisa dipercaya'],
+    answer: {
+      en: "Decision support, not an oracle. The encoded weights are defensible expert defaults, not validated facts — every value is editable. Always apply your team's judgment and context this tool cannot capture.",
+      id: 'Alat bantu keputusan, bukan ramalan. Bobot yang tertanam adalah default ahli yang dapat dipertanggungjawabkan, bukan fakta tervalidasi — semua nilai dapat diubah. Selalu gunakan pertimbangan tim dan konteks yang tidak dapat ditangkap alat ini.',
     },
   },
 ];
@@ -347,7 +408,8 @@ function capabilities(lang: Lang): string {
         '- Menjawab istilah dari **glosarium** (arsitektur maupun 12 **atribut kualitas**)',
         '- Menunjukkan **biaya/operasional**, **risiko/anti-pattern** (skenario Anda atau katalog lengkap), **sensitivitas**, dan **jalur migrasi**',
         '- Menjelaskan **dimensi** ("apa itu granularitas deploy?"), **faktor** ("apa itu budget?"), **jawaban Anda saat ini**, dan **alternatif/runner-up**',
-        '- Menjawab soal **privasi**, **mode**, **ekspor**, **reset**, **pintasan keyboard**, **tema**, **bahasa**, **instalasi PWA**, **aksesibilitas**, **browser**, **metodologi skor**, dan **Wizard Kustom**',
+        '- Menjawab **siapa** yang cocok pakai sebuah arsitektur, **kapan** memakainya, dan **kenapa bukan** opsi lain',
+        '- Menjawab soal **privasi**, **mode**, **ekspor**, **reset**, **pintasan keyboard**, **tema**, **bahasa**, **instalasi PWA**, **aksesibilitas**, **browser**, **metodologi skor**, **Wizard Kustom**, **untuk siapa aplikasi ini**, **di mana belajar lebih lanjut**, cara **mulai**, dan **seberapa akurat** ini',
       ].join('\n')
     : [
         "I'm the **Chat Advisor** — computed from the model, not a language model. I can:",
@@ -358,7 +420,8 @@ function capabilities(lang: Lang): string {
         '- Answer **glossary** terms (architecture *and* the 12 **quality attributes**)',
         '- Cover **cost/ops**, **risk/anti-patterns** (your scenario or the full catalog), **sensitivity**, and **migration paths**',
         '- Explain a **dimension** ("what is deployment granularity?"), a **factor** ("what is budget?"), **your current answers**, and **alternatives/runner-up**',
-        '- Answer **privacy**, **mode**, **export**, **reset**, **keyboard shortcuts**, **theme**, **language**, **PWA install**, **accessibility**, **browser support**, **scoring methodology**, and the **Custom Wizard**',
+        '- Answer **who** should use an architecture, **when** to use it, and **why not** the alternatives',
+        '- Answer **privacy**, **mode**, **export**, **reset**, **keyboard shortcuts**, **theme**, **language**, **PWA install**, **accessibility**, **browser support**, **scoring methodology**, the **Custom Wizard**, **who this app is for**, **where to learn more**, **getting started**, and **how accurate** this is',
       ].join('\n');
 }
 
@@ -390,10 +453,11 @@ export function answerText(input: string, ctx: ChatContext): string {
   // App-usage / meta FAQ (broadened scenario coverage, owner request): so no aspect of using the
   // app — privacy, mode, exporting, resetting, cost, risk, sensitivity, migration — leaves anyone
   // confused. Checked before the glossary/explain intents since these are more specific questions.
-  if (has(text, 'private', 'privacy', 'offline', 'server', 'account', 'sign up', 'telemetry', 'privasi', 'akun', 'daftar', 'gratis', 'free')) return privacyInfo(lang);
+  // "server calls"/"a server", not bare "server" — avoids colliding with the "Serverless" option name.
+  if (has(text, 'private', 'privacy', 'offline', 'server call', 'no server', 'a server', 'account', 'sign up', 'telemetry', 'privasi', 'akun', 'daftar', 'gratis', 'free', 'where is my data', 'where is this stored', 'di mana data saya', 'data saya disimpan')) return privacyInfo(lang);
   if (has(text, 'guided mode', 'expert mode', 'mode ahli', 'mode pemandu', 'which mode', 'mode apa', 'beda mode')) return modeInfo(lang);
-  if (has(text, 'export', 'download', 'share link', 'adr', 'ekspor', 'unduh', 'bagikan', 'simpan hasil')) return exportInfo(lang);
-  if (has(text, 'reset', 'start over', 'mulai ulang', 'atur ulang', 'hapus semua')) return resetInfo(lang);
+  if (has(text, 'export', 'download', 'share link', 'adr', 'ekspor', 'unduh', 'bagikan', 'simpan hasil', 'where can i export', 'where do i export', 'di mana saya ekspor', 'di mana simpan')) return exportInfo(lang);
+  if (has(text, 'reset', 'start over', 'mulai ulang', 'atur ulang', 'hapus semua', 'where is reset', 'where do i reset', 'di mana atur ulang')) return resetInfo(lang);
   if (has(text, 'migration', 'migrate', 'brownfield', 'legacy system', 'existing system', 'migrasi', 'sistem lama', 'sistem existing')) return migrationInfo(text, lang);
   if (has(text, 'cost', 'expensive', 'infra cost', 'operational overhead', 'biaya', 'mahal', 'operasional')) {
     return costOps(ctx, lang, matched.find((o) => o.dim === 'D1')?.id);
@@ -421,6 +485,14 @@ export function answerText(input: string, ctx: ChatContext): string {
 
   if (matched.length >= 2 && has(text, 'vs', 'versus', 'compare', 'banding', 'atau', 'or')) {
     return compare(matched[0], matched[1], lang);
+  }
+  // 5W1H "Who" + "When", for a NAMED option — checked before the generic "why" so "why not X" (and
+  // "who/when should I use X") answer about X specifically, not the top D1 pick in general.
+  if (matched.length >= 1 && has(text, 'who should use', 'when should i use', 'when to use', 'siapa yang cocok pakai', 'kapan pakai', 'kapan menggunakan', 'kapan harus pakai')) {
+    return whenWhoInfo(matched[0].id, matched[0].dim, ctx, lang);
+  }
+  if (matched.length >= 1 && has(text, 'why not', 'kenapa bukan', 'kenapa tidak')) {
+    return explain(matched[0].id, matched[0].dim, ctx, lang);
   }
   if (has(text, 'why', 'kenapa', 'mengapa', 'alasan')) return why(ctx, lang);
   if (matched.length >= 1 && !has(text, 'recommend', 'rekomendasi')) {
