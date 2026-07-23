@@ -840,6 +840,12 @@ html.light .aa-aurora {
   -webkit-backdrop-filter: none;
   background: var(--color-background-secondary);
 }
+/* Ensure modal cards are fully opaque, not transparent (owner request) */
+.aa-manual.aa-glass,
+.aa-chat-panel.aa-glass,
+.aa-cop-card.aa-glass {
+  background: var(--color-background-primary) !important;
+}
 
 /* ---- Modern badge system (Fase 1 polish) --------------------------------
    One recipe for every badge / complementary label: glass pill, accent-tinted
@@ -2755,6 +2761,7 @@ svg {
   border-radius: var(--border-radius-xl);
   overflow: hidden;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  background: var(--color-background-primary);
 }
 @media (max-width: 640px) {
   .aa-chat-panel {
@@ -3065,6 +3072,7 @@ body.aa-cop-running .aa-steps {
   border-radius: var(--border-radius-lg);
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.4);
   outline: none;
+  background: var(--color-background-primary);
   /* Flex column: header + footer are pinned (flex:none), only the middle scrolls — no control or
      text is ever clipped, on any viewport height. */
   display: flex;
