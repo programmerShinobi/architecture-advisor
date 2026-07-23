@@ -515,12 +515,17 @@ html.light {
 .f-ov {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.32);
+  background: rgba(0, 0, 0, 0.5);
   display: none;
   align-items: flex-start;
   justify-content: center;
-  z-index: 50;
+  z-index: 10001;
   padding: 60px 16px;
+  /* Ensure backdrop covers entire viewport on mobile, including safe areas */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .f-ov.open {
   display: flex;
@@ -557,8 +562,8 @@ html.light {
   border-radius: 9px;
   display: grid;
   place-items: center;
-  color: #05060f;
-  background: var(--aa-grad-accent);
+  color: var(--color-text-secondary);
+  background: var(--color-background-tertiary);
   flex: none;
 }
 .aa-manual-titles {
@@ -2197,6 +2202,12 @@ svg {
     background: linear-gradient(to top, var(--color-background-primary) 60%, transparent);
     pointer-events: none;
   }
+  /* Hide action bar when Guide modal is open */
+  .f-ov.open ~ .aa-mobile-actionbar,
+  body:has(.f-ov.open) .aa-mobile-actionbar {
+    display: none !important;
+    pointer-events: none !important;
+  }
   .aa-mobile-actionbar > button {
     pointer-events: auto;
     flex: 1;
@@ -2341,16 +2352,16 @@ svg {
   transform: translateY(-1px);
 }
 .aa-export-btn.primary {
-  color: #05060f;
+  color: var(--color-text-secondary);
   font-weight: 600;
-  background: var(--aa-grad-accent);
-  border-color: transparent;
-  box-shadow: 0 3px 14px -6px rgba(139, 124, 255, 0.7);
+  background: var(--color-background-secondary);
+  border-color: var(--color-border-secondary);
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
 }
 .aa-export-btn.primary .aa-kbd {
-  color: #05060f;
-  background: rgba(5, 6, 15, 0.12);
-  border-color: rgba(5, 6, 15, 0.18);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border-color: var(--color-border-tertiary);
 }
 @supports not (background: color-mix(in srgb, red, blue)) {
   .aa-export-btn {
@@ -2734,9 +2745,9 @@ svg {
   cursor: pointer;
   display: grid;
   place-items: center;
-  color: #05060f;
-  background: var(--aa-grad-accent);
-  box-shadow: 0 8px 24px -6px rgba(139, 124, 255, 0.7);
+  color: var(--color-text-tertiary);
+  background: var(--color-background-secondary);
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.15);
   transition:
     transform 0.15s var(--aa-ease),
     box-shadow 0.15s ease;
@@ -2946,8 +2957,8 @@ svg {
   cursor: pointer;
   display: grid;
   place-items: center;
-  color: #05060f;
-  background: var(--aa-grad-accent);
+  color: var(--color-text-secondary);
+  background: var(--color-background-secondary);
 }
 .aa-chat-send:disabled {
   opacity: 0.5;
@@ -3010,11 +3021,10 @@ body.aa-cop-running .aa-steps {
   font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
-  color: var(--color-text-primary);
-  background: color-mix(in srgb, var(--color-background-tertiary) 70%, transparent);
-  border: 1px solid color-mix(in srgb, var(--aa-accent) 30%, transparent);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--aa-shadow-md);
+  color: var(--color-text-secondary);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
   transition:
     transform 0.15s var(--aa-ease),
     border-color 0.15s ease;
