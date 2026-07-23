@@ -213,6 +213,11 @@ flowchart LR
 - **Nav-harmony & clean teardown** — switching tabs mid-tour stops it; "Start Over" resets the tour
   alongside the chat; every observer/listener/timer is cleaned up (zero leaks). The launcher and
   the whole overlay are **lazy-loaded**, so the initial JS budget is untouched.
+- **One floating thing at a time** — opening any of {Chat Advisor, this tour, the Guide/Manual,
+  command palette, shortcuts, Compare} closes every other one, so nothing is ever covered by or
+  highlighted behind another. The tour's final step targets the Chat Advisor FAB, a *fixed* control,
+  so that step skips the scroll-into-view + mobile bottom sheet (which would otherwise cover the very
+  button it points at) via a `floating` flag on the step.
 
 ## Run it locally
 

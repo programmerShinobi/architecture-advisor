@@ -114,7 +114,11 @@ export function CopilotOverlay({ running, step, index, total, bus, onNext, onPre
   const vw = window.visualViewport?.width ?? window.innerWidth;
   const vh = window.visualViewport?.height ?? window.innerHeight;
   // Phones: the card is a bottom SHEET (always fully visible, never clipped) — CSS positions it.
-  const sheet = vw <= 640;
+  // EXCEPT for a floating target (e.g. the Chat Advisor FAB): that button lives in the same bottom
+  // corner a sheet would occupy, so the sheet would cover the very control it's meant to highlight
+  // (owner report). Floating steps fall back to the clamped desktop placement below instead, which
+  // already flips above/beside the target to stay clear of it.
+  const sheet = vw <= 640 && !step.floating;
   const cardW = Math.min(340, vw - 24);
   const h = cardH || 320; // measured card height (fallback until first layout)
 

@@ -24,6 +24,13 @@ const OPTIONS = DIMENSION_ORDER.flatMap((dim) =>
 
 const has = (text: string, ...words: string[]) => words.some((w) => text.includes(w));
 
+// A "what IS X" / "define X" question is about the CONCEPT; personal/scenario framing ("my", "this
+// combination", "this pick") means the user wants live data about THEIR scenario instead. Used to
+// disambiguate generic keywords (e.g. "anti-pattern") that are both a glossary term and a live check.
+const isConceptual = (text: string) =>
+  has(text, 'what is', 'what are', 'define', 'meaning of', 'apa itu', 'artinya', 'apa yang dimaksud') &&
+  !has(text, 'my ', 'this combination', 'this pick', 'this scenario', 'my scenario', 'skenario saya', 'kombinasi ini', 'kombinasi saya', 'pilihan ini');
+
 function findOptions(text: string) {
   return OPTIONS.filter((o) => text.includes(o.lc) || text.includes(o.id.replaceAll('-', ' ')));
 }
@@ -325,7 +332,9 @@ const FAQ: { keywords: string[]; answer: Bilingual }[] = [
     },
   },
   {
-    keywords: ['install this app', 'add to home screen', 'pwa', 'install app', 'instal aplikasi', 'aplikasi offline'],
+    // No "aplikasi offline" — it collided with the privacy intent's "offline" keyword (asking
+    // about offline install would wrongly get the generic privacy blurb instead of this answer).
+    keywords: ['install this app', 'add to home screen', 'pwa', 'install app', 'instal aplikasi'],
     answer: {
       en: "This app is a **PWA** — installable from your browser's menu (Add to Home Screen / Install App) and works fully offline afterward.",
       id: 'Aplikasi ini adalah **PWA** — bisa diinstal dari menu peramban Anda (Tambah ke Layar Utama / Instal Aplikasi) dan bekerja penuh secara offline sesudahnya.',
@@ -450,30 +459,53 @@ export function answerText(input: string, ctx: ChatContext): string {
   const factorHit = findFactor(text);
   if (factorHit) return factorInfo(factorHit, ctx, lang);
 
+  // The FAQ table is checked FIRST among the app-usage intents: its entries are specific multi-word
+  // phrases (e.g. "install this app"), so they must outrank the broader single-word checks below
+  // (e.g. bare "offline") — otherwise "can I install this app offline?" would be shadowed by the
+  // generic privacy answer purely because "offline" is checked first in source order.
+  const faqHit = FAQ.find((f) => has(text, ...f.keywords));
+  if (faqHit) return tr(faqHit.answer, lang);
+
   // App-usage / meta FAQ (broadened scenario coverage, owner request): so no aspect of using the
   // app — privacy, mode, exporting, resetting, cost, risk, sensitivity, migration — leaves anyone
   // confused. Checked before the glossary/explain intents since these are more specific questions.
   // "server calls"/"a server", not bare "server" — avoids colliding with the "Serverless" option name.
-  if (has(text, 'private', 'privacy', 'offline', 'server call', 'no server', 'a server', 'account', 'sign up', 'telemetry', 'privasi', 'akun', 'daftar', 'gratis', 'free', 'where is my data', 'where is this stored', 'di mana data saya', 'data saya disimpan')) return privacyInfo(lang);
+  // No "daftar" here either — that Indonesian word doubles as "list" (this app has no sign-up flow
+  // to "daftar" for), and it collided with the anti-pattern catalog's own "list all" qualifier.
+  if (has(text, 'private', 'privacy', 'offline', 'server call', 'no server', 'a server', 'account', 'sign up', 'telemetry', 'privasi', 'akun', 'gratis', 'free', 'where is my data', 'where is this stored', 'di mana data saya', 'data saya disimpan')) return privacyInfo(lang);
   if (has(text, 'guided mode', 'expert mode', 'mode ahli', 'mode pemandu', 'which mode', 'mode apa', 'beda mode')) return modeInfo(lang);
   if (has(text, 'export', 'download', 'share link', 'adr', 'ekspor', 'unduh', 'bagikan', 'simpan hasil', 'where can i export', 'where do i export', 'di mana saya ekspor', 'di mana simpan')) return exportInfo(lang);
   if (has(text, 'reset', 'start over', 'mulai ulang', 'atur ulang', 'hapus semua', 'where is reset', 'where do i reset', 'di mana atur ulang')) return resetInfo(lang);
   if (has(text, 'migration', 'migrate', 'brownfield', 'legacy system', 'existing system', 'migrasi', 'sistem lama', 'sistem existing')) return migrationInfo(text, lang);
   if (has(text, 'cost', 'expensive', 'infra cost', 'operational overhead', 'biaya', 'mahal', 'operasional')) {
+    // "what is Cost efficiency?" (the quality attribute) beats the generic cost/ops branch — bare
+    // "cost"/"biaya" is also a substring of that QA's own name ("Cost efficiency"/"Efisiensi biaya").
+    const qaCost = qaInfo(text, lang);
+    if (qaCost) return qaCost;
     return costOps(ctx, lang, matched.find((o) => o.dim === 'D1')?.id);
   }
   if (has(text, 'anti-pattern', 'anti pattern', 'risk', 'warning', 'gotcha', 'risiko', 'peringatan', 'waspada')) {
-    // "all/every/list" asks for the full catalog; otherwise it's about THIS scenario's combination.
-    if (has(text, 'all', 'every', 'list', 'catalog', 'general', 'semua', 'semuanya', 'daftar', 'apa saja')) return antiPatternCatalog(lang);
+    // "all/every/list" asks for the full catalog; otherwise it's about THIS scenario's combination
+    // — UNLESS the phrasing is conceptual ("what is an anti-pattern?"), which means the GLOSSARY
+    // term, not a live check (bare "anti-pattern" is both a glossary term and this branch's trigger).
+    if (has(text, 'all', 'every', 'list', 'catalog', 'general', 'semua', 'semuanya', 'apa saja')) return antiPatternCatalog(lang);
+    if (isConceptual(text)) {
+      const g0 = glossary(text, lang);
+      if (g0) return g0;
+    }
     return risks(ctx, lang);
   }
-  if (has(text, 'sensitivity', 'sensitive', 'what if i change', 'how close', 'sensitif', 'kalau saya ubah', 'seberapa dekat')) return sensitivityInfo(ctx, lang);
+  if (has(text, 'sensitivity', 'sensitive', 'what if i change', 'how close', 'sensitif', 'kalau saya ubah', 'seberapa dekat')) {
+    // Same disambiguation as anti-pattern above, for the "Sensitivity / robustness" glossary term.
+    if (isConceptual(text)) {
+      const g1 = glossary(text, lang);
+      if (g1) return g1;
+    }
+    return sensitivityInfo(ctx, lang);
+  }
 
-  // Second coverage pass: FAQ table (one-line-per-entry, easy to extend), then current-answers/
-  // alternatives/QA lookups — all still grounded in real config, never invented.
-  const faqHit = FAQ.find((f) => has(text, ...f.keywords));
-  if (faqHit) return tr(faqHit.answer, lang);
-
+  // Second coverage pass: current-answers/alternatives/QA lookups — all still grounded in real
+  // config, never invented (the FAQ table itself was already checked above).
   if (has(text, 'my answer', 'my factor', 'my level', 'current answer', 'jawaban saya', 'faktor saya', 'level saya')) return myAnswers(ctx, lang);
   if (has(text, 'runner up', 'runner-up', 'second best', 'alternative', 'peringkat kedua', 'alternatif', 'opsi lain')) return alternatives(ctx, lang);
 

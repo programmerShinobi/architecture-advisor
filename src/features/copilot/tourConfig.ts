@@ -78,6 +78,10 @@ const STEPS: CopilotStep[] = [
       view: 'advisor',
       target: 'chat-advisor',
       placement: 'left',
+      // The Chat Advisor FAB is a FIXED floating button, not a page section — it never moves when
+      // the page scrolls, and the mobile bottom sheet would otherwise cover the very button this
+      // step highlights. `floating: true` tells the engine/overlay to skip both (owner report).
+      floating: true,
       title: { en: 'Ask the Chat Advisor', id: 'Tanya Chat Advisor' },
       body: {
         en: 'Any time, ask the Chat Advisor about your recommendation, an architecture, or a trade-off — grounded in your scenario, computed from the model.',

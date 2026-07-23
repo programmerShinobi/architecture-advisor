@@ -93,8 +93,10 @@ export function useCopilot({ currentView, onRequestView, lang, topPick }: Params
       // Pre-Flight Check (owner revision): scroll the target's TOP to just BELOW the pinned chrome
       // (app bar + step rail) so the spotlight is never hidden behind the sticky header, yet stays
       // high enough to sit ABOVE the bottom-sheet card. Then wait a paint so the first draw isn't
-      // mid-transition; the overlay's live tracking follows it afterwards.
-      if (el) {
+      // mid-transition; the overlay's live tracking follows it afterwards. Skipped for a FLOATING
+      // target (e.g. the Chat Advisor FAB): it's fixed-position, so scrolling the page can never
+      // change where it sits on screen — the scroll would just be pointless page motion.
+      if (el && !s.floating) {
         const r = el.getBoundingClientRect();
         const vh = window.visualViewport?.height ?? window.innerHeight;
         const desiredTop = Math.max(vh * 0.16, topChromeBottom() + 14);

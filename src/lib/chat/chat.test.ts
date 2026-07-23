@@ -207,6 +207,53 @@ describe('local advisor adapter — grounded, deterministic, bilingual', () => {
     expect(answerText('untuk siapa aplikasi ini?', ctx({ lang: 'id' }))).toMatch(/mahasiswa hingga arsitek senior/);
   });
 
+  // Regression tests for real question/answer MISMATCHES the owner found by hand-testing — each one
+  // is a case where a short, generic keyword shadowed a MORE SPECIFIC, conceptually different intent.
+  describe('mismatch regressions — a generic keyword must never shadow a more specific intent', () => {
+    it('"why not serverless?" answers about Serverless, not the generic privacy blurb ("server" ⊂ "serverless")', () => {
+      const a = answerText('why not serverless?', ctx());
+      expect(a).not.toMatch(/100% in your browser/);
+      expect(a).toMatch(/Serverless/);
+    });
+
+    it('"aplikasi offline" (ID) reaches the PWA-install answer, not the generic privacy blurb', () => {
+      const a = answerText('bisakah instal aplikasi offline?', ctx({ lang: 'id' }));
+      expect(a).toMatch(/PWA/);
+    });
+
+    it('"daftar semua anti-pattern" (ID, "list all") reaches the full catalog, not the privacy blurb', () => {
+      const a = answerText('daftar semua anti-pattern', ctx({ lang: 'id' }));
+      expect(a).toMatch(/Semua anti-pattern yang dipantau/);
+    });
+
+    it('"what is Cost efficiency?" explains the QUALITY ATTRIBUTE, not the scenario\'s cost/ops numbers', () => {
+      const a = answerText('what is Cost efficiency?', ctx());
+      expect(a).toMatch(/ISO\/IEC 25010/);
+      expect(a).not.toMatch(/Cost & operations —/);
+    });
+
+    it('"apa itu efisiensi biaya?" (ID) explains the quality attribute too', () => {
+      const a = answerText('apa itu efisiensi biaya?', ctx({ lang: 'id' }));
+      expect(a).toMatch(/ISO\/IEC 25010/);
+    });
+
+    it('"what is an anti-pattern?" explains the CONCEPT (glossary), not a scenario-specific check', () => {
+      const a = answerText('what is an anti-pattern?', ctx());
+      expect(a).not.toMatch(/Warnings for your scenario|No anti-patterns detected/);
+      expect(a).toMatch(/Anti-pattern/);
+    });
+
+    it('"any risks with this combination?" still answers about THIS scenario, not the glossary concept', () => {
+      const a = answerText('any risks with this combination?', ctx());
+      expect(a).toMatch(/Warnings for your scenario|No anti-patterns detected/);
+    });
+
+    it('a real cost/ops question is unaffected by the QA-priority check ("what\'s the operational cost?")', () => {
+      const a = answerText("what's the operational cost?", ctx());
+      expect(a).toMatch(/Cost & operations —/);
+    });
+  });
+
   it('adapter streams the full answer and is offline (network:false)', async () => {
     expect(localAdvisorAdapter.network).toBe(false);
     const history = [{ id: '1', role: 'user' as const, text: 'recommend', ts: 0 }];

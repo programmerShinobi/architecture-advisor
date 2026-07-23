@@ -18,6 +18,11 @@ export interface CopilotStep {
   placement?: Placement;
   dos?: Bilingual[];
   donts?: Bilingual[];
+  /** True when the target is a FIXED/floating control (e.g. the Chat Advisor FAB), not a normal
+   *  page section. Floating targets don't move when the page scrolls, so the Pre-Flight Check must
+   *  skip the scroll-into-view adjustment, and the overlay must skip the mobile bottom sheet (which
+   *  would otherwise cover the very control it's meant to highlight). */
+  floating?: boolean;
 }
 
 export interface CopilotTour {
@@ -41,6 +46,7 @@ export interface CopilotStepView {
   target: TourId;
   placement: Placement;
   view: CopilotView;
+  floating: boolean;
 }
 
 /**

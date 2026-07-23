@@ -27,7 +27,7 @@ describe('ManualBook overlay', () => {
     const onClose = vi.fn();
     renderWithI18n(<ManualBook open onClose={onClose} levels={DEFAULT_LEVELS} weights={weights} />);
     expect(screen.getByRole('dialog', { name: /Manual/ })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+    fireEvent.click(screen.getByRole('button', { name: /close the guide/i }));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 

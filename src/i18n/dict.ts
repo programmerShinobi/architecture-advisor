@@ -10,6 +10,7 @@ export const DICT = {
   'cmd.placeholder': { en: 'Type a command or search…', id: 'Ketik perintah atau cari…' },
   'manual.open': { en: 'Guide', id: 'Panduan' },
   'manual.title': { en: 'Manual — how it works, end to end', id: 'Manual — cara kerja, dari awal sampai akhir' },
+  'manual.close': { en: 'Close the guide', id: 'Tutup panduan' },
   'pal.manual': { en: 'Open the manual / guide', id: 'Buka manual / panduan' },
   'pal.pinA': { en: 'Pin current scenario as A', id: 'Sematkan skenario ini sebagai A' },
   'pal.pinB': { en: 'Pin current scenario as B', id: 'Sematkan skenario ini sebagai B' },

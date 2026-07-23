@@ -557,3 +557,68 @@ Nothing in the underlying architecture changed: `getChatAdapter()`, `ChatAdapter
 `localAdvisorAdapter` (its internal `id: 'local-advisor'`), and the Adapter Pattern itself keep
 their names — "chat" and "advisor" already described the mechanism accurately; only the
 AI-implying product-facing brand needed to go.
+
+## Chat Advisor & Copilot — full mutual exclusion + floating-target fixes, 2026-07-23
+
+Owner report (hand-testing on iPhone SE): the two floating features and the existing overlays could
+visibly collide. Three concrete UI/UX defects, all fixed:
+
+1. **Opening the Chat Advisor covered the "Pandu saya" (Guide me) launcher**, and starting the tour
+   left the chat panel open underneath the tour card. Fixed with **full mutual exclusion**: opening
+   any ONE of {Chat Advisor panel, Copilot tour, Manual/Guide book, command palette, shortcuts,
+   Compare} now closes every other one — never two open or highlighted at once. Wiring lives in
+   `App.tsx`: `handleChatOpenChange` (chat opening clears `overlay`), `handleTourStart` (tour
+   starting bumps `chatCloseSignal` **and** clears `overlay`), a derived `chatCloseSignal` string
+   (changes whenever `overlay` opens or the tour starts — **derived, not a setState-in-effect**, to
+   satisfy the `react-hooks/set-state-in-effect` rule), and `suspendCopilot = chatOpen || overlay
+   !== null` passed to `<Copilot suspended>`. `ChatFab` self-reports its open state via
+   `onOpenChange` and closes itself when `closeSignal` changes; `Copilot` stops the tour + hides its
+   launcher when `suspended`, and calls `onTourStart` when the run begins.
+
+2. **When the tour highlighted the Chat Advisor FAB (last step), the mobile bottom sheet covered the
+   very button it was pointing at**, and the Pre-Flight Check tried to scroll a fixed-position
+   element into view (pointless page motion). Fixed with a `floating: true` flag on that tour step
+   (threaded through `CopilotStep → CopilotStepView`): `useCopilot` skips the scroll adjustment for
+   a floating target, and `CopilotOverlay` skips the mobile bottom-sheet layout for it (falling back
+   to the clamped placement that flips above/beside the target). Verified iPhone-SE: the card sits
+   clear of the FAB (no overlap), spotlight visible.
+
+3. The FAB button itself intentionally **stays visible** during the tour's final step (the step
+   highlights it); only the chat *panel* is force-closed. After the tour ends, clicking the FAB
+   opens the panel normally and re-hides the launcher — verified.
+
+## Chat Advisor Q&A mismatches + Guide (Panduan) modernization, 2026-07-23
+
+More owner hand-testing surfaced answers that didn't match the question, plus a dated-looking Guide.
+
+**Chat Advisor — five question/answer MISMATCHES fixed** (each a short generic keyword shadowing a
+more specific, conceptually different intent — all now covered by regression tests in
+`chat.test.ts`):
+- "why not **serverless**?" returned the privacy blurb — bare `server` is a substring of
+  "serverless"; narrowed to `server call` / `no server` / `a server`.
+- "instal **aplikasi offline**" returned the privacy blurb — `offline` shadowed the PWA-install FAQ;
+  fixed by checking the (more specific, multi-word) FAQ table **before** the broad single-word
+  intents, and dropping `aplikasi offline` from the PWA keywords.
+- "**daftar** semua anti-pattern" returned the privacy blurb — Indonesian `daftar` means "list" (the
+  app has no sign-up), and collided with the catalog's "list all"; removed from privacy keywords.
+- "what is **Cost efficiency**?" returned the scenario's cost/ops numbers instead of the quality
+  attribute — `cost`/`biaya` is a substring of that QA's name; the cost/ops branch now checks
+  `qaInfo()` first.
+- "what is an **anti-pattern**?" (the concept) returned a scenario-specific check — added an
+  `isConceptual()` guard ("what is / define …", without "my/this scenario") that routes conceptual
+  phrasings to the GLOSSARY term for both the anti-pattern and sensitivity intents.
+- The underlying lesson (documented for future intents): **order intents most-specific first**; a
+  bare keyword must never be checked before a multi-word phrase or exact label that contains it.
+
+**Guide / Manual ("Panduan") — content fix + UI modernization:**
+- **Content mismatch fixed.** §7 "the feature map" claimed to cover *everything in the app* but
+  omitted the two features added this session. Added subsections for the **Chat Advisor** (grounded,
+  offline, Advisor-tab-only, not an LLM) and the **"Guide me" interactive tour**, and noted the
+  mutual-exclusion behavior. All other facts re-verified against the current app.
+- **Modernized the dated look** without new deps or bundle regression: the flat inline-styled modal
+  became a glass shell (`aa-glass`) with a gradient book-mark header + subtitle, a **sticky
+  jump-to-section table of contents** (9 pills), numbered gradient section badges, and card-styled
+  sub-sections — all via new `.aa-manual-*` classes in `index.css` (inline styles removed). The TOC
+  uses `scrollIntoView`, **not** `href="#id"` anchors, so it never mutates `location.hash` (which
+  this app reserves for share-state — an anchor jump would have clobbered a share link). Verified
+  desktop + mobile; the close button's aria-label became "Close the guide" (test updated).
