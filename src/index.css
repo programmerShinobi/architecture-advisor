@@ -521,6 +521,11 @@ html.light {
   justify-content: center;
   z-index: 10001;
   padding: 60px 16px;
+  /* Ensure backdrop covers entire viewport on mobile, including safe areas */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .f-ov.open {
   display: flex;
@@ -557,8 +562,8 @@ html.light {
   border-radius: 9px;
   display: grid;
   place-items: center;
-  color: #05060f;
-  background: var(--aa-grad-accent);
+  color: var(--color-text-secondary);
+  background: var(--color-background-tertiary);
   flex: none;
 }
 .aa-manual-titles {
@@ -2196,6 +2201,12 @@ svg {
     padding: 10px var(--aa-page-pad);
     background: linear-gradient(to top, var(--color-background-primary) 60%, transparent);
     pointer-events: none;
+  }
+  /* Hide action bar when Guide modal is open */
+  .f-ov.open ~ .aa-mobile-actionbar,
+  body:has(.f-ov.open) .aa-mobile-actionbar {
+    display: none !important;
+    pointer-events: none !important;
   }
   .aa-mobile-actionbar > button {
     pointer-events: auto;
