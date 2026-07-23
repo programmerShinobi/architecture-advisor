@@ -9,7 +9,7 @@ export const TOUR_IDS = [
   'quality-priorities', // Step 2 — derived ISO/IEC 25010 weights
   'recommendation', // Step 3 — the engine output (professional analysis)
   'strategic-output', // Step 4 — export / share
-  'ai-advisor', // the chat launcher
+  'chat-advisor', // the chat launcher
 ] as const;
 
 export type TourId = (typeof TOUR_IDS)[number];

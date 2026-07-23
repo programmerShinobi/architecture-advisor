@@ -26,6 +26,7 @@ export const localCopilotService: CopilotService = {
       target: step.target,
       placement: step.placement ?? 'bottom',
       view: step.view,
+      floating: step.floating ?? false,
     };
   },
 };

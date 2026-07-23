@@ -15,7 +15,7 @@ interface Props {
   onClose: () => void;
 }
 
-const SUGGESTIONS: DictKey[] = ['chat.sug.recommend', 'chat.sug.explain', 'chat.sug.compare', 'chat.sug.why'];
+const SUGGESTIONS: DictKey[] = ['chat.sug.recommend', 'chat.sug.explain', 'chat.sug.compare', 'chat.sug.why', 'chat.sug.risk', 'chat.sug.cost'];
 
 // The chat panel — a DUMB presentation layer for the Message[] + stream (all logic lives in
 // useChat). Smart-scroll (IntersectionObserver: auto-scroll unless the user scrolled up), full a11y

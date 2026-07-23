@@ -10,6 +10,7 @@ export const DICT = {
   'cmd.placeholder': { en: 'Type a command or search…', id: 'Ketik perintah atau cari…' },
   'manual.open': { en: 'Guide', id: 'Panduan' },
   'manual.title': { en: 'Manual — how it works, end to end', id: 'Manual — cara kerja, dari awal sampai akhir' },
+  'manual.close': { en: 'Close the guide', id: 'Tutup panduan' },
   'pal.manual': { en: 'Open the manual / guide', id: 'Buka manual / panduan' },
   'pal.pinA': { en: 'Pin current scenario as A', id: 'Sematkan skenario ini sebagai A' },
   'pal.pinB': { en: 'Pin current scenario as B', id: 'Sematkan skenario ini sebagai B' },
@@ -232,10 +233,11 @@ export const DICT = {
     id: 'Pilih tujuan untuk hasil paling tajam — jika tidak, kami mengasumsikan baseline moderat yang seimbang.',
   },
   'wizard.optional': { en: 'optional', id: 'opsional' },
-  /* AI Advisor chat (Phase 3) — rule-based, computed from the model (not a language model). */
-  'chat.open': { en: 'Ask the AI Advisor', id: 'Tanya AI Advisor' },
+  /* Chat Advisor (Phase 3) — rule-based, computed from the model (deliberately NOT branded "AI",
+     since it isn't a language model — the name says what it does: chat, plus advisor). */
+  'chat.open': { en: 'Ask the Chat Advisor', id: 'Tanya Chat Advisor' },
   'chat.close': { en: 'Close chat', id: 'Tutup obrolan' },
-  'chat.title': { en: 'AI Advisor', id: 'AI Advisor' },
+  'chat.title': { en: 'Chat Advisor', id: 'Chat Advisor' },
   'chat.sub': {
     en: 'Computed from the model, not a language model — answers are grounded in your scenario.',
     id: 'Dihitung dari model, bukan model bahasa — jawaban berdasar skenario Anda.',
@@ -252,6 +254,8 @@ export const DICT = {
   'chat.sug.explain': { en: 'What is microservices?', id: 'Apa itu microservices?' },
   'chat.sug.compare': { en: 'Monolith vs microservices', id: 'Monolith vs microservices' },
   'chat.sug.why': { en: 'Why this recommendation?', id: 'Kenapa rekomendasi ini?' },
+  'chat.sug.risk': { en: 'Any risks with this combination?', id: 'Ada risiko pada kombinasi ini?' },
+  'chat.sug.cost': { en: "What's the operational cost?", id: 'Berapa biaya operasionalnya?' },
   /* Interactive Copilot / guided tutorial (Phase 3) */
   'copilot.start': { en: 'Guide me', id: 'Pandu saya' },
   'copilot.startHint': { en: 'Take the interactive walkthrough', id: 'Ikuti pemandu interaktif' },

@@ -16,7 +16,7 @@ describe('data-tour-id whitelist', () => {
     expect(isTourId(null)).toBe(false);
   });
   it('tourId() spreads a typed data-tour-id attribute, nothing else', () => {
-    expect(tourId('ai-advisor')).toEqual({ 'data-tour-id': 'ai-advisor' });
+    expect(tourId('chat-advisor')).toEqual({ 'data-tour-id': 'chat-advisor' });
   });
 });
 
@@ -70,5 +70,19 @@ describe('tour config integrity', () => {
       expect(s.body.en && s.body.id, `${s.id} body`).toBeTruthy();
       for (const d of [...(s.dos ?? []), ...(s.donts ?? [])]) expect(d.en && d.id).toBeTruthy();
     }
+  });
+
+  it('describe() always resolves a `floating` boolean, true for the fixed Chat Advisor FAB target', () => {
+    const ctx = { lang: 'en' as const };
+    // Every step gets a concrete boolean (never undefined) so the overlay/engine can branch on it.
+    for (const s of MAIN_TOUR.steps) {
+      expect(typeof localCopilotService.describe(s, ctx).floating).toBe('boolean');
+    }
+    // The chat-advisor FAB is fixed-position → must be flagged floating (skips scroll + bottom sheet).
+    const chatStep = MAIN_TOUR.steps.find((s) => s.target === 'chat-advisor');
+    if (chatStep) expect(localCopilotService.describe(chatStep, ctx).floating).toBe(true);
+    // A normal page-section step must NOT be floating.
+    const sectionStep = MAIN_TOUR.steps.find((s) => s.target === 'recommendation')!;
+    expect(localCopilotService.describe(sectionStep, ctx).floating).toBe(false);
   });
 });

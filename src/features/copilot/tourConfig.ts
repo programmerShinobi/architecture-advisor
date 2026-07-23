@@ -74,21 +74,25 @@ const STEPS: CopilotStep[] = [
       dos: [{ en: 'Export an ADR to record the decision + its reasoning', id: 'Ekspor ADR untuk mencatat keputusan + alasannya' }],
     },
     {
-      id: 'ai',
+      id: 'chat',
       view: 'advisor',
-      target: 'ai-advisor',
+      target: 'chat-advisor',
       placement: 'left',
-      title: { en: 'Ask the AI Advisor', id: 'Tanya AI Advisor' },
+      // The Chat Advisor FAB is a FIXED floating button, not a page section — it never moves when
+      // the page scrolls, and the mobile bottom sheet would otherwise cover the very button this
+      // step highlights. `floating: true` tells the engine/overlay to skip both (owner report).
+      floating: true,
+      title: { en: 'Ask the Chat Advisor', id: 'Tanya Chat Advisor' },
       body: {
-        en: 'Any time, ask the AI Advisor about your recommendation, an architecture, or a trade-off — grounded in your scenario, computed from the model.',
-        id: 'Kapan saja, tanya AI Advisor soal rekomendasi Anda, sebuah arsitektur, atau trade-off — berdasar skenario Anda, dihitung dari model.',
+        en: 'Any time, ask the Chat Advisor about your recommendation, an architecture, or a trade-off — grounded in your scenario, computed from the model.',
+        id: 'Kapan saja, tanya Chat Advisor soal rekomendasi Anda, sebuah arsitektur, atau trade-off — berdasar skenario Anda, dihitung dari model.',
       },
     },
 ];
 
-// Drop the chat step when the AI Advisor chat is gated off, so the tour never points at a control
+// Drop the chat step when the Chat Advisor is gated off, so the tour never points at a control
 // that isn't on screen. Flip FEATURES.chat back on and the step (and its target) return untouched.
 export const MAIN_TOUR: CopilotTour = {
   id: 'advisor-walkthrough',
-  steps: STEPS.filter((s) => FEATURES.chat || s.target !== 'ai-advisor'),
+  steps: STEPS.filter((s) => FEATURES.chat || s.target !== 'chat-advisor'),
 };

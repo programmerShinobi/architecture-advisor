@@ -59,7 +59,7 @@ const ManualBook = lazy(() => import('./components/overlays/ManualBook'));
 // the Advisor's initial bundle. The Advisor remains the default view.
 const LearnView = lazy(() => import('./components/insights/LearnView'));
 
-// AI Advisor chat (Phase 3) — lazy so NOTHING chat-related (FAB, panel, hook, adapter, renderer)
+// Chat Advisor (Phase 3) — lazy so NOTHING chat-related (FAB, panel, hook, adapter, renderer)
 // touches the initial bundle; it loads on first idle. Only `resetChatPersistence` (tiny, engine-free)
 // is imported eagerly, for "Start Over".
 const ChatFab = lazy(() => import('./components/chat/ChatFab'));
@@ -126,6 +126,14 @@ export default function App() {
   const chatResetRef = useRef<(() => void) | null>(null);
   // Registered by the Copilot so "Start Over" hard-resets the guided tour (anti-contamination).
   const copilotResetRef = useRef<(() => void) | null>(null);
+  // Full mutual exclusion between every floating/overlay UI (owner report): the Chat Advisor panel
+  // and the Copilot tour. `chatOpen` mirrors ChatFab's own open state (it self-reports via
+  // onOpenChange — App can't set it directly). `chatCloseTick` is bumped to force ChatFab closed
+  // from outside (tour starting, or any `overlay` opening); ChatFab watches it and calls its own
+  // setOpen(false) in response. The `overlay` half of this (Manual/Guide · palette · shortcuts ·
+  // Compare) is wired in just below, once `overlay`/`setOverlay` exist.
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatCloseTick, setChatCloseTick] = useState(0);
 
   const scenario: ScenarioState = { v: 1, mode, lang, levels, selections, overrides };
   const exportInput: ExportInput = { levels, overrides, selections: effective, lang };
@@ -171,6 +179,24 @@ export default function App() {
 
   const { status: exportStatus, setStatus: setExportStatus, run } = useExportActions(exportInput, scenario, weights);
   const [overlay, setOverlay] = useState<'palette' | 'shortcuts' | 'manual' | 'compare' | null>(null);
+
+  // Finish the mutual-exclusion wiring (owner report: opening any ONE of Chat Advisor / Copilot
+  // tour / Manual-Guide / palette / shortcuts / Compare must close every other one — never two open
+  // or highlighted together). `chatCloseSignal` is a plain DERIVED value (no effect, no
+  // setState-in-effect) that changes whenever `overlay` opens OR the tour starts — ChatFab watches
+  // it and closes itself in response. Opening chat or starting the tour closes `overlay` directly
+  // (both are ordinary event handlers, not effects).
+  const chatCloseSignal = `${overlay ?? ''}|${chatCloseTick}`;
+  const handleChatOpenChange = (open: boolean) => {
+    setChatOpen(open);
+    if (open) setOverlay(null);
+  };
+  const handleTourStart = () => {
+    setChatCloseTick((n) => n + 1);
+    setOverlay(null);
+  };
+  const suspendCopilot = chatOpen || overlay !== null;
+
   const [snapA, setSnapA] = usePersistedState<ScenarioState | null>('aa.snapA', null);
   const [snapB, setSnapB] = usePersistedState<ScenarioState | null>('aa.snapB', null);
 
@@ -248,12 +274,18 @@ export default function App() {
   return (
     <>
     <AuroraBackground />
-    {/* AI Advisor chat (Phase 3) — gated behind FEATURES.chat (owner: disabled until finalized).
-        When on, it mounts GLOBALLY (never per-view) so navigating tabs closes the Guide but never
-        unmounts the chat or disrupts an active stream (Phase 2.2 harmony). */}
-    {FEATURES.chat && (
+    {/* Chat Advisor (Phase 3) — gated behind FEATURES.chat, and confined to the Advisor tab (owner
+        request): the chat is about the scenario being built there, so surfacing it on Home/Insights
+        would just be a confusing floating button with nothing to talk about. Leaving the tab
+        unmounts it; conversation history still persists (localStorage) and resumes on return. */}
+    {FEATURES.chat && mainView === 'advisor' && (
       <Suspense fallback={null}>
-        <ChatFab contextInput={{ levels, overrides, mode, lang }} registerReset={(fn) => (chatResetRef.current = fn)} />
+        <ChatFab
+          contextInput={{ levels, overrides, mode, lang }}
+          registerReset={(fn) => (chatResetRef.current = fn)}
+          onOpenChange={handleChatOpenChange}
+          closeSignal={chatCloseSignal}
+        />
       </Suspense>
     )}
     {/* Interactive Copilot / guided tutorial (Phase 3) — a lazy, pluggable feature module. */}
@@ -264,6 +296,8 @@ export default function App() {
         lang={lang}
         topPick={rankings.D1[0]?.name}
         registerReset={(fn) => (copilotResetRef.current = fn)}
+        suspended={suspendCopilot}
+        onTourStart={handleTourStart}
       />
     </Suspense>
     <MobileChrome mainView={mainView} onNavigate={navigate} theme={theme} onToggleTheme={toggleTheme} mode={mode} onSetMode={setMode} />

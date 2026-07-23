@@ -114,7 +114,11 @@ export function CopilotOverlay({ running, step, index, total, bus, onNext, onPre
   const vw = window.visualViewport?.width ?? window.innerWidth;
   const vh = window.visualViewport?.height ?? window.innerHeight;
   // Phones: the card is a bottom SHEET (always fully visible, never clipped) — CSS positions it.
-  const sheet = vw <= 640;
+  // EXCEPT for a floating target (e.g. the Chat Advisor FAB): that button lives in the same bottom
+  // corner a sheet would occupy, so the sheet would cover the very control it's meant to highlight
+  // (owner report). Floating steps fall back to the clamped desktop placement below instead, which
+  // already flips above/beside the target to stay clear of it.
+  const sheet = vw <= 640 && !step.floating;
   const cardW = Math.min(340, vw - 24);
   const h = cardH || 320; // measured card height (fallback until first layout)
 
@@ -125,11 +129,17 @@ export function CopilotOverlay({ running, step, index, total, bus, onNext, onPre
     const cx = rect.left + rect.width / 2 - cardW / 2;
     const belowTop = rect.top + rect.height + 12;
     const aboveTop = rect.top - h - 12;
-    const side = step.placement === 'left' || step.placement === 'right';
+    // A "left"/"right" step only gets a side placement if there's genuinely room for it — a target
+    // that spans nearly the full row (e.g. a wide section header) has none, and forcing the card
+    // there would land it directly ON TOP of the target instead of beside it (the "kepotong" bug on
+    // wide viewports). Fall back to the same below/above logic as any other placement.
+    const wantsLeft = step.placement === 'left';
+    const wantsRight = step.placement === 'right';
+    const sideFits = wantsLeft ? rect.left - 12 >= cardW + 14 : wantsRight ? vw - (rect.left + rect.width) - 12 >= cardW + 14 : false;
     let top: number;
     let left = cx;
-    if (side) {
-      left = step.placement === 'left' ? rect.left - cardW - 14 : rect.left + rect.width + 14;
+    if (sideFits) {
+      left = wantsLeft ? rect.left - cardW - 14 : rect.left + rect.width + 14;
       top = rect.top;
     } else if (step.placement === 'top' && aboveTop >= 12) {
       top = aboveTop;

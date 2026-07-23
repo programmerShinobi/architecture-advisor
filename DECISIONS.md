@@ -383,12 +383,62 @@ Both are chosen precisely to preserve the Zero-Mismatch invariant.
 
 ## Phase 3 — "AI Advisor" chat (Context-Aware, Client-Side), 2026-07-19
 
-> **Update (2026-07-19): shipped OFF.** The chat is gated behind `FEATURES.chat`
-> (`src/config/features.ts`), currently `false`, while its UX is finalized — the deploy goes out
-> without it. Because the feature was already fully code-split, the gate is a single flag: `App`
-> skips mounting the FAB, and the Copilot tour filters out its chat step, so nothing points at a
-> control that isn't on screen. Flipping the flag to `true` restores everything with zero other
-> edits. The design below stands.
+> **Update (2026-07-23): shipped ON, coverage broadened.** The chat was briefly gated off behind
+> `FEATURES.chat` (`src/config/features.ts`) while its UX was finalized; it is now back to `true`.
+> Because the feature is fully code-split, the flag is a one-line toggle either way — `App` mounts
+> or skips the FAB, and the Copilot tour includes or filters out its chat step, so nothing ever
+> points at a control that isn't on screen. Owner request: broaden scenario coverage so no aspect
+> of using the app confuses anyone. `localAdvisorAdapter` gained new grounded intents — all pure,
+> deterministic, unit-tested, reading only the frozen engine or real config, never inventing UI
+> behavior: **cost/ops** (`config/costOps.ts`), **risk/anti-patterns** (`detectAntiPatterns()`,
+> evaluated the same way as the on-screen `AntiPatternWarning` — against the engine's own top pick
+> per dimension, since this app never lets a user override an individual dimension's pick), **
+> sensitivity** (`sensitivity()`), **migration paths** (`config/migrationPaths.ts`), and an
+> app-usage FAQ (privacy/offline, Guided vs Expert mode, export/share, reset) describing the real
+> UI, not invented copy. Two new suggestion chips surface the new coverage in the empty state.
+>
+> **n8n integration — declined, by explicit owner choice.** Routing the chatbot through an n8n
+> webhook was proposed and considered; it would require a live n8n server and would send scenario
+> data outside the browser, directly breaking the product's core, repeatedly-stated promise (100%
+> client-side, offline, no server calls, no telemetry). Given the choice between skipping it, an
+> opt-in adapter behind a separate off-by-default flag, or making it the default, the owner chose
+> to **skip it and strengthen the local, offline adapter instead** — the broadened coverage above is
+> that alternative. If a network/n8n backend is ever wanted, `getChatAdapter()` is still the single,
+> already-built swap-point; nothing here forecloses it, but it does not exist today and nothing
+> silently calls out to any external service.
+
+> **Update (2026-07-23): a second, much larger coverage pass.** Owner request: "as many scenarios
+> as possible, as complete and as detailed as possible" — so no aspect of using the app, in any
+> language, ever leaves anyone confused. `localAdvisorAdapter` gained ten more grounded intents, all
+> pure, deterministic, unit-tested (167 unit tests total, up from 153), and reading only real
+> config/UI — never invented copy:
+> - **Anti-pattern catalog** — every wired rule regardless of scenario (`ANTI_PATTERNS`, "list all
+>   anti-patterns"), distinct from the scenario-specific `risks()` ("any risks with THIS?").
+> - **Dimension explainer** — the axis itself (e.g. "what is Deployment Granularity?"), every
+>   option ranked and scored from the user's real factors.
+> - **Factor explainer** — a single project input (e.g. "Budget / cost flexibility"): its question,
+>   all 3 levels, and the user's current answer.
+> - **Current-answers summary** — all 14 factor answers in one message ("what are my answers?").
+> - **Alternatives / runner-up** — the real #2 and #3 ranked options for a dimension, never the #1.
+> - **Quality-attribute glossary** — the 12 ISO/IEC 25010 attributes the model is built from (e.g.
+>   "what is scalability?"), distinct from the existing architecture-term `GLOSSARY`.
+> - **A data-driven app-usage FAQ table** (`FAQ` array, one line per entry so future additions don't
+>   need a new `if`-branch): keyboard shortcuts, Pin A/B + Compare, dark/light theme, EN/ID language
+>   switch, PWA install, accessibility (WCAG AA + keyboard operability), browser support, the
+>   scoring pipeline/methodology, and the Custom Wizard — each answer describes the real UI/README
+>   content, not invented behavior.
+>
+> **Ordering matters for correctness, not just relevance.** Dimension/factor lookups are checked
+> *before* the generic keyword intents (cost/risk/migration/etc.) — they only ever match an exact,
+> full on-screen label (e.g. the complete string "Budget / cost flexibility"), which is strictly
+> more specific than a short keyword like "cost" that can legitimately appear *inside* that same
+> label. Checking the generic keyword first would silently swallow the more specific factor
+> question — this was caught by a failing unit test during development and fixed by re-ordering,
+> not by weakening either intent.
+>
+> **Bundle:** raised the total JS budget 268→278 kB gzip (`scripts/check-bundle-size.mjs`) — the
+> initial bundle and CSS are untouched (both features stay fully lazy); still comfortably under the
+> 300 kB NFR ceiling.
 
 Implements the Phase-3 blueprint while honoring two enforced invariants (building it literally
 would have tripped both — the very regressions the mandate forbids):
@@ -399,8 +449,9 @@ would have tripped both — the very regressions the mandate forbids):
   same config the app renders (`answerText()` is pure + unit-tested), so the chat can never
   contradict the model or fabricate a fact. Keeps the product's core promise (100% client-side,
   free, offline, no keys, no telemetry) intact. A network LLM is a drop-in: implement `ChatAdapter`
-  and return it from that one function — **zero** UI/hook/state changes. "AI Advisor" is the
-  product name; the UI says "computed from the model, not a language model."
+  and return it from that one function — **zero** UI/hook/state changes. "AI Advisor" was the
+  original product name (renamed to "Chat Advisor" — see the dated entry near the end of this
+  file); the UI has always said "computed from the model, not a language model."
 - **Dependency-free rich rendering (no react-markdown / DOMPurify / Mermaid / Zod).** Bubbles use
   the existing `lib/markdown.tsx` (React elements, **never** `dangerouslySetInnerHTML`) — XSS-safe
   *by construction*, a stronger guarantee than sanitizing an HTML string, and adds no dep. A
@@ -419,6 +470,18 @@ would have tripped both — the very regressions the mandate forbids):
   **BroadcastChannels a reset** so other tabs clear silently. The FAB mounts **globally** (never
   per-view), so switching tabs closes the Guide but **never** unmounts the chat or disrupts an
   active stream. Verified in-browser: reply grounded to `/100`, survives nav, reset wipes, EN/ID.
+
+> **Update (2026-07-23): confined to the Advisor tab (supersedes the "mounts globally" bullet
+> above).** Owner request: the chat should only appear where there's something to talk about — the
+> scenario being built on the Advisor tab — so it never shows as a confusing floating button on
+> Home/Insights. `App.tsx` now renders `<ChatFab>` only when `FEATURES.chat && mainView ===
+> 'advisor'`; leaving the tab unmounts it. This is a deliberate trade-off against the original
+> "never disrupts an active stream" guarantee: a stream in flight when the user navigates away IS
+> now cancelled (a clean abort via the existing `AbortSignal` plumbing, not a crash or leak) —
+> accepted because confining *visibility* to the relevant tab was judged more important than
+> surviving an in-flight reply across an unrelated tab switch. Conversation **history** is
+> unaffected either way (`localStorage`-persisted, same as before) and resumes the moment the user
+> returns to Advisor.
 
 ## Phase 3 — Interactive Copilot & guided tour, 2026-07-19
 
@@ -452,3 +515,110 @@ chat did — the maximalist form would have tripped them:
   next to the chat (`registerReset`); the launcher **and** the whole overlay are `lazy()` — initial
   JS budget untouched. Engine (bus/whitelist/service/tour config) is unit-tested; the DOM overlay is
   verified in-browser.
+
+> **Update (2026-07-23): fixed a desktop card/spotlight overlap ("kepotong").** On wide viewports, a
+> step configured with `placement: 'left'`/`'right'` (e.g. "See what matters most") could target a
+> section header that spans nearly the full row — leaving no room to actually place the card beside
+> it, so `CopilotOverlay` collapsed it onto the target instead. Fixed in
+> `src/features/copilot/components/CopilotOverlay.tsx`: a side placement is now only used when there
+> is genuinely enough horizontal room (`sideFits` check); otherwise it falls back to the same
+> below/above logic every other placement already uses. Verified at 1440×900 across all 5 steps:
+> zero spotlight/card overlap. This also protects any future tour step authored with a side
+> placement against the same class of bug, regardless of how wide its target turns out to be.
+
+## Rename: "AI Advisor" → "Chat Advisor", 2026-07-23
+
+Owner request: the feature was branded "AI Advisor" while actually being a **local, rule-based
+assistant computed from the frozen engine** — never a language model, never a network call. The
+name itself was the mismatch: it implied "AI" (commonly read as an LLM) for a feature that
+deliberately isn't one. Renamed everywhere to **"Chat Advisor"** — honest about what it is (a chat
+feature, an advisor over the frozen model), with nothing left to misread.
+
+To avoid a short- or long-term mismatch between the display name and any internal reference to it,
+every related identifier was renamed together, not just the visible copy:
+
+- **User-facing strings** (`src/i18n/dict.ts`, both EN/ID): `chat.open`, `chat.title`, the Copilot
+  tour's chat step (title + body), the chatbot's own self-description in `localAdvisorAdapter.ts`
+  (`capabilities()`, `privacyInfo()`), and the `chat.test.ts` assertion that pins that copy.
+- **The closed `data-tour-id` whitelist** (`src/features/copilot/dataTourId.ts`): the token
+  `'ai-advisor'` → `'chat-advisor'`, updated everywhere it's referenced — the FAB's
+  `data-tour-id`, the tour step's `target` + its id-filter in `tourConfig.ts`, and the whitelist
+  unit test in `copilot.test.ts`. Renaming the *identifier*, not just the label, matters here: the
+  whitelist is a security/correctness boundary (Copilot Phase 1.2) — leaving it as `ai-advisor`
+  while the display name became "Chat Advisor" would itself have been a new mismatch, just moved
+  one layer down instead of removed.
+- **Code comments** referencing the old name in `App.tsx`, `config/features.ts`, `index.css`, and
+  `ChatFab.tsx` — updated so nothing in the source contradicts the shipped name.
+- **README.md / DECISIONS.md** — headings, prose, and the component-map table updated; the original
+  historical decision entries above are left as an accurate record of what was decided *at the
+  time*, with an inline pointer added to this entry rather than being rewritten.
+
+Nothing in the underlying architecture changed: `getChatAdapter()`, `ChatAdapter`, `ChatService`,
+`localAdvisorAdapter` (its internal `id: 'local-advisor'`), and the Adapter Pattern itself keep
+their names — "chat" and "advisor" already described the mechanism accurately; only the
+AI-implying product-facing brand needed to go.
+
+## Chat Advisor & Copilot — full mutual exclusion + floating-target fixes, 2026-07-23
+
+Owner report (hand-testing on iPhone SE): the two floating features and the existing overlays could
+visibly collide. Three concrete UI/UX defects, all fixed:
+
+1. **Opening the Chat Advisor covered the "Pandu saya" (Guide me) launcher**, and starting the tour
+   left the chat panel open underneath the tour card. Fixed with **full mutual exclusion**: opening
+   any ONE of {Chat Advisor panel, Copilot tour, Manual/Guide book, command palette, shortcuts,
+   Compare} now closes every other one — never two open or highlighted at once. Wiring lives in
+   `App.tsx`: `handleChatOpenChange` (chat opening clears `overlay`), `handleTourStart` (tour
+   starting bumps `chatCloseSignal` **and** clears `overlay`), a derived `chatCloseSignal` string
+   (changes whenever `overlay` opens or the tour starts — **derived, not a setState-in-effect**, to
+   satisfy the `react-hooks/set-state-in-effect` rule), and `suspendCopilot = chatOpen || overlay
+   !== null` passed to `<Copilot suspended>`. `ChatFab` self-reports its open state via
+   `onOpenChange` and closes itself when `closeSignal` changes; `Copilot` stops the tour + hides its
+   launcher when `suspended`, and calls `onTourStart` when the run begins.
+
+2. **When the tour highlighted the Chat Advisor FAB (last step), the mobile bottom sheet covered the
+   very button it was pointing at**, and the Pre-Flight Check tried to scroll a fixed-position
+   element into view (pointless page motion). Fixed with a `floating: true` flag on that tour step
+   (threaded through `CopilotStep → CopilotStepView`): `useCopilot` skips the scroll adjustment for
+   a floating target, and `CopilotOverlay` skips the mobile bottom-sheet layout for it (falling back
+   to the clamped placement that flips above/beside the target). Verified iPhone-SE: the card sits
+   clear of the FAB (no overlap), spotlight visible.
+
+3. The FAB button itself intentionally **stays visible** during the tour's final step (the step
+   highlights it); only the chat *panel* is force-closed. After the tour ends, clicking the FAB
+   opens the panel normally and re-hides the launcher — verified.
+
+## Chat Advisor Q&A mismatches + Guide (Panduan) modernization, 2026-07-23
+
+More owner hand-testing surfaced answers that didn't match the question, plus a dated-looking Guide.
+
+**Chat Advisor — five question/answer MISMATCHES fixed** (each a short generic keyword shadowing a
+more specific, conceptually different intent — all now covered by regression tests in
+`chat.test.ts`):
+- "why not **serverless**?" returned the privacy blurb — bare `server` is a substring of
+  "serverless"; narrowed to `server call` / `no server` / `a server`.
+- "instal **aplikasi offline**" returned the privacy blurb — `offline` shadowed the PWA-install FAQ;
+  fixed by checking the (more specific, multi-word) FAQ table **before** the broad single-word
+  intents, and dropping `aplikasi offline` from the PWA keywords.
+- "**daftar** semua anti-pattern" returned the privacy blurb — Indonesian `daftar` means "list" (the
+  app has no sign-up), and collided with the catalog's "list all"; removed from privacy keywords.
+- "what is **Cost efficiency**?" returned the scenario's cost/ops numbers instead of the quality
+  attribute — `cost`/`biaya` is a substring of that QA's name; the cost/ops branch now checks
+  `qaInfo()` first.
+- "what is an **anti-pattern**?" (the concept) returned a scenario-specific check — added an
+  `isConceptual()` guard ("what is / define …", without "my/this scenario") that routes conceptual
+  phrasings to the GLOSSARY term for both the anti-pattern and sensitivity intents.
+- The underlying lesson (documented for future intents): **order intents most-specific first**; a
+  bare keyword must never be checked before a multi-word phrase or exact label that contains it.
+
+**Guide / Manual ("Panduan") — content fix + UI modernization:**
+- **Content mismatch fixed.** §7 "the feature map" claimed to cover *everything in the app* but
+  omitted the two features added this session. Added subsections for the **Chat Advisor** (grounded,
+  offline, Advisor-tab-only, not an LLM) and the **"Guide me" interactive tour**, and noted the
+  mutual-exclusion behavior. All other facts re-verified against the current app.
+- **Modernized the dated look** without new deps or bundle regression: the flat inline-styled modal
+  became a glass shell (`aa-glass`) with a gradient book-mark header + subtitle, a **sticky
+  jump-to-section table of contents** (9 pills), numbered gradient section badges, and card-styled
+  sub-sections — all via new `.aa-manual-*` classes in `index.css` (inline styles removed). The TOC
+  uses `scrollIntoView`, **not** `href="#id"` anchors, so it never mutates `location.hash` (which
+  this app reserves for share-state — an anchor jump would have clobbered a share link). Verified
+  desktop + mobile; the close button's aria-label became "Close the guide" (test updated).
