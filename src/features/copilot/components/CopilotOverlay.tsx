@@ -125,11 +125,17 @@ export function CopilotOverlay({ running, step, index, total, bus, onNext, onPre
     const cx = rect.left + rect.width / 2 - cardW / 2;
     const belowTop = rect.top + rect.height + 12;
     const aboveTop = rect.top - h - 12;
-    const side = step.placement === 'left' || step.placement === 'right';
+    // A "left"/"right" step only gets a side placement if there's genuinely room for it — a target
+    // that spans nearly the full row (e.g. a wide section header) has none, and forcing the card
+    // there would land it directly ON TOP of the target instead of beside it (the "kepotong" bug on
+    // wide viewports). Fall back to the same below/above logic as any other placement.
+    const wantsLeft = step.placement === 'left';
+    const wantsRight = step.placement === 'right';
+    const sideFits = wantsLeft ? rect.left - 12 >= cardW + 14 : wantsRight ? vw - (rect.left + rect.width) - 12 >= cardW + 14 : false;
     let top: number;
     let left = cx;
-    if (side) {
-      left = step.placement === 'left' ? rect.left - cardW - 14 : rect.left + rect.width + 14;
+    if (sideFits) {
+      left = wantsLeft ? rect.left - cardW - 14 : rect.left + rect.width + 14;
       top = rect.top;
     } else if (step.placement === 'top' && aboveTop >= 12) {
       top = aboveTop;

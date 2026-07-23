@@ -120,20 +120,33 @@ flowchart LR
 - **④ Strategic output** — the recommendation with a trade-off radar, sensitivity, anti-pattern
   warnings and migration paths; export an ADR (MADR), a full report, CSV/JSON, or a share link.
 
-## AI Advisor chat (Phase 3)
+## Chat Advisor (Phase 3)
 
-> **Status: temporarily disabled.** The chat is gated **off** behind a single flag
-> (`FEATURES.chat` in [`src/config/features.ts`](src/config/features.ts)) while its UX is being
-> finalized, so the deployed build ships without it. The code is complete and code-split; flip the
-> flag to `true` to bring it back (the FAB mounts, "Start Over" resets it, and the Copilot tour
-> restores its chat step — no other change). The rest of this section describes it as designed.
+A floating **Chat Advisor** (bottom-right) answers questions grounded in *your* scenario across a
+deliberately broad range of angles, so a newcomer is never stuck wondering how the app — or the
+model behind it — actually behaves:
 
-A floating **AI Advisor** (bottom-right) answers questions grounded in *your* scenario —
-"what do you recommend?", "what is microservices?", "monolith vs microservices", "why?". It is a
-**client-side, offline, rule-based** assistant computed from the frozen engine + the same config
-the app renders, so it can never contradict the model or fabricate a fact (the UI says
+- The model itself: **recommendation**, explaining an architecture, comparing two, "**why**",
+  **cost & operational overhead**, **risk / anti-patterns** (your scenario, or the full catalog),
+  **sensitivity** ("how close is this pick?"), and **migration paths**.
+- The 5 dimensions and 14 factors as concepts: "what is **Deployment Granularity**?" (every option
+  ranked), "what is **Budget / cost flexibility**?" (the question, all 3 levels, your current
+  answer), "what are **my current answers**?", and real **alternatives/runner-up** picks.
+- Both glossaries: architecture terms *and* the 12 ISO/IEC 25010 **quality attributes** ("what is
+  scalability?").
+- Using the app itself: **privacy/offline**, Guided vs Expert **mode**, **export/share**, **reset**,
+  **keyboard shortcuts**, **dark/light theme**, **EN/ID language**, **PWA install**,
+  **accessibility**, **browser support**, the scoring **methodology**, and the **Custom Wizard**.
+
+It's named
+**"Chat Advisor"**, not "AI Advisor" — the name should say what it actually is: a **client-side,
+offline, rule-based** assistant computed from the frozen engine + the same config the app renders,
+never a language model, so it can never contradict the model or fabricate a fact (the UI says
 *"computed from the model, not a language model"*). It is built on the **Adapter Pattern**, so a
-network LLM is a drop-in later with zero UI changes.
+network LLM is a drop-in later with zero UI changes. The flag that gates it,
+`FEATURES.chat` in [`src/config/features.ts`](src/config/features.ts), is currently `on`; set it
+to `false` for a one-line disable (the FAB unmounts and the Copilot tour drops its chat step
+automatically — see [DECISIONS.md](DECISIONS.md)).
 
 ```mermaid
 flowchart LR
@@ -329,7 +342,7 @@ real pipeline steps) and the total duration short; the component already renders
 `prefers-reduced-motion`. It is triggered by `analysisRun` in `App.tsx`, which increments on an
 explicit analyze action (preset/wizard apply) — never on a live factor edit.
 
-### Swap the chat AI backend (ChatService adapter)
+### Swap the Chat Advisor's backend (ChatService adapter)
 
 The chat depends only on the `ChatAdapter` contract, so the whole UI/state layer is backend-agnostic.
 `getChatAdapter()` in [`src/lib/chat/index.ts`](src/lib/chat/index.ts) is the **single** swap-point —
@@ -388,7 +401,7 @@ export function getCopilotService(): CopilotService {
 | Area | Component | Notes |
 |---|---|---|
 | Scenario gallery + wizard entry | [`components/advisor/PresetBar.tsx`](src/components/advisor/PresetBar.tsx) | search, tag filters, dominant custom card |
-| AI Advisor chat (lazy, flag-gated) | [`components/chat/ChatFab.tsx`](src/components/chat/ChatFab.tsx) · `ChatPanel.tsx` · [`hooks/useChat.ts`](src/hooks/useChat.ts) | launcher + panel + state bridge — off via `FEATURES.chat` |
+| Chat Advisor (lazy, flag-gated) | [`components/chat/ChatFab.tsx`](src/components/chat/ChatFab.tsx) · `ChatPanel.tsx` · [`hooks/useChat.ts`](src/hooks/useChat.ts) | launcher + panel + state bridge — toggle via `FEATURES.chat` |
 | Chat service (Adapter) | [`lib/chat/`](src/lib/chat/) | `getChatAdapter()` · `localAdvisorAdapter` · `buildChatContext()` |
 | Copilot tour (lazy, pluggable) | [`features/copilot/Copilot.tsx`](src/features/copilot/Copilot.tsx) · `useCopilot.ts` · `components/CopilotOverlay.tsx` | launcher + engine + portal overlay |
 | Copilot service (Adapter) | [`features/copilot/`](src/features/copilot/) | `getCopilotService()` · `MAIN_TOUR` · `tourId()` whitelist · event bus |

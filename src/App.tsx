@@ -59,7 +59,7 @@ const ManualBook = lazy(() => import('./components/overlays/ManualBook'));
 // the Advisor's initial bundle. The Advisor remains the default view.
 const LearnView = lazy(() => import('./components/insights/LearnView'));
 
-// AI Advisor chat (Phase 3) — lazy so NOTHING chat-related (FAB, panel, hook, adapter, renderer)
+// Chat Advisor (Phase 3) — lazy so NOTHING chat-related (FAB, panel, hook, adapter, renderer)
 // touches the initial bundle; it loads on first idle. Only `resetChatPersistence` (tiny, engine-free)
 // is imported eagerly, for "Start Over".
 const ChatFab = lazy(() => import('./components/chat/ChatFab'));
@@ -248,9 +248,9 @@ export default function App() {
   return (
     <>
     <AuroraBackground />
-    {/* AI Advisor chat (Phase 3) — gated behind FEATURES.chat (owner: disabled until finalized).
-        When on, it mounts GLOBALLY (never per-view) so navigating tabs closes the Guide but never
-        unmounts the chat or disrupts an active stream (Phase 2.2 harmony). */}
+    {/* Chat Advisor (Phase 3) — gated behind FEATURES.chat. When on, it mounts GLOBALLY (never
+        per-view) so navigating tabs closes the Guide but never unmounts the chat or disrupts an
+        active stream (Phase 2.2 harmony). */}
     {FEATURES.chat && (
       <Suspense fallback={null}>
         <ChatFab contextInput={{ levels, overrides, mode, lang }} registerReset={(fn) => (chatResetRef.current = fn)} />

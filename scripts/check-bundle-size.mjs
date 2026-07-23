@@ -17,7 +17,7 @@ import { gzipSync } from 'node:zlib';
 // shared async chunk can't silently be mis-counted. Headroom catches a real regression; raise the
 // budgets deliberately (with a note) if the app grows.
 const JS_INITIAL_BUDGET_KB = 121; // 120→121 for Phase 3 (chat + copilot) 2026-07-19: both features are LAZY chunks; the only initial delta is their dynamic-import stubs + a few refs of wiring (~0.3kB gzip, negligible FCP). NFR ceiling is far higher.
-const JS_TOTAL_BUDGET_KB = 268; // raised 200→260 (Insights bilingualisation 2026-07-15); 260→268 for the Phase 3 AI Advisor chat 2026-07-19 (adapter + hook + panel, all in a LAZY chunk — the FAB is lazy too, so the initial budget is untouched; NFR cap is 300)
+const JS_TOTAL_BUDGET_KB = 278; // raised 200→260 (Insights bilingualisation 2026-07-15); 260→268 for the Phase 3 Chat Advisor 2026-07-19 (adapter + hook + panel, all in a LAZY chunk — the FAB is lazy too, so the initial budget is untouched); 268→278 for the 2026-07-23 scenario-coverage expansion (cost/ops, risk catalog, sensitivity, migration, dimension/factor/QA lookups, app-usage FAQ — all pure data-driven text in the same lazy chunk; NFR cap is 300)
 const CSS_BUDGET_KB = 29; // 25→27 (Fase 2g polish 2026-07-18); 27→29 for Phase 3 2026-07-19 (chat panel + copilot overlay/launcher/Dos-Don'ts cards); still under the ~30kB NFR ceiling
 
 const dir = 'dist/assets';

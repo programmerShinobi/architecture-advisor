@@ -13,7 +13,7 @@ interface Props {
   registerReset: (reset: (() => void) | null) => void;
 }
 
-// The floating chat launcher (Advisor "AI Advisor"). Toggles the lazy panel; keeps its own open
+// The floating chat launcher (Advisor "Chat Advisor"). Toggles the lazy panel; keeps its own open
 // state. Esc closes. Opening never resets chat; closing keeps the session (persisted).
 export function ChatFab({ contextInput, registerReset }: Readonly<Props>) {
   const { t } = useI18n();
@@ -49,7 +49,7 @@ export function ChatFab({ contextInput, registerReset }: Readonly<Props>) {
       <button
         ref={btnRef}
         type="button"
-        data-tour-id="ai-advisor"
+        data-tour-id="chat-advisor"
         className={'aa-chat-fab' + (open ? ' open' : '')}
         onClick={toggle}
         aria-label={open ? t('chat.close') : t('chat.open')}

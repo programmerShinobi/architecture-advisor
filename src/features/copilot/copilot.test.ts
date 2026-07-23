@@ -16,7 +16,7 @@ describe('data-tour-id whitelist', () => {
     expect(isTourId(null)).toBe(false);
   });
   it('tourId() spreads a typed data-tour-id attribute, nothing else', () => {
-    expect(tourId('ai-advisor')).toEqual({ 'data-tour-id': 'ai-advisor' });
+    expect(tourId('chat-advisor')).toEqual({ 'data-tour-id': 'chat-advisor' });
   });
 });
 

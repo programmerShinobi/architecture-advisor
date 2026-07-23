@@ -3,6 +3,7 @@ import { answerText, localAdvisorAdapter } from './localAdvisorAdapter';
 import { buildChatContext, isValidContext, isValidLevels } from './context';
 import { DEFAULT_LEVELS } from '../../config/defaults';
 import { FACTOR_ORDER } from '../../config/factors';
+import { rank } from '../scoring';
 import type { ChatContext } from './types';
 import type { Levels } from '../../types';
 
@@ -52,11 +53,108 @@ describe('local advisor adapter — grounded, deterministic, bilingual', () => {
 
   it('falls back to capabilities on gibberish (never fabricates)', () => {
     const a = answerText('asdfqwer zzz', ctx());
-    expect(a).toMatch(/didn.t quite catch|AI Advisor/i);
+    expect(a).toMatch(/didn.t quite catch|Chat Advisor/i);
   });
 
   it('is deterministic', () => {
     expect(answerText('recommend', ctx())).toBe(answerText('recommend', ctx()));
+  });
+
+  // Broadened scenario coverage (Phase 3.4): every new aspect stays grounded in the frozen engine
+  // or the real UI — never invented behavior — so it can never contradict the app.
+  it('answers cost/ops questions from the real COST_OPS table', () => {
+    const a = answerText('what is the operational cost of microservices?', ctx());
+    expect(a).toMatch(/Cost & operations — Microservices/);
+    expect(a).toMatch(/Operational overhead: (low|medium|high)/);
+  });
+
+  it('answers risk/anti-pattern questions from the real detector (never fabricates a warning)', () => {
+    // Heavy legacy coupling + no migration plan, biasing the engine's own top D1 pick toward
+    // serverless — a real, wired anti-pattern rule ("legacy-without-plan"), not an invented one.
+    const risky = ctx({ levels: { ...DEFAULT_LEVELS, legacy: 2, scale: 2, ttm: 2, budget: 0, devops: 0 } });
+    const a = answerText('any risks with this?', risky);
+    expect(a).toMatch(/Warnings for your scenario/);
+    expect(a).toMatch(/Strangler Fig|legacy/i);
+  });
+
+  it('reports "no anti-patterns" honestly when none are triggered', () => {
+    const a = answerText('any risks with this?', ctx({ levels: { ...DEFAULT_LEVELS, team: 2, devops: 2 } }));
+    expect(a).toMatch(/No anti-patterns detected/i);
+  });
+
+  it('answers sensitivity questions from the real sensitivity() flips', () => {
+    const a = answerText('how sensitive is this pick?', ctx());
+    expect(a).toMatch(/How close your pick is|stable/i);
+  });
+
+  it('answers migration-path questions from the real MIGRATION_PATHS config', () => {
+    const a = answerText('how do I migrate my legacy system?', ctx());
+    expect(a).toMatch(/Incremental migration path/);
+    expect(a).toMatch(/^1\./m);
+  });
+
+  it('answers app-usage FAQ (privacy, mode, export, reset) without touching the engine', () => {
+    expect(answerText('is my data private?', ctx())).toMatch(/100% in your browser/);
+    expect(answerText('what is expert mode?', ctx())).toMatch(/Guided mode|Expert mode/);
+    expect(answerText('how do I export my plan?', ctx())).toMatch(/Save & share/);
+    expect(answerText('how do I reset?', ctx())).toMatch(/Reset.+button|restores the default/i);
+  });
+
+  it('new intents are bilingual (ID)', () => {
+    expect(answerText('apakah ini privasi?', ctx({ lang: 'id' }))).toMatch(/berjalan di peramban/);
+    expect(answerText('bagaimana cara migrasi sistem lama?', ctx({ lang: 'id' }))).toMatch(/Jalur migrasi bertahap/);
+  });
+
+  // Second coverage pass (owner: as many scenarios as possible, as complete and detailed as
+  // possible) — still every answer reads only the frozen engine or real, existing config/UI.
+  it('lists the FULL anti-pattern catalog on a generic ask, distinct from the scenario-specific one', () => {
+    const a = answerText('list all anti-patterns', ctx());
+    expect(a).toMatch(/Every anti-pattern this app watches for/);
+    expect(a).toMatch(/premature-microservices|distributed monolith/i);
+  });
+
+  it('explains a DIMENSION (the axis itself) with every option ranked and scored', () => {
+    const a = answerText('what is Deployment Granularity?', ctx());
+    expect(a).toMatch(/Deployment Granularity/);
+    expect(a).toMatch(/1\. \*\*.+\*\* \(\d+\/100\)/);
+  });
+
+  it('explains a FACTOR with its question, current answer, and all 3 levels', () => {
+    const a = answerText('explain Budget / cost flexibility', ctx());
+    expect(a).toMatch(/Budget \/ cost flexibility/);
+    expect(a).toMatch(/Your current answer/);
+    expect(a).toMatch(/0\..+\n1\..+\n2\./s);
+  });
+
+  it('summarizes all 14 current answers on request', () => {
+    const a = answerText('what are my current answers?', ctx());
+    expect(a).toMatch(/Your current answers \(14 factors\)/);
+    expect(a.match(/^- /gm)?.length).toBe(14);
+  });
+
+  it('lists real runner-up alternatives (never the same as the top pick)', () => {
+    const a = answerText("what's the runner-up?", ctx());
+    const top = rank(ctx().levels, 'D1')[0].name;
+    expect(a).toMatch(/Alternatives for/);
+    expect(a).not.toContain(`**${top}** (`); // the #1 pick itself is never listed as an "alternative"
+  });
+
+  it('answers a quality-attribute glossary question (distinct from the architecture glossary)', () => {
+    const a = answerText('what is scalability?', ctx());
+    expect(a).toMatch(/Scalability/);
+    expect(a).toMatch(/ISO\/IEC 25010/);
+  });
+
+  it('answers the broadened app-usage FAQ: shortcuts, theme, language, PWA, a11y, browsers, methodology, wizard', () => {
+    expect(answerText('what are the keyboard shortcuts?', ctx())).toMatch(/command palette/i);
+    expect(answerText('how do I switch to dark mode?', ctx())).toMatch(/light and dark themes/i);
+    expect(answerText('how do I change language?', ctx())).toMatch(/EN \/ ID/);
+    expect(answerText('can I install this app?', ctx())).toMatch(/PWA/);
+    expect(answerText('is this app accessible?', ctx())).toMatch(/WCAG AA/);
+    expect(answerText('which browsers are supported?', ctx())).toMatch(/Chrome, Edge, Firefox/);
+    expect(answerText('how does scoring work?', ctx())).toMatch(/Score = Σ weight × fit/);
+    expect(answerText('what is the custom wizard?', ctx())).toMatch(/Custom Wizard/);
+    expect(answerText('how do I compare two scenarios?', ctx())).toMatch(/Pin A/);
   });
 
   it('adapter streams the full answer and is offline (network:false)', async () => {
