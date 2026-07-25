@@ -17,7 +17,7 @@ import {
   IconScale,
 } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
-import { AVAILABLE_SECTIONS, sectionMeta } from '../../config/sections';
+import { AVAILABLE_SECTIONS, sectionMeta, SECTION_GROUPS, SECTION_WHEN } from '../../config/sections';
 import { contentBySection, contentBySlug, docBody, docTitle, docTldr } from '../../lib/content';
 import { renderMarkdown } from '../../lib/markdown';
 import { DIMENSIONS, DIMENSION_ORDER } from '../../config/dimensions';
@@ -599,39 +599,58 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
       <h1 style={{ fontSize: 'var(--aa-fs-xl)', fontWeight: 600, marginBottom: '6px' }}>{t('learn.title')}</h1>
       <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '6px', maxWidth: '72ch' }}>{t('learn.intro')}</p>
       <p style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', marginBottom: '18px' }}>{t('learn.readingHint')}</p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px, 100%), 1fr))', gap: '14px' }}>
-        {AVAILABLE_SECTIONS.map((s) => {
-          const Icon = s.icon;
-          const isLens = (LENSES as string[]).includes(s.id);
-          const guides = s.id === 'catalog' ? 0 : contentBySection(s.id).length;
-          return (
-            <button key={s.id} type="button" className="learn-card aa-reveal" style={{ ...cardBase, padding: 'var(--aa-panel-pad)', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
-              <span className="learn-chip">
-                <Icon size={19} aria-hidden />
-              </span>
-              <span style={{ fontSize: '16px', fontWeight: 600 }}>{t(s.label)}</span>
-              <span style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5, flexGrow: 1 }}>{t(s.desc)}</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--color-text-info)', fontWeight: 600, flexWrap: 'wrap' }}>
-                {isLens ? (
-                  <>
-                    {totalArchitectures} {t('learn.architectures')}
-                    {guides > 0 && <span style={{ color: 'var(--color-text-tertiary)' }}>· {guides} {t('learn.guidesWord')}</span>}
-                  </>
-                ) : s.id === 'roadmap' ? (
-                  <>{LEARNING_PATHS.length} {t('learn.paths')}</>
-                ) : s.id === 'academy' ? (
-                  <>{ACADEMY_QUIZZES.length} {t('learn.modules')}</>
-                ) : s.id === 'lab' ? (
-                  <>{LAB_EXPERIMENTS.length} {t('learn.experiments')}</>
-                ) : (
-                  <>{guides} {t('learn.articles')}</>
-                )}
-                <IconArrowRight size={13} aria-hidden />
-              </span>
-            </button>
-          );
-        })}
-      </div>
+
+      {/* The seven sections are NOT seven peers, and rendering them as one flat grid was the single
+          biggest source of confusion here: four of them are the SAME 21 architectures read from four
+          angles, while the other three are activities you do. Someone who cannot see that boundary
+          reads "Catalog, Playbook, Review, Library" as four separate libraries to get through, which
+          is both wrong and daunting. Grouping states the structure the codebase already knew. */}
+      {SECTION_GROUPS.map((group) => {
+        const sections = AVAILABLE_SECTIONS.filter((s) => group.ids.includes(s.id));
+        if (sections.length === 0) return null;
+        return (
+          <section key={group.id} style={{ marginBottom: '26px' }}>
+            <h2 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '3px' }}>{t(group.label)}</h2>
+            <p style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5, marginBottom: '12px', maxWidth: '72ch' }}>{t(group.desc)}</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px, 100%), 1fr))', gap: '14px' }}>
+              {sections.map((s) => {
+                const Icon = s.icon;
+                const isLens = (LENSES as string[]).includes(s.id);
+                const guides = s.id === 'catalog' ? 0 : contentBySection(s.id).length;
+                return (
+                  <button key={s.id} type="button" className="learn-card aa-reveal" style={{ ...cardBase, padding: 'var(--aa-panel-pad)', display: 'flex', flexDirection: 'column', gap: '10px' }} onClick={() => setSection(s.id)}>
+                    <span className="learn-chip">
+                      <Icon size={19} aria-hidden />
+                    </span>
+                    <span style={{ fontSize: '16px', fontWeight: 600 }}>{t(s.label)}</span>
+                    <span style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{t(s.desc)}</span>
+                    {/* "Open this when…" — the descriptions say what a section CONTAINS; this says
+                        when it is the right one to pick, which is the actual question being asked. */}
+                    <span style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', lineHeight: 1.5, flexGrow: 1 }}>{t(SECTION_WHEN[s.id])}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--color-text-info)', fontWeight: 600, flexWrap: 'wrap' }}>
+                      {isLens ? (
+                        <>
+                          {totalArchitectures} {t('learn.architectures')}
+                          {guides > 0 && <span style={{ color: 'var(--color-text-tertiary)' }}>· {guides} {t('learn.guidesWord')}</span>}
+                        </>
+                      ) : s.id === 'roadmap' ? (
+                        <>{LEARNING_PATHS.length} {t('learn.paths')}</>
+                      ) : s.id === 'academy' ? (
+                        <>{ACADEMY_QUIZZES.length} {t('learn.modules')}</>
+                      ) : s.id === 'lab' ? (
+                        <>{LAB_EXPERIMENTS.length} {t('learn.experiments')}</>
+                      ) : (
+                        <>{guides} {t('learn.articles')}</>
+                      )}
+                      <IconArrowRight size={13} aria-hidden />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

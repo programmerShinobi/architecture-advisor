@@ -523,6 +523,25 @@ export const DICT = {
   'learn.evidence.strong': { en: 'Strong evidence', id: 'Bukti kuat' },
   'learn.evidence.moderate': { en: 'Moderate evidence', id: 'Bukti sedang' },
   'learn.evidence.emerging': { en: 'Emerging evidence', id: 'Bukti awal' },
+  // The Insights landing groups its seven sections into four lenses + three activities, and says
+  // when each one is the right thing to open — see src/config/sections.ts for why.
+  'learn.group.lenses': { en: 'Read about the architectures', id: 'Membaca tentang arsitekturnya' },
+  'learn.group.lenses.desc': {
+    en: 'Four ways of reading the same 21 architectures — not four separate libraries. Pick the angle that matches your question; every architecture appears in all four.',
+    id: 'Empat cara membaca 21 arsitektur yang sama — bukan empat pustaka terpisah. Pilih sudut yang cocok dengan pertanyaan Anda; tiap arsitektur muncul di keempatnya.',
+  },
+  'learn.group.practice': { en: 'Build the skill', id: 'Melatih kemampuannya' },
+  'learn.group.practice.desc': {
+    en: 'Things you do rather than read: a route through the material, questions to test yourself against, and a sandbox that runs the real scoring engine.',
+    id: 'Hal yang Anda kerjakan, bukan dibaca: rute menyusuri materinya, soal untuk menguji diri, dan sandbox yang menjalankan mesin skor sungguhan.',
+  },
+  'learn.when.catalog': { en: 'Open this when you do not yet know what an architecture is or where it is used.', id: 'Buka ini kalau Anda belum tahu sebuah arsitektur itu apa atau dipakai di mana.' },
+  'learn.when.playbook': { en: 'Open this when you have decided and now have to build it.', id: 'Buka ini kalau Anda sudah memutuskan dan sekarang harus membangunnya.' },
+  'learn.when.review': { en: 'Open this when you are weighing two options against each other.', id: 'Buka ini kalau Anda sedang menimbang dua opsi.' },
+  'learn.when.library': { en: 'Open this when you hit a term you do not recognise.', id: 'Buka ini kalau Anda menemui istilah yang tak dikenali.' },
+  'learn.when.roadmap': { en: 'Open this when you want a route instead of choosing where to start.', id: 'Buka ini kalau Anda ingin rute, bukan bingung memilih mulai dari mana.' },
+  'learn.when.academy': { en: 'Open this when you want to find out what you actually retained.', id: 'Buka ini kalau Anda ingin tahu apa yang benar-benar Anda ingat.' },
+  'learn.when.lab': { en: 'Open this when you want to see a trade-off move instead of reading about it.', id: 'Buka ini kalau Anda ingin melihat pertukarannya bergerak, bukan membacanya.' },
   'section.catalog': { en: 'Catalog', id: 'Katalog' },
   'section.catalog.desc': { en: 'Discover every architecture: what it is, where it is used, why it exists.', id: 'Kenali setiap arsitektur: apa itu, di mana dipakai, mengapa ada.' },
   'section.playbook': { en: 'Playbook', id: 'Playbook' },

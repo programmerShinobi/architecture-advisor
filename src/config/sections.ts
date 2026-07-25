@@ -35,6 +35,43 @@ export const SECTIONS: SectionMeta[] = [
 
 export const AVAILABLE_SECTIONS = SECTIONS.filter((s) => s.available);
 
+/**
+ * The two kinds of section, made explicit for the Insights landing.
+ *
+ * Catalog / Playbook / Review / Library are FOUR ANGLES ON THE SAME 21 ARCHITECTURES — the same
+ * subject read four ways, not four separate libraries. Roadmap / Academy / Lab are activities you
+ * do. Presenting all seven as one flat grid hid that boundary and made the tab look like seven
+ * bodies of material to get through, which is both wrong and discouraging.
+ */
+export interface SectionGroup {
+  id: 'lenses' | 'practice';
+  label: DictKey;
+  desc: DictKey;
+  ids: SectionId[];
+}
+
+export const SECTION_GROUPS: SectionGroup[] = [
+  { id: 'lenses', label: 'learn.group.lenses', desc: 'learn.group.lenses.desc', ids: ['catalog', 'playbook', 'review', 'library'] },
+  { id: 'practice', label: 'learn.group.practice', desc: 'learn.group.practice.desc', ids: ['roadmap', 'academy', 'lab'] },
+];
+
+/**
+ * "Open this when…" — one line per section naming the SITUATION it answers.
+ *
+ * The `desc` fields say what a section contains; that is not the question a person on this page is
+ * asking. They are asking which one to click, and that is decided by what they are trying to do
+ * right now, so these are phrased as circumstances rather than contents.
+ */
+export const SECTION_WHEN: Record<SectionId, DictKey> = {
+  catalog: 'learn.when.catalog',
+  playbook: 'learn.when.playbook',
+  review: 'learn.when.review',
+  library: 'learn.when.library',
+  roadmap: 'learn.when.roadmap',
+  academy: 'learn.when.academy',
+  lab: 'learn.when.lab',
+};
+
 export function sectionMeta(id: SectionId): SectionMeta | undefined {
   return SECTIONS.find((s) => s.id === id);
 }

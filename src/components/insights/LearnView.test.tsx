@@ -19,6 +19,24 @@ describe('LearnView', () => {
     return { onOpenAdvisor, onLoadLab };
   };
 
+  // The landing groups its seven sections into "four lenses on the same 21 architectures" + "three
+  // activities". Rendering them as one flat grid read as seven separate libraries to get through —
+  // wrong, and the main reason the tab felt daunting. These pin the structure and the routing line.
+  it('groups the landing into the four lenses and the three activities, never one flat list', () => {
+    render();
+    expect(screen.getByRole('heading', { name: 'Read about the architectures' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Build the skill' })).toBeInTheDocument();
+    // The point of the grouping: state that the four are one subject read four ways.
+    expect(screen.getByText(/Four ways of reading the same 21 architectures/)).toBeInTheDocument();
+  });
+
+  it('tells the reader when each section is the right one to open, not just what it holds', () => {
+    render();
+    // One "Open this when…" line per section: the descriptions say what a section CONTAINS, which
+    // is not the question someone staring at seven cards is actually asking.
+    expect(screen.getAllByText(/^Open this when/)).toHaveLength(AVAILABLE_SECTIONS.length);
+  });
+
   it('every architecture has a Catalog, Playbook, Review, and Library entry (parity with the model)', () => {
     for (const dim of DIMENSION_ORDER) {
       for (const opt of DIMENSIONS[dim].options) {
