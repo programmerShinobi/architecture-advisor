@@ -2315,6 +2315,13 @@ svg {
   border-color: color-mix(in srgb, var(--aa-accent) 40%, transparent);
   transform: translateY(-1px);
 }
+/* Pressed/expanded state for icon toggles (e.g. the chat's "What can I ask?" browser). A toggle
+   whose on-state is invisible reads as a dead button — kept to surfaces, not an accent fill. */
+.aa-ctl-icon.on {
+  background: var(--color-background-tertiary);
+  border-color: var(--color-border-secondary);
+  color: var(--color-text-primary);
+}
 @supports not (background: color-mix(in srgb, red, blue)) {
   .aa-appbar .f-btn,
   .aa-seg,
@@ -2831,6 +2838,106 @@ svg {
   flex-wrap: wrap;
   gap: 6px;
   justify-content: center;
+}
+
+/* ---- Capability browser ("What can I ask?") -----------------------------
+   Two levels, deliberately: the adapter routes ~27 intent families, and listing
+   them flat is the overwhelm this is meant to cure (progressive disclosure).
+   Level 1 = five plain-language topics; level 2 = real, tappable questions.
+   Subtle surfaces only — no accent fills, per the owner's no-bright-colors rule. */
+.aa-chat-empty-lead {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+.aa-chat-topics {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 2px 0 4px;
+}
+.aa-chat-topic,
+.aa-chat-ask {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  padding: 9px 11px;
+  min-height: 44px; /* touch target floor */
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+.aa-chat-topic:hover,
+.aa-chat-ask:hover {
+  border-color: var(--color-border-secondary);
+  background: var(--color-background-tertiary);
+}
+.aa-chat-topic-ic {
+  flex: none;
+  color: var(--color-text-tertiary);
+}
+.aa-chat-topic-txt {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+.aa-chat-topic-label {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.aa-chat-topic-hint {
+  font-size: 11px;
+  line-height: 1.4;
+  /* Secondary, not tertiary: at 11px over the hover surface, tertiary measures 4.22:1 and fails
+     WCAG AA (axe-verified). Hierarchy still reads via size and weight, not contrast alone. */
+  color: var(--color-text-secondary);
+}
+.aa-chat-topic-go {
+  flex: none;
+  color: var(--color-text-tertiary);
+}
+.aa-chat-ask {
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.aa-chat-topic-back,
+.aa-chat-browse-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  align-self: center;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 7px 9px;
+  min-height: 34px;
+  border-radius: var(--border-radius-sm);
+}
+.aa-chat-topic-back {
+  align-self: start;
+  justify-content: flex-start;
+}
+.aa-chat-topic-back:hover,
+.aa-chat-browse-cta:hover {
+  color: var(--color-text-primary);
+  background: var(--color-background-secondary);
+}
+@media (prefers-reduced-motion: reduce) {
+  .aa-chat-topic,
+  .aa-chat-ask {
+    transition: none;
+  }
 }
 .aa-chat-msg {
   display: flex;

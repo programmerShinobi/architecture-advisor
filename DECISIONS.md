@@ -676,3 +676,67 @@ no threshold is claimed. It grows only when a real person gets a real answer wro
 **Not done (and why).** The per-intent floor ("every intent passes ≥2 of ≥3 cases") belongs to the
 maintainer-authored suite, not the held-out set, and is a separate change; it is not implied by
 anything above.
+
+---
+
+## Chat Advisor discoverability: a browsable capability menu, 2026-07-25
+
+**The complaint.** Users were still confused *using* the Chat Advisor after three rounds of widening
+its coverage. That was the diagnosis error: the problem had stopped being coverage several rounds
+earlier. The adapter answers ~27 intent families; the panel advertised **six** flat chips and one
+vague sentence, and `capabilities()` — the full catalogue — was reachable only by typing "help",
+which is precisely the knowledge a confused newcomer does not have. Newcomers exhausted the chips,
+guessed, hit the fallback, and reasonably concluded the thing was stupid. Experts never discovered
+sensitivity, migration paths, factor lookups or the quality-attribute glossary at all. **Adding more
+intents could not have fixed this, and three rounds of it did not.**
+
+**Decision.** A two-level capability browser, opened from a permanent header control (and a link on
+the empty state): five plain-language topics, each drilling into real questions that send with one
+tap. Two levels rather than one flat list is the point — showing ~27 intents at once is the overwhelm
+being cured, so this follows progressive disclosure rather than fighting it. The header control
+matters independently: mid-conversation there is no empty state, so it is the only way in.
+
+**The rule that makes it safe.** Every question the menu offers is one tap from being sent, so a dead
+suggestion would be the app confidently advertising a capability it lacks — the exact failure this
+product exists to argue against. `chatTopics.test.ts` therefore sends every entry through the real
+adapter in **both** languages and fails on a fallback.
+
+**That check paid for itself before it shipped.** It found **4 of 39** entries dead on arrival, and
+the pattern mattered more than the count: **three were Indonesian-only** phrasing gaps —
+`privat` (only `privasi` was a keyword), `dipasang` (only `instal aplikasi`), `seberapa tipis` (only
+`seberapa dekat`) — plus one English substring break, `how does **the** scoring work` against a
+keyword written `how does scoring work`. Indonesian users were hitting fallbacks materially more
+often than English ones, which is a plausible part of why the confusion persisted at all. All four
+were fixed **in the adapter**, not by rewording the menu to suit brittle keywords, so they help
+anyone who phrases it that way.
+
+**Two defects the screenshots caught that the tests could not.** The transcript's follow-the-bottom
+auto-scroll also ran for the browser, dragging its opening line out of view — it read as clipped
+text. And scrolling that list to the top tripped the bottom sentinel, so a "jump to latest" button
+appeared over a menu with nothing to jump to. Both are now suppressed while browsing. Neither would
+have surfaced without actually looking at the rendered result.
+
+**Verification (each claim has a command).**
+
+```bash
+npx vitest run src/components/chat/chatTopics.test.ts   # 39/39 — every entry answerable, EN + ID
+npx vitest run src/components/chat/ChatPanel.test.tsx   #  6/6  — the affordance itself
+```
+
+axe (WCAG 2.0/2.1 A + AA) over the open panel, **both themes, both levels, every topic hovered**: 0
+violations. It was not 0 at first — the hint text at 11px measured **4.22:1** on the hover surface
+against a 4.5 requirement, so it moved from `--color-text-tertiary` to `--color-text-secondary`;
+hierarchy still reads through size and weight rather than contrast alone. Touch targets are ≥44px,
+the toggle exposes `aria-expanded`, and transitions respect `prefers-reduced-motion`.
+
+Full battery: tsc clean, lint 0 warnings, **237/237** unit, 14/14 E2E, 6/6 guards, bundle within
+budget. No new dependencies; the icons and CSS variables were already in the project.
+
+**Also fixed while here:** jsdom implements no scrolling API, so any component that scrolls threw on
+render under test. `src/test/setup.ts` now stubs `scrollIntoView`/`scrollTo` as no-ops — scroll
+*position* is asserted in the browser-driven E2E specs, never in jsdom, so this costs no coverage.
+
+**Not claimed.** `chatTopics.test.ts` asserts each question is *answerable*, not that it lands on the
+intended topic; that stronger check is what the held-out set is for. And a menu is not proof of
+comprehension — whether this actually reduces confusion is a question for real users, whose queries
+belong in `heldout.json`.

@@ -138,6 +138,29 @@ model behind it — actually behaves:
   **keyboard shortcuts**, **dark/light theme**, **EN/ID language**, **PWA install**,
   **accessibility**, **browser support**, the scoring **methodology**, and the **Custom Wizard**.
 
+### Finding out what you can ask ("What can I ask?")
+
+Breadth is worthless if nobody can see it. The panel used to advertise **six** chips against ~27
+answerable intent families, and the full catalogue was reachable only by typing *"help"* — the one
+thing a confused newcomer cannot know to do. So newcomers exhausted the chips, guessed, hit the
+fallback, and concluded the advisor was stupid; experts never found sensitivity, migration paths or
+the quality-attribute glossary at all.
+
+The panel now has a permanent **"What can I ask?"** control in its header (plus a
+*"See everything I can answer"* link on the empty state) opening a two-level browser: five
+plain-language topics — *your recommendation · understand an architecture · risks, cost & migration ·
+the model behind it · using this app* — each drilling into real questions that send with one tap.
+Two levels rather than one flat list is deliberate: dumping ~27 intents at once is the overwhelm
+this is meant to cure.
+
+Every advertised question is machine-checked to be answerable in **both** languages
+([`chatTopics.test.ts`](src/components/chat/chatTopics.test.ts)) — a suggestion that lands on the
+fallback would be the app confidently promising a capability it does not have. That check earned its
+keep immediately: it caught 4 of 39 entries as dead on arrival, three of them **Indonesian-only**
+phrasing gaps (`privat`, `dipasang`, `seberapa tipis`) plus one English substring break — *"how does
+**the** scoring work"* missing a keyword written as `how does scoring work`. Those were fixed in the
+adapter, so they help anyone who types that way, not just the menu.
+
 ### How well it actually understands you — stated honestly
 
 The ~190 unit tests in [`chat.test.ts`](src/lib/chat/chat.test.ts) are a **self-consistency** suite,
