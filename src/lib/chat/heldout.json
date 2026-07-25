@@ -1,0 +1,75 @@
+{
+  "_README": [
+    "HELD-OUT QUERY SET for the Chat Advisor — read this before touching the file.",
+    "",
+    "WHY IT EXISTS. The 180+ unit tests in chat.test.ts were written by the same person who wrote",
+    "the keyword vocabulary in localAdvisorAdapter.ts, in the same sitting, often reusing the exact",
+    "words from the `patterns`/keyword arrays. That measures SELF-CONSISTENCY, not comprehension —",
+    "grading an exam with a key written by the candidate. The proof it was hollow: those tests were",
+    "all green while five real questions the owner typed by hand still got the wrong answer.",
+    "",
+    "THE ONE RULE. Queries in this file may ONLY come from someone who has not read the knowledge",
+    "base — the owner hand-testing, a user report, an issue, a usability session. A maintainer may",
+    "NEVER invent a query here to make a number look better. If you catch yourself writing a query",
+    "from memory of the keyword list, it belongs in chat.test.ts instead, not here.",
+    "",
+    "WHAT IS AND ISN'T HELD OUT. The QUERY text is held out — that is the part vocabulary leaks",
+    "into. The `expect` matchers are necessarily maintainer-written, because someone has to say",
+    "what a correct answer looks like. Keep them about the ANSWER'S SUBSTANCE (which topic it",
+    "landed on), never about phrasing the adapter happens to use today.",
+    "",
+    "NO ACCURACY GATE. Reported, not gated, until >= 30 queries — below that a single case moves",
+    "the percentage by >3 points, so a threshold would be noise, and it could be gamed by adding",
+    "easy queries. The only hard rule is NON-REGRESSION, enforced against heldout-snapshot.json:",
+    "a query that once passed may never start failing. Deliberate changes therefore show up as a",
+    "reviewable diff in that snapshot.",
+    "",
+    "HOW TO ADD ONE. Append an entry with the query VERBATIM (typos, casing and all — those are",
+    "the signal), record where it came from in `source`, then run `npx vitest run heldout`. A new",
+    "query that fails is a finding, not a broken build: fix the adapter, or leave it failing and",
+    "documented until someone does."
+  ],
+
+  "queries": [
+    {
+      "id": "ho-001",
+      "query": "why not serverless?",
+      "lang": "en",
+      "source": "owner hand-test, 2026-07-23",
+      "finding": "Answered with the generic privacy blurb: the bare keyword \"server\" matched inside \"serverless\".",
+      "expect": { "must": ["Serverless"], "mustNot": ["100% in your browser"] }
+    },
+    {
+      "id": "ho-002",
+      "query": "bisakah instal aplikasi offline?",
+      "lang": "id",
+      "source": "owner hand-test, 2026-07-23",
+      "finding": "Answered privacy instead of PWA install: the bare keyword \"offline\" ran before the FAQ table.",
+      "expect": { "must": ["PWA"] }
+    },
+    {
+      "id": "ho-003",
+      "query": "daftar semua anti-pattern",
+      "lang": "id",
+      "source": "owner hand-test, 2026-07-23",
+      "finding": "Answered privacy: \"daftar\" was a privacy keyword and shadowed the anti-pattern catalogue.",
+      "expect": { "must": ["Semua anti-pattern yang dipantau"] }
+    },
+    {
+      "id": "ho-004",
+      "query": "what is Cost efficiency?",
+      "lang": "en",
+      "source": "owner hand-test, 2026-07-23",
+      "finding": "Answered the scenario's cost/ops numbers instead of defining the quality attribute.",
+      "expect": { "must": ["ISO/IEC 25010"], "mustNot": ["Cost & operations —"] }
+    },
+    {
+      "id": "ho-005",
+      "query": "what is an anti-pattern?",
+      "lang": "en",
+      "source": "owner hand-test, 2026-07-23",
+      "finding": "Ran a scenario-specific check instead of explaining the concept from the glossary.",
+      "expect": { "must": ["Anti-pattern"], "mustNot": ["Warnings for your scenario", "No anti-patterns detected"] }
+    }
+  ]
+}

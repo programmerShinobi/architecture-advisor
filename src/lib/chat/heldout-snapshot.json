@@ -1,0 +1,22 @@
+{
+  "_README": [
+    "NON-REGRESSION BASELINE for heldout.json — machine-checked by heldout.test.ts.",
+    "",
+    "An id set to `true` has passed at least once, so it may NEVER start failing again: that is the",
+    "single hard rule of the held-out set (there is deliberately no accuracy threshold). Flipping one",
+    "back to false, or deleting it, is only legitimate as a reviewed diff in this file with a reason",
+    "in the commit message — which is the whole point of committing the baseline instead of computing",
+    "it at run time.",
+    "",
+    "A NEW query starts absent from this map. It is reported but not enforced until it passes once;",
+    "add it here in the same commit that makes it pass."
+  ],
+  "recorded": "2026-07-25",
+  "passing": {
+    "ho-001": true,
+    "ho-002": true,
+    "ho-003": true,
+    "ho-004": true,
+    "ho-005": true
+  }
+}

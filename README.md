@@ -138,6 +138,31 @@ model behind it — actually behaves:
   **keyboard shortcuts**, **dark/light theme**, **EN/ID language**, **PWA install**,
   **accessibility**, **browser support**, the scoring **methodology**, and the **Custom Wizard**.
 
+### How well it actually understands you — stated honestly
+
+The ~190 unit tests in [`chat.test.ts`](src/lib/chat/chat.test.ts) are a **self-consistency** suite,
+not an accuracy score: their queries were written by whoever wrote the keyword vocabulary in
+`localAdvisorAdapter.ts`, often reusing its exact words. Passing them proves the adapter agrees with
+itself. The proof that this is not the same as being understood: they were **all green** while five
+questions the owner typed by hand still got the wrong answer (a bare `server` keyword matching inside
+*"serverless"*, and four more like it).
+
+So comprehension is tracked separately, in a **held-out set** —
+[`heldout.json`](src/lib/chat/heldout.json) — which may **only** ever contain queries from someone
+who has not read the knowledge base (hand-testing, user reports, usability sessions); a maintainer
+inventing one there to lift a number defeats the entire mechanism. It is **reported, never gated**:
+below ~30 queries a single case swings the percentage by more than 3 points, so a threshold would be
+noise and could be met by adding easy queries. The one hard rule is **non-regression** against
+[`heldout-snapshot.json`](src/lib/chat/heldout-snapshot.json) — a query that once passed may never
+start failing, so deliberate changes surface as a reviewable diff.
+
+```bash
+npx vitest run src/lib/chat/heldout.test.ts --disable-console-intercept   # prints the report
+```
+
+Seeded with the five real hand-test failures; current status is **5/5 passing, 5/30 collected** —
+too few to mean anything yet, which is exactly why no gate is claimed.
+
 It's named
 **"Chat Advisor"**, not "AI Advisor" — the name should say what it actually is: a **client-side,
 offline, rule-based** assistant computed from the frozen engine + the same config the app renders,

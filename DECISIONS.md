@@ -622,3 +622,57 @@ more specific, conceptually different intent — all now covered by regression t
   uses `scrollIntoView`, **not** `href="#id"` anchors, so it never mutates `location.hash` (which
   this app reserves for share-state — an anchor jump would have clobbered a share link). Verified
   desktop + mobile; the close button's aria-label became "Close the guide" (test updated).
+
+---
+
+## Held-out evaluation for the Chat Advisor, 2026-07-25
+
+**The problem, named plainly.** The ~190 unit tests in `src/lib/chat/chat.test.ts` were written by
+the same author as the keyword vocabulary in `localAdvisorAdapter.ts`, in the same sitting, often
+reusing that vocabulary's exact words. That measures **self-consistency, not comprehension** —
+grading an exam with a key written by the candidate. It is not a hypothetical weakness: the suite was
+**entirely green** while five questions the owner typed by hand still returned the wrong answer
+(`server` matching inside *"serverless"*, `offline` beating the PWA FAQ, `daftar` shadowing the
+anti-pattern catalogue, `cost` beating the Cost-efficiency quality attribute, and the anti-pattern
+*concept* running a scenario check). Green tests plus wrong answers is the whole argument.
+
+**Decision.** Track comprehension in a separate **held-out set**, `src/lib/chat/heldout.json`,
+governed by one sourcing rule: it may **only** contain queries from someone who has not read the
+knowledge base — owner hand-testing, user reports, issues, usability sessions. A maintainer inventing
+a query there to improve a number defeats the mechanism entirely, so the rule is written into the
+file's own header rather than left to memory.
+
+What is held out is the **query text** — that is where vocabulary leaks in. The `expect` matchers are
+necessarily maintainer-written (someone must define a correct answer); they are kept to the answer's
+*substance* (which topic it landed on), never to phrasing the adapter happens to use today.
+
+**No accuracy gate — deliberately.** Below ~30 queries a single case moves the percentage by more
+than 3 points, so any threshold would be noise, and it could be satisfied by adding easy queries —
+an incentive that corrupts the measurement it is meant to protect. The score is **reported, never
+enforced**. The single hard rule is **non-regression** against `heldout-snapshot.json`: an id that
+has passed once may never start failing. The baseline is committed rather than computed at run time
+precisely so an intentional change appears as a reviewable diff.
+
+**Why this over raising the unit-test count.** More self-authored tests would have raised the number
+without moving the thing the number is supposed to stand for. The five hand-test failures proved the
+existing suite could be fully green and still wrong; adding more of the same could not have caught
+them.
+
+**Verification (every claim here has a command).**
+
+```bash
+npx vitest run src/lib/chat/heldout.test.ts --disable-console-intercept  # report: 5/5, 5/30 collected
+```
+
+The guard was proven to bite rather than assumed to: re-introducing the original `'server call'` →
+`'server'` bug turned exactly `ho-001` red (`4/5 passing`, 1 failed test) and restoring it returned
+the suite to green. Full battery after the change: tsc clean, lint 0 warnings, **192/192** unit,
+6/6 guards, build clean, and `grep -rl heldout dist/` empty — the held-out data is imported only by a
+test file, so it never reaches the production bundle.
+
+**Status: 5 of 30 queries.** Too few to mean anything yet, which is the honest reading and the reason
+no threshold is claimed. It grows only when a real person gets a real answer wrong.
+
+**Not done (and why).** The per-intent floor ("every intent passes ≥2 of ≥3 cases") belongs to the
+maintainer-authored suite, not the held-out set, and is a separate change; it is not implied by
+anything above.
