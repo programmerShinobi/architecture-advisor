@@ -136,7 +136,7 @@ export default function AcademyView({ onOpenArch, onOpenArticle }: Props) {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px, 100%), 1fr))', gap: '11px' }}>
       {ACADEMY_QUIZZES.map((m) => (
         <button key={m.id} type="button" className="learn-card" style={cardBase} onClick={() => openModule(m.id)}>
           <span className="learn-art" aria-hidden>

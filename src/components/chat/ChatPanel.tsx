@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
-import { IconSend, IconPlayerStop, IconRotate2, IconX, IconSparkles, IconArrowDown, IconHelpCircle, IconChevronRight, IconChevronLeft } from '@tabler/icons-react';
+import { IconSend, IconPlayerStop, IconRotate2, IconX, IconSparkles, IconArrowDown, IconHelpCircle, IconChevronRight, IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
 import { ChatMessageItem } from './ChatMessageItem';
-import { CHAT_TOPICS } from './chatTopics';
+import { CHAT_TOPICS, CHAT_HOWTO } from './chatTopics';
+
+/** Sentinel for the "How do I use this?" pane — not a topic, so it cannot collide with a topic id. */
+const HOWTO_ID = '__howto__';
 import type { ChatMessage } from '../../lib/chat';
 import type { DictKey } from '../../i18n/dict';
 
@@ -114,22 +117,53 @@ export function ChatPanel({ messages, streaming, onSend, onStop, onRegenerate, o
       <div className="aa-chat-list" ref={listRef} aria-live="polite" aria-atomic="false">
         {showBrowser ? (
           <div className="aa-chat-topics">
-            <p className="aa-chat-empty-lead">{t(openTopic ? 'chat.browse.pick' : 'chat.browse.lead')}</p>
+            <p className="aa-chat-empty-lead">
+              {(() => {
+                if (openTopic === null) return t('chat.browse.lead');
+                return openTopic === HOWTO_ID ? t('chat.howto.lead') : t('chat.browse.pick');
+              })()}
+            </p>
 
             {openTopic === null ? (
-              CHAT_TOPICS.map((topic) => {
-                const Ic = topic.icon;
-                return (
-                  <button key={topic.id} type="button" className="aa-chat-topic" onClick={() => setOpenTopic(topic.id)} aria-expanded={false}>
-                    <Ic size={17} aria-hidden className="aa-chat-topic-ic" />
-                    <span className="aa-chat-topic-txt">
-                      <span className="aa-chat-topic-label">{tr(topic.label)}</span>
-                      <span className="aa-chat-topic-hint">{tr(topic.hint)}</span>
-                    </span>
-                    <IconChevronRight size={15} aria-hidden className="aa-chat-topic-go" />
-                  </button>
-                );
-              })
+              <>
+                {/* Listed first and on purpose: someone who does not yet know they can type freely,
+                    or that the advisor already reads their scenario, will not be helped by a longer
+                    menu of questions. */}
+                <button type="button" className="aa-chat-topic" onClick={() => setOpenTopic(HOWTO_ID)}>
+                  <IconInfoCircle size={17} aria-hidden className="aa-chat-topic-ic" />
+                  <span className="aa-chat-topic-txt">
+                    <span className="aa-chat-topic-label">{t('chat.howto')}</span>
+                    <span className="aa-chat-topic-hint">{t('chat.howto.hint')}</span>
+                  </span>
+                  <IconChevronRight size={15} aria-hidden className="aa-chat-topic-go" />
+                </button>
+                {CHAT_TOPICS.map((topic) => {
+                  const Ic = topic.icon;
+                  return (
+                    <button key={topic.id} type="button" className="aa-chat-topic" onClick={() => setOpenTopic(topic.id)}>
+                      <Ic size={17} aria-hidden className="aa-chat-topic-ic" />
+                      <span className="aa-chat-topic-txt">
+                        <span className="aa-chat-topic-label">{tr(topic.label)}</span>
+                        <span className="aa-chat-topic-hint">{tr(topic.hint)}</span>
+                      </span>
+                      <IconChevronRight size={15} aria-hidden className="aa-chat-topic-go" />
+                    </button>
+                  );
+                })}
+              </>
+            ) : openTopic === HOWTO_ID ? (
+              <>
+                <button type="button" className="aa-chat-topic-back" onClick={() => setOpenTopic(null)}>
+                  <IconChevronLeft size={14} aria-hidden />
+                  {t('chat.browse.back')}
+                </button>
+                {CHAT_HOWTO.map((h) => (
+                  <div key={h.title.en} className="aa-chat-howto">
+                    <span className="aa-chat-howto-title">{tr(h.title)}</span>
+                    <span className="aa-chat-howto-body">{tr(h.body)}</span>
+                  </div>
+                ))}
+              </>
             ) : (
               <>
                 <button type="button" className="aa-chat-topic-back" onClick={() => setOpenTopic(null)}>

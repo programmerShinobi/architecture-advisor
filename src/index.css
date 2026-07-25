@@ -109,7 +109,7 @@ html.light {
   --color-text-success: #0a7048;
   --color-text-warning: #b5790e;
   --color-text-cost: #8a5300; /* darker amber → ≥4.5:1 on the light card background */
-  --color-text-danger: #c4392e;
+  --color-text-danger: #a92c22; /* darkened → ≥4.5:1 for the 11px "DON'T" heading on its own danger tint (axe-verified; #c4392e measured 4.0:1) */
   --color-background-info: rgba(87, 51, 198, 0.09);
   --color-background-success: rgba(15, 138, 95, 0.1);
   --color-background-warning: rgba(181, 121, 14, 0.1);
@@ -2449,7 +2449,7 @@ svg {
 }
 .aa-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr));
   gap: 10px;
 }
 .aa-scard {
@@ -2906,6 +2906,26 @@ svg {
 .aa-chat-ask {
   font-size: 12.5px;
   line-height: 1.45;
+}
+/* "How to use this" — prose, not a control: no hover/pointer affordance, so it never reads as a
+   dead button. Same surface as the topic rows so the pane still looks like one list. */
+.aa-chat-howto {
+  display: grid;
+  gap: 3px;
+  padding: 10px 11px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+}
+.aa-chat-howto-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.aa-chat-howto-body {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
 }
 .aa-chat-topic-back,
 .aa-chat-browse-cta {

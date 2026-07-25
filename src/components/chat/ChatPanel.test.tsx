@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
 import { ChatPanel } from './ChatPanel';
-import { CHAT_TOPICS } from './chatTopics';
+import { CHAT_TOPICS, CHAT_HOWTO } from './chatTopics';
 import { renderWithI18n } from '../../test/render';
 
 /**
@@ -80,6 +80,25 @@ describe('ChatPanel — the capability browser is discoverable without prior kno
     // deliberately also one of the six quick chips, so matching by text alone proves nothing.
     expect(container.querySelectorAll('.aa-chat-ask')).toHaveLength(0);
     expect(screen.queryByText('All topics')).not.toBeInTheDocument();
+  });
+
+  it('leads with "How to use this", ahead of the question topics', () => {
+    const { container } = panel();
+    fireEvent.click(screen.getByText('See everything I can answer'));
+
+    const rows = [...container.querySelectorAll('.aa-chat-topic-label')].map((n) => n.textContent);
+    expect(rows[0]).toBe('How to use this'); // a menu of questions cannot teach someone HOW to ask
+    expect(rows).toHaveLength(CHAT_TOPICS.length + 1);
+  });
+
+  it('explains the things a first-timer is actually blocked on, including the expert framing', () => {
+    panel();
+    fireEvent.click(screen.getByText('See everything I can answer'));
+    fireEvent.click(screen.getByText('How to use this'));
+
+    for (const h of CHAT_HOWTO) expect(screen.getByText(h.title.en)).toBeInTheDocument();
+    // The how-to is prose, not tappable questions — it must not render send-on-click rows.
+    expect(document.querySelectorAll('.aa-chat-ask')).toHaveLength(0);
   });
 
   it('can go back up a level', () => {

@@ -627,7 +627,7 @@ more specific, conceptually different intent — all now covered by regression t
 
 ## Held-out evaluation for the Chat Advisor, 2026-07-25
 
-**The problem, named plainly.** The ~190 unit tests in `src/lib/chat/chat.test.ts` were written by
+**The problem, named plainly.** The 43 unit tests in `src/lib/chat/chat.test.ts` were written by
 the same author as the keyword vocabulary in `localAdvisorAdapter.ts`, in the same sitting, often
 reusing that vocabulary's exact words. That measures **self-consistency, not comprehension** —
 grading an exam with a key written by the candidate. It is not a hypothetical weakness: the suite was
@@ -740,3 +740,67 @@ render under test. `src/test/setup.ts` now stubs `scrollIntoView`/`scrollTo` as 
 intended topic; that stronger check is what the held-out set is for. And a menu is not proof of
 comprehension — whether this actually reduces confusion is a question for real users, whose queries
 belong in `heldout.json`.
+
+---
+
+## Production-readiness review, 2026-07-25
+
+A full pass over every feature, run after the Chat Advisor help work. Recorded because two of the
+findings were real defects that no existing gate would have caught, and because the checks that came
+back clean are worth being able to point at later.
+
+**Chat Advisor — the remaining gap after the topic browser.** Browsing topics tells someone *what*
+can be asked; it still leaves them guessing whether they may type freely, whether it already knows
+the scenario they just built, and why it sometimes fails to understand. A **"How to use this"** pane
+now leads the browser (ahead of the question topics, on purpose) and answers exactly those four
+things — including a blunt paragraph for experts stating what kind of system it is: deterministic,
+rule-based over the frozen model, no network, and unable to reason about anything outside it. It is
+static prose, so a confused user does not have to send a message to learn how to send a message.
+Guide §7 was expanded to match: how to get an answer start to finish, what it can answer, what it is
+*not*, and the expert framing.
+
+### Defects found and fixed
+
+- **WCAG AA contrast failure, light mode.** The `DON'T` heading in the Copilot tour measured
+  **4.0:1** against its own danger tint at 11px, below the 4.5 requirement. `--color-text-danger`
+  went `#c4392e` → `#a92c22` in light mode. It is one token, so every other danger usage improved
+  with it, including the chat "stop" button that uses it as a *background* behind light text.
+- **Horizontal overflow at 320px** on Advisor and Insights (326px against a 320px viewport).
+  Cause: `repeat(auto-fit, minmax(270px, 1fr))` — `minmax` forces a track wider than its container
+  once the container drops below the stated minimum. Fixed in **all 12** affected grids as
+  `minmax(min(<N>px, 100%), 1fr)`, which is inert above the threshold. This was **pre-existing, not a
+  regression** — verified by stashing the change set and reproducing 326 vs 320 on the prior commit.
+  It went unnoticed because the responsive E2E stops at 360px, while WCAG 1.4.10 Reflow is specified
+  at **320px**.
+- **An inaccurate claim in our own docs.** README and DECISIONS both said "~190 unit tests in
+  `chat.test.ts`"; that file has **43** — ~190 was the whole suite at the time. Corrected in both.
+  Noted because a docs-integrity rule the project already states ("every claim has a command that
+  proves it") is worth applying to prose about the tests themselves, not only to model values.
+
+### Checked and clean (so the absence of a finding is on the record)
+
+- **axe WCAG 2.0/2.1 A + AA**: Home, Advisor, Insights × light/dark at 1440 **and** 320; plus the
+  Guide/Manual, command palette, shortcuts, all six Copilot tour steps, the chat capability browser
+  and the how-to pane. **0 violations** after the two fixes above.
+- **No horizontal scroll** at 320 / 360 / 768 / 1024 / 1440 across all three views.
+- **No runtime console errors or page errors** on load across those widths and views.
+- **i18n**: every dictionary key has non-empty EN *and* ID; **zero unused keys**. 17 entries are
+  EN-identical — each verified deliberate (proper nouns, `CSV`/`JSON`, `ISO/IEC`, `Advisor`,
+  `Command palette`), not untranslated leftovers.
+- **No** `TODO`/`FIXME`/`HACK`/`@ts-ignore`, no stray `console.*` (the one that exists is DEV-gated),
+  no `debugger`, no `.only`/`.skip`.
+- Full battery: tsc clean, lint 0 warnings, **239/239** unit, **14/14** E2E, **6/6** guards.
+
+**Two false alarms, recorded so they are not "fixed" by someone later.** `lp.h1.pre`/`lp.h1.post`
+carry deliberate leading/trailing spaces — the headline is split around a gradient-highlighted word,
+and trimming them yields "architecture withevidence,not trends." And `lp.meta.iso` reading
+"ISO/IEC 2023" is not a truncated 25010: it is the caption under a stat tile whose figure *is*
+`25010`, matching `ISO/IEC 25010:2023` elsewhere.
+
+**Bundle.** Total JS gzip crossed its 278kB budget (278.6). Raised to **281** with the reason
+recorded inline, per that guard's own convention: the added weight is bilingual help copy inside the
+already-lazy chat chunk, initial JS is unchanged at 120.8/121, and the NFR ceiling is 300.
+
+**Not claimed.** "Production-ready" here means the checks above pass — it is not a security audit, a
+load test, or evidence that users are now less confused. The last of those is answerable only by real
+users, whose queries belong in `heldout.json`.

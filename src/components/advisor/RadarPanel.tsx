@@ -140,7 +140,7 @@ export function RadarPanel({ weights, mode }: Props) {
         })}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(270px,1fr))', gap: '18px', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(270px, 100%), 1fr))', gap: '18px', alignItems: 'start' }}>
         <div style={{ minHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <svg viewBox="0 0 380 360" width="100%" style={{ maxWidth: '380px' }} role="img" aria-label="Radar chart across twelve quality attributes">
             {rings.map((ring) => (

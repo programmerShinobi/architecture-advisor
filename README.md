@@ -163,7 +163,7 @@ adapter, so they help anyone who types that way, not just the menu.
 
 ### How well it actually understands you — stated honestly
 
-The ~190 unit tests in [`chat.test.ts`](src/lib/chat/chat.test.ts) are a **self-consistency** suite,
+The 43 unit tests in [`chat.test.ts`](src/lib/chat/chat.test.ts) are a **self-consistency** suite,
 not an accuracy score: their queries were written by whoever wrote the keyword vocabulary in
 `localAdvisorAdapter.ts`, often reusing its exact words. Passing them proves the adapter agrees with
 itself. The proof that this is not the same as being understood: they were **all green** while five

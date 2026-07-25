@@ -101,7 +101,7 @@ export default function LabView({ onRun, onOpenArch }: Props) {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px, 100%), 1fr))', gap: '11px' }}>
       {LAB_EXPERIMENTS.map((e) => (
         <button key={e.id} type="button" className="learn-card" style={cardBase} onClick={() => setExpId(e.id)}>
           <span className="learn-art" aria-hidden>

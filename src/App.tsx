@@ -413,7 +413,7 @@ export default function App() {
           <DimensionDetail dim={currentDim} ranked={rankings[currentDim]} weights={weights} />
           <RadarPanel weights={weights} mode={mode} />
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: '14px', marginTop: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(250px, 100%), 1fr))', gap: '14px', marginTop: '16px' }}>
             <SensitivityCard flips={flips} levels={levels} />
             <MigrationCard value={migKey} onChange={setMigKey} />
           </div>
