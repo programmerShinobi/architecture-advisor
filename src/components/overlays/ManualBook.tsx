@@ -15,15 +15,16 @@ const READER_DOC_URL =
 // The 9 sections, as data — drives the sticky jump-to-section table of contents (modern doc nav).
 // Keep in sync with the <section id> anchors below.
 const TOC: { id: string; en: string; id_: string }[] = [
-  { id: 'aa-man-1', en: 'Overview', id_: 'Ikhtisar' },
-  { id: 'aa-man-2', en: 'Four steps', id_: 'Empat langkah' },
-  { id: 'aa-man-3', en: 'The calculation', id_: 'Perhitungan' },
-  { id: 'aa-man-4', en: 'Your numbers', id_: 'Angka Anda' },
-  { id: 'aa-man-5', en: 'Dimensions', id_: 'Dimensi' },
-  { id: 'aa-man-6', en: 'Analysis', id_: 'Analisis' },
-  { id: 'aa-man-7', en: 'Feature map', id_: 'Peta fitur' },
-  { id: 'aa-man-8', en: 'Honesty', id_: 'Kejujuran' },
-  { id: 'aa-man-9', en: 'Sources', id_: 'Sumber' },
+  { id: 'aa-man-1', en: 'By your role', id_: 'Sesuai peran Anda' },
+  { id: 'aa-man-2', en: 'Overview', id_: 'Ikhtisar' },
+  { id: 'aa-man-3', en: 'Four steps', id_: 'Empat langkah' },
+  { id: 'aa-man-4', en: 'The calculation', id_: 'Perhitungan' },
+  { id: 'aa-man-5', en: 'Your numbers', id_: 'Angka Anda' },
+  { id: 'aa-man-6', en: 'Dimensions', id_: 'Dimensi' },
+  { id: 'aa-man-7', en: 'Analysis', id_: 'Analisis' },
+  { id: 'aa-man-8', en: 'Feature map', id_: 'Peta fitur' },
+  { id: 'aa-man-9', en: 'Honesty', id_: 'Kejujuran' },
+  { id: 'aa-man-10', en: 'Sources', id_: 'Sumber' },
 ];
 
 interface Props {
@@ -97,9 +98,69 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
         </nav>
 
         <div className="aa-manual-body">
-          {/* 1. Overview */}
+          {/* 1. By your role — deliberately first. Everything after this explains HOW the tool works;
+              a reader who does not yet know which parts apply to them will not get that far. Each
+              entry names a concrete path and what to walk away with, because "explore the app" is
+              not an answer for someone with a decision to make. */}
           <section id="aa-man-1" className="aa-manual-section">
-          {H(1, 'What this tool is', 'Apa itu alat ini')}
+          {H(1, 'Start here — what to do, by your role', 'Mulai dari sini — apa yang harus dilakukan, sesuai peran Anda')}
+          {p(
+            'The app has three tabs and many panels, which is a lot to face when you only need one answer. Find yourself below; each line is a complete path, not a tour.',
+            'Aplikasi ini punya tiga tab dan banyak panel — terlalu banyak dihadapi kalau Anda cuma butuh satu jawaban. Cari diri Anda di bawah; tiap baris adalah jalur lengkap, bukan tur keliling.',
+          )}
+
+          <div className={card}>
+            <strong className="aa-manual-subhead">{L('New to architecture — a student, or a developer picking a stack for the first time', 'Baru di arsitektur — mahasiswa, atau developer yang pertama kali memilih tumpukan teknologi')}</strong>
+            {p(
+              'Open Advisor, keep Guided mode, and press "Guide me" for the walkthrough. Pick the scenario card closest to your project instead of answering all 14 questions cold. Read the recommendation with "why", then open the Chat Advisor and ask "what is a monolith?" or "monolith vs microservices". Do not treat the winner as the right answer — read the close-call note, because being told two options are nearly tied is more useful to you than a single name.',
+              'Buka Advisor, tetap di mode Terpandu, lalu tekan "Pandu saya" untuk pemandunya. Pilih kartu skenario yang paling mirip proyek Anda daripada menjawab 14 pertanyaan dari nol. Baca rekomendasinya beserta "kenapa", lalu buka Chat Advisor dan tanya "apa itu monolith?" atau "monolith vs microservices". Jangan anggap pemenangnya sebagai jawaban benar — baca catatan selisih tipis, karena diberi tahu dua opsi nyaris seri lebih berguna bagi Anda daripada satu nama.',
+            )}
+          </div>
+
+          <div className={card}>
+            <strong className="aa-manual-subhead">{L('Software Architect — you already have an opinion and want it challenged', 'Arsitek Perangkat Lunak — Anda sudah punya pendapat dan ingin diuji')}</strong>
+            {p(
+              'Switch to Expert mode and answer the 14 factors directly. Go straight to sensitivity: ask the Chat Advisor "how close is this?" to see which single answer flips the result — that margin is the real output, not the winner. Override any weight you disagree with; the recommendation recomputes and stays traceable. Use "why not X" on the option you expected to win, then export an ADR so the reasoning survives the meeting.',
+              'Pindah ke mode Ahli dan jawab 14 faktornya langsung. Langsung ke sensitivitas: tanya Chat Advisor "seberapa tipis selisihnya?" untuk melihat satu jawaban mana yang membalik hasilnya — margin itulah keluaran sebenarnya, bukan pemenangnya. Timpa bobot mana pun yang tak Anda setujui; rekomendasinya dihitung ulang dan tetap dapat ditelusuri. Pakai "kenapa bukan X" pada opsi yang Anda kira menang, lalu ekspor ADR agar penalarannya bertahan setelah rapat usai.',
+            )}
+          </div>
+
+          <div className={card}>
+            <strong className="aa-manual-subhead">{L('CTO or Engineering Manager — you need a decision you can defend later', 'CTO atau Engineering Manager — Anda butuh keputusan yang bisa dipertanggungjawabkan nanti')}</strong>
+            {p(
+              'Your output is the ADR export, not the screen. Build the scenario, then pin it as A, change the one assumption you are unsure about — budget, scale, or time-to-market — and pin that as B; Compare shows exactly what that assumption costs you. Export the ADR and the printable report. Read "Honesty & limitations" below before you circulate anything, and quote the close-call margin rather than the winner alone: a decision recorded as "these two were within two points, we chose the cheaper one" ages far better than one recorded as a verdict.',
+              'Keluaran Anda adalah ekspor ADR, bukan layarnya. Susun skenarionya, sematkan sebagai A, ubah satu asumsi yang Anda ragukan — anggaran, skala, atau waktu rilis — lalu sematkan sebagai B; Bandingkan menunjukkan persis berapa harga asumsi itu. Ekspor ADR dan laporan siap cetak. Baca "Kejujuran & batasan" di bawah sebelum menyebarkan apa pun, dan kutip margin selisih tipisnya, bukan cuma pemenangnya: keputusan yang dicatat sebagai "keduanya beda dua poin, kami pilih yang lebih murah" jauh lebih awet daripada yang dicatat sebagai vonis.',
+            )}
+          </div>
+
+          <div className={card}>
+            <strong className="aa-manual-subhead">{L('Tech Lead — you have to explain the choice to your team tomorrow', 'Tech Lead — besok Anda harus menjelaskan pilihan ini ke tim')}</strong>
+            {p(
+              'Work through the four steps once, then spend your time in the "why" panel: it names which of your answers pushed which quality attribute, so you can explain the decision in your team\'s own terms instead of asserting it. Ask the Chat Advisor for the migration path — knowing how you would move to microservices later is what makes choosing a monolith now defensible. The share link reproduces your exact scenario on someone else\'s machine, which is usually more persuasive than a screenshot.',
+              'Lewati empat langkahnya sekali, lalu habiskan waktu Anda di panel "kenapa": ia menyebut jawaban Anda yang mana mendorong atribut mutu yang mana, sehingga Anda bisa menjelaskan keputusannya dengan bahasa tim sendiri, bukan sekadar menyatakannya. Tanyakan jalur migrasi ke Chat Advisor — tahu bagaimana nanti pindah ke microservices itulah yang membuat memilih monolith sekarang bisa dipertanggungjawabkan. Tautan berbagi mereproduksi skenario Anda persis di mesin orang lain, dan itu biasanya lebih meyakinkan daripada tangkapan layar.',
+            )}
+          </div>
+
+          <div className={card}>
+            <strong className="aa-manual-subhead">{L('QA or SRE — you care about what breaks, not what wins', 'QA atau SRE — yang Anda pedulikan apa yang rusak, bukan apa yang menang')}</strong>
+            {p(
+              'Skip the ranking and open the anti-pattern warnings: they flag combinations that are known to hurt, such as microservices with a single shared database. Ask the Chat Advisor for "the full anti-pattern catalogue" to see every rule being checked, not only the ones your scenario triggered, and ask about operational cost to see the monitoring and deployment burden a choice implies. Testability and observability are two of the twelve quality attributes — if they matter to you, raise their weight in Expert mode and watch the ranking change.',
+              'Lewati peringkatnya dan buka peringatan anti-pattern: ia menandai kombinasi yang diketahui menyakitkan, misalnya microservices dengan satu basis data bersama. Minta Chat Advisor menampilkan "seluruh katalog anti-pattern" untuk melihat semua aturan yang diperiksa, bukan hanya yang terpicu skenario Anda, dan tanyakan biaya operasional untuk melihat beban pemantauan dan penyebaran yang tersirat dari sebuah pilihan. Kemudahan pengujian dan keteramatan adalah dua dari dua belas atribut mutu — kalau itu penting bagi Anda, naikkan bobotnya di mode Ahli dan perhatikan peringkatnya berubah.',
+            )}
+          </div>
+
+          <div className={card}>
+            <strong className="aa-manual-subhead">{L('Teaching or studying this — you want the reasoning, not a recommendation', 'Mengajar atau mempelajarinya — Anda ingin penalarannya, bukan rekomendasinya')}</strong>
+            {p(
+              'Start on Insights instead of Advisor. The catalogue explains all 21 architectures from four angles; learning paths order them; the quizzes check understanding; and the Lab lets you change one factor and watch the ranking move, which teaches the trade-off far better than reading about it. Section 3 below sets out the entire calculation, and section 10 lists the literature each fit score leans on.',
+              'Mulailah dari Wawasan, bukan Advisor. Katalognya menjelaskan seluruh 21 arsitektur dari empat sudut; jalur belajar mengurutkannya; kuisnya menguji pemahaman; dan Lab membuat Anda mengubah satu faktor lalu melihat peringkatnya bergerak, yang mengajarkan pertukarannya jauh lebih baik daripada membacanya. Bagian 3 di bawah memaparkan seluruh perhitungannya, dan bagian 10 mendaftar literatur yang menjadi sandaran tiap skor kecocokan.',
+            )}
+          </div>
+          </section>
+
+          {/* 2. Overview */}
+          <section id="aa-man-2" className="aa-manual-section">
+          {H(2, 'What this tool is', 'Apa itu alat ini')}
           {p(
             'Architecture Advisor turns a few questions about your project into a recommended software architecture across five independent dimensions — and shows the full reasoning. It is decision support, not an oracle: every weight is a defensible default you can edit, and every score is traceable. Everything runs 100% in your browser — free, no account, no server, installable, and it keeps working offline.',
             'Architecture Advisor mengubah beberapa pertanyaan tentang proyek Anda menjadi rekomendasi arsitektur perangkat lunak pada lima dimensi independen — dan menunjukkan seluruh penalarannya. Ini alat bantu keputusan, bukan ramalan: tiap bobot adalah default yang bisa Anda ubah, dan tiap skor dapat ditelusuri. Semuanya berjalan 100% di browser Anda — gratis, tanpa akun, tanpa server, dapat dipasang, dan tetap bekerja offline.',
@@ -113,8 +174,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* 2. The four steps */}
-          <section id="aa-man-2" className="aa-manual-section">
-          {H(2, 'The four steps', 'Empat langkah')}
+          <section id="aa-man-3" className="aa-manual-section">
+          {H(3, 'The four steps', 'Empat langkah')}
           {p(
             '(1) Describe your project with the 14 factors — start from one of the 10 scenario presets if one is close, and use the real-world example shown under each answer. (2) See the quality-attribute priorities the tool derives. (3) Get the recommendation across all five dimensions, with the trade-off radar and the reasoning. (4) Save or share — export an ADR, a full report, CSV/JSON, or a link that reproduces your exact scenario.',
             '(1) Jelaskan proyek Anda lewat 14 faktor — mulai dari salah satu dari 10 preset skenario bila ada yang mirip, dan manfaatkan contoh nyata di bawah tiap jawaban. (2) Lihat prioritas atribut kualitas yang diturunkan alat. (3) Dapatkan rekomendasi di kelima dimensi, dengan radar trade-off dan alasannya. (4) Simpan atau bagikan — ekspor ADR, laporan lengkap, CSV/JSON, atau tautan yang mereproduksi skenario Anda persis.',
@@ -123,8 +184,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* 3. THE CALCULATION */}
-          <section id="aa-man-3" className="aa-manual-section">
-          {H(3, 'The calculation, in full detail', 'Perhitungan, selengkap-lengkapnya')}
+          <section id="aa-man-4" className="aa-manual-section">
+          {H(4, 'The calculation, in full detail', 'Perhitungan, selengkap-lengkapnya')}
           {p(
             'This is an additive multi-attribute value model (MAVT) — the same family ATAM’s utility tree draws on. There are four steps.',
             'Ini model nilai multi-atribut aditif (MAVT) — keluarga yang sama dengan utility tree pada ATAM. Ada empat langkah.',
@@ -159,8 +220,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* Live worked example */}
-          <section id="aa-man-4" className="aa-manual-section">
-          {H(4, 'Your numbers, computed live', 'Angka Anda, dihitung langsung')}
+          <section id="aa-man-5" className="aa-manual-section">
+          {H(5, 'Your numbers, computed live', 'Angka Anda, dihitung langsung')}
           {p(
             'Nothing is hidden — here is the exact calculation for your current inputs. Change anything and reopen this to watch it update.',
             'Tidak ada yang disembunyikan — berikut perhitungan persis untuk input Anda saat ini. Ubah apa saja lalu buka lagi untuk melihatnya berubah.',
@@ -230,8 +291,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* 5. Dimensions — every option explained, plain-language + deeper, evidence-grounded */}
-          <section id="aa-man-5" className="aa-manual-section">
-          {H(5, 'The five dimensions — every option explained', 'Lima dimensi — tiap opsi dijelaskan')}
+          <section id="aa-man-6" className="aa-manual-section">
+          {H(6, 'The five dimensions — every option explained', 'Lima dimensi — tiap opsi dijelaskan')}
           {p(
             'A coherent architecture is more than one label. The tool decides across five orthogonal dimensions, each scored independently with the same model. Below, every option is explained for newcomers and experts alike — what it is, when it fits, what it costs, and a deeper note with the evidence. These are defensible, well-supported explanations grounded in recognised standards and the software-architecture literature (see the sources under each note and the bibliography in Section 9) — not universal laws; context decides.',
             'Arsitektur yang koheren lebih dari satu label. Alat memutuskan pada lima dimensi ortogonal, masing-masing dinilai independen dengan model yang sama. Di bawah ini tiap opsi dijelaskan untuk pemula maupun ahli — apa itu, kapan cocok, apa biayanya, dan catatan lebih dalam beserta buktinya. Ini penjelasan yang dapat dipertanggungjawabkan dan berbasis standar yang diakui serta literatur arsitektur perangkat lunak (lihat sumber di tiap catatan dan daftar pustaka pada Bagian 9) — bukan hukum mutlak; konteks yang menentukan.',
@@ -296,8 +357,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* 6. Analysis */}
-          <section id="aa-man-6" className="aa-manual-section">
-          {H(6, 'Analysis & safeguards', 'Analisis & pengaman')}
+          <section id="aa-man-7" className="aa-manual-section">
+          {H(7, 'Analysis & safeguards', 'Analisis & pengaman')}
           {p(
             'The radar overlays options across all 12 attributes so trade-offs are visible. Anti-pattern checks flag known-bad combinations (e.g. microservices on one shared database — a distributed monolith). The sensitivity card shows how fragile the pick is; migration paths give a safe, incremental route (Strangler Fig) if you already have a system.',
             'Radar menumpuk opsi pada seluruh 12 atribut agar trade-off terlihat. Pemeriksaan anti-pattern menandai kombinasi yang dikenal buruk (mis. microservices pada satu database bersama — distributed monolith). Kartu sensitivitas menunjukkan seberapa rapuh pilihan; jalur migrasi memberi rute bertahap yang aman (Strangler Fig) bila Anda sudah punya sistem.',
@@ -306,8 +367,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* 7. Feature map — everything in the app (Fase 2: the Guide covers ALL features) */}
-          <section id="aa-man-7" className="aa-manual-section">
-          {H(7, 'Everything in the app — the feature map', 'Semua yang ada di aplikasi — peta fitur')}
+          <section id="aa-man-8" className="aa-manual-section">
+          {H(8, 'Everything in the app — the feature map', 'Semua yang ada di aplikasi — peta fitur')}
 
           <strong className="aa-manual-subhead">{L('Home', 'Beranda')}</strong>
           {p(
@@ -374,8 +435,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* 8. Honesty */}
-          <section id="aa-man-8" className="aa-manual-section">
-          {H(8, 'Honesty & limitations', 'Kejujuran & batasan')}
+          <section id="aa-man-9" className="aa-manual-section">
+          {H(9, 'Honesty & limitations', 'Kejujuran & batasan')}
           {p(
             'The encoded weights and fit values are defensible expert defaults, not empirically validated facts. The tool cannot capture your team’s tacit knowledge, politics, or unique constraints. Treat a close call as a genuine tie and apply judgment. Empirical validation is a future (v3.0) goal.',
             'Bobot dan nilai kecocokan yang tertanam adalah default ahli yang dapat dipertanggungjawabkan, bukan fakta yang tervalidasi empiris. Alat tidak bisa menangkap pengetahuan tersirat tim, politik, atau kendala unik Anda. Anggap selisih tipis sebagai seri sungguhan dan gunakan pertimbangan. Validasi empiris adalah tujuan mendatang (v3.0).',
@@ -384,8 +445,8 @@ export function ManualBook({ open, onClose, levels, weights }: Props) {
           </section>
 
           {/* 9. Methodology */}
-          <section id="aa-man-9" className="aa-manual-section">
-          {H(9, 'Methodology & sources', 'Metodologi & sumber')}
+          <section id="aa-man-10" className="aa-manual-section">
+          {H(10, 'Methodology & sources', 'Metodologi & sumber')}
           {p(
             'The method the tool operationalizes:',
             'Metode yang dioperasionalkan alat ini:',
