@@ -21,6 +21,7 @@
     "size": "node scripts/check-bundle-size.mjs",
     "audit:prod": "npm audit --omit=dev --audit-level=high",
     "content:validate": "node scripts/check-content.mjs",
+    "lang:check": "node scripts/check-language-purity.mjs",
     "test:e2e": "playwright test"
   },
   "dependencies": {
