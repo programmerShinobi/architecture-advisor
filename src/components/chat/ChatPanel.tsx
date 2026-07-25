@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
-import { IconSend, IconPlayerStop, IconRotate2, IconX, IconSparkles, IconArrowDown } from '@tabler/icons-react';
+import { IconSend, IconPlayerStop, IconRotate2, IconX, IconSparkles, IconArrowDown, IconHelpCircle, IconChevronRight, IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
 import { ChatMessageItem } from './ChatMessageItem';
+import { CHAT_TOPICS, CHAT_HOWTO } from './chatTopics';
+
+/** Sentinel for the "How do I use this?" pane — not a topic, so it cannot collide with a topic id. */
+const HOWTO_ID = '__howto__';
 import type { ChatMessage } from '../../lib/chat';
 import type { DictKey } from '../../i18n/dict';
 
@@ -21,12 +25,17 @@ const SUGGESTIONS: DictKey[] = ['chat.sug.recommend', 'chat.sug.explain', 'chat.
 // useChat). Smart-scroll (IntersectionObserver: auto-scroll unless the user scrolled up), full a11y
 // (labelled dialog, polite live region, keyboard), and a Stop/Regenerate affordance.
 export function ChatPanel({ messages, streaming, onSend, onStop, onRegenerate, onReset, onClose }: Readonly<Props>) {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const [draft, setDraft] = useState('');
   const listRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const atBottomRef = useRef(true);
   const [showJump, setShowJump] = useState(false);
+  // Capability browser: `browsing` is the explicit toggle, `openTopic` the drilled-in category
+  // (two levels — showing all ~27 intents at once is the overwhelm this is meant to cure).
+  const [browsing, setBrowsing] = useState(false);
+  const [openTopic, setOpenTopic] = useState<string | null>(null);
+  const showBrowser = browsing && !streaming;
 
   // Smart-scroll: observe a bottom sentinel. When it's visible the user is at the bottom → follow
   // new content; when they scroll up it's hidden → pause auto-scroll (no UI hijacking).
@@ -45,8 +54,16 @@ export function ChatPanel({ messages, streaming, onSend, onStop, onRegenerate, o
   }, []);
 
   useEffect(() => {
+    // The browser replaces the transcript in this scroll area, so following the bottom sentinel
+    // would drag its opening line out of view — read as clipped text, which it was.
+    if (showBrowser) return;
     if (atBottomRef.current) endRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, showBrowser]);
+
+  // Entering the browser, or moving between its two levels, always starts at the top of that list.
+  useEffect(() => {
+    if (showBrowser) listRef.current?.scrollTo({ top: 0 });
+  }, [showBrowser, openTopic]);
 
   const lastAssistantIdx = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i--) if (messages[i].role === 'assistant') return i;
@@ -74,6 +91,19 @@ export function ChatPanel({ messages, streaming, onSend, onStop, onRegenerate, o
           {t('chat.title')}
         </span>
         <span className="aa-chat-tools">
+          {/* The capability browser used to be reachable only by typing "help" — the one thing a
+              confused newcomer cannot know. It is now a permanent control, so the depth is
+              discoverable at any point in the conversation, not just on an empty panel. */}
+          <button
+            type="button"
+            className={'aa-ctl-icon' + (browsing ? ' on' : '')}
+            onClick={() => { setBrowsing((b) => !b); setOpenTopic(null); }}
+            title={t('chat.browse')}
+            aria-label={t('chat.browse')}
+            aria-expanded={browsing}
+          >
+            <IconHelpCircle size={16} aria-hidden />
+          </button>
           <button type="button" className="aa-ctl-icon" onClick={onReset} title={t('chat.reset')} aria-label={t('chat.reset')}>
             <IconRotate2 size={15} aria-hidden />
           </button>
@@ -85,9 +115,79 @@ export function ChatPanel({ messages, streaming, onSend, onStop, onRegenerate, o
       <p className="aa-chat-sub">{t('chat.sub')}</p>
 
       <div className="aa-chat-list" ref={listRef} aria-live="polite" aria-atomic="false">
-        {messages.length === 0 ? (
+        {showBrowser ? (
+          <div className="aa-chat-topics">
+            <p className="aa-chat-empty-lead">
+              {(() => {
+                if (openTopic === null) return t('chat.browse.lead');
+                return openTopic === HOWTO_ID ? t('chat.howto.lead') : t('chat.browse.pick');
+              })()}
+            </p>
+
+            {openTopic === null ? (
+              <>
+                {/* Listed first and on purpose: someone who does not yet know they can type freely,
+                    or that the advisor already reads their scenario, will not be helped by a longer
+                    menu of questions. */}
+                <button type="button" className="aa-chat-topic" onClick={() => setOpenTopic(HOWTO_ID)}>
+                  <IconInfoCircle size={17} aria-hidden className="aa-chat-topic-ic" />
+                  <span className="aa-chat-topic-txt">
+                    <span className="aa-chat-topic-label">{t('chat.howto')}</span>
+                    <span className="aa-chat-topic-hint">{t('chat.howto.hint')}</span>
+                  </span>
+                  <IconChevronRight size={15} aria-hidden className="aa-chat-topic-go" />
+                </button>
+                {CHAT_TOPICS.map((topic) => {
+                  const Ic = topic.icon;
+                  return (
+                    <button key={topic.id} type="button" className="aa-chat-topic" onClick={() => setOpenTopic(topic.id)}>
+                      <Ic size={17} aria-hidden className="aa-chat-topic-ic" />
+                      <span className="aa-chat-topic-txt">
+                        <span className="aa-chat-topic-label">{tr(topic.label)}</span>
+                        <span className="aa-chat-topic-hint">{tr(topic.hint)}</span>
+                      </span>
+                      <IconChevronRight size={15} aria-hidden className="aa-chat-topic-go" />
+                    </button>
+                  );
+                })}
+              </>
+            ) : openTopic === HOWTO_ID ? (
+              <>
+                <button type="button" className="aa-chat-topic-back" onClick={() => setOpenTopic(null)}>
+                  <IconChevronLeft size={14} aria-hidden />
+                  {t('chat.browse.back')}
+                </button>
+                {CHAT_HOWTO.map((h) => (
+                  <div key={h.title.en} className="aa-chat-howto">
+                    <span className="aa-chat-howto-title">{tr(h.title)}</span>
+                    <span className="aa-chat-howto-body">{tr(h.body)}</span>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <>
+                <button type="button" className="aa-chat-topic-back" onClick={() => setOpenTopic(null)}>
+                  <IconChevronLeft size={14} aria-hidden />
+                  {t('chat.browse.back')}
+                </button>
+                {CHAT_TOPICS.filter((x) => x.id === openTopic).map((topic) =>
+                  topic.asks.map((ask) => (
+                    <button
+                      key={ask.en}
+                      type="button"
+                      className="aa-chat-ask"
+                      onClick={() => { onSend(tr(ask)); setBrowsing(false); setOpenTopic(null); }}
+                    >
+                      {tr(ask)}
+                    </button>
+                  )),
+                )}
+              </>
+            )}
+          </div>
+        ) : messages.length === 0 ? (
           <div className="aa-chat-empty">
-            <p>{t('chat.empty')}</p>
+            <p className="aa-chat-empty-lead">{t('chat.empty')}</p>
             <div className="aa-chat-sugs">
               {SUGGESTIONS.map((k) => (
                 <button key={k} type="button" className="f-chip" onClick={() => onSend(t(k))}>
@@ -95,6 +195,12 @@ export function ChatPanel({ messages, streaming, onSend, onStop, onRegenerate, o
                 </button>
               ))}
             </div>
+            {/* The six chips above are a fast start, not the whole menu — say so, or a newcomer
+                exhausts them, guesses, hits the fallback and concludes the advisor is stupid. */}
+            <button type="button" className="aa-chat-browse-cta" onClick={() => setBrowsing(true)}>
+              <IconHelpCircle size={14} aria-hidden />
+              {t('chat.browse.cta')}
+            </button>
           </div>
         ) : (
           messages.map((m, i) => (
@@ -111,7 +217,9 @@ export function ChatPanel({ messages, streaming, onSend, onStop, onRegenerate, o
         <div ref={endRef} className="aa-chat-end" />
       </div>
 
-      {showJump && (
+      {/* Not while browsing: scrolling that list to the top trips the bottom sentinel, and a
+          "jump to latest" control over a topic menu points at nothing. */}
+      {showJump && !showBrowser && (
         <button
           type="button"
           className="aa-chat-jump"

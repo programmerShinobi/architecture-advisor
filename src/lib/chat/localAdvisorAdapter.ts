@@ -334,7 +334,7 @@ const FAQ: { keywords: string[]; answer: Bilingual }[] = [
   {
     // No "aplikasi offline" — it collided with the privacy intent's "offline" keyword (asking
     // about offline install would wrongly get the generic privacy blurb instead of this answer).
-    keywords: ['install this app', 'add to home screen', 'pwa', 'install app', 'instal aplikasi'],
+    keywords: ['install this app', 'add to home screen', 'pwa', 'install app', 'instal aplikasi', 'dipasang', 'pasang aplikasi'],
     answer: {
       en: "This app is a **PWA** — installable from your browser's menu (Add to Home Screen / Install App) and works fully offline afterward.",
       id: 'Aplikasi ini adalah **PWA** — bisa diinstal dari menu peramban Anda (Tambah ke Layar Utama / Instal Aplikasi) dan bekerja penuh secara offline sesudahnya.',
@@ -355,7 +355,9 @@ const FAQ: { keywords: string[]; answer: Bilingual }[] = [
     },
   },
   {
-    keywords: ['how is the score calculated', 'how does scoring work', 'methodology', 'metodologi', 'bagaimana skor dihitung', 'cara menghitung skor'],
+    // "scoring work" (not "how does scoring work") so an inserted article — "how does THE scoring
+    // work" — still matches; that exact substring break shipped a dead suggestion once already.
+    keywords: ['how is the score calculated', 'scoring work', 'how the score', 'methodology', 'metodologi', 'bagaimana skor dihitung', 'cara menghitung skor', 'cara kerja skor'],
     answer: {
       en: 'Pipeline: **your answers → weighted priorities → 1–5 fit per option → Score = Σ weight × fit**, normalized to /100. Open "How does it decide?" under any recommendation for the full, auditable numbers.',
       id: 'Alur: **jawaban Anda → prioritas berbobot → kecocokan 1–5 per opsi → Skor = Σ bobot × kecocokan**, dinormalisasi ke /100. Buka "Bagaimana ia memutuskan?" di bawah rekomendasi mana pun untuk angka lengkap yang bisa diaudit.',
@@ -472,7 +474,7 @@ export function answerText(input: string, ctx: ChatContext): string {
   // "server calls"/"a server", not bare "server" — avoids colliding with the "Serverless" option name.
   // No "daftar" here either — that Indonesian word doubles as "list" (this app has no sign-up flow
   // to "daftar" for), and it collided with the anti-pattern catalog's own "list all" qualifier.
-  if (has(text, 'private', 'privacy', 'offline', 'server call', 'no server', 'a server', 'account', 'sign up', 'telemetry', 'privasi', 'akun', 'gratis', 'free', 'where is my data', 'where is this stored', 'di mana data saya', 'data saya disimpan')) return privacyInfo(lang);
+  if (has(text, 'private', 'privacy', 'offline', 'server call', 'no server', 'a server', 'account', 'sign up', 'telemetry', 'privasi', 'privat', 'akun', 'gratis', 'free', 'where is my data', 'where is this stored', 'di mana data saya', 'data saya disimpan')) return privacyInfo(lang);
   if (has(text, 'guided mode', 'expert mode', 'mode ahli', 'mode pemandu', 'which mode', 'mode apa', 'beda mode')) return modeInfo(lang);
   if (has(text, 'export', 'download', 'share link', 'adr', 'ekspor', 'unduh', 'bagikan', 'simpan hasil', 'where can i export', 'where do i export', 'di mana saya ekspor', 'di mana simpan')) return exportInfo(lang);
   if (has(text, 'reset', 'start over', 'mulai ulang', 'atur ulang', 'hapus semua', 'where is reset', 'where do i reset', 'di mana atur ulang')) return resetInfo(lang);
@@ -495,7 +497,7 @@ export function answerText(input: string, ctx: ChatContext): string {
     }
     return risks(ctx, lang);
   }
-  if (has(text, 'sensitivity', 'sensitive', 'what if i change', 'how close', 'sensitif', 'kalau saya ubah', 'seberapa dekat')) {
+  if (has(text, 'sensitivity', 'sensitive', 'what if i change', 'how close', 'how narrow', 'how firm', 'sensitif', 'kalau saya ubah', 'seberapa dekat', 'seberapa tipis', 'berapa tipis', 'selisih')) {
     // Same disambiguation as anti-pattern above, for the "Sensitivity / robustness" glossary term.
     if (isConceptual(text)) {
       const g1 = glossary(text, lang);

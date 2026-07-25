@@ -622,3 +622,185 @@ more specific, conceptually different intent — all now covered by regression t
   uses `scrollIntoView`, **not** `href="#id"` anchors, so it never mutates `location.hash` (which
   this app reserves for share-state — an anchor jump would have clobbered a share link). Verified
   desktop + mobile; the close button's aria-label became "Close the guide" (test updated).
+
+---
+
+## Held-out evaluation for the Chat Advisor, 2026-07-25
+
+**The problem, named plainly.** The 43 unit tests in `src/lib/chat/chat.test.ts` were written by
+the same author as the keyword vocabulary in `localAdvisorAdapter.ts`, in the same sitting, often
+reusing that vocabulary's exact words. That measures **self-consistency, not comprehension** —
+grading an exam with a key written by the candidate. It is not a hypothetical weakness: the suite was
+**entirely green** while five questions the owner typed by hand still returned the wrong answer
+(`server` matching inside *"serverless"*, `offline` beating the PWA FAQ, `daftar` shadowing the
+anti-pattern catalogue, `cost` beating the Cost-efficiency quality attribute, and the anti-pattern
+*concept* running a scenario check). Green tests plus wrong answers is the whole argument.
+
+**Decision.** Track comprehension in a separate **held-out set**, `src/lib/chat/heldout.json`,
+governed by one sourcing rule: it may **only** contain queries from someone who has not read the
+knowledge base — owner hand-testing, user reports, issues, usability sessions. A maintainer inventing
+a query there to improve a number defeats the mechanism entirely, so the rule is written into the
+file's own header rather than left to memory.
+
+What is held out is the **query text** — that is where vocabulary leaks in. The `expect` matchers are
+necessarily maintainer-written (someone must define a correct answer); they are kept to the answer's
+*substance* (which topic it landed on), never to phrasing the adapter happens to use today.
+
+**No accuracy gate — deliberately.** Below ~30 queries a single case moves the percentage by more
+than 3 points, so any threshold would be noise, and it could be satisfied by adding easy queries —
+an incentive that corrupts the measurement it is meant to protect. The score is **reported, never
+enforced**. The single hard rule is **non-regression** against `heldout-snapshot.json`: an id that
+has passed once may never start failing. The baseline is committed rather than computed at run time
+precisely so an intentional change appears as a reviewable diff.
+
+**Why this over raising the unit-test count.** More self-authored tests would have raised the number
+without moving the thing the number is supposed to stand for. The five hand-test failures proved the
+existing suite could be fully green and still wrong; adding more of the same could not have caught
+them.
+
+**Verification (every claim here has a command).**
+
+```bash
+npx vitest run src/lib/chat/heldout.test.ts --disable-console-intercept  # report: 5/5, 5/30 collected
+```
+
+The guard was proven to bite rather than assumed to: re-introducing the original `'server call'` →
+`'server'` bug turned exactly `ho-001` red (`4/5 passing`, 1 failed test) and restoring it returned
+the suite to green. Full battery after the change: tsc clean, lint 0 warnings, **192/192** unit,
+6/6 guards, build clean, and `grep -rl heldout dist/` empty — the held-out data is imported only by a
+test file, so it never reaches the production bundle.
+
+**Status: 5 of 30 queries.** Too few to mean anything yet, which is the honest reading and the reason
+no threshold is claimed. It grows only when a real person gets a real answer wrong.
+
+**Not done (and why).** The per-intent floor ("every intent passes ≥2 of ≥3 cases") belongs to the
+maintainer-authored suite, not the held-out set, and is a separate change; it is not implied by
+anything above.
+
+---
+
+## Chat Advisor discoverability: a browsable capability menu, 2026-07-25
+
+**The complaint.** Users were still confused *using* the Chat Advisor after three rounds of widening
+its coverage. That was the diagnosis error: the problem had stopped being coverage several rounds
+earlier. The adapter answers ~27 intent families; the panel advertised **six** flat chips and one
+vague sentence, and `capabilities()` — the full catalogue — was reachable only by typing "help",
+which is precisely the knowledge a confused newcomer does not have. Newcomers exhausted the chips,
+guessed, hit the fallback, and reasonably concluded the thing was stupid. Experts never discovered
+sensitivity, migration paths, factor lookups or the quality-attribute glossary at all. **Adding more
+intents could not have fixed this, and three rounds of it did not.**
+
+**Decision.** A two-level capability browser, opened from a permanent header control (and a link on
+the empty state): five plain-language topics, each drilling into real questions that send with one
+tap. Two levels rather than one flat list is the point — showing ~27 intents at once is the overwhelm
+being cured, so this follows progressive disclosure rather than fighting it. The header control
+matters independently: mid-conversation there is no empty state, so it is the only way in.
+
+**The rule that makes it safe.** Every question the menu offers is one tap from being sent, so a dead
+suggestion would be the app confidently advertising a capability it lacks — the exact failure this
+product exists to argue against. `chatTopics.test.ts` therefore sends every entry through the real
+adapter in **both** languages and fails on a fallback.
+
+**That check paid for itself before it shipped.** It found **4 of 39** entries dead on arrival, and
+the pattern mattered more than the count: **three were Indonesian-only** phrasing gaps —
+`privat` (only `privasi` was a keyword), `dipasang` (only `instal aplikasi`), `seberapa tipis` (only
+`seberapa dekat`) — plus one English substring break, `how does **the** scoring work` against a
+keyword written `how does scoring work`. Indonesian users were hitting fallbacks materially more
+often than English ones, which is a plausible part of why the confusion persisted at all. All four
+were fixed **in the adapter**, not by rewording the menu to suit brittle keywords, so they help
+anyone who phrases it that way.
+
+**Two defects the screenshots caught that the tests could not.** The transcript's follow-the-bottom
+auto-scroll also ran for the browser, dragging its opening line out of view — it read as clipped
+text. And scrolling that list to the top tripped the bottom sentinel, so a "jump to latest" button
+appeared over a menu with nothing to jump to. Both are now suppressed while browsing. Neither would
+have surfaced without actually looking at the rendered result.
+
+**Verification (each claim has a command).**
+
+```bash
+npx vitest run src/components/chat/chatTopics.test.ts   # 39/39 — every entry answerable, EN + ID
+npx vitest run src/components/chat/ChatPanel.test.tsx   #  6/6  — the affordance itself
+```
+
+axe (WCAG 2.0/2.1 A + AA) over the open panel, **both themes, both levels, every topic hovered**: 0
+violations. It was not 0 at first — the hint text at 11px measured **4.22:1** on the hover surface
+against a 4.5 requirement, so it moved from `--color-text-tertiary` to `--color-text-secondary`;
+hierarchy still reads through size and weight rather than contrast alone. Touch targets are ≥44px,
+the toggle exposes `aria-expanded`, and transitions respect `prefers-reduced-motion`.
+
+Full battery: tsc clean, lint 0 warnings, **237/237** unit, 14/14 E2E, 6/6 guards, bundle within
+budget. No new dependencies; the icons and CSS variables were already in the project.
+
+**Also fixed while here:** jsdom implements no scrolling API, so any component that scrolls threw on
+render under test. `src/test/setup.ts` now stubs `scrollIntoView`/`scrollTo` as no-ops — scroll
+*position* is asserted in the browser-driven E2E specs, never in jsdom, so this costs no coverage.
+
+**Not claimed.** `chatTopics.test.ts` asserts each question is *answerable*, not that it lands on the
+intended topic; that stronger check is what the held-out set is for. And a menu is not proof of
+comprehension — whether this actually reduces confusion is a question for real users, whose queries
+belong in `heldout.json`.
+
+---
+
+## Production-readiness review, 2026-07-25
+
+A full pass over every feature, run after the Chat Advisor help work. Recorded because two of the
+findings were real defects that no existing gate would have caught, and because the checks that came
+back clean are worth being able to point at later.
+
+**Chat Advisor — the remaining gap after the topic browser.** Browsing topics tells someone *what*
+can be asked; it still leaves them guessing whether they may type freely, whether it already knows
+the scenario they just built, and why it sometimes fails to understand. A **"How to use this"** pane
+now leads the browser (ahead of the question topics, on purpose) and answers exactly those four
+things — including a blunt paragraph for experts stating what kind of system it is: deterministic,
+rule-based over the frozen model, no network, and unable to reason about anything outside it. It is
+static prose, so a confused user does not have to send a message to learn how to send a message.
+Guide §7 was expanded to match: how to get an answer start to finish, what it can answer, what it is
+*not*, and the expert framing.
+
+### Defects found and fixed
+
+- **WCAG AA contrast failure, light mode.** The `DON'T` heading in the Copilot tour measured
+  **4.0:1** against its own danger tint at 11px, below the 4.5 requirement. `--color-text-danger`
+  went `#c4392e` → `#a92c22` in light mode. It is one token, so every other danger usage improved
+  with it, including the chat "stop" button that uses it as a *background* behind light text.
+- **Horizontal overflow at 320px** on Advisor and Insights (326px against a 320px viewport).
+  Cause: `repeat(auto-fit, minmax(270px, 1fr))` — `minmax` forces a track wider than its container
+  once the container drops below the stated minimum. Fixed in **all 12** affected grids as
+  `minmax(min(<N>px, 100%), 1fr)`, which is inert above the threshold. This was **pre-existing, not a
+  regression** — verified by stashing the change set and reproducing 326 vs 320 on the prior commit.
+  It went unnoticed because the responsive E2E stops at 360px, while WCAG 1.4.10 Reflow is specified
+  at **320px**.
+- **An inaccurate claim in our own docs.** README and DECISIONS both said "~190 unit tests in
+  `chat.test.ts`"; that file has **43** — ~190 was the whole suite at the time. Corrected in both.
+  Noted because a docs-integrity rule the project already states ("every claim has a command that
+  proves it") is worth applying to prose about the tests themselves, not only to model values.
+
+### Checked and clean (so the absence of a finding is on the record)
+
+- **axe WCAG 2.0/2.1 A + AA**: Home, Advisor, Insights × light/dark at 1440 **and** 320; plus the
+  Guide/Manual, command palette, shortcuts, all six Copilot tour steps, the chat capability browser
+  and the how-to pane. **0 violations** after the two fixes above.
+- **No horizontal scroll** at 320 / 360 / 768 / 1024 / 1440 across all three views.
+- **No runtime console errors or page errors** on load across those widths and views.
+- **i18n**: every dictionary key has non-empty EN *and* ID; **zero unused keys**. 17 entries are
+  EN-identical — each verified deliberate (proper nouns, `CSV`/`JSON`, `ISO/IEC`, `Advisor`,
+  `Command palette`), not untranslated leftovers.
+- **No** `TODO`/`FIXME`/`HACK`/`@ts-ignore`, no stray `console.*` (the one that exists is DEV-gated),
+  no `debugger`, no `.only`/`.skip`.
+- Full battery: tsc clean, lint 0 warnings, **239/239** unit, **14/14** E2E, **6/6** guards.
+
+**Two false alarms, recorded so they are not "fixed" by someone later.** `lp.h1.pre`/`lp.h1.post`
+carry deliberate leading/trailing spaces — the headline is split around a gradient-highlighted word,
+and trimming them yields "architecture withevidence,not trends." And `lp.meta.iso` reading
+"ISO/IEC 2023" is not a truncated 25010: it is the caption under a stat tile whose figure *is*
+`25010`, matching `ISO/IEC 25010:2023` elsewhere.
+
+**Bundle.** Total JS gzip crossed its 278kB budget (278.6). Raised to **281** with the reason
+recorded inline, per that guard's own convention: the added weight is bilingual help copy inside the
+already-lazy chat chunk, initial JS is unchanged at 120.8/121, and the NFR ceiling is 300.
+
+**Not claimed.** "Production-ready" here means the checks above pass — it is not a security audit, a
+load test, or evidence that users are now less confused. The last of those is answerable only by real
+users, whose queries belong in `heldout.json`.

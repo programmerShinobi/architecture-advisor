@@ -97,7 +97,7 @@ export default function RoadmapView({ onOpenArch, onOpenArticle, onOpenAdvisor }
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '11px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px, 100%), 1fr))', gap: '11px' }}>
       {LEARNING_PATHS.map((p) => (
         <button key={p.id} type="button" className="learn-card" style={cardBase} onClick={() => setPathId(p.id)}>
           <span className="learn-art" aria-hidden>

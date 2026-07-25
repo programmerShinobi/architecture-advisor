@@ -16,7 +16,7 @@ export function DimensionCards({ rankings, current, onSelect }: Props) {
       <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', marginBottom: '10px' }}>
         {t('results.pickLayer')}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(120px,1fr))', gap: '10px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(120px, 100%), 1fr))', gap: '10px' }}>
         {DIMENSION_ORDER.map((dim, i) => {
           const on = dim === current;
           const top = rankings[dim][0];
