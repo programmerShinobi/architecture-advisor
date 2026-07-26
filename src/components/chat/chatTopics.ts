@@ -63,7 +63,7 @@ export const CHAT_HOWTO: readonly ChatHowTo[] = [
     title: { en: 'Type in your own words — English or Indonesian', id: 'Ketik dengan kata-kata Anda sendiri — Inggris atau Indonesia' },
     body: {
       en: 'You do not have to use the suggested wording. Ask "why not serverless?", "apa risikonya?", or name any architecture, factor or quality attribute you see on screen. It follows whichever language you are reading the app in.',
-      id: 'Anda tak harus memakai kalimat yang disarankan. Tanya "kenapa bukan serverless?", "apa risikonya?", atau sebut arsitektur, faktor, atau atribut mutu mana pun yang Anda lihat di layar. Ia mengikuti bahasa yang sedang Anda pakai.',
+      id: 'Anda tak harus memakai kalimat yang disarankan. Tanya "kenapa bukan serverless?", "apa risikonya?", atau sebut arsitektur, faktor, atau atribut kualitas mana pun yang Anda lihat di layar. Ia mengikuti bahasa yang sedang Anda pakai.',
     },
   },
   {
@@ -123,7 +123,7 @@ export const CHAT_TOPICS: readonly ChatTopic[] = [
     id: 'model',
     icon: IconMathFunction,
     label: { en: 'The model behind it', id: 'Model di baliknya' },
-    hint: { en: 'The 5 dimensions, the 14 questions, the 12 quality attributes, the maths', id: '5 dimensi, 14 pertanyaan, 12 atribut mutu, perhitungannya' },
+    hint: { en: 'The 5 dimensions, the 14 questions, the 12 quality attributes, the maths', id: '5 dimensi, 14 pertanyaan, 12 atribut kualitas, perhitungannya' },
     asks: [
       { en: 'What is Deployment Granularity?', id: 'Apa itu Deployment Granularity?' },
       { en: 'What is scalability?', id: 'Apa itu skalabilitas?' },

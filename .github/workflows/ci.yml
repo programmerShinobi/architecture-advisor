@@ -46,7 +46,7 @@ jobs:
         run: node scripts/check-app-config.mjs
       - name: Validate content (schema + primary sources + related_advisor ↔ frozen model)
         run: npm run content:validate
-      - name: Check bilingual purity (no half-translated EN/ID strings)
+      - name: Check bilingual quality (no half-translated prose, consistent register + terminology)
         run: npm run lang:check
       - name: Lint
         run: npm run lint
