@@ -18,6 +18,7 @@ import {
 } from '@tabler/icons-react';
 import { useI18n } from '../../i18n/I18nContext';
 import { AVAILABLE_SECTIONS, sectionMeta, SECTION_GROUPS, SECTION_WHEN } from '../../config/sections';
+import { SECTION_INTROS } from '../../config/sectionIntros';
 import { contentBySection, contentBySlug, docBody, docTitle, docTldr } from '../../lib/content';
 import { renderMarkdown } from '../../lib/markdown';
 import { DIMENSIONS, DIMENSION_ORDER } from '../../config/dimensions';
@@ -513,15 +514,8 @@ export default function LearnView({ onOpenAdvisor, onLoadLab, initialTarget }: P
     const meta = sectionMeta(section);
     const isLens = (LENSES as string[]).includes(section);
     const angle = (isLens ? section : 'catalog') as Angle;
-    const intro =
-      section === 'catalog' ? t('learn.catalogIntro')
-      : section === 'playbook' ? t('learn.playbookIntro')
-      : section === 'review' ? t('learn.reviewIntro')
-      : section === 'library' ? t('learn.libraryIntro')
-      : section === 'roadmap' ? t('learn.roadmapIntro')
-      : section === 'academy' ? t('learn.academyIntro')
-      : section === 'lab' ? t('learn.labIntro')
-      : meta ? t(meta.desc) : '';
+    // Long prose lives in SECTION_INTROS (lazy chunk), not `dict` — see that file for why.
+    const intro = SECTION_INTROS[section] ? tr(SECTION_INTROS[section]) : meta ? t(meta.desc) : '';
     const guides = section === 'catalog' ? [] : contentBySection(section);
     const countLine =
       section === 'roadmap' ? `${LEARNING_PATHS.length} ${t('learn.paths')} · `

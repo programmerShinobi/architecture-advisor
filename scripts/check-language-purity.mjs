@@ -56,10 +56,47 @@ for (const file of files) {
   }
 }
 
+// ---- 2. Register + terminology consistency (Indonesian) --------------------
+// Two defects that are invisible to the mixed-language check above but read just as badly.
+//
+// REGISTER. The app addresses the reader formally, as "Anda", in ~1170 strings. Ten strings had
+// slipped into the informal "kamu"/"-mu", which makes the Indonesian read as though two different
+// people wrote it. Words that merely END in -mu (ilmu, tamu, jamu) are excluded.
+//
+// TERMINOLOGY. The same concept must keep one Indonesian name. These pairs were each found as a
+// real split in the codebase — "mode Expert" against "mode Ahli", "atribut mutu" against "atribut
+// kualitas" — where the winner is simply the form already used everywhere else.
+const INFORMAL = /\b(kamu|kau)\b|\b\w+mu\b/gi;
+const INFORMAL_OK = /^(ilmu|jamu|semu|tamu|kamu?mu|lumu)$/i; // genuinely end in -mu
+const TERMS = [
+  { wrong: /\bmode Expert\b/, right: 'mode Ahli' },
+  { wrong: /\bmode Guided\b/, right: 'mode Terpandu' },
+  { wrong: /\batribut mutu\b/, right: 'atribut kualitas' },
+  { wrong: /\bquality attribute\b/, right: 'atribut kualitas' },
+];
+
+for (const file of files) {
+  const src = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+  for (const rx of [RX_OBJ, RX_FN]) {
+    rx.lastIndex = 0;
+    let m;
+    while ((m = rx.exec(src))) {
+      const id = m[3] ?? m[4] ?? '';
+      if (!id) continue;
+      const line = src.slice(0, m.index).split('\n').length;
+      const informal = (id.match(INFORMAL) || []).filter((w) => !INFORMAL_OK.test(w));
+      if (informal.length) problems.push(`${file}:${line} — informal address (${[...new Set(informal)].join(', ')}); this app says "Anda": "${id.slice(0, 110)}"`);
+      for (const t of TERMS) {
+        if (t.wrong.test(id)) problems.push(`${file}:${line} — inconsistent term; use "${t.right}": "${id.slice(0, 110)}"`);
+      }
+    }
+  }
+}
+
 console.log(`Language purity — ${pairs} EN/ID pairs across ${files.length} files`);
 if (problems.length) {
   for (const p of problems) console.log(`  ✗ ${p}`);
-  console.error(`\n${problems.length} mixed-language string(s). Translate the sentence, or if the flagged word is genuinely a technical term, add it to this script's exclusions with a reason.`);
+  console.error(`\n${problems.length} problem(s) across three checks: half-translated prose, informal address, and split terminology. Fix the string — or, if a flagged word is genuinely a technical term that must stay as-is, add it to this script's exclusions with a reason.`);
   process.exit(1);
 }
-console.log('  no mixed-language strings  ✓');
+console.log('  no half-translated prose, consistent "Anda", one name per term  ✓');
