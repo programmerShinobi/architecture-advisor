@@ -9,6 +9,7 @@ import {
   sensitivity,
   contributions,
   leverage,
+  compensations,
 } from './scoring';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
 import { FACTOR_ORDER } from '../config/factors';
@@ -217,5 +218,56 @@ describe('leverage — decision leverage per factor', () => {
     const unseating = rows.filter((r) => r.unseats);
     const inert = rows.filter((r) => r.swing === 0);
     for (const u of unseating) for (const i of inert) expect(u.swing).toBeGreaterThan(i.swing);
+  });
+});
+
+describe('compensations — where the winner won despite being weak', () => {
+  const weights = (over: Partial<Record<string, number>> = {}) => {
+    const base = Object.fromEntries(QA_ORDER.map((q) => [q, 100 / QA_ORDER.length]));
+    return { ...base, ...over } as never;
+  };
+
+  it('flags a heavily-weighted attribute the option is weak on', () => {
+    const w = weights({ costEfficiency: 40 });
+    const fit = QA_ORDER.map((q) => (q === 'costEfficiency' ? 2 : 5));
+    const out = compensations(w, fit);
+    expect(out.map((c) => c.qa)).toEqual(['costEfficiency']);
+    expect(out[0].fit).toBe(2);
+  });
+
+  it('stays silent when the option is strong where it matters', () => {
+    const w = weights({ costEfficiency: 40 });
+    expect(compensations(w, QA_ORDER.map(() => 5))).toEqual([]);
+  });
+
+  /** A weakness the user does not care about is not a compensation — it is just a trade-off. */
+  it('ignores a weakness on an attribute weighted below an even share', () => {
+    const w = weights({ costEfficiency: 40, testability: 1 });
+    const fit = QA_ORDER.map((q) => (q === 'testability' ? 1 : 5));
+    expect(compensations(w, fit)).toEqual([]);
+  });
+
+  /**
+   * Regression: the first rule took the top 3 by weight unconditionally, so on a sparse scenario it
+   * announced "scores 2/5 on Scalability, which you weighted 0.0%" — advice about something the
+   * user had explicitly not asked for. Nothing below an even share may ever trigger this.
+   */
+  it('never fires on an attribute weighted at or near zero', () => {
+    const w = weights({ costEfficiency: 99 });
+    QA_ORDER.forEach((q) => { if (q !== 'costEfficiency') (w as Record<string, number>)[q] = 0.05; });
+    const fit = QA_ORDER.map((q) => (q === 'costEfficiency' ? 5 : 1)); // everything else weak, but unweighted
+    expect(compensations(w, fit)).toEqual([]);
+  });
+
+  it('orders several disclosures by weight, heaviest first', () => {
+    const w = weights({ costEfficiency: 30, scalability: 25, security: 20 });
+    const fit = QA_ORDER.map(() => 1);
+    expect(compensations(w, fit).map((c) => c.qa)).toEqual(['costEfficiency', 'scalability', 'security']);
+  });
+
+  it('is deterministic', () => {
+    const w = weights({ costEfficiency: 40 });
+    const fit = QA_ORDER.map((q) => (q === 'costEfficiency' ? 2 : 5));
+    expect(compensations(w, fit)).toEqual(compensations(w, fit));
   });
 });

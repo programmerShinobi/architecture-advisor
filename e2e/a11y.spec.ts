@@ -32,6 +32,27 @@ test('no WCAG A/AA violations incl. color-contrast (Expert mode + light theme)',
   expect((await scan(page)).violations).toEqual([]);
 });
 
+/**
+ * The scans above land on scenarios where the conditional result panels stay hidden, so whole
+ * components were never scanned at all. This one loads a scenario chosen because it triggers BOTH
+ * the anti-pattern warning and the compensation disclosure, in light theme where contrast is
+ * tightest — the combination that was hiding a real 2.95:1 failure in the anti-pattern text.
+ */
+test('no WCAG A/AA violations with the warning panels actually on screen (light theme)', async ({ page }) => {
+  const levels = { team: 2, distribution: 2, ttm: 0, budget: 1, lifespan: 1, scale: 2, dataVolume: 2,
+    async: 0, realtime: 0, domain: 0, consistency: 2, security: 0, legacy: 1, devops: 2 };
+  await page.goto(APP);
+  await page.evaluate((lv) => localStorage.setItem('aa.levels', JSON.stringify(lv)), levels);
+  await page.reload();
+  await page.getByRole('button', { name: 'EN', exact: true }).click();
+  await page.getByRole('button', { name: 'Advisor', exact: true }).click();
+  await page.getByRole('button', { name: 'Toggle theme' }).click(); // → light
+  // Prove the panels really rendered; a green scan of an empty page would be worthless.
+  await expect(page.getByText(/A common mistake to avoid/i)).toBeVisible();
+  await expect(page.getByText(/Won despite a weakness/i)).toBeVisible();
+  expect((await scan(page)).violations).toEqual([]);
+});
+
 test('no WCAG A/AA violations incl. color-contrast (Manual/Guide, dark theme)', async ({ page }) => {
   await page.goto(APP);
   // Exact match: with English default, /Guide/ would also hit the "Guided" mode toggle.
