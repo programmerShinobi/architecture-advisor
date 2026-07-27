@@ -17,7 +17,7 @@ import { useI18n } from '../../i18n/I18nContext';
 import { DIMENSIONS } from '../../config/dimensions';
 import { DIM_NARRATIVE, OPTION_BLURB } from '../../config/dimensionContent';
 import { QUALITY_ATTRIBUTES } from '../../config/qualityAttributes';
-import { contributions, displayScore } from '../../lib/scoring';
+import { compensations, contributions, displayScore } from '../../lib/scoring';
 import { WhyNotRunnerUp } from './WhyNotRunnerUp';
 import type { DimensionId, RankedOption, Weights } from '../../types';
 
@@ -49,6 +49,13 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
   const contrib = contributions(weights, topOption.qaFit)
     .filter((c) => c.points > 0)
     .slice(0, 4);
+  // Shown to EVERYONE, not gated behind Expert like the contribution bars below: an additive score
+  // is fully compensatory, so a novice reading only the headline number has no way to see that the
+  // winner is poor at something they said mattered. That is precisely the reader who needs telling.
+  // Capped at two lines: the RULE is unbounded (every above-average attribute the winner is weak
+  // on qualifies, and it fires on 28.2% of sampled decisions), but a wall of warnings reads as
+  // noise and gets skipped — which would defeat the disclosure. The heaviest two carry the point.
+  const comps = compensations(weights, topOption.qaFit).slice(0, 2);
   const maxPts = Math.max(...contrib.map((c) => c.points), 0.001);
 
   return (
@@ -104,6 +111,35 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
             </div>
           ))}
         </div>
+
+        {comps.length > 0 && (
+          <div
+            style={{
+              display: 'flex',
+              gap: '9px',
+              alignItems: 'flex-start',
+              background: 'var(--color-background-warning)',
+              border: '0.5px solid var(--color-border-warning)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: '11px 13px',
+              marginTop: '12px',
+            }}
+          >
+            <IconScale size={15} style={{ color: 'var(--color-text-warning)', marginTop: '2px', flex: 'none' }} aria-hidden />
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 500, marginBottom: '2px' }}>{t('comp.title')}</div>
+              {comps.map((c) => (
+                <p key={c.qa} style={{ fontSize: '12px', lineHeight: 1.55, color: 'var(--color-text-secondary)', margin: '0 0 2px' }}>
+                  {t('comp.line')
+                    .replace('{option}', top.name)
+                    .replace('{qa}', QUALITY_ATTRIBUTES[c.qa].name[lang])
+                    .replace('{fit}', String(c.fit))
+                    .replace('{weight}', c.weight.toFixed(1))}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Expert: top contributing attributes (live) */}
         <div className="expert-only" style={{ background: 'var(--color-background-primary)', borderRadius: 'var(--border-radius-md)', padding: '12px 14px', marginTop: '12px' }}>

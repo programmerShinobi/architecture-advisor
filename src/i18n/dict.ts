@@ -80,6 +80,12 @@ export const DICT = {
   'detail.good': { en: 'The good:', id: 'Sisi baik:' },
   'detail.cost': { en: 'The cost:', id: 'Biayanya:' },
   'detail.know': { en: 'Good to know:', id: 'Perlu diketahui:' },
+  /* Compensation disclosure — the winner won despite being weak where the user weighted heavily. */
+  'comp.title': { en: 'Won despite a weakness', id: 'Menang meski ada kelemahan' },
+  'comp.line': {
+    en: '{option} scores {fit}/5 on {qa}, which you weighted {weight}% — its strengths elsewhere outweigh that. Check the trade is one you can accept.',
+    id: '{option} bernilai {fit}/5 pada {qa}, padahal Anda memberinya bobot {weight}% — kekuatannya di tempat lain menutupi hal itu. Pastikan pertukaran itu bisa Anda terima.',
+  },
   'detail.contrib': {
     en: 'Top contributing attributes (weight × fit)',
     id: 'Atribut penyumbang teratas (bobot × kecocokan)',

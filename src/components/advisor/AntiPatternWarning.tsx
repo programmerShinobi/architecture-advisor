@@ -30,10 +30,10 @@ export function AntiPatternWarning({ rules, mode }: Props) {
         >
           <IconAlertTriangle size={19} style={{ color: 'var(--color-text-warning)', marginTop: '1px', flex: 'none' }} aria-hidden />
           <div>
-            <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-warning)', marginBottom: '3px' }}>
+            <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-primary)', marginBottom: '3px' }}>
               {mode === 'expert' ? t('ap.titleExpert').replace('{id}', r.id) : t('ap.title.g')}
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--color-text-warning)', lineHeight: 1.55 }}>{tr(r.message)}</div>
+            <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.55 }}>{tr(r.message)}</div>
           </div>
         </div>
       ))}
