@@ -83,8 +83,13 @@ export const DICT = {
   /* Compensation disclosure — the winner won despite being weak where the user weighted heavily. */
   'comp.title': { en: 'Won despite a weakness', id: 'Menang meski ada kelemahan' },
   'comp.line': {
-    en: '{option} scores {fit}/5 on {qa}, which you weighted {weight}% — its strengths elsewhere outweigh that. Check the trade is one you can accept.',
-    id: '{option} bernilai {fit}/5 pada {qa}, padahal Anda memberinya bobot {weight}% — kekuatannya di tempat lain menutupi hal itu. Pastikan pertukaran itu bisa Anda terima.',
+    en: '{option} scores {fit}/5 on {qa}, which sits at {weight}% in your priorities — its strengths elsewhere outweigh that. Check the trade is one you can accept.',
+    id: '{option} bernilai {fit}/5 pada {qa}, yang berada di {weight}% dalam prioritas Anda — kekuatannya di tempat lain menutupi hal itu. Pastikan pertukaran itu bisa Anda terima.',
+  },
+  'comp.holds': { en: 'Still wins when weakness is penalised harder.', id: 'Tetap unggul meski kelemahan dihitung lebih berat.' },
+  'comp.flips': {
+    en: 'Score weakness more heavily and {other} wins instead — this pick leans on offsetting.',
+    id: 'Bila kelemahan dinilai lebih berat, {other} yang unggul — pilihan ini bertumpu pada penutupan kelemahan.',
   },
   'detail.contrib': {
     en: 'Top contributing attributes (weight × fit)',

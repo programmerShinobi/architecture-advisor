@@ -10,6 +10,7 @@ import {
   contributions,
   leverage,
   compensations,
+  weaknessAverseWinner,
 } from './scoring';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
 import { FACTOR_ORDER } from '../config/factors';
@@ -269,5 +270,87 @@ describe('compensations — where the winner won despite being weak', () => {
     const w = weights({ costEfficiency: 40 });
     const fit = QA_ORDER.map((q) => (q === 'costEfficiency' ? 2 : 5));
     expect(compensations(w, fit)).toEqual(compensations(w, fit));
+  });
+});
+
+describe('weaknessAverseWinner — the "harsher on weakness" second opinion', () => {
+  const flat = () => Object.fromEntries(QA_ORDER.map((q) => [q, 100 / QA_ORDER.length])) as never;
+
+  it('returns a real option of the dimension', () => {
+    for (const dim of DIMENSION_ORDER) {
+      const names = DIMENSIONS[dim].options.map((o) => o.name);
+      expect(names).toContain(weaknessAverseWinner(flat(), dim));
+    }
+  });
+
+  it('is deterministic', () => {
+    for (const dim of DIMENSION_ORDER) {
+      expect(weaknessAverseWinner(flat(), dim)).toBe(weaknessAverseWinner(flat(), dim));
+    }
+  });
+
+  /**
+   * The whole point: geometric aggregation must actually punish a weakness that additive forgives.
+   * A synthetic pair proves the mechanism rather than trusting the real matrices to exercise it —
+   * "all 3s" beats "one 1 and the rest 5s" under geometric, while additive prefers the latter.
+   */
+  it('makes strength pay a worse rate for weakness than the additive sum does', () => {
+    // 40% of the weight on the weak attribute — inside the band where the two aggregators genuinely
+    // disagree. Below ~32% even geometric still prefers the spike, which is exactly the overclaim
+    // this test exists to prevent: geometric reduces compensability, it does not remove it.
+    const w = Object.fromEntries(QA_ORDER.map((q, i) => [q, i === 0 ? 40 : 60 / (QA_ORDER.length - 1)])) as never;
+    const even = QA_ORDER.map(() => 3);
+    const spiky = QA_ORDER.map((_, i) => (i === 0 ? 1 : 5));
+    const geo = (fit: number[]) => Math.exp(QA_ORDER.reduce((s, q, i) => s + ((w as Record<string, number>)[q] / 100) * Math.log(fit[i]), 0));
+    expect(composite(w, spiky)).toBeGreaterThan(composite(w, even)); // additive still prefers the spike
+    expect(geo(even)).toBeGreaterThan(geo(spiky));                    // geometric no longer does
+  });
+
+  /** Guards the claim in the doc comment: at equal weights the weakness IS still bought off. */
+  it('does not pretend to be fully non-compensatory', () => {
+    const w = flat();
+    const geo = (fit: number[]) => Math.exp(QA_ORDER.reduce((s, q, i) => s + ((w as Record<string, number>)[q] / 100) * Math.log(fit[i]), 0));
+    expect(geo(QA_ORDER.map((_, i) => (i === 0 ? 1 : 5)))).toBeGreaterThan(geo(QA_ORDER.map(() => 3)));
+  });
+
+  /** It is a check, never the recommendation: it must not be able to change what rank() returns. */
+  it('does not affect the ranking the app recommends', () => {
+    const levels = { team: 2, scale: 2, budget: 1, consistency: 2 };
+    const before = rank(levels, 'D1').map((r) => r.name);
+    weaknessAverseWinner(deriveWeights(levels), 'D1');
+    expect(rank(levels, 'D1').map((r) => r.name)).toEqual(before);
+  });
+});
+
+/**
+ * The two percentages quoted in `compensations()` and `weaknessAverseWinner()` are load-bearing:
+ * they are the entire justification for disclosing compensation rather than switching aggregator,
+ * and they have been repeated in review notes. Prose figures rot silently — the frozen-model guards
+ * catch an ACCIDENTAL model change, but a deliberate one updates both copies, passes CI, and leaves
+ * these numbers quietly wrong.
+ *
+ * So the claims are measured here instead of asserted in a comment. The sample is a seeded PRNG,
+ * so the counts are exact rather than approximate, which is deliberate: an exact tripwire fails the
+ * moment the model moves and names the doc comments that need rewriting. It costs ~250ms.
+ */
+describe('the documented compensation rates (tripwire for the doc comments)', () => {
+  it('still measures 28.2% compensation and 12.4% aggregator disagreement', () => {
+    let seed = 42;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    let comp = 0, disagree = 0, total = 0;
+    for (let n = 0; n < 4000; n++) {
+      const levels = Object.fromEntries(FACTOR_ORDER.map((f) => [f, Math.floor(rnd() * 3)]));
+      const w = deriveWeights(levels);
+      for (const dim of DIMENSION_ORDER) {
+        total++;
+        const top = rank(levels, dim)[0];
+        const opt = DIMENSIONS[dim].options.find((o) => o.name === top.name)!;
+        if (compensations(w, opt.qaFit).length > 0) comp++;
+        if (weaknessAverseWinner(w, dim) !== top.name) disagree++;
+      }
+    }
+    expect(total).toBe(20000);
+    expect(comp).toBe(5634);      // 28.2% — quoted in compensations()
+    expect(disagree).toBe(2484);  // 12.4% — quoted in weaknessAverseWinner()
   });
 });
