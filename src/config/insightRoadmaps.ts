@@ -34,15 +34,15 @@ export const LEARNING_PATHS: LearningPath[] = [
     ),
     outcome: b(
       'You can explain the basic deployment styles and run the Advisor for a small project.',
-      'Kamu bisa menjelaskan gaya deployment dasar dan menjalankan Advisor untuk proyek kecil.',
+      'Anda bisa menjelaskan gaya deployment dasar dan menjalankan Advisor untuk proyek kecil.',
     ),
     steps: [
       { kind: 'arch', dim: 'D1', optionId: 'layered', lens: 'catalog', note: b('Meet the classic starting point — layers, and why they erode.', 'Kenali titik awal klasik — lapisan, dan mengapa ia terkikis.') },
       { kind: 'arch', dim: 'D1', optionId: 'monolith', lens: 'catalog', note: b('One deployable, one database — why "boring" is often right.', 'Satu deployable, satu basis data — mengapa "membosankan" sering kali benar.') },
       { kind: 'arch', dim: 'D1', optionId: 'modular-monolith', lens: 'catalog', note: b('Module boundaries without distribution — the pragmatic middle.', 'Batas modul tanpa distribusi — jalan tengah yang pragmatis.') },
       { kind: 'article', slug: 'monolith-microservices-decision-map', note: b('The whole D1 decision on one screen.', 'Seluruh keputusan D1 dalam satu layar.') },
-      { kind: 'article', slug: 'writing-good-adrs', note: b('Record your decision so future-you knows why.', 'Catat keputusanmu agar dirimu di masa depan tahu alasannya.') },
-      { kind: 'advisor', note: b('Run the Advisor with your own project factors and read the reasoning.', 'Jalankan Advisor dengan faktor proyekmu sendiri dan baca penalarannya.') },
+      { kind: 'article', slug: 'writing-good-adrs', note: b('Record your decision so future-you knows why.', 'Catat keputusan Anda agar diri Anda di masa depan tahu alasannya.') },
+      { kind: 'advisor', note: b('Run the Advisor with your own project factors and read the reasoning.', 'Jalankan Advisor dengan faktor proyek Anda sendiri dan baca penalarannya.') },
     ],
   },
   {
@@ -55,16 +55,16 @@ export const LEARNING_PATHS: LearningPath[] = [
     ),
     outcome: b(
       'You can plan an incremental extraction and spot a distributed monolith before it ships.',
-      'Kamu bisa merencanakan ekstraksi bertahap dan mengenali distributed monolith sebelum ia dirilis.',
+      'Anda bisa merencanakan ekstraksi bertahap dan mengenali distributed monolith sebelum ia dirilis.',
     ),
     steps: [
-      { kind: 'article', slug: 'when-to-use-microservices', note: b('Check the prerequisites before you commit.', 'Periksa prasyarat sebelum kamu berkomitmen.') },
+      { kind: 'article', slug: 'when-to-use-microservices', note: b('Check the prerequisites before you commit.', 'Periksa prasyarat sebelum Anda berkomitmen.') },
       { kind: 'arch', dim: 'D1', optionId: 'modular-monolith', lens: 'playbook', note: b('Enforce module boundaries inside one process first.', 'Tegakkan batas modul di dalam satu proses lebih dulu.') },
       { kind: 'article', slug: 'strangler-fig-migration', note: b('Extract one capability at a time — never big-bang.', 'Ekstrak satu kapabilitas dalam satu waktu — jangan pernah big-bang.') },
-      { kind: 'arch', dim: 'D1', optionId: 'microservices', lens: 'review', note: b('The honest evaluation: what you gain and what it costs.', 'Evaluasi jujur: apa yang kamu dapat dan apa biayanya.') },
+      { kind: 'arch', dim: 'D1', optionId: 'microservices', lens: 'review', note: b('The honest evaluation: what you gain and what it costs.', 'Evaluasi jujur: apa yang Anda dapat dan apa biayanya.') },
       { kind: 'article', slug: 'detecting-distributed-monolith', note: b('The warning signs that the split went wrong.', 'Tanda-tanda peringatan bahwa pemecahan berjalan salah.') },
-      { kind: 'article', slug: 'avoiding-premature-microservices', note: b('A checklist to keep you honest.', 'Checklist untuk menjagamu tetap jujur.') },
-      { kind: 'advisor', note: b('Model your current system and compare D1 recommendations.', 'Modelkan sistemmu saat ini dan bandingkan rekomendasi D1.') },
+      { kind: 'article', slug: 'avoiding-premature-microservices', note: b('A checklist to keep you honest.', 'Checklist untuk menjaga Anda tetap jujur.') },
+      { kind: 'advisor', note: b('Model your current system and compare D1 recommendations.', 'Modelkan sistem Anda saat ini dan bandingkan rekomendasi D1.') },
     ],
   },
   {
@@ -77,12 +77,12 @@ export const LEARNING_PATHS: LearningPath[] = [
     ),
     outcome: b(
       'You can choose a communication style deliberately, with its failure modes priced in.',
-      'Kamu bisa memilih gaya komunikasi secara sengaja, dengan mode kegagalannya sudah diperhitungkan.',
+      'Anda bisa memilih gaya komunikasi secara sengaja, dengan mode kegagalannya sudah diperhitungkan.',
     ),
     steps: [
       { kind: 'article', slug: 'choosing-communication-style', note: b('Sync vs async vs events — the core question.', 'Sync vs async vs event — pertanyaan intinya.') },
       { kind: 'arch', dim: 'D2', optionId: 'synchronous', lens: 'catalog', note: b('The baseline: request–response, and where its coupling strains.', 'Baseline: request–response, dan di mana koplingnya tertekan.') },
-      { kind: 'arch', dim: 'D2', optionId: 'event-driven', lens: 'catalog', note: b('What event-driven really buys you.', 'Apa yang sebenarnya kamu dapat dari event-driven.') },
+      { kind: 'arch', dim: 'D2', optionId: 'event-driven', lens: 'catalog', note: b('What event-driven really buys you.', 'Apa yang sebenarnya Anda dapat dari event-driven.') },
       { kind: 'arch', dim: 'D2', optionId: 'async-messaging', lens: 'playbook', note: b('Adopt messaging step by step (idempotency, DLQs, ordering).', 'Adopsi messaging langkah demi langkah (idempotensi, DLQ, pengurutan).') },
       { kind: 'arch', dim: 'D2', optionId: 'streaming', lens: 'review', note: b('The durable, replayable log — evaluated honestly.', 'Log yang tahan lama dan bisa diputar ulang — dievaluasi jujur.') },
       { kind: 'advisor', note: b('Raise the async and real-time factors and watch D2 reorder.', 'Naikkan faktor async dan real-time lalu lihat D2 berubah urutan.') },
@@ -98,7 +98,7 @@ export const LEARNING_PATHS: LearningPath[] = [
     ),
     outcome: b(
       'You can decide when to split data — and keep a cross-service flow correct when you do.',
-      'Kamu bisa memutuskan kapan memecah data — dan menjaga alur lintas-layanan tetap benar saat melakukannya.',
+      'Anda bisa memutuskan kapan memecah data — dan menjaga alur lintas-layanan tetap benar saat melakukannya.',
     ),
     steps: [
       { kind: 'article', slug: 'choosing-data-management', note: b('The D3 decision: from one DB to polyglot.', 'Keputusan D3: dari satu DB ke polyglot.') },
@@ -117,11 +117,11 @@ export const LEARNING_PATHS: LearningPath[] = [
     audience: 'practitioner',
     description: b(
       'Independent of how you deploy, the inside of the codebase decides the cost of change. Learn the structures that keep the core testable.',
-      'Terlepas dari cara kamu men-deploy, bagian dalam basis kode menentukan biaya perubahan. Pelajari struktur yang menjaga inti tetap dapat diuji.',
+      'Terlepas dari cara Anda men-deploy, bagian dalam basis kode menentukan biaya perubahan. Pelajari struktur yang menjaga inti tetap dapat diuji.',
     ),
     outcome: b(
       'You can pick between Hexagonal, Clean, Vertical Slice, and Layered for a given codebase.',
-      'Kamu bisa memilih di antara Hexagonal, Clean, Vertical Slice, dan Layered untuk suatu basis kode.',
+      'Anda bisa memilih di antara Hexagonal, Clean, Vertical Slice, dan Layered untuk suatu basis kode.',
     ),
     steps: [
       { kind: 'article', slug: 'choosing-code-structure', note: b('The D4 decision in one guide.', 'Keputusan D4 dalam satu panduan.') },
@@ -130,7 +130,7 @@ export const LEARNING_PATHS: LearningPath[] = [
       { kind: 'arch', dim: 'D4', optionId: 'clean', lens: 'playbook', note: b('Adopt the dependency rule without the ceremony trap.', 'Adopsi aturan dependensi tanpa jebakan seremoni.') },
       { kind: 'arch', dim: 'D4', optionId: 'vertical-slice', lens: 'review', note: b('The feature-first alternative, evaluated.', 'Alternatif feature-first, dievaluasi.') },
       { kind: 'article', slug: 'genai-and-architecture', note: b('Why clear boundaries matter more in the AI-assisted era.', 'Mengapa batas yang jelas makin penting di era berbantuan AI.') },
-      { kind: 'article', slug: 'architectural-technical-debt', note: b('Manage the structural compromises you do take on.', 'Kelola kompromi struktural yang memang kamu ambil.') },
+      { kind: 'article', slug: 'architectural-technical-debt', note: b('Manage the structural compromises you do take on.', 'Kelola kompromi struktural yang memang Anda ambil.') },
     ],
   },
   {
@@ -143,7 +143,7 @@ export const LEARNING_PATHS: LearningPath[] = [
     ),
     outcome: b(
       'You can match a rendering strategy to a product and know when micro-frontends earn their cost.',
-      'Kamu bisa mencocokkan strategi rendering dengan produk dan tahu kapan micro-frontend sepadan dengan biayanya.',
+      'Anda bisa mencocokkan strategi rendering dengan produk dan tahu kapan micro-frontend sepadan dengan biayanya.',
     ),
     steps: [
       { kind: 'article', slug: 'choosing-frontend-architecture', note: b('SPA vs SSR/SSG vs micro-frontends — the map.', 'SPA vs SSR/SSG vs micro-frontend — petanya.') },
@@ -160,16 +160,16 @@ export const LEARNING_PATHS: LearningPath[] = [
     audience: 'architect',
     description: b(
       'Structured evaluation: quality attributes, scenario-driven review, and automated guards that keep the decisions honest over time.',
-      'Evaluasi terstruktur: quality attribute, tinjauan berbasis skenario, dan penjaga otomatis yang menjaga keputusan tetap jujur dari waktu ke waktu.',
+      'Evaluasi terstruktur: atribut kualitas, tinjauan berbasis skenario, dan penjaga otomatis yang menjaga keputusan tetap jujur dari waktu ke waktu.',
     ),
     outcome: b(
       'You can run an ATAM-style review and turn its findings into CI-enforced fitness functions.',
-      'Kamu bisa menjalankan tinjauan gaya ATAM dan mengubah temuannya menjadi fitness function yang ditegakkan CI.',
+      'Anda bisa menjalankan tinjauan gaya ATAM dan mengubah temuannya menjadi fitness function yang ditegakkan CI.',
     ),
     steps: [
       { kind: 'article', slug: 'atam-review-checklist', note: b('The scenario-driven review method, step by step.', 'Metode tinjauan berbasis skenario, langkah demi langkah.') },
       { kind: 'arch', dim: 'D1', optionId: 'serverless', lens: 'review', note: b('Practice on a style with sharp trade-offs.', 'Berlatih pada gaya dengan trade-off yang tajam.') },
-      { kind: 'article', slug: 'serverless-readiness-checklist', note: b('A readiness checklist you can reuse in reviews.', 'Checklist kesiapan yang bisa kamu pakai ulang dalam tinjauan.') },
+      { kind: 'article', slug: 'serverless-readiness-checklist', note: b('A readiness checklist you can reuse in reviews.', 'Checklist kesiapan yang bisa Anda pakai ulang dalam tinjauan.') },
       { kind: 'article', slug: 'fitness-functions-guarding', note: b('Turn review findings into failing tests.', 'Ubah temuan tinjauan menjadi tes yang gagal.') },
       { kind: 'article', slug: 'green-software-architecture', note: b('Add the sustainability lens — utilization as a review criterion.', 'Tambahkan lensa keberlanjutan — utilisasi sebagai kriteria tinjauan.') },
       { kind: 'advisor', note: b("Use the Advisor's radar and sensitivity cards as review input.", 'Gunakan radar dan kartu sensitivitas Advisor sebagai masukan tinjauan.') },

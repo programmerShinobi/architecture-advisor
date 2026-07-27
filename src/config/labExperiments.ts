@@ -66,7 +66,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     levels: { team: 0, distribution: 0, ttm: 2, budget: 0, lifespan: 1, scale: 0, dataVolume: 0, async: 0, realtime: 0, domain: 0, consistency: 1, security: 0, legacy: 0, devops: 0 },
     watch: [
       b('The D1 recommendation (it should favour a monolith/modular monolith).', 'Rekomendasi D1 (seharusnya condong ke monolith/modular monolith).'),
-      b('In Expert mode, override the D1 selection to Microservices.', 'Di mode Expert, timpa pilihan D1 menjadi Microservices.'),
+      b('In Expert mode, override the D1 selection to Microservices.', 'Di mode Ahli, timpa pilihan D1 menjadi Microservices.'),
       b('The anti-pattern warning that appears — read its reasoning.', 'Peringatan anti-pattern yang muncul — baca alasannya.'),
     ],
     takeaway: b(
@@ -113,7 +113,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     watch: [
       b('The D3 ranking — single shared DB vs database-per-service.', 'Peringkat D3 — satu DB bersama vs database-per-service.'),
       b('Now relax Consistency to its lowest level and watch D3 reorder.', 'Sekarang longgarkan Konsistensi ke level terendah dan lihat D3 berubah urutan.'),
-      b('The data-consistency anti-pattern warnings if you force a mismatch.', 'Peringatan anti-pattern konsistensi data jika kamu memaksakan ketidakcocokan.'),
+      b('The data-consistency anti-pattern warnings if you force a mismatch.', 'Peringatan anti-pattern konsistensi data jika Anda memaksakan ketidakcocokan.'),
     ],
     takeaway: b(
       'Losing the single transaction is the real price of splitting data — when the business cannot tolerate eventual consistency, the model keeps data together.',
@@ -159,7 +159,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     watch: [
       b('The D4 ranking — where do Hexagonal and Clean sit versus Layered?', 'Peringkat D4 — di mana Hexagonal dan Clean dibanding Layered?'),
       b('Now set Lifespan to its lowest and Time-to-market to its highest, and compare (pin A/B).', 'Sekarang set Umur ke terendah dan Time-to-market ke tertinggi, lalu bandingkan (sematkan A/B).'),
-      b('The contribution bars: which quality attributes carry the D4 decision.', 'Bilah kontribusi: quality attribute mana yang menopang keputusan D4.'),
+      b('The contribution bars: which quality attributes carry the D4 decision.', 'Bilah kontribusi: atribut kualitas mana yang menopang keputusan D4.'),
     ],
     takeaway: b(
       'The ceremony of a protected core is an investment priced by lifespan and domain complexity — exactly the "don\'t impose Clean on a small app" guidance, computed.',

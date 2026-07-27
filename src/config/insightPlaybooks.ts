@@ -65,7 +65,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
       b('Record the "when would we split?" triggers in an ADR so the future extraction is deliberate.', 'Catat pemicu "kapan kita akan memecah?" dalam ADR agar ekstraksi di masa depan disengaja.'),
     ],
     practices: [
-      b('Enforce module boundaries inside the monolith even though nothing forces you to.', 'Tegakkan batas modul di dalam monolith meski tak ada yang memaksamu.'),
+      b('Enforce module boundaries inside the monolith even though nothing forces you to.', 'Tegakkan batas modul di dalam monolith meski tak ada yang memaksa Anda.'),
       b('Load-test the single process early; vertical scaling has a knowable ceiling.', 'Uji beban proses tunggal sejak awal; penskalaan vertikal punya batas atas yang bisa diketahui.'),
       b('Feature flags for risky changes — one deployable means one blast radius.', 'Feature flag untuk perubahan berisiko — satu deployable berarti satu blast radius.'),
     ],
@@ -240,7 +240,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
     ],
     pitfalls: [
       b('Event chains that implement a workflow nobody can see — add a saga/orchestrator when flow matters.', 'Rantai event yang mengimplementasikan alur kerja yang tak terlihat siapa pun — tambahkan saga/orkestrator saat alur penting.'),
-      b('Fat events carrying entire entities — couple consumers to your internals.', 'Event gemuk yang membawa seluruh entity — mengkopling konsumer ke internalmu.'),
+      b('Fat events carrying entire entities — couple consumers to your internals.', 'Event gemuk yang membawa seluruh entity — mengkopling konsumer ke internal Anda.'),
       b('Using events where a query was needed: events notify, they do not answer questions.', 'Memakai event padahal kueri yang dibutuhkan: event memberi tahu, ia tak menjawab pertanyaan.'),
     ],
   },
@@ -341,7 +341,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
       b('Model commands with invariants enforced in the write model (aggregates).', 'Modelkan command dengan invarian yang ditegakkan di model tulis (aggregate).'),
       b('Project events/changes into read models shaped exactly for each query.', 'Proyeksikan event/perubahan ke read model yang dibentuk persis untuk tiap kueri.'),
       b('Measure and expose read-model staleness; make the UX honest about it.', 'Ukur dan tampilkan keusangan read-model; buat UX jujur soal itu.'),
-      b('Automate projection rebuilds — they are your schema-change escape hatch.', 'Otomatiskan pembangunan-ulang proyeksi — itu jalan keluarmu untuk perubahan skema.'),
+      b('Automate projection rebuilds — they are your schema-change escape hatch.', 'Otomatiskan pembangunan-ulang proyeksi — itu jalan keluar Anda untuk perubahan skema.'),
     ],
     practices: [
       b('Keep the write model minimal; resist querying it for lists.', 'Jaga model tulis minimal; tahan diri untuk mengueri-nya demi daftar.'),
@@ -368,7 +368,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
       b('Persist to an append-only store with optimistic concurrency per aggregate stream.', 'Simpan ke penyimpanan hanya-tambah dengan konkurensi optimistik per stream aggregate.'),
       b('Build projections for every read need; never query the log directly for UI.', 'Bangun proyeksi untuk tiap kebutuhan baca; jangan pernah mengueri log langsung untuk UI.'),
       b('Add snapshotting once aggregate streams grow long.', 'Tambahkan snapshotting begitu stream aggregate memanjang.'),
-      b('Design upcasting for event schema evolution before you need it.', 'Rancang upcasting untuk evolusi skema event sebelum kamu membutuhkannya.'),
+      b('Design upcasting for event schema evolution before you need it.', 'Rancang upcasting untuk evolusi skema event sebelum Anda membutuhkannya.'),
     ],
     practices: [
       b('Keep events business-meaningful (OrderPaid), not CRUD deltas (RowUpdated).', 'Jaga event bermakna-bisnis (OrderPaid), bukan delta CRUD (RowUpdated).'),
@@ -388,7 +388,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
     ),
     prerequisites: [
       b('Distinct access patterns proven by measurement, not preference.', 'Pola akses berbeda yang terbukti lewat pengukuran, bukan preferensi.'),
-      b('Ops capacity (or managed services) for every engine you adopt.', 'Kapasitas ops (atau layanan terkelola) untuk tiap mesin yang kamu adopsi.'),
+      b('Ops capacity (or managed services) for every engine you adopt.', 'Kapasitas ops (atau layanan terkelola) untuk tiap mesin yang Anda adopsi.'),
     ],
     steps: [
       b('Start from the query patterns; pick the smallest set of engines that serves them.', 'Mulai dari pola kueri; pilih himpunan mesin terkecil yang melayaninya.'),
@@ -398,7 +398,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
       b('Cap the portfolio: adding engine #N requires retiring or justifying against the cap.', 'Batasi portofolio: menambah mesin ke-N mengharuskan memensiunkan atau membenarkannya terhadap batas.'),
     ],
     practices: [
-      b('Prefer managed offerings; your differentiation is not running databases.', 'Utamakan penawaran terkelola; diferensiasimu bukan menjalankan basis data.'),
+      b('Prefer managed offerings; your differentiation is not running databases.', 'Utamakan penawaran terkelola; diferensiasi Anda bukan menjalankan basis data.'),
       b('Consistency contracts documented per derived store (how stale can it be?).', 'Kontrak konsistensi terdokumentasi per penyimpanan turunan (seberapa usang ia boleh?).'),
       b('One team owns each engine’s operational excellence.', 'Satu tim memiliki keunggulan operasional tiap mesin.'),
     ],
@@ -433,7 +433,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
     ],
     pitfalls: [
       b('Leaking ORM entities or framework annotations into the core.', 'Membocorkan entity ORM atau anotasi framework ke dalam inti.'),
-      b('Port interfaces that mirror a specific vendor API — you have adapters around adapters.', 'Antarmuka port yang mencerminkan API vendor tertentu — kamu punya adapter di sekitar adapter.'),
+      b('Port interfaces that mirror a specific vendor API — you have adapters around adapters.', 'Antarmuka port yang mencerminkan API vendor tertentu — Anda punya adapter di sekitar adapter.'),
       b('Hexagon ceremony for a 2-week script — match the investment to the lifespan.', 'Seremoni hexagon untuk skrip 2 minggu — sesuaikan investasi dengan umurnya.'),
     ],
   },
@@ -486,7 +486,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
       b('Keep cross-slice calls rare and explicit — prefer duplication over coupling.', 'Jaga panggilan antar-irisan langka dan eksplisit — utamakan duplikasi daripada kopling.'),
     ],
     pitfalls: [
-      b('A "common" folder that regrows the horizontal layers you left.', 'Folder "common" yang menumbuhkan kembali lapisan horizontal yang kamu tinggalkan.'),
+      b('A "common" folder that regrows the horizontal layers you left.', 'Folder "common" yang menumbuhkan kembali lapisan horizontal yang Anda tinggalkan.'),
       b('Slices reaching into each other’s internals — invisible coupling returns.', 'Irisan yang menjangkau internal satu sama lain — kopling tak kasat mata kembali.'),
       b('Zero shared invariants: money/date/id types should not be re-invented per slice.', 'Nol invarian bersama: tipe uang/tanggal/id semestinya tak ditemukan-ulang per irisan.'),
     ],
@@ -569,7 +569,7 @@ export const INSIGHT_PLAYBOOKS: Record<string, ArchPlaybook> = {
       b('Lazy-load below-the-fold and admin surfaces aggressively.', 'Lazy-load area below-the-fold dan permukaan admin secara agresif.'),
     ],
     pitfalls: [
-      b('A single monolithic bundle — interactivity you can’t reach in time.', 'Satu bundel monolitik — interaktivitas yang tak bisa kamu capai tepat waktu.'),
+      b('A single monolithic bundle — interactivity you can’t reach in time.', 'Satu bundel monolitik — interaktivitas yang tak bisa Anda capai tepat waktu.'),
       b('Recreating a server-cache in Redux by hand — use a data-fetch layer.', 'Membuat ulang server-cache di Redux secara manual — pakai lapisan data-fetch.'),
       b('Ignoring first-paint on content pages that actually needed SSR/SSG.', 'Mengabaikan first-paint pada halaman konten yang sebenarnya butuh SSR/SSG.'),
     ],

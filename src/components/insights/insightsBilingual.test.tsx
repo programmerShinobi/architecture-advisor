@@ -29,7 +29,7 @@ describe('Insights renders Indonesian at the deepest sub-level (lang=id)', () =>
     renderWithI18n(<RoadmapView onOpenArch={vi.fn()} onOpenArticle={vi.fn()} onOpenAdvisor={vi.fn()} />, 'id');
     expect(screen.getByText(/Mulai dari nol: apa itu keputusan arsitektur/i)).toBeTruthy(); // description
     fireEvent.click(screen.getByText(/Dasar-dasar arsitektur/i));
-    expect(screen.getByText(/Kamu bisa menjelaskan gaya deployment dasar/i)).toBeTruthy(); // outcome
+    expect(screen.getByText(/Anda bisa menjelaskan gaya deployment dasar/i)).toBeTruthy(); // outcome
     expect(screen.getByText(/Kenali titik awal klasik — lapisan/i)).toBeTruthy(); // step note (deepest)
   });
 
