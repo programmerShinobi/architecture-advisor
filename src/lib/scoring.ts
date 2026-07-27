@@ -263,7 +263,7 @@ export function compensations(weights: Weights, qaFit: number[]): Compensation[]
 }
 
 /**
- * Step 7 — THE NON-COMPENSATORY CHECK: does this pick survive if weakness cannot be offset?
+ * Step 7 — THE WEAKNESS-AVERSE SECOND OPINION: does this pick survive a harsher view of weakness?
  *
  * `composite()` adds weighted fits, so a 1 on one attribute is repaid one-for-one by a 5 on another
  * at the same weight. A weighted GEOMETRIC mean — exp(Σ wⱼ·ln φⱼ) — makes that repayment far more
@@ -286,7 +286,7 @@ export function compensations(weights: Weights, qaFit: number[]): Compensation[]
  * Returns the geometric winner's name. Ties break on canonical config order, exactly as `rankWith`
  * does, so a tie can never make the two look like they disagree when they do not.
  */
-export function nonCompensatoryWinner(weights: Weights, dim: DimensionId): string {
+export function weaknessAverseWinner(weights: Weights, dim: DimensionId): string {
   return DIMENSIONS[dim].options
     .map((opt, index) => ({
       name: opt.name,

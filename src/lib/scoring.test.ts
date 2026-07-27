@@ -10,7 +10,7 @@ import {
   contributions,
   leverage,
   compensations,
-  nonCompensatoryWinner,
+  weaknessAverseWinner,
 } from './scoring';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
 import { FACTOR_ORDER } from '../config/factors';
@@ -273,19 +273,19 @@ describe('compensations — where the winner won despite being weak', () => {
   });
 });
 
-describe('nonCompensatoryWinner — the "no offsetting" check', () => {
+describe('weaknessAverseWinner — the "harsher on weakness" second opinion', () => {
   const flat = () => Object.fromEntries(QA_ORDER.map((q) => [q, 100 / QA_ORDER.length])) as never;
 
   it('returns a real option of the dimension', () => {
     for (const dim of DIMENSION_ORDER) {
       const names = DIMENSIONS[dim].options.map((o) => o.name);
-      expect(names).toContain(nonCompensatoryWinner(flat(), dim));
+      expect(names).toContain(weaknessAverseWinner(flat(), dim));
     }
   });
 
   it('is deterministic', () => {
     for (const dim of DIMENSION_ORDER) {
-      expect(nonCompensatoryWinner(flat(), dim)).toBe(nonCompensatoryWinner(flat(), dim));
+      expect(weaknessAverseWinner(flat(), dim)).toBe(weaknessAverseWinner(flat(), dim));
     }
   });
 
@@ -317,7 +317,40 @@ describe('nonCompensatoryWinner — the "no offsetting" check', () => {
   it('does not affect the ranking the app recommends', () => {
     const levels = { team: 2, scale: 2, budget: 1, consistency: 2 };
     const before = rank(levels, 'D1').map((r) => r.name);
-    nonCompensatoryWinner(deriveWeights(levels), 'D1');
+    weaknessAverseWinner(deriveWeights(levels), 'D1');
     expect(rank(levels, 'D1').map((r) => r.name)).toEqual(before);
+  });
+});
+
+/**
+ * The two percentages quoted in `compensations()` and `weaknessAverseWinner()` are load-bearing:
+ * they are the entire justification for disclosing compensation rather than switching aggregator,
+ * and they have been repeated in review notes. Prose figures rot silently — the frozen-model guards
+ * catch an ACCIDENTAL model change, but a deliberate one updates both copies, passes CI, and leaves
+ * these numbers quietly wrong.
+ *
+ * So the claims are measured here instead of asserted in a comment. The sample is a seeded PRNG,
+ * so the counts are exact rather than approximate, which is deliberate: an exact tripwire fails the
+ * moment the model moves and names the doc comments that need rewriting. It costs ~250ms.
+ */
+describe('the documented compensation rates (tripwire for the doc comments)', () => {
+  it('still measures 28.2% compensation and 12.4% aggregator disagreement', () => {
+    let seed = 42;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    let comp = 0, disagree = 0, total = 0;
+    for (let n = 0; n < 4000; n++) {
+      const levels = Object.fromEntries(FACTOR_ORDER.map((f) => [f, Math.floor(rnd() * 3)]));
+      const w = deriveWeights(levels);
+      for (const dim of DIMENSION_ORDER) {
+        total++;
+        const top = rank(levels, dim)[0];
+        const opt = DIMENSIONS[dim].options.find((o) => o.name === top.name)!;
+        if (compensations(w, opt.qaFit).length > 0) comp++;
+        if (weaknessAverseWinner(w, dim) !== top.name) disagree++;
+      }
+    }
+    expect(total).toBe(20000);
+    expect(comp).toBe(5634);      // 28.2% — quoted in compensations()
+    expect(disagree).toBe(2484);  // 12.4% — quoted in weaknessAverseWinner()
   });
 });

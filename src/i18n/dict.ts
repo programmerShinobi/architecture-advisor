@@ -86,7 +86,7 @@ export const DICT = {
     en: '{option} scores {fit}/5 on {qa}, which you weighted {weight}% — its strengths elsewhere outweigh that. Check the trade is one you can accept.',
     id: '{option} bernilai {fit}/5 pada {qa}, padahal Anda memberinya bobot {weight}% — kekuatannya di tempat lain menutupi hal itu. Pastikan pertukaran itu bisa Anda terima.',
   },
-  'comp.holds': { en: 'Still wins even when weakness counts double.', id: 'Tetap unggul meski kelemahan dihitung lebih berat.' },
+  'comp.holds': { en: 'Still wins when weakness is penalised harder.', id: 'Tetap unggul meski kelemahan dihitung lebih berat.' },
   'comp.flips': {
     en: 'Score weakness more heavily and {other} wins instead — this pick leans on offsetting.',
     id: 'Bila kelemahan dinilai lebih berat, {other} yang unggul — pilihan ini bertumpu pada penutupan kelemahan.',
