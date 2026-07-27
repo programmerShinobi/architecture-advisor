@@ -17,7 +17,7 @@ import { useI18n } from '../../i18n/I18nContext';
 import { DIMENSIONS } from '../../config/dimensions';
 import { DIM_NARRATIVE, OPTION_BLURB } from '../../config/dimensionContent';
 import { QUALITY_ATTRIBUTES } from '../../config/qualityAttributes';
-import { compensations, contributions, displayScore, weaknessAverseWinner } from '../../lib/scoring';
+import { compensations, contributions, displayScore, roundWeights, weaknessAverseWinner } from '../../lib/scoring';
 import { WhyNotRunnerUp } from './WhyNotRunnerUp';
 import type { DimensionId, RankedOption, Weights } from '../../types';
 
@@ -60,6 +60,11 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
   // a standalone panel would be a second warning competing with the first. Attached here it turns
   // "there is a weakness" into the question that actually matters: does the DECISION depend on it?
   const averseWinner = comps.length > 0 ? weaknessAverseWinner(weights, dim) : null;
+  // Displayed through roundWeights like every other weight in the app (Priorities, the override
+  // panel, Fitness functions, chat, exports, the Manual). Showing the raw float here printed
+  // "13.2%" beside a Priorities panel reading "13%" for the same attribute in the same session —
+  // two renderings of one number, which reads as the tool contradicting itself.
+  const shownWeights = roundWeights(weights);
   const maxPts = Math.max(...contrib.map((c) => c.points), 0.001);
 
   return (
@@ -138,7 +143,7 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
                     .replace('{option}', top.name)
                     .replace('{qa}', QUALITY_ATTRIBUTES[c.qa].name[lang])
                     .replace('{fit}', String(c.fit))
-                    .replace('{weight}', c.weight.toFixed(1))}
+                    .replace('{weight}', String(shownWeights[c.qa]))}
                 </p>
               ))}
               {averseWinner && (
