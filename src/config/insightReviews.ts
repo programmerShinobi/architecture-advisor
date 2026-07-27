@@ -430,7 +430,7 @@ export const INSIGHT_REVIEWS: Record<string, ArchReview> = {
     ],
     verdict: b(
       'Non-negotiable if you do microservices honestly. The cost is the consistency toolkit — budget for it or stay monolithic.',
-      'Tak bisa ditawar jika kamu menjalankan microservices dengan jujur. Biayanya adalah perkakas konsistensi — anggarkan atau tetap monolitik.',
+      'Tak bisa ditawar jika Anda menjalankan microservices dengan jujur. Biayanya adalah perkakas konsistensi — anggarkan atau tetap monolitik.',
     ),
   },
   'D3:cqrs': {

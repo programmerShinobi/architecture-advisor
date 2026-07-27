@@ -131,7 +131,7 @@ export const ACADEMY_QUIZZES: QuizModule[] = [
         answer: 1,
         explain: b(
           'You pay all the costs of distribution (network, ops, eventual consistency) with none of the independence — the top microservice anti-pattern in the literature.',
-          'Kamu membayar semua biaya distribusi (jaringan, ops, konsistensi eventual) tanpa kemandiriannya — anti-pattern microservice teratas dalam literatur.',
+          'Anda membayar semua biaya distribusi (jaringan, ops, konsistensi eventual) tanpa kemandiriannya — anti-pattern microservice teratas dalam literatur.',
         ),
         review: { kind: 'arch', dim: 'D1', optionId: 'microservices', lens: 'review' },
       },
@@ -153,8 +153,8 @@ export const ACADEMY_QUIZZES: QuizModule[] = [
         choices: [
           b('Which protocol is fastest', 'Protokol mana yang tercepat'),
           b('Whether the caller must wait for an answer right now', 'Apakah pemanggil harus menunggu jawaban sekarang juga'),
-          b('Whether you use JSON or protobuf', 'Apakah kamu memakai JSON atau protobuf'),
-          b('How many services you have', 'Berapa banyak layanan yang kamu miliki'),
+          b('Whether you use JSON or protobuf', 'Apakah Anda memakai JSON atau protobuf'),
+          b('How many services you have', 'Berapa banyak layanan yang Anda miliki'),
         ],
         answer: 1,
         explain: b(
@@ -183,7 +183,7 @@ export const ACADEMY_QUIZZES: QuizModule[] = [
         choices: [
           b('Exactly one consumer needs a reply immediately', 'Tepat satu konsumer butuh balasan seketika'),
           b('Many consumers react to the same fact and the system must be easy to extend', 'Banyak konsumer bereaksi terhadap fakta yang sama dan sistem harus mudah diperluas'),
-          b('You need strong global transactions', 'Kamu butuh transaksi global yang kuat'),
+          b('You need strong global transactions', 'Anda butuh transaksi global yang kuat'),
           b('The team is brand new to distributed systems', 'Tim benar-benar baru terhadap sistem terdistribusi'),
         ],
         answer: 1,
@@ -211,7 +211,7 @@ export const ACADEMY_QUIZZES: QuizModule[] = [
       {
         q: b('Streaming (e.g. a log like Kafka) is the right D2 pick when…', 'Streaming (mis. log seperti Kafka) adalah pilihan D2 yang tepat saat…'),
         choices: [
-          b('You need one nightly batch job', 'Kamu butuh satu pekerjaan batch malam'),
+          b('You need one nightly batch job', 'Anda butuh satu pekerjaan batch malam'),
           b('Data flows continuously and consumers replay or process it in near real time', 'Data mengalir kontinu dan konsumer memutar-ulang atau memprosesnya mendekati real time'),
           b('Requests must block until processed', 'Permintaan harus menunggu sampai diproses'),
           b('The payloads are tiny', 'Muatannya sangat kecil'),
@@ -453,7 +453,7 @@ export const ACADEMY_QUIZZES: QuizModule[] = [
         choices: [
           b('Any app has two pages', 'Aplikasi apa pun punya dua halaman'),
           b('A large organisation has many UI teams on one product needing independent deploys', 'Organisasi besar punya banyak tim UI di satu produk yang butuh deploy independen'),
-          b('You want a smaller bundle', 'Kamu ingin bundel yang lebih kecil'),
+          b('You want a smaller bundle', 'Anda ingin bundel yang lebih kecil'),
           b('SEO is critical', 'SEO itu kritis'),
         ],
         answer: 1,
@@ -514,7 +514,7 @@ export const ACADEMY_QUIZZES: QuizModule[] = [
         answer: 1,
         explain: b(
           'ATAM asks how well the architecture satisfies the prioritised quality attributes and what is sacrificed — it surfaces risks, not scores.',
-          'ATAM menanyakan seberapa baik arsitektur memenuhi quality attribute yang diprioritaskan dan apa yang dikorbankan — ia memunculkan risiko, bukan skor.',
+          'ATAM menanyakan seberapa baik arsitektur memenuhi atribut kualitas yang diprioritaskan dan apa yang dikorbankan — ia memunculkan risiko, bukan skor.',
         ),
         review: { kind: 'article', slug: 'atam-review-checklist' },
       },

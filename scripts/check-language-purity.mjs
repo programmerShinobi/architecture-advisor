@@ -26,7 +26,7 @@ const ID_FN = ['yang', 'dan', 'dengan', 'untuk', 'ini', 'itu', 'dari', 'pada', '
 
 const Q = "(?:'((?:[^'\\\\]|\\\\.)*)'|\"((?:[^\"\\\\]|\\\\.)*)\")";
 const RX_OBJ = new RegExp(`en:\\s*${Q}\\s*,\\s*id:\\s*${Q}`, 'g');
-const RX_FN = new RegExp(`\\b[Lp]\\(\\s*${Q}\\s*,\\s*${Q}\\s*[,)]`, 'gs');
+const RX_FN = new RegExp(`\\b[Lpb]\\(\\s*${Q}\\s*,\\s*${Q}\\s*[,)]`, 'gs');
 
 /** Strip hyphenated compounds first — they are single technical terms, not prose. */
 const words = (s) => (s.toLowerCase().replace(/[a-z]+-[a-z-]+/g, ' ').match(/[a-z]+/g) || []);
