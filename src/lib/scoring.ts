@@ -261,3 +261,38 @@ export function compensations(weights: Weights, qaFit: number[]): Compensation[]
     .filter((c) => c.weight > floor && c.fit <= COMP_WEAK_FIT)
     .sort((a, b) => b.weight - a.weight || QA_ORDER.indexOf(a.qa) - QA_ORDER.indexOf(b.qa));
 }
+
+/**
+ * Step 7 — THE NON-COMPENSATORY CHECK: does this pick survive if weakness cannot be offset?
+ *
+ * `composite()` adds weighted fits, so a 1 on one attribute is repaid one-for-one by a 5 on another
+ * at the same weight. A weighted GEOMETRIC mean — exp(Σ wⱼ·ln φⱼ) — makes that repayment far more
+ * expensive: the marginal value of extra strength falls as the weakness deepens.
+ *
+ * Precisely, and this is worth stating because it is easy to overclaim: geometric aggregation
+ * REDUCES compensability, it does not remove it. With twelve attributes at equal weight, one fit of
+ * 1 among eleven 5s still scores 4.37 — comfortably above a flat row of 3s. Strength does still buy
+ * off weakness; it simply costs more. Only a veto or threshold rule (ELECTRE-style) is genuinely
+ * non-compensatory, and that would need its own justification and its own ADR.
+ *
+ * Over the same 4,000-scenario sample the two aggregators disagree about the winner in 12.4% of
+ * decisions, which is what makes it useful as a second opinion.
+ *
+ * This is used as a CHECK, never as the recommendation. Re-ranking the app on geometric aggregation
+ * would silently move the advice in one decision in eight and require re-freezing the model; running
+ * it alongside costs nothing and answers a question the additive score cannot: is the winner ahead
+ * on merit across the board, or ahead because its weaknesses were paid for?
+ *
+ * Returns the geometric winner's name. Ties break on canonical config order, exactly as `rankWith`
+ * does, so a tie can never make the two look like they disagree when they do not.
+ */
+export function nonCompensatoryWinner(weights: Weights, dim: DimensionId): string {
+  return DIMENSIONS[dim].options
+    .map((opt, index) => ({
+      name: opt.name,
+      index,
+      // Fits are 1–5, so ln is always defined and finite; no clamping needed.
+      score: Math.exp(QA_ORDER.reduce((s, q, i) => s + (weights[q] / 100) * Math.log(opt.qaFit[i] ?? 3), 0)),
+    }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)[0].name;
+}

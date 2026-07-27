@@ -28,8 +28,20 @@ const Q = "(?:'((?:[^'\\\\]|\\\\.)*)'|\"((?:[^\"\\\\]|\\\\.)*)\")";
 const RX_OBJ = new RegExp(`en:\\s*${Q}\\s*,\\s*id:\\s*${Q}`, 'g');
 const RX_FN = new RegExp(`\\b[Lpb]\\(\\s*${Q}\\s*,\\s*${Q}\\s*[,)]`, 'gs');
 
-/** Strip hyphenated compounds first — they are single technical terms, not prose. */
-const words = (s) => (s.toLowerCase().replace(/[a-z]+-[a-z-]+/g, ' ').match(/[a-z]+/g) || []);
+/**
+ * Reduce a string to the words that are genuinely prose.
+ *
+ * `{placeholder}` tokens go first: they are substituted at runtime and are code, not language, so a
+ * key like `{other} yang unggul` must not be read as an Indonesian sentence containing the English
+ * word "other". Hyphenated compounds go next, because "append-only" and "read-only" are single
+ * technical terms whose tail would otherwise look like the English word "only".
+ */
+const words = (s) =>
+  (s
+    .toLowerCase()
+    .replace(/\{[^}]*\}/g, ' ')
+    .replace(/[a-z]+-[a-z-]+/g, ' ')
+    .match(/[a-z]+/g) || []);
 
 const files = execSync('grep -rl "en:\\|L(\'\\|p(\'" src/ content/ --include=*.ts --include=*.tsx --include=*.json 2>/dev/null || true', { encoding: 'utf8' })
   .trim().split('\n').filter(Boolean).filter((f) => !f.includes('.test.'));

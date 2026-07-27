@@ -10,6 +10,7 @@ import {
   contributions,
   leverage,
   compensations,
+  nonCompensatoryWinner,
 } from './scoring';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
 import { FACTOR_ORDER } from '../config/factors';
@@ -269,5 +270,54 @@ describe('compensations — where the winner won despite being weak', () => {
     const w = weights({ costEfficiency: 40 });
     const fit = QA_ORDER.map((q) => (q === 'costEfficiency' ? 2 : 5));
     expect(compensations(w, fit)).toEqual(compensations(w, fit));
+  });
+});
+
+describe('nonCompensatoryWinner — the "no offsetting" check', () => {
+  const flat = () => Object.fromEntries(QA_ORDER.map((q) => [q, 100 / QA_ORDER.length])) as never;
+
+  it('returns a real option of the dimension', () => {
+    for (const dim of DIMENSION_ORDER) {
+      const names = DIMENSIONS[dim].options.map((o) => o.name);
+      expect(names).toContain(nonCompensatoryWinner(flat(), dim));
+    }
+  });
+
+  it('is deterministic', () => {
+    for (const dim of DIMENSION_ORDER) {
+      expect(nonCompensatoryWinner(flat(), dim)).toBe(nonCompensatoryWinner(flat(), dim));
+    }
+  });
+
+  /**
+   * The whole point: geometric aggregation must actually punish a weakness that additive forgives.
+   * A synthetic pair proves the mechanism rather than trusting the real matrices to exercise it —
+   * "all 3s" beats "one 1 and the rest 5s" under geometric, while additive prefers the latter.
+   */
+  it('makes strength pay a worse rate for weakness than the additive sum does', () => {
+    // 40% of the weight on the weak attribute — inside the band where the two aggregators genuinely
+    // disagree. Below ~32% even geometric still prefers the spike, which is exactly the overclaim
+    // this test exists to prevent: geometric reduces compensability, it does not remove it.
+    const w = Object.fromEntries(QA_ORDER.map((q, i) => [q, i === 0 ? 40 : 60 / (QA_ORDER.length - 1)])) as never;
+    const even = QA_ORDER.map(() => 3);
+    const spiky = QA_ORDER.map((_, i) => (i === 0 ? 1 : 5));
+    const geo = (fit: number[]) => Math.exp(QA_ORDER.reduce((s, q, i) => s + ((w as Record<string, number>)[q] / 100) * Math.log(fit[i]), 0));
+    expect(composite(w, spiky)).toBeGreaterThan(composite(w, even)); // additive still prefers the spike
+    expect(geo(even)).toBeGreaterThan(geo(spiky));                    // geometric no longer does
+  });
+
+  /** Guards the claim in the doc comment: at equal weights the weakness IS still bought off. */
+  it('does not pretend to be fully non-compensatory', () => {
+    const w = flat();
+    const geo = (fit: number[]) => Math.exp(QA_ORDER.reduce((s, q, i) => s + ((w as Record<string, number>)[q] / 100) * Math.log(fit[i]), 0));
+    expect(geo(QA_ORDER.map((_, i) => (i === 0 ? 1 : 5)))).toBeGreaterThan(geo(QA_ORDER.map(() => 3)));
+  });
+
+  /** It is a check, never the recommendation: it must not be able to change what rank() returns. */
+  it('does not affect the ranking the app recommends', () => {
+    const levels = { team: 2, scale: 2, budget: 1, consistency: 2 };
+    const before = rank(levels, 'D1').map((r) => r.name);
+    nonCompensatoryWinner(deriveWeights(levels), 'D1');
+    expect(rank(levels, 'D1').map((r) => r.name)).toEqual(before);
   });
 });

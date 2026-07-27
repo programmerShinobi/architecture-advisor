@@ -17,7 +17,7 @@ import { useI18n } from '../../i18n/I18nContext';
 import { DIMENSIONS } from '../../config/dimensions';
 import { DIM_NARRATIVE, OPTION_BLURB } from '../../config/dimensionContent';
 import { QUALITY_ATTRIBUTES } from '../../config/qualityAttributes';
-import { compensations, contributions, displayScore } from '../../lib/scoring';
+import { compensations, contributions, displayScore, nonCompensatoryWinner } from '../../lib/scoring';
 import { WhyNotRunnerUp } from './WhyNotRunnerUp';
 import type { DimensionId, RankedOption, Weights } from '../../types';
 
@@ -56,6 +56,10 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
   // on qualifies, and it fires on 28.2% of sampled decisions), but a wall of warnings reads as
   // noise and gets skipped — which would defeat the disclosure. The heaviest two carry the point.
   const comps = compensations(weights, topOption.qaFit).slice(0, 2);
+  // Only computed when a compensation exists — on its own the verdict has nothing to qualify, and
+  // a standalone panel would be a second warning competing with the first. Attached here it turns
+  // "there is a weakness" into the question that actually matters: does the DECISION depend on it?
+  const strictWinner = comps.length > 0 ? nonCompensatoryWinner(weights, dim) : null;
   const maxPts = Math.max(...contrib.map((c) => c.points), 0.001);
 
   return (
@@ -137,6 +141,13 @@ export function DimensionDetail({ dim, ranked, weights }: Props) {
                     .replace('{weight}', c.weight.toFixed(1))}
                 </p>
               ))}
+              {strictWinner && (
+                <p style={{ fontSize: '12px', lineHeight: 1.55, color: 'var(--color-text-secondary)', margin: '5px 0 0', fontWeight: 500 }}>
+                  {strictWinner === top.name
+                    ? t('comp.holds')
+                    : t('comp.flips').replace('{other}', strictWinner)}
+                </p>
+              )}
             </div>
           </div>
         )}
