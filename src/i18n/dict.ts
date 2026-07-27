@@ -145,6 +145,21 @@ export const DICT = {
     id: 'Jika {factor} jadi {level} → {winner} yang menang.',
   },
   'sens.robust': { en: 'Otherwise the pick is robust.', id: 'Selain itu, pilihannya tangguh.' },
+  /* Decision leverage (tornado) — how much each answer moves the winner's lead. */
+  'lev.title': { en: 'Which answers are deciding this', id: 'Jawaban mana yang menentukan ini' },
+  'lev.intro': {
+    en: 'How far the lead moves if you change one answer by a single level. The long bars are the answers worth getting right.',
+    id: 'Seberapa jauh keunggulan bergeser bila Anda mengubah satu jawaban sebesar satu tingkat. Batang yang panjang adalah jawaban yang layak dipastikan benar.',
+  },
+  'lev.reading': {
+    en: '{factor}: the lead moves {lose} points in the worst direction and {gain} in the best.',
+    id: '{factor}: keunggulan bergerak {lose} poin ke arah terburuk dan {gain} poin ke arah terbaik.',
+  },
+  'lev.unseats': { en: 'changes the pick', id: 'mengubah pilihan' },
+  'lev.unit': {
+    en: "Measured in the same 0–100 points as the scores above — the winner's lead over its closest rival.",
+    id: 'Diukur memakai poin 0–100 yang sama dengan skor di atas — keunggulan pemenang atas pesaing terdekatnya.',
+  },
   'mig.title': { en: 'Already have a system?', id: 'Sudah punya sistem?' },
   'mig.intro': {
     en: 'Get a safe, step-by-step path — not a risky rewrite',

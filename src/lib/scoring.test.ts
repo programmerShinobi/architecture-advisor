@@ -8,8 +8,10 @@ import {
   isCloseCall,
   sensitivity,
   contributions,
+  leverage,
 } from './scoring';
 import { DIMENSION_ORDER, DIMENSIONS } from '../config/dimensions';
+import { FACTOR_ORDER } from '../config/factors';
 import { DEFAULT_LEVELS } from '../config/defaults';
 import { PRESETS } from '../config/presets';
 import { QA_ORDER } from '../config/qualityAttributes';
@@ -166,5 +168,54 @@ describe('composite() defaults unlisted qaFit entries to 3', () => {
     const w = deriveWeights(DEFAULT_LEVELS);
     // timeToMarket weight is 100% at defaults; a vector with ttm at index 11 missing → 3
     expect(approx(composite(w, [4, 3, 3, 4, 3, 2, 3, 3, 5, 3, 4]), 3)).toBe(true);
+  });
+});
+
+describe('leverage — decision leverage per factor', () => {
+  // A scenario with a mix of levels, so floor/ceiling clamping is genuinely exercised.
+  const levels = { team: 0, distribution: 1, ttm: 2, budget: 0, lifespan: 1, scale: 2,
+    dataVolume: 1, async: 2, realtime: 2, domain: 0, consistency: 2, security: 2, legacy: 0, devops: 2 };
+
+  it('covers all 14 factors exactly once', () => {
+    const rows = leverage(levels);
+    expect(rows).toHaveLength(FACTOR_ORDER.length);
+    expect(new Set(rows.map((r) => r.factor)).size).toBe(FACTOR_ORDER.length);
+  });
+
+  it('is deterministic — same input, identical output', () => {
+    expect(leverage(levels)).toEqual(leverage(levels));
+  });
+
+  it('is sorted by swing, largest first', () => {
+    const swings = leverage(levels).map((r) => r.swing);
+    expect([...swings].sort((a, b) => b - a)).toEqual(swings);
+  });
+
+  it('clamps at the ends of the 0–2 scale', () => {
+    const rows = leverage(levels);
+    // team is at 0 → cannot go down; scale is at 2 → cannot go up.
+    expect(rows.find((r) => r.factor === 'team')!.down).toBeNull();
+    expect(rows.find((r) => r.factor === 'scale')!.up).toBeNull();
+    // ...and the reachable direction is always populated.
+    expect(rows.find((r) => r.factor === 'team')!.up).not.toBeNull();
+    expect(rows.find((r) => r.factor === 'scale')!.down).not.toBeNull();
+  });
+
+  // The claim made in leverage()'s doc comment: `unseats` and `sensitivity()` describe the same
+  // event, so they must agree on every dimension and every scenario — not merely look similar.
+  it('agrees with sensitivity() about which factors unseat the winner', () => {
+    for (const dim of DIMENSION_ORDER) {
+      const flipped = new Set(sensitivity(levels, dim).map((f) => f.factor));
+      for (const row of leverage(levels, dim)) {
+        expect(row.unseats, `${dim}/${row.factor}`).toBe(flipped.has(row.factor));
+      }
+    }
+  });
+
+  it('a factor that unseats the winner always outranks one that barely moves the margin', () => {
+    const rows = leverage(levels);
+    const unseating = rows.filter((r) => r.unseats);
+    const inert = rows.filter((r) => r.swing === 0);
+    for (const u of unseating) for (const i of inert) expect(u.swing).toBeGreaterThan(i.swing);
   });
 });

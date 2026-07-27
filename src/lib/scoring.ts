@@ -1,4 +1,4 @@
-import type { DimensionId, Levels, QaId, RankedOption, Weights } from '../types';
+import type { DimensionId, FactorId, Levels, QaId, RankedOption, Weights } from '../types';
 import { QA_ORDER } from '../config/qualityAttributes';
 import { FACTOR_ORDER } from '../config/factors';
 import { INFLUENCE } from '../config/factorQaMatrix';
@@ -144,4 +144,67 @@ export function sensitivity(levels: Levels, dim: DimensionId = 'D1', overrides: 
     }
   }
   return flips;
+}
+
+export interface Leverage {
+  factor: FactorId;
+  /** Margin change (display points) if this factor drops one level; null at the floor. */
+  down: number | null;
+  /** Margin change (display points) if this factor rises one level; null at the ceiling. */
+  up: number | null;
+  /** Bar length: the larger of the two absolute swings. Sort key. */
+  swing: number;
+  /** True when either direction unseats the current winner (margin goes negative). */
+  unseats: boolean;
+}
+
+/**
+ * Step 5 — DECISION LEVERAGE: how much does each of the 14 answers actually matter?
+ *
+ * WHAT THIS ANSWERS THAT NOTHING ELSE DOES. `sensitivity()` above is binary — it lists the answers
+ * that would flip the winner outright and says nothing about the rest. But "does not flip it" covers
+ * two completely different situations: an answer that barely moves the result, and one that moves it
+ * a great deal while still leaving the same option on top. Only the first is safe to be unsure about.
+ * Leverage separates them, so someone can see where being wrong would actually cost them and where
+ * it would not — which is the question people are really asking when they hesitate over an answer.
+ *
+ * WHAT IS MEASURED. Not the winner's own score, which moves for every option at once and so says
+ * little; instead the MARGIN — the winner's lead over its closest rival. That is the quantity that
+ * decides whether the recommendation stands. Each factor is nudged one level down and one level up
+ * (skipping moves past the 0–2 ends) and the margin is re-derived from the same frozen model; the
+ * bar is the larger of the two deviations. A negative margin means that nudge unseats the winner
+ * outright, which is exactly the `sensitivity()` case — so the two functions agree by construction
+ * rather than by coincidence, and `scoring.test.ts` asserts that agreement.
+ *
+ * Units are display points (0–100), matching the scores shown on screen, so a swing of 3 means the
+ * lead moves by 3 of the same points the user is reading. Deterministic: no randomness, no clock.
+ */
+export function leverage(levels: Levels, dim: DimensionId = 'D1', overrides: Overrides = {}): Leverage[] {
+  const pts = (raw: number) => (raw / 5) * 100;
+  const marginOf = (lv: Levels, winnerName: string): number => {
+    const ranked = rankWith(effectiveWeights(lv, overrides), dim);
+    const win = ranked.find((o) => o.name === winnerName);
+    if (!win) return 0;
+    let bestOther = -Infinity;
+    for (const o of ranked) if (o.name !== winnerName && o.score > bestOther) bestOther = o.score;
+    return bestOther === -Infinity ? 0 : pts(win.score - bestOther);
+  };
+
+  const winner = rankWith(effectiveWeights(levels, overrides), dim)[0].name;
+  const base = marginOf(levels, winner);
+
+  return FACTOR_ORDER.map((f) => {
+    const at = levels[f] ?? 0;
+    const nudge = (to: number): number | null =>
+      to < 0 || to > 2 ? null : marginOf({ ...levels, [f]: to }, winner) - base;
+    const down = nudge(at - 1);
+    const up = nudge(at + 1);
+    return {
+      factor: f,
+      down,
+      up,
+      swing: Math.max(Math.abs(down ?? 0), Math.abs(up ?? 0)),
+      unseats: (down !== null && base + down < 0) || (up !== null && base + up < 0),
+    };
+  }).sort((a, b) => b.swing - a.swing || FACTOR_ORDER.indexOf(a.factor) - FACTOR_ORDER.indexOf(b.factor));
 }
