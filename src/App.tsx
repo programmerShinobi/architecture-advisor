@@ -25,6 +25,7 @@ import { DimensionCards } from './components/advisor/DimensionCards';
 import { DimensionDetail } from './components/advisor/DimensionDetail';
 import { RadarPanel } from './components/advisor/RadarPanel';
 import { SensitivityCard } from './components/advisor/SensitivityCard';
+import { LeverageCard } from './components/advisor/LeverageCard';
 import { MigrationCard } from './components/advisor/MigrationCard';
 import { AntiPatternWarning } from './components/advisor/AntiPatternWarning';
 import { HowItDecides } from './components/advisor/HowItDecides';
@@ -43,7 +44,7 @@ import { FEATURES } from './config/features';
 import { PRESETS } from './config/presets';
 import type { MigrationKey } from './config/migrationPaths';
 import { DIMENSION_ORDER } from './config/dimensions';
-import { effectiveWeights, rankWith, sensitivity, type Overrides } from './lib/scoring';
+import { effectiveWeights, rankWith, sensitivity, leverage, type Overrides } from './lib/scoring';
 import { detectAntiPatterns } from './lib/antiPatternEngine';
 import type { ExportInput } from './lib/snapshot';
 import type { ScenarioState } from './lib/scenarioIO';
@@ -116,6 +117,9 @@ export default function App() {
   );
 
   const flips = useMemo(() => sensitivity(levels, 'D1', overrides), [levels, overrides]);
+  // Same dimension and overrides as `flips` above: the two cards sit side by side, so a mismatch
+  // would have them describing different recommendations without saying so.
+  const leverageRows = useMemo(() => leverage(levels, 'D1', overrides), [levels, overrides]);
 
   const [editWeights, setEditWeights] = useState(false);
   const [analysisRun, setAnalysisRun] = useState(0);
@@ -415,6 +419,7 @@ export default function App() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(250px, 100%), 1fr))', gap: '14px', marginTop: '16px' }}>
             <SensitivityCard flips={flips} levels={levels} />
+            <LeverageCard rows={leverageRows} />
             <MigrationCard value={migKey} onChange={setMigKey} />
           </div>
 
